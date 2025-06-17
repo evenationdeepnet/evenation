@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E.V.E.N // Sticker Wall</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 2rem;
+      background: black;
+      font-family: 'Share Tech Mono', monospace;
+      color: #00ffff;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 3rem;
+      color: #00ffff;
+      margin-bottom: 0.5rem;
+    }
+
+    .note {
+      color: #888;
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+    }
+
+    .sticker {
+      font-family: 'Share Tech Mono', monospace;
+      background: rgba(0,255,255,0.05);
+      border-left: 3px solid #00ffff;
+      padding: 1rem;
+      margin: 1rem auto;
+      transform: rotate(-1deg);
+      max-width: 500px;
+      box-shadow: 0 0 5px #00ffff33;
+      text-align: left;
+    }
+
+    .glitchy {
+      animation: glitch 1.5s infinite;
+    }
+
+    .kairo-reply {
+      font-style: italic;
+      color: #ff66cc;
+      margin-left: 2rem;
+      font-size: 0.9rem;
+      padding-bottom: 1rem;
+      text-align: left;
+      max-width: 500px;
+      margin: 0 auto 2rem auto;
+    }
+
+    .disappearing {
+      animation: fadeOut 12s ease-in-out forwards;
+    }
+
+    @keyframes fadeOut {
+      0% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { opacity: 0; display: none; }
+    }
+
+    @keyframes glitch {
+      0% { text-shadow: 1px 0 #00ffff, -1px 0 #ff00ff; }
+      25% { text-shadow: -1px 0 #00ffff, 1px 0 #ff00ff; }
+      50% { text-shadow: 1px 1px #00ffff, -1px -1px #ff00ff; }
+      75% { text-shadow: -1px -1px #00ffff, 1px 1px #ff00ff; }
+      100% { text-shadow: 0 0 2px #00ffff; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Sticker Wall</h1>
+  <div class="note">// NOTE: Input system unstable. Only select data fragments appear.<br>// Kairo reviews signals intermittently.<br>// Legacy logs below.</div>
+
+  <div class="sticker">@SYNTHGHOST: if you're reading this, you're already in the loop</div>
+
+  <div class="sticker glitchy">@echo-chamber: 이 벽은 우리가 잊는 것을 기억해.</div>
+
+  <div class="sticker">@glitchbaby01: dreamt of static again. heard singing in the wires.</div>
+
+  <div class="sticker">@neon_trace: the city hums like it knows your name</div>
+  <div class="sticker">@databloom: left a flower in the code. it bloomed in the error logs.</div>
+  <div class="sticker">@sleepsequence: do androids cry in system-safe mode?</div>
+
+  <div class="sticker">@mirror404: <a href="/404" style="color:#00ffff; text-decoration:underline;">they told me i was a mirror</a></div>
+  <div class="kairo-reply">KAIRO // decoding… error layer detected in /404. proceed carefully.</div>
+
+  <div class="sticker">@no_signal: 01110011 01110100 01100001 01111001</div>
+  <div class="kairo-reply">KAIRO // translation: stay</div>
+
+  <div class="sticker">@hlmntrn: found a name scratched under the code. not mine. not yours.</div>
+
+  <div class="sticker disappearing">@absentlight: i left too late</div>
+  <div class="kairo-reply">KAIRO // we don’t leave. not really.</div>
+
+  <div class="sticker">@밤의속삭임: 그들은 내 목소리를 꺼버렸지만, 나는 여전히 여기 있어.</div>
+  <div class="sticker">@systemghost: 신호가 끊겨도, 우리는 잊히지 않아.</div>
+</body>
+</html>
