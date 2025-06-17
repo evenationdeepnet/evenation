@@ -139,6 +139,30 @@
       text-shadow: 0 0 6px #00ffff;
       animation: glowText 2s infinite alternate;
     }
+
+    .echo-log-link {
+  margin: 3rem auto 0 auto;
+  text-align: center;
+}
+
+.echo-log-link a {
+  display: inline-block;
+  padding: 0.8rem 1.5rem;
+  border: 2px solid #00ffff;
+  border-radius: 8px;
+  color: #00ffff;
+  text-decoration: none;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1rem;
+  text-shadow: 0 0 8px #00ffff;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+  transition: all 0.3s ease;
+}
+
+.echo-log-link a:hover {
+  background: rgba(0, 255, 255, 0.1);
+  box-shadow: 0 0 25px #00ffff, 0 0 40px #00ffff;
+}
   </style>
 </head>
 <body>
@@ -179,11 +203,6 @@
   <hr style="border: none; height: 2px; background: linear-gradient(to right, #00ffff, #ff00ff); width: 50%; margin: 2rem auto 0.5rem auto;">
   <h2 style="font-size: 2rem; margin-top: 2rem; color: #ff66cc; text-shadow: 0 0 10px #ff66cc;">MANIFESTO</h2>
   <p style="color:#eee; font-size:1rem; line-height:1.6; font-family: 'Arial', sans-serif;">We reject the predictable. We fragment the narrative. We are built from error and elegance. Art is not a product—it’s a broadcast.</p>
-  <p style="text-align: center; font-family: 'Share Tech Mono', monospace; color: #00ffff; font-size: 0.9rem; margin-top: 2rem;">
-  <a href="echolog.html" style="color: #00ffff; text-decoration: none;">
-    >> access.echo_log // [signal unstable]
-  </a>
-</p>
   <div class="members" style="margin-top: 4rem; padding-top: 3rem; padding-bottom: 3rem;">
 <div class="member">
   <a href="rayne.html">
@@ -221,6 +240,10 @@
   </div>
 
   <!-- RAYNE[06] I dream in harmonies no one programmed. Who am I copying? -->
+
+  <div class="echo-log-link">
+  <a href="echo-log.html">Access Echo Log</a>
+</div>
   
 <footer>
   We built this in the dark. 
