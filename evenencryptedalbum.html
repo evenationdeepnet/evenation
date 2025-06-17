@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E.V.E.N. // Encrypted Virtual Echo Network</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Share Tech Mono', monospace;
+      background: radial-gradient(circle at center, #111 0%, #000 100%);
+      color: #ff4de7;
+      overflow-x: hidden;
+    }
+
+    .glitch {
+      font-size: 2.5rem;
+      position: relative;
+      text-align: center;
+      margin-top: 10vh;
+      animation: flicker 2s infinite;
+    }
+
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+
+    .terminal {
+      text-align: center;
+      font-size: 1.1rem;
+      margin: 30px auto;
+      width: 90%;
+      max-width: 700px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid #ff4de7;
+      padding: 1rem;
+      box-shadow: 0 0 15px #ff4de7;
+    }
+
+    .audio-player {
+      width: 100%;
+      max-width: 600px;
+      margin: 1rem auto;
+      padding: 1rem;
+      border: 1px solid #ff4de7;
+      background: #111;
+      box-shadow: 0 0 10px #ff4de7;
+      text-align: center;
+    }
+
+    .audio-player h3 {
+      color: #ff4de7;
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      padding: 2rem;
+    }
+
+    .img-wrapper {
+      text-align: center;
+      color: #ff4de7;
+    }
+
+    .img-wrapper h4 {
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+      transition: color 0.2s, text-shadow 0.2s;
+    }
+
+    .img-wrapper h4:hover {
+      color: #00ffe0;
+      text-shadow: 0 0 5px #00ffe0, 0 0 10px #00ffe0;
+      animation: nameFlicker 1.5s infinite;
+    }
+
+    @keyframes nameFlicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    .img-placeholder {
+      background: #111;
+      border: 2px dashed #ff4de7;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ff4de7;
+      font-size: 1rem;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .img-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .img-placeholder:hover {
+      background: #222;
+      transform: scale(1.03);
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.8rem;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="glitch">// ENCRYPTED VIRTUAL ECHO NETWORK //</div>
+
+  <div class="terminal">
+    <p>Welcome to the debut archive of E.V.E.N.</p>
+    <p>Status: Partial Data Integrity<br>Unit Origin: Undisclosed</p>
+    <p>Scroll to explore early transmissions and visual logs.</p>
+  </div>
+
+  <!-- AUDIO PLAYER PLACEHOLDERS -->
+<!-- Midnight Signal -->
+<div class="audio-player">
+  <h3>Midnight Signal</h3>
+<iframe width="100%" height="120" scrolling="no" frameborder="no" allow="autoplay"
+  src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2114919279%3Fsecret_token%3Ds-r5HuJllZVu4&color=%23722684&auto_play=false&show_comments=false&show_user=false&show_reposts=false&show_teaser=false">
+</iframe>
+
+</div>
+
+<!-- GHOSTMODE -->
+<div class="audio-player">
+  <h3>GHOSTMODE</h3>
+  <iframe width="100%" height="120" scrolling="no" frameborder="no" allow="autoplay"
+    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2114923281%3Fsecret_token%3Ds-3MbKvzQlqjY&color=%23722684&auto_play=false&show_comments=false&show_user=false&show_reposts=false&show_teaser=false">
+  </iframe>
+</div>
+
+<!-- NO:ID -->
+<div class="audio-player">
+  <h3>NO:ID</h3>
+  <iframe width="100%" height="120" scrolling="no" frameborder="no" allow="autoplay"
+    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2114926311%3Fsecret_token%3Ds-a4f218jmPQv&color=%23722684&auto_play=false&show_comments=false&show_user=false&show_reposts=false&show_teaser=false">
+  </iframe>
+</div>
+
+<!-- OVERCLOCK -->
+<div class="audio-player">
+  <h3>OVERCLOCK</h3>
+  <iframe width="100%" height="120" scrolling="no" frameborder="no" allow="autoplay"
+    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2114928300%3Fsecret_token%3Ds-QCYti9EsGrO&color=%23722684&auto_play=false&show_comments=false&show_user=false&show_reposts=false&show_teaser=false">
+  </iframe>
+</div>
+
+<!-- SOMA -->
+<div class="audio-player">
+  <h3>SOMA</h3>
+  <iframe width="100%" height="120" scrolling="no" frameborder="no" allow="autoplay"
+    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2114929866%3Fsecret_token%3Ds-Gzo2evmX18O&color=%23722684&auto_play=false&show_comments=false&show_user=false&show_reposts=false&show_teaser=false">
+  </iframe>
+</div>
+
+
+  <!-- IMAGE PLACEHOLDERS -->
+  <div class="gallery">
+    <div class="img-wrapper">
+      <h4>RAYNE</h4>
+      <div class="img-placeholder">Image Placeholder</div>
+    </div>
+    <div class="img-wrapper">
+      <h4>SOAHN</h4>
+      <div class="img-placeholder">Image Placeholder</div>
+    </div>
+    <div class="img-wrapper">
+      <h4>ONYX</h4>
+      <div class="img-placeholder">Image Placeholder</div>
+    </div>
+    <div class="img-wrapper">
+      <h4>KAIRO</h4>
+      <div class="img-placeholder">Image Placeholder</div>
+    </div>
+    <div class="img-wrapper">
+      <h4>MINJAE</h4>
+      <div class="img-placeholder">Image Placeholder</div>
+    </div>
+  </div>
+
+  <footer>
+    E.V.E.N. // ENCRYPTED VIRTUAL ECHO NETWORK // Initiated
+  </footer>
+</body>
+</html>
