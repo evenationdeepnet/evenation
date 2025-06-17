@@ -60,19 +60,30 @@
 .gallery {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
   justify-content: center;
+  gap: 30px;
+  padding: 2rem 1rem;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
 .img-wrapper {
+  width: 180px;
   text-align: center;
-  width: 150px;
 }
 
 .img-wrapper img {
   width: 100%;
-  border-radius: 10px;
+  height: auto;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 12px;
   border: 1px solid #722684;
+  transition: transform 0.3s ease;
+}
+
+.img-wrapper img:hover {
+  transform: scale(1.05);
 }
 
     @keyframes nameFlicker {
