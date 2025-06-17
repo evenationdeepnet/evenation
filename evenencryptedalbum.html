@@ -57,20 +57,18 @@
       font-size: 1.2rem;
     }
 
-.gallery {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 30px;
-  padding: 2rem 1rem;
-  max-width: 1000px;
-  margin: 0 auto;
-}
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 20px;
+      padding: 2rem 1rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
 
-.img-wrapper {
-  width: 180px;
-  text-align: center;
-}
+    .img-wrapper {
+      text-align: center;
+    }
 
 .img-wrapper img {
   width: 100%;
