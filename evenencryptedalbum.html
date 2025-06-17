@@ -57,29 +57,23 @@
       font-size: 1.2rem;
     }
 
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1rem;
-      padding: 2rem;
-    }
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
 
-    .img-wrapper {
-      text-align: center;
-      color: #ff4de7;
-    }
+.img-wrapper {
+  text-align: center;
+  width: 150px;
+}
 
-    .img-wrapper h4 {
-      margin-bottom: 0.5rem;
-      font-size: 1rem;
-      transition: color 0.2s, text-shadow 0.2s;
-    }
-
-    .img-wrapper h4:hover {
-      color: #00ffe0;
-      text-shadow: 0 0 5px #00ffe0, 0 0 10px #00ffe0;
-      animation: nameFlicker 1.5s infinite;
-    }
+.img-wrapper img {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #722684;
+}
 
     @keyframes nameFlicker {
       0%, 100% { opacity: 1; }
