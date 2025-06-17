@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E.V.E.N. // Signals Feed</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Share Tech Mono', monospace;
+      background: radial-gradient(circle at center, #000 0%, #020202 100%);
+      color: #a00ff6;
+      overflow-x: hidden;
+    }
+
+    .glitch {
+      font-size: 2.5rem;
+      position: relative;
+      text-align: center;
+      margin-top: 10vh;
+      animation: flicker 2s infinite;
+    }
+
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+
+    .terminal {
+      text-align: center;
+      font-size: 1.1rem;
+      margin: 30px auto;
+      width: 90%;
+      max-width: 700px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid #00ff6a;
+      padding: 1rem;
+      box-shadow: 0 0 15px #00ff6a;
+    }
+
+    .audio-player {
+      width: 100%;
+      max-width: 600px;
+      margin: 1rem auto;
+      padding: 1rem;
+      border: 1px solid #00ff6a;
+      background: #111;
+      box-shadow: 0 0 10px #00ff6a;
+      text-align: center;
+    }
+
+    .audio-player h3 {
+      color: #00ff6a;
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 20px;
+      padding: 2rem 1rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .img-wrapper {
+      text-align: center;
+    }
+
+    .img-wrapper img {
+      width: 100%;
+      height: auto;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 1px solid #00ff6a;
+      transition: transform 0.3s ease;
+    }
+
+    .img-wrapper img:hover {
+      transform: scale(1.05);
+    }
+
+    @keyframes nameFlicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    .img-placeholder {
+      background: #111;
+      border: 2px dashed #00ff6a;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #00ff6a;
+      font-size: 1rem;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .img-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .img-placeholder:hover {
+      background: #222;
+      transform: scale(1.03);
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.8rem;
+      color: #555;
+    }
+
+        .return-link {
+      margin-top: 50px;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .return-link a {
+      font-family: 'Orbitron', sans-serif;
+      border: 2px dashed #00ff6a;
+      color: #00ff6a;
+      text-decoration: none;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      border: 1px solid #00ff6a;
+      padding: 10px 20px;
+      border-radius: 8px;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .return-link a:hover {
+      background: #00ff6a;
+      color: #0d0d0d;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="glitch">// SIGNAL FEED: ACTIVE //</div>
+
+  <div class="terminal">
+    <p>Signal bursts detected from encrypted echo layers.</p>
+    <p>Fragments recovered: 3<br>Status: Clean but distorted</p>
+    <p>Listen below.</p>
+  </div>
+
+  <!-- AUDIO PLACEHOLDERS -->
+  <div class="audio-player">
+    <h3>Signal 17</h3>
+    <audio controls>
+      <source src="" type="audio/mpeg">
+    </audio>
+  </div>
+  <div class="audio-player">
+    <h3>Signal 18</h3>
+    <audio controls>
+      <source src="" type="audio/mpeg">
+    </audio>
+  </div>
+  <div class="audio-player">
+    <h3>Signal 19</h3>
+    <audio controls>
+      <source src="" type="audio/mpeg">
+    </audio>
+  </div>
+
+<!-- IMAGE PLACEHOLDERS -->
+<div class="gallery">
+  <div class="img-wrapper">
+    <h4>RAYNE</h4>
+    <img src="RAYNE.png" alt="Rayne">
+  </div>
+  <div class="img-wrapper">
+    <h4>SOAHN</h4>
+    <img src="Soahn.png" alt="Soahn">
+  </div>
+  <div class="img-wrapper">
+    <h4>ONYX</h4>
+    <img src="Onyx.png" alt="Onyx">
+  </div>
+  <div class="img-wrapper">
+    <h4>KAIRO</h4>
+    <img src="Kairo.png" alt="Kairo">
+  </div>
+  <div class="img-wrapper">
+    <h4>MINJAE</h4>
+    <img src="Minjae.png" alt="Minjae">
+  </div>
+</div>
+
+  <div class="return-link">
+    <a href="home.html">&larr; Return to the Network</a>
+  </div>
+
+  <footer>
+    SIGNAL SERIES © E.V.E.N. ARCHIVE // Transmission Complete
+  </footer>
+</body>
+</html>
