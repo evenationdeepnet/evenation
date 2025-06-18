@@ -163,6 +163,25 @@
   background: rgba(0, 255, 255, 0.05);
   box-shadow: 0 0 10px #00ffff;
 }
+
+    .button-glow-alt {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.6rem 1.2rem;
+  background-color: transparent;
+  border: 1px solid #ff4fdd;
+  color: #ff4fdd;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  text-decoration: none;
+  box-shadow: 0 0 6px #ff4fdd55;
+  transition: all 0.2s ease-in-out;
+}
+
+.button-glow-alt:hover {
+  background-color: #ff4fdd22;
+  text-shadow: 0 0 6px #ff4fdd;
+}
   </style>
 </head>
 <body>
@@ -243,6 +262,8 @@
 
   <div class="echo-log-link">
   <a href="echolog.html">Access Echo Log</a>
+
+<a href="ghost-threads.html" class="button-glow-alt" title="unauthorised thread access">↳ access ghost threads</a>
 </div>
   
 <footer>
