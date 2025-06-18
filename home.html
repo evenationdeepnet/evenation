@@ -182,6 +182,24 @@
   background-color: #ff4fdd22;
   text-shadow: 0 0 6px #ff4fdd;
 }
+    .ghost-link {
+  margin-top: 0.5rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.ghost-link a {
+  color: #ff4fdd;
+  text-decoration: none;
+  opacity: 0.65;
+  transition: all 0.2s ease;
+}
+
+.ghost-link a:hover {
+  opacity: 1;
+  text-shadow: 0 0 6px #ff4fdd;
+}
   </style>
 </head>
 <body>
@@ -262,8 +280,10 @@
 
   <div class="echo-log-link">
   <a href="echolog.html">Access Echo Log</a>
-
-<a href="ghost-threads.html" class="button-glow-alt" title="unauthorised thread access">↳ access ghost threads</a>
+  </div>
+  
+<div class="ghost-link">
+  <a href="ghost-threads.html" title="unauthorised thread access">↳ access ghost threads</a>
 </div>
   
 <footer>
