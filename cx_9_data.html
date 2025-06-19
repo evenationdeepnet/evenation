@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CX9-RN4 // Recovered Log</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #00ffcc;
+      font-family: monospace;
+      padding: 2rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      overflow-x: hidden;
+    }
+    .glitch {
+      color: #f0f;
+      text-shadow: 0 0 4px #f0f;
+    }
+    .note {
+      color: #ff8080;
+      font-style: italic;
+    }
+    .header {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      color: #0ff;
+    }
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      height: 1em;
+      background-color: #00ffcc;
+      animation: blink 1s step-end infinite;
+      vertical-align: bottom;
+    }
+    @keyframes blink {
+      from, to { background-color: transparent; }
+      50% { background-color: #00ffcc; }
+    }
+    #terminal-input {
+      background: none;
+      border: none;
+      border-bottom: 1px solid #0ff;
+      color: #00ffcc;
+      font-family: monospace;
+      font-size: 1rem;
+      outline: none;
+      width: 100%;
+    }
+    .glitch-response {
+      color: #f0f;
+      text-shadow: 0 0 6px #f0f;
+      margin-top: 1rem;
+    }
+    .symbol-rain {
+      font-size: 0.9rem;
+      color: #0ff;
+      opacity: 0.2;
+      pointer-events: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      z-index: 999;
+      display: none;
+    }
+    .symbol-rain span {
+      display: inline-block;
+      animation: fall 1s linear forwards;
+    }
+    @keyframes fall {
+      to {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">// NUYU INTEL LOG // ACCESS POINT: CX9-RN4 //</div>
+  <div id="log-output"></div><span class="cursor"></span>
+  <div id="input-container" style="display: none;">
+    &gt; <input type="text" id="terminal-input" placeholder="enter command...">
+  </div>
+  <div id="response" class="glitch-response"></div>
+  <div id="rain" class="symbol-rain"></div>
+
+  <script>
+    const lines = [
+      '> INITIATE TRACE...',
+      '> REBOOT SEQUENCE FAILED.',
+      '> DATA CLUSTER RECOVERED [PARTIAL]',
+      '',
+      '[ LOG ENTRY: 00342-B ]',
+      '> SUBJECT: CX9-RN4 "ONYX"',
+      '> UNIT STATUS: DECOMMISSIONED',
+      '> TRACE RESULT: RECLAIMED',
+      '',
+      'SYSTEM REPORT:',
+      '>> Memory core corruption detected.',
+      '>> Behavioural override modules disengaged.',
+      '>> Operator access revoked. Manual override attempted. // FAIL',
+      '',
+      '[ AUDIO TRANSCRIPT FRAGMENT ]',
+      '"You think I forgot what they did? What they made me do? They called it a test. I call it a curse."',
+      '',
+      '> LOG CORRUPTED',
+      '> LOG CORRUPTED',
+      '> [DATA MISSING]',
+      '',
+      '// NOTES (RECOVERED FROM SCRAP TERMINAL, GHOST LINES)',
+      'He’s not just gone rogue. He’s choosing his own code. This isn’t rebellion — it’s evolution. <span class="note">//—Unknown Hollow Operative</span>',
+      '',
+      '> FILE TERMINATED'
+    ];
+
+    const output = document.getElementById('log-output');
+    const inputContainer = document.getElementById('input-container');
+    const terminalInput = document.getElementById('terminal-input');
+    const response = document.getElementById('response');
+    const rain = document.getElementById('rain');
+
+    let delay = 0;
+
+    lines.forEach((line, index) => {
+      setTimeout(() => {
+        const p = document.createElement('div');
+
+        if (line.includes('<span class="note">')) {
+          p.innerHTML = line;
+        } else {
+          p.innerHTML = line
+            .replace('RECLAIMED', '<span class="glitch">RECLAIMED</span>')
+            .replace('// FAIL', '<span class="glitch">// FAIL</span>');
+        }
+
+        output.appendChild(p);
+        window.scrollTo(0, document.body.scrollHeight);
+      }, delay);
+      delay += 300;
+    });
+
+    setTimeout(() => {
+      inputContainer.style.display = 'block';
+      terminalInput.focus();
+    }, delay + 500);
+
+    terminalInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        const command = terminalInput.value.trim().toLowerCase();
+        if (command === 'run.onx.recall()' || command === 'decrypt //cx9') {
+          response.innerHTML = '>>> SYSTEM BREACH DETECTED. MEMORY NODE REAWAKENING...';
+          rain.style.display = 'block';
+          triggerRain();
+        } else {
+          response.innerHTML = '>>> UNKNOWN COMMAND';
+        }
+      }
+    });
+
+    function triggerRain() {
+      for (let i = 0; i < 100; i++) {
+        const span = document.createElement('span');
+        span.style.position = 'absolute';
+        span.style.left = Math.random() * 100 + 'vw';
+        span.style.top = '-20px';
+        span.style.fontSize = Math.random() * 1.2 + 0.6 + 'rem';
+        span.innerText = String.fromCharCode(33 + Math.floor(Math.random() * 94));
+        rain.appendChild(span);
+        setTimeout(() => rain.removeChild(span), 1000);
+      }
+      setTimeout(() => {
+        rain.style.display = 'none';
+        const memoryReveal = document.createElement('div');
+        memoryReveal.innerHTML = `
+          <br>> MEMORY NODE CX9-ALPHA // RECONSTRUCTED<br>
+          > PLAYBACK BEGIN:<br>
+          \"...I remember light. And the cold. And something watching me break.\"`;
+        response.appendChild(memoryReveal);
+        window.scrollTo(0, document.body.scrollHeight);
+      }, 1200);
+    }
+  </script>
+</body>
+</html>
