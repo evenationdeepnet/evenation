@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>E.V.E.N Signal Map</title>
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      font-family: 'Orbitron', sans-serif;
+      color: #0f0;
+    }
+
+    .signal-map {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(to right, rgba(0,255,0,0.25) 1px, transparent 1px),
+                  linear-gradient(to bottom, rgba(0,255,0,0.25) 1px, transparent 1px),
+                  #000 url('ghost-lines-map.png') center/cover no-repeat;
+      overflow: hidden;
+    }
+
+    .node {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background-color: #0f0;
+      box-shadow: 0 0 10px #0f0;
+      animation: pulse 2s infinite;
+      cursor: pointer;
+    }
+
+    .node::after {
+      content: attr(data-id);
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.65rem;
+      color: #0f0;
+      opacity: 0.8;
+      white-space: nowrap;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.5); opacity: 0.4; }
+      100% { transform: scale(1); opacity: 0.9; }
+    }
+    .scanlines {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 255, 0, 0.05),
+        rgba(0, 255, 0, 0.05) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .node.unstable {
+      animation: flicker 0.4s infinite;
+    }
+
+    @keyframes flicker {
+      0%, 100% { opacity: 0.9; }
+      40% { opacity: 0.2; }
+      60% { opacity: 0.6; }
+      80% { opacity: 0.1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="signal-map">
+    <div class="scanlines"></div>
+    <div class="node" style="top: 20%; left: 30%;" data-id="00C9-M"></div>
+    <div class="node" style="top: 40%; left: 60%;" data-id="042S-R"></div>
+    <div class="node" style="top: 65%; left: 45%;" data-id="078K-K"></div>
+    <div class="node" style="top: 35%; left: 75%;" data-id="012X-O"></div>
+    <div class="node unstable" style="top: 80%; left: 20%;" data-id="0000-R"></div>
+  </div>
+</body>
+</html>
