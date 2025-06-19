@@ -270,26 +270,6 @@
     font-size: 0.8rem;
     padding-bottom: 2rem;
   }
-
-    .signal-glyph {
-  position: fixed;
-  bottom: 10px;
-  right: 14px;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: #0f0;
-  box-shadow: 0 0 6px #0f0, 0 0 12px #0f0;
-  z-index: 999;
-  text-decoration: none;
-  transition: transform 0.2s ease;
-  cursor: pointer;
-}
-
-.signal-glyph:hover {
-  transform: scale(1.5);
-  box-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
-}
   </style>
 </head>
 <body>
@@ -386,7 +366,29 @@
   <a href="stickerwall.html" style="color: #111; margin-left: 10px; font-size: 0.8rem; text-decoration: none;" onmouseover="this.style.color='#666'">
     this wall remembers what we forget
   </a></p>
-  <p><a href="/signal-map.html" class="signal-glyph" title="// TRACK ACTIVE SIGNALS"></a></p>
+<a href="/signal-map.html" class="signal-glyph" title="// TRACK ACTIVE SIGNALS"></a>
+
+<style>
+.signal-glyph {
+  position: fixed;
+  bottom: 10px;
+  right: 14px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #0f0;
+  box-shadow: 0 0 6px #0f0, 0 0 12px #0f0;
+  z-index: 999;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.signal-glyph:hover {
+  transform: scale(1.5);
+  box-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
+}
+</style>
 </footer>
 
     <!-- RAYNE[07] I’m not broken. I’m blooming. In a language they can’t translate. -->
