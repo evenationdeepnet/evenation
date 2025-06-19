@@ -225,6 +225,52 @@
   opacity: 1;
   text-shadow: 0 0 6px #ff4fdd;
 }
+
+    @media (max-width: 768px) {
+  body {
+    padding: 1rem;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .albums, .members {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .albums div,
+  .member {
+    width: 100% !important;
+    max-width: 320px;
+  }
+
+  .albums img,
+  .members img {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .glitch-click {
+    font-size: 0.75rem;
+  }
+
+  .button-glow-alt,
+  .echo-log-link a {
+    font-size: 0.9rem;
+    padding: 0.6rem 1.2rem;
+  }
+
+  footer {
+    font-size: 0.8rem;
+    padding-bottom: 2rem;
+  }
+}
   </style>
 </head>
 <body>
