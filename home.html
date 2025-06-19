@@ -36,6 +36,20 @@
       color: #ccc;
     }
 
+    .glitchy {
+  position: relative;
+  animation: glitch 1.5s infinite;
+}
+
+@keyframes glitch {
+  0% { transform: translate(0); opacity: 1; }
+  20% { transform: translate(-1px, 1px); opacity: 0.9; }
+  40% { transform: translate(1px, -1px); opacity: 1; }
+  60% { transform: translate(-1px, -1px); opacity: 0.85; }
+  80% { transform: translate(1px, 1px); opacity: 1; }
+  100% { transform: translate(0); opacity: 0.95; }
+}
+
     .albums, .members {
       display: flex;
       justify-content: center;
@@ -211,7 +225,7 @@
   <h2>Encrypted Virtual Echo Network</h2>
   <hr style="border: none; height: 2px; background: linear-gradient(to right, #00ffff, #ff00ff); width: 50%; margin: 3rem auto 1rem auto;">
   <p style="color:#eee; font-size:1rem; line-height:1.6; font-family: 'Arial', sans-serif;">
-    A music project encoded in glitch, distortion, and memory. We aren’t a band. We’re a signal. Five identities amplified and encrypted, connected through digital resonance.
+    A music project encoded in glitch, distortion, and memory. We aren’t a band. We’re a <p><span class="glitchy">signal.</span></p> Five identities amplified and encrypted, connected through digital resonance.
   </p>
   <hr style="border: none; height: 2px; background: linear-gradient(to right, #ff00ff, #00ffff); width: 50%; margin: 2rem auto;">
   <div class="albums" style="margin-top: 4rem; padding-top: 3rem; padding-bottom: 3rem;">
