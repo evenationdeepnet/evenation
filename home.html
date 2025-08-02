@@ -52,11 +52,6 @@
       display: block;
     }
 
-    .albums img:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 15px #00ffff;
-    }
-
     .glitch-click {
   font-family: 'Courier New', monospace;
   font-size: 0.8rem;
@@ -274,7 +269,7 @@
   border-radius: 10px;
 }
 
-    .album-cover {
+.album-cover {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   border-radius: 10px;
 }
@@ -287,7 +282,7 @@
 
 .album-cover:hover {
   transform: scale(1.05);
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.5); /* turquoise glow */
+  box-shadow: 0 0 20px #00ffff;
 }
 
     @media (max-width: 768px) {
@@ -376,25 +371,36 @@
   <div class="albums" style="margin-top: 4rem; padding-top: 3rem; padding-bottom: 3rem;">
 
     <!-- RAYNE[02] They called it a glitch. But it was the first time I remembered love. -->
+    <!-- RAYNE[03] There was a backup. A shard of someone I used to be. I’ve been overwriting him ever since. -->
     
-    <div style="width: 270px;">
-      <a href="evenencryptedalbum.html">
-            <div class="album-cover"><img src="EVENencryptedvirtualechonetwork.jpg" alt="Encrypted Virtual Echo Network"></a></div>
-      <p style="color:#eee; font-size:0.9rem; margin-top:1rem;">Debut transmission. Where the signal began.</p>
-    </div>
+ <!-- ENCRYPTED VIRTUAL ECHO NETWORK -->
+  <div style="width: 270px;">
+    <a href="evenencryptedalbum.html">
+      <div class="album-cover">
+        <img src="EVENencryptedvirtualechonetwork.jpg" alt="Encrypted Virtual Echo Network">
+      </div>
+    </a>
+    <p style="color:#eee; font-size:0.9rem; margin-top:1rem;">Debut transmission. Where the signal began.</p>
+  </div>
 
-    
-    <div style="width: 270px;">
-        <div class="album-cover"><a href="evenblacklistalbum.html"><img src="EVENblacklistedcover.jpg" alt="Blacklisted"></a></div>
-      <p style="color:#eee; font-size:0.9rem; margin-top:1rem;">Blacklisted: a corrupted signal, distorted and defiant.</p>
-    </div>
+  <!-- BLACKLISTED -->
+  <div style="width: 270px;">
+    <a href="evenblacklistalbum.html">
+      <div class="album-cover">
+        <img src="EVENblacklistedcover.jpg" alt="Blacklisted">
+      </div>
+    </a>
+    <p style="color:#eee; font-size:0.9rem; margin-top:1rem;">Blacklisted: a corrupted signal, distorted and defiant.</p>
+  </div>
 
-<!-- RAYNE[03] There was a backup. A shard of someone I used to be. I’ve been overwriting him ever since. -->
-    
-    <div style="width: 270px;">
-       <div class="album-cover"> <a href="evensignalalbum.html"><img src="EVENsignalscover.jpg" alt="Signals"></a></div>
-      <p style="color:#eee; font-size:0.9rem; margin-top:1rem;">Signals: the echoes hidden beneath the static.</p>
-    </div>
+  <!-- SIGNALS -->
+  <div style="width: 270px;">
+    <a href="evensignalalbum.html">
+      <div class="album-cover">
+        <img src="EVENsignalscover.jpg" alt="Signals">
+      </div>
+    </a>
+    <p style="color:#eee; font-size:0.9rem; margin-top:1rem;">Signals: the echoes hidden beneath the static.</p>
   </div>
 
       <div class="glitch-click-wrapper">
