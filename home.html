@@ -272,7 +272,22 @@
 .album-image img {
   max-width: 300px;
   border-radius: 10px;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+}
+
+    .album-cover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 10px;
+}
+
+.album-cover img {
+  display: block;
+  width: 100%;
+  border-radius: 10px;
+}
+
+.album-cover:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.5); /* turquoise glow */
 }
 
     @media (max-width: 768px) {
@@ -351,9 +366,11 @@
     <p>Haunting, glitch-bloomed and unflinchingly human. <br>Eight new tracks echoing with memory, rebellion, and the fragments we leave behind.</p>
     <a href="evenechomemoryalbum.html" class="album-button">Explore the Album</a>
   </div>
-  <div class="album-image">
+<div class="album-image">
+  <div class="album-cover">
     <img src="evenechomemorycover.jpg" alt="Echo Memory album cover">
   </div>
+</div>
 </div>
   
   <div class="albums" style="margin-top: 4rem; padding-top: 3rem; padding-bottom: 3rem;">
@@ -361,7 +378,8 @@
     <!-- RAYNE[02] They called it a glitch. But it was the first time I remembered love. -->
     
     <div style="width: 270px;">
-      <a href="evenencryptedalbum.html"><img src="EVENencryptedvirtualechonetwork.jpg" alt="Encrypted Virtual Echo Network"></a>
+      <a href="evenencryptedalbum.html">
+            <div class="album-cover"><img src="EVENencryptedvirtualechonetwork.jpg" alt="Encrypted Virtual Echo Network"></a></div>
       <p style="color:#eee; font-size:0.9rem; margin-top:1rem;">Debut transmission. Where the signal began.</p>
     </div>
 
