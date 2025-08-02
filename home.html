@@ -272,8 +272,8 @@
   }
 
 .highlighted-album {
-  width: 270px;
-  margin: 5rem auto 3rem auto;
+  width: 250px;
+  margin: 7rem auto 3rem auto;
   text-align: center;
   animation: pulseHighlight 4s infinite ease-in-out;
 }
@@ -284,10 +284,13 @@
   box-shadow: 0 0 25px #00ffff, 0 0 15px #ff00ff55;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
+      
 .highlighted-album img:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 35px #00ffff, 0 0 25px #ff00ffaa;
+  transform: scale(1.06);
+  box-shadow:
+    0 0 15px #ff00ffaa,
+    0 0 25px #00ffffaa,
+    0 0 35px #00ffff55;
 }
 
 .highlighted-album p {
