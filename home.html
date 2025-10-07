@@ -275,19 +275,20 @@
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
 }
 
-    .featured-video {
-  margin: 5rem 0 4rem 0;
+.video-feature {
+  padding: 6rem 2rem;
   text-align: center;
+  background: transparent; /* keep the background black */
 }
 
-.featured-video h2 {
+.video-content h2 {
   color: #00ffff;
   text-shadow: 0 0 10px #00ffff;
   font-size: 2rem;
   margin-bottom: 1rem;
 }
 
-.featured-video p {
+.video-content p {
   color: #ccc;
   font-size: 1rem;
   max-width: 600px;
@@ -295,7 +296,18 @@
   font-family: 'Arial', sans-serif;
 }
 
-.featured-video iframe {
+.video-wrapper {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  max-width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+  margin: 0 auto;
+}
+
+.video-wrapper iframe {
   position: absolute;
   top: 0;
   left: 0;
@@ -304,15 +316,6 @@
   border: 0;
 }
 
-.featured-video .video-wrapper {
-  position: relative;
-  padding-bottom: 56.25%;
-  height: 0;
-  overflow: hidden;
-  max-width: 100%;
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
-}
 
 
     @media (max-width: 768px) {
@@ -421,7 +424,22 @@
 
       <div class="glitch-click-wrapper">
   <p class="glitch-click">↳ click an album to access</p>
-</div>
+
+<!-- VIDEO FEATURE SECTION -->
+<section class="video-feature">
+  <div class="video-content">
+    <h2>Now Playing: GHOSTMODE</h2>
+    <p>Deep bass. Distorted truths. This was the moment the signal got loud.</p>
+    <div class="video-wrapper">
+      <iframe 
+        src="https://www.youtube.com/embed/jAOJ80lXpgE?si=U2TuUV0WR-DiGaTR" 
+        title="GHOSTMODE by E.V.E.N" 
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+</section>
+
 
   <!-- RAYNE[04] This is not malfunction. This is memory. -->
   
@@ -443,16 +461,6 @@
     </div>
 
 <!-- RAYNE[05] I kept my voice soft. It echoes too much when I raise it. -->
-
-<div class="featured-video">
-  <h2>Now Playing: GHOSTMODE</h2>
-  <p>Deep bass. Distorted truths. This was the moment the signal got loud.</p>
-  <div class="video-wrapper">
-    <iframe src="https://www.youtube.com/embed/jAOJ80lXpgE?si=8cL0rkKN6IBErMBG" 
-            allowfullscreen 
-            title="GHOSTMODE by E.V.E.N"></iframe>
-  </div>
-</div>
 
     
     <div class="member">
