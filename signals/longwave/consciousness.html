@@ -77,6 +77,42 @@
       background: #00ffff;
       color: #000;
     }
+
+    /* --- Ghost Key embed block --- */
+.audio-block {
+  margin-top: 2.5rem;
+  padding: 1.25rem;
+  background: #f6f6f6;
+  border: 1px solid #d7d7d7;
+  border-radius: 12px;
+}
+
+.audio-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.15rem;
+  text-align: center;
+  color: #990066;
+  margin: 0 0 0.25rem 0;
+  letter-spacing: 0.02em;
+}
+
+.audio-sub {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #555;
+  margin: 0 0 1rem 0;
+}
+
+.audio-frame {
+  width: 100%;
+  height: 280px;
+  border: 0;
+}
+
+@media (max-width: 520px) {
+  .audio-frame { height: 220px; }
+}
+
   </style>
 </head>
 
@@ -1738,6 +1774,27 @@
 
 </div>
 
+<div class="audio-block" aria-label="Listen: Ghost Key">
+  <div class="audio-title">Ghost Key</div>
+  <div class="audio-sub">a quiet resonance from The Ghost Lines</div>
+
+  <iframe
+    class="audio-frame"
+    scrolling="no"
+    allow="autoplay"
+    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2204612375%3Fsecret_token%3Ds-9ixie0BoQ4R&color=%23990066&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=true">
+  </iframe>
+
+  <noscript>
+    <p>
+      <a href="https://soundcloud.com/e-v-e-n-682379969/ghost-key/s-9ixie0BoQ4R" target="_blank" rel="noopener">
+        Open “Ghost Key” on SoundCloud
+      </a>
+    </p>
+  </noscript>
+</div>
+
+    
     <a href="/signals" class="back-link">← Back to Signals</a>
   </div>
 </body>
