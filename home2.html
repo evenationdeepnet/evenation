@@ -226,58 +226,39 @@
   text-shadow: 0 0 6px #ff4fdd;
 }
 
-    .album-highlight {
-  display: flex;
+/* FEATURED: text left, cover right */
+.album-highlight {
+  display: grid;
+  grid-template-columns: minmax(320px, 1fr) minmax(320px, 480px);
   align-items: center;
-  justify-content: space-between;
   gap: 3rem;
-  flex-wrap: wrap;
-  max-width: 900px;
+  max-width: 900px;          /* matches your albums grid width */
   margin: 7rem auto 5rem auto;
 }
 
-.albums {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 2rem;
-  max-width: 900px;   /* keeps it aligned with your container width */
-  margin: 4rem auto;  /* centre within the page */
+.album-text { 
+  max-width: 520px; 
+  text-align: left; 
 }
 
-/* Each album card takes 1/3 of the row (minus the gap) */
-.albums .album-card {
-  flex: 1 1 calc(33.333% - 2rem);
-  max-width: 300px;     /* caps size so they don’t get huge on wide screens */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Make the covers fill the card width */
-.albums .album-card img {
+/* make the cover fill the right column neatly */
+.album-image { width: 100%; }
+.album-image img {
   width: 100%;
   height: auto;
   border-radius: 10px;
+  box-shadow: 0 0 20px rgba(255,255,255,0.4);
   display: block;
-  box-shadow: 0 0 20px rgba(255,255,255,0.2);
 }
 
-/* Caption under each cover */
-.albums .album-card p {
-  margin-top: 0.75rem;
-  color: #eee;
-  font-size: 0.95rem;
-  text-align: center;
-  max-width: 26ch;
-}
-
-/* Responsive: 2-up on tablets, 1-up on mobile */
-@media (max-width: 980px) {
-  .albums .album-card { flex: 1 1 calc(50% - 2rem); }
-}
-@media (max-width: 640px) {
-  .albums .album-card { flex: 1 1 100%; max-width: 420px; }
+/* responsive collapse */
+@media (max-width: 900px) {
+  .album-highlight {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .album-text { text-align: center; margin: 0 auto; }
+  .album-image { max-width: 350px; margin: 0 auto; }
 }
 
 .video-feature {
