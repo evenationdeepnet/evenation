@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>MINJAE // CIPHER CHORUS</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a0a; --ink:#eaeaea; --muted:#8aa; --accent:#ff9bd6; --glow:0 0 18px rgba(255,155,214,.35);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100dvh; display:grid; place-items:center;
+    background: radial-gradient(1200px 800px at 70% -10%, #1a0f18 0%, #0a0a0a 55%),
+                radial-gradient(900px 700px at 20% 110%, #111822 0%, #0a0a0a 60%);
+    color:var(--ink); font-family:'Share Tech Mono', monospace;
+  }
+  .wrap{
+    width:min(920px, 92vw); padding:2rem 1.5rem; border:1px solid #333; border-radius:12px;
+    background:linear-gradient(120deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+    box-shadow:var(--glow);
+  }
+  h1{font-family:'Orbitron',sans-serif; letter-spacing:.08em; margin:0 0 .25rem 0}
+  .sub{color:var(--muted); margin:0 0 1.25rem 0; font-size:.9rem}
+  .grid{display:grid; grid-template-columns: 1.1fr .9fr; gap:1.25rem}
+  textarea{
+    width:100%; min-height:140px; resize:vertical; padding:1rem;
+    background:transparent; color:var(--ink); border:1px solid #3b3b3b; border-radius:10px;
+    outline:none; caret-color:var(--accent);
+    box-shadow: inset 0 0 0 9999px rgba(255,255,255,0.01);
+  }
+  .controls{display:flex; flex-wrap:wrap; gap:.6rem; margin:.75rem 0 1.25rem}
+  button{
+    border:1px solid var(--accent); background:transparent; color:var(--accent);
+    padding:.55rem .9rem; border-radius:999px; cursor:pointer; font-weight:600;
+    transition:.2s ease; text-transform:uppercase; letter-spacing:.04em;
+    box-shadow:var(--glow);
+  }
+  button:hover{background:rgba(255,155,214,.1)}
+  .out{
+    border:1px solid #3b3b3b; border-radius:10px; padding:1rem; min-height:140px;
+    display:flex; flex-direction:column; gap:.75rem; background:rgba(255,255,255,.02);
+  }
+  .label{font-size:.8rem; color:#9bb}
+  .block{white-space:pre-wrap; line-height:1.6}
+  .cipher{font-size:.85rem; color:#b9a; opacity:.85; word-break:break-all}
+  .aside{font-size:.85rem; color:#ffd6ee; opacity:.9}
+  .footer{margin-top:1rem; color:#789; font-size:.8rem; text-align:center}
+  @media (max-width: 860px){ .grid{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+  <main class="wrap" role="main" aria-labelledby="t">
+    <h1 id="t">MINJAE'S CIPHER CHORUS</h1>
+    <p class="sub">// i'll rewrite raw input into a usable signal. feelings → fragments. fragments → code.</p>
+
+    <section class="grid">
+      <div>
+        <label class="label" for="in">INPUT // tell me something real</label>
+        <textarea id="in" placeholder="(one or two sentences is enough)"></textarea>
+        <div class="controls">
+          <button id="encode">Encode</button>
+          <button id="clear" aria-label="Clear input and output">Clear</button>
+          <button id="copy" aria-label="Copy encoded output">Copy</button>
+        </div>
+      </div>
+
+      <div class="out" aria-live="polite">
+        <div>
+          <div class="label">OUTPUT // lyric fragment</div>
+          <div id="frag" class="block">—</div>
+        </div>
+        <div>
+          <div class="label">CIPHER // attach to transmission</div>
+          <div id="cipher" class="cipher">—</div>
+        </div>
+        <div id="aside" class="aside" hidden> </div>
+      </div>
+    </section>
+
+    <p class="footer">Tip: paste the fragment into your post; keep the cipher for those who know where to look.</p>
+  </main>
+
+<script>
+/* ===== Minjae’s tiny encoder =====
+   — distils input into a short “lyric fragment”
+   — generates a compact cipher (base64 + checksum)
+   — occasionally drops a Minjae aside
+*/
+const $ = sel => document.querySelector(sel);
+const input = $('#in'), frag = $('#frag'), cipher = $('#cipher'), aside = $('#aside');
+
+const STOP = ['and','but','or','so','because','that','this','with','without','really','very','just','like','literally','actually','kinda','sorta'];
+
+const VERB_SOFTEN = {
+  hurts:"stings", hate:"refuse", love:"sync",
+  cry:"leak", cried:"leaked", crying:"leaking",
+  die:"fade", killed:"cut", broken:"open",
+  dream:"simulate", break:"fracture", run:"drift", speak:"transmit", 
+  hold:"anchor", fall:"descend", see:"render", remember:"restore",
+  forget:"erase", wait:"loop",
+  feel:"register", touch:"interface", bleed:"transmit", burn:"overload",
+  write:"encode", sing:"output", hear:"receive", breathe:"reboot",
+  live:"execute", rise:"compile", hide:"mask", fix:"patch",
+  reach:"extend", find:"locate", lose:"disconnect", stay:"persist",
+  change:"rewire"
+};
+
+// optional noun substitutions for a more "Minjae" tone
+const NOUN_GLITCH = {
+  heart: "core",
+  eyes: "lenses",
+  hands: "interfaces",
+  voice: "frequency",
+  rain: "signal",
+  flood: "overflow",
+  sea: "network",
+  memory: "cache",
+  dream: "render",
+  flower: "code-fragment",
+  sky: "surface",
+  soul: "process",            // existential, mechanical
+  blood: "current",           // energy flow imagery
+  tear: "subroutine",         // emotion rendered as code
+  light: "data-stream",       // poetic yet digital
+  shadow: "echo",             // lingering digital trace
+  star: "node"                // fits the E.V.E.N constellation theme
+};
+
+// adjectives → Minjae slang or tone-filtered words
+const ADJ_TONE = {
+  awesome: "fire",
+  amazing: "clean",
+  beautiful: "sharp",
+  perfect: "synthetic",
+  cool: "cold-coded",
+  sad: "low-res",
+  happy: "bright",
+  strong: "stable",
+  weak: "lagging",
+  angry: "spiked",
+  tired: "low-battery",
+  lonely: "off-grid",
+  wild: "unpatched"
+};
+
+const ASIDES = [
+  "Too many adjectives. Trim it. Let the feeling breathe.",
+  "Keep one truth. Delete the apology.",
+  "Looks better in 4 lines. Trust me.",
+  "Encryption’s fine. Don’t hide from yourself.",
+  "Good. Now say it simpler.",
+  "You don’t need permission to be loud.",
+  "Emotion is data. Format it properly.",
+  "You're not broken, just running a different build.",
+  "Clarity isn't weakness. It's precision.",
+  "You overthink rhythm. Let the syntax fall apart.",
+  "If it hurts, keep typing.",
+  "Poetry is just compression with feelings.",
+  "Version yourself. Then release the update.",
+  "You think too clean. Corrupt something on purpose.",
+  "Stop chasing perfect. Perfect is surveillance."
+];
+
+// Rare asides — appear very occasionally
+const RARE_ASIDES = [
+  "// MinjaeNote: don’t look for meaning. build it.",
+  "// debug entry 000c9: the system writes back sometimes.",
+  "// art = data with bad boundaries.",
+  "// stay encrypted. they’re still listening.",
+  "// there’s no such thing as silence, only unrecorded sound."
+];
+
+// occasional character swaps for glitchy texture
+function digitiseWord(w) {
+  if (Math.random() > 0.1) return w; // only 10% chance per word
+  return w
+    .replace(/o/g, () => Math.random() < 0.5 ? "0" : "ø")
+    .replace(/e/g, () => Math.random() < 0.5 ? "3" : "∑")
+    .replace(/s/g, () => Math.random() < 0.5 ? "$" : "5")
+    .replace(/a/g, () => Math.random() < 0.5 ? "4" : "∆");
+}
+
+function toWords(s){
+  return s.toLowerCase()
+    .replace(/[^a-z0-9\s']/g,' ')
+    .split(/\s+/).filter(Boolean);
+}
+
+function transformWord(w){
+  if (VERB_SOFTEN[w]) w = VERB_SOFTEN[w];
+  if (NOUN_GLITCH[w]) w = NOUN_GLITCH[w];
+  if (ADJ_TONE[w]) w = ADJ_TONE[w];
+  return w;
+}
+
+function fragmentize(text){
+  const words = toWords(text)
+    .map(transformWord)
+    .filter(w => !STOP.includes(w))
+    .map(digitiseWord); // NEW: glitch layer
+
+  if(!words.length) return "say it plain\ni’ll keep it safe";
+
+  const salient = [];
+  for(const w of words){
+    if(!salient.includes(w)) salient.push(w);
+    if(salient.length>=10) break;
+  }
+
+  const lines = [];
+  while(salient.length){
+    const n = Math.min((2 + Math.floor(Math.random()*3)), salient.length);
+    lines.push(salient.splice(0,n).join(' '));
+  }
+
+  let out = lines.join('\n');
+  if(Math.random()<0.35) out += "\n// keep it moving";
+  if(Math.random()<0.25) out += "\n// i’m listening";
+  // NEW: 1 in 20 chance of a rare aside
+  if(Math.random()<0.05) out += "\n" + RARE_ASIDES[Math.floor(Math.random()*RARE_ASIDES.length)];
+  return out;
+}
+
+function tinyCipher(text){
+  // base64 of trimmed text + simple checksum (sum of char codes % 97)
+  const t = text.trim();
+  if(!t) return '—';
+  const b64 = btoa(unescape(encodeURIComponent(t))).replace(/=+$/,'');
+  let sum = 0; for(let i=0;i<t.length;i++) sum += t.charCodeAt(i);
+  const chk = (sum % 97).toString(16).padStart(2,'0');
+  return `mjn:${b64}.${chk}`;
+}
+
+function encode(){
+  const val = input.value.trim();
+  if(!val){ frag.textContent = '—'; cipher.textContent = '—'; aside.hidden = true; return; }
+  const f = fragmentize(val);
+  frag.textContent = f;
+  cipher.textContent = tinyCipher(val);
+  // rare aside (1 in 4)
+  if(Math.random()<0.25){
+    aside.textContent = ASIDES[Math.floor(Math.random()*ASIDES.length)];
+    aside.hidden=false;
+  } else {
+    aside.hidden=true;
+  }
+}
+
+$('#encode').addEventListener('click', encode);
+$('#clear').addEventListener('click', ()=>{
+  input.value=''; frag.textContent='—'; cipher.textContent='—'; aside.hidden=true; input.focus();
+});
+$('#copy').addEventListener('click', ()=>{
+  const combo = `${frag.textContent}\n\n[${cipher.textContent}]`;
+  navigator.clipboard.writeText(combo).then(()=>{
+    aside.textContent='Copied.'; aside.hidden=false; setTimeout(()=>aside.hidden=true,1200);
+  });
+});
+// Enter (Cmd/Ctrl+Enter) to encode
+input.addEventListener('keydown', e=>{
+  if(e.key==='Enter' && (e.metaKey||e.ctrlKey)){ e.preventDefault(); encode(); }
+});
+</script>
+
+</body>
+</html>
