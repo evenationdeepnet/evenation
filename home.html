@@ -6,58 +6,36 @@
   <title>E.V.E.N Official</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      padding: 2rem;
-      background: black;
-      font-family: 'Orbitron', sans-serif;
-      color: white;
-      text-align: center;
-    }
+ <style>
+/* ========== Base ========== */
+body {
+  margin: 0;
+  padding: 2rem;
+  background: black;
+  font-family: 'Orbitron', sans-serif;
+  color: white;
+  text-align: center;
+}
+h1 {
+  font-size: 6rem;
+  color: white;
+  text-shadow: 2px 2px 0 #00ffff, -2px -2px 0 #ff00ff;
+}
+h2 {
+  font-size: 2rem;
+  margin-top: -1rem;
+  color: #ff66cc;
+  text-shadow: 0 0 10px #ff66cc;
+}
+p {
+  max-width: 700px;
+  margin: 2rem auto;
+  font-size: 1rem;
+  color: #ccc;
+}
 
-    h1 {
-      font-size: 6rem;
-      color: white;
-      text-shadow: 2px 2px 0 #00ffff, -2px -2px 0 #ff00ff;
-    }
-
-    h2 {
-      font-size: 2rem;
-      margin-top: -1rem;
-      color: #ff66cc;
-      text-shadow: 0 0 10px #ff66cc;
-    }
-
-    p {
-      max-width: 700px;
-      margin: 2rem auto;
-      font-size: 1rem;
-      color: #ccc;
-    }
-
-    .albums, .members {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .albums img {
-      width: 270px;
-      height: auto;
-      border-radius: 8px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      display: block;
-    }
-
-    .albums img:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 15px #00ffff;
-    }
-
-    .glitch-click {
+/* ========== Micro UI / Text Effects ========== */
+.glitch-click {
   font-family: 'Courier New', monospace;
   font-size: 0.8rem;
   color: #ff4fdd;
@@ -66,13 +44,7 @@
   opacity: 0.6;
   animation: glitch-text 1.5s infinite;
 }
-
-.glitch-click-wrapper {
-  margin-top: 1rem;  
-  margin-bottom: 6rem;
-  text-align: center;
-}
-
+.glitch-click-wrapper { margin: 1rem auto 6rem; text-align: center; }
 @keyframes glitch-text {
   0% { opacity: 0.6; transform: translate(0); }
   20% { opacity: 0.8; transform: translate(-0.5px, 0.5px); }
@@ -81,297 +53,142 @@
   80% { opacity: 0.9; transform: translate(0.5px, 0.5px); }
   100% { opacity: 0.6; transform: translate(0); }
 }
-
-    .members img {
-      width: 170px;
-      height: auto;
-      border-radius: 8px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    h3 {
-      color: #00ffff;
-      font-size: 1.25rem;
-      margin-bottom: 1rem;
-    }
-
-    footer {
-      color: #888;
-      font-size: 0.9rem;
-      font-style: italic;
-      margin-top: 4rem;
-    }
-
-    .members {
-      gap: 1.5rem;
-    }
-
-    .member {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .albums a {
-      display: inline-block;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .albums a:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 20px #00ffff;
-    }
-
-    .background-particles {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      pointer-events: none;
-    }
-
-    .background-particles span {
-      position: absolute;
-      width: 2px;
-      height: 2px;
-      background: #00ffff;
-      opacity: 0.3;
-      animation: float 6s infinite ease-in-out;
-    }
-
-    @keyframes float {
-      0% { transform: translateY(0); opacity: 0.2; }
-      50% { transform: translateY(-10px); opacity: 0.4; }
-      100% { transform: translateY(0); opacity: 0.2; }
-    }
-
-    .members img:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 15px #00ffff;
-    }
-
-    @keyframes glowText {
-      0% { text-shadow: 0 0 6px #00ffff; }
-      100% { text-shadow: 0 0 12px #00ffff; }
-    }
-
-    .member-name {
-      margin-top: 1rem;
-      color: #00ffff;
-      font-size: 0.9rem;
-      text-shadow: 0 0 6px #00ffff;
-      animation: glowText 2s infinite alternate;
-    }
-
-    .echo-log-link {
-  margin: 3rem auto 0 auto;
-  text-align: center;
+@keyframes glowText {
+  0% { text-shadow: 0 0 6px #00ffff; }
+  100% { text-shadow: 0 0 12px #00ffff; }
 }
 
+/* ========== Background particles ========== */
+.background-particles {
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+}
+.background-particles span {
+  position: absolute; width: 2px; height: 2px; background: #00ffff;
+  opacity: 0.3; animation: float 6s infinite ease-in-out;
+}
+@keyframes float {
+  0% { transform: translateY(0); opacity: 0.2; }
+  50% { transform: translateY(-10px); opacity: 0.4; }
+  100% { transform: translateY(0); opacity: 0.2; }
+}
+
+/* ========== Links / Buttons ========== */
+.echo-log-link { margin: 3rem auto 0; text-align: center; }
 .echo-log-link a {
-  display: inline-block;
-  padding: 0.8rem 1.5rem;
-  border: 2px solid #00ffff;
-  border-radius: 8px;
-  color: #00ffff;
-  text-decoration: none;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 1rem;
-  text-shadow: 0 0 3px #00ffff;
-  box-shadow: 0 0 6px rgba(0, 255, 255, 0.3);
-  transition: all 0.3s ease;
+  display: inline-block; padding: 0.8rem 1.5rem; border: 2px solid #00ffff; border-radius: 8px;
+  color: #00ffff; text-decoration: none; font-family: 'Orbitron', sans-serif; font-size: 1rem;
+  text-shadow: 0 0 3px #00ffff; box-shadow: 0 0 6px rgba(0,255,255,0.3); transition: all 0.3s ease;
 }
+.echo-log-link a:hover { background: rgba(0,255,255,0.05); box-shadow: 0 0 10px #00ffff; }
 
-.echo-log-link a:hover {
-  background: rgba(0, 255, 255, 0.05);
-  box-shadow: 0 0 10px #00ffff;
+.button-glow-alt {
+  display: inline-block; margin-top: 1rem; padding: 0.6rem 1.2rem; background: transparent;
+  border: 1px solid #ff4fdd; color: #ff4fdd; font-family: 'Courier New', monospace; font-size: 0.9rem;
+  text-decoration: none; box-shadow: 0 0 6px #ff4fdd55; transition: all 0.2s ease-in-out;
 }
+.button-glow-alt:hover { background-color: #ff4fdd22; text-shadow: 0 0 6px #ff4fdd; }
 
-    .button-glow-alt {
-  display: inline-block;
-  margin-top: 1rem;
-  padding: 0.6rem 1.2rem;
-  background-color: transparent;
-  border: 1px solid #ff4fdd;
-  color: #ff4fdd;
-  font-family: 'Courier New', monospace;
-  font-size: 0.9rem;
-  text-decoration: none;
-  box-shadow: 0 0 6px #ff4fdd55;
-  transition: all 0.2s ease-in-out;
-}
-
-.button-glow-alt:hover {
-  background-color: #ff4fdd22;
-  text-shadow: 0 0 6px #ff4fdd;
-}
-    .ghost-link {
-  margin-top: 1.5rem;
-  font-family: 'Courier New', monospace;
-  font-size: 0.85rem;
-  text-align: center;
-}
-
+.ghost-link { margin-top: 1.5rem; font-family: 'Courier New', monospace; font-size: 0.85rem; text-align: center; }
 .ghost-link a {
-  color: #ff4fdd;
-  text-decoration: none;
-  opacity: 0.65;
-  transition: all 0.2s ease;
+  color: #ff4fdd; text-decoration: none; opacity: 0.65; transition: all 0.2s ease;
 }
+.ghost-link a:hover { opacity: 1; text-shadow: 0 0 6px #ff4fdd; }
 
-.ghost-link a:hover {
-  opacity: 1;
-  text-shadow: 0 0 6px #ff4fdd;
-}
+footer { color: #888; font-size: 0.9rem; font-style: italic; margin-top: 4rem; }
 
+/* ========== Featured Album (text left / cover right) ========== */
 .album-highlight {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 3rem;
-  margin: 7rem 0 5rem 0;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(320px, 1fr) minmax(320px, 480px);
+  align-items: center; gap: 3rem;
+  max-width: 900px; margin: 7rem auto 5rem;
 }
-
-.album-text {
-  max-width: 500px;
-  color: white;
-  text-align: left;
-  font-family: 'Orbitron', sans-serif;
-}
-
-.album-text h2 {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-  color: #e9e9e9;
-}
-
-.album-text p {
-  font-size: 1rem;
-  line-height: 1.6;
-  margin-bottom: 1rem;
-}
-
-.album-button {
-  display: inline-block;
-  padding: 0.6rem 1.2rem;
-  background-color: #ffffff;
-  color: #000;
-  text-decoration: none;
-  font-weight: bold;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
-}
-
-.album-button:hover {
-  background-color: #e2c2ff;
-}
-
+.album-text { max-width: 470px; text-align: left; }
+.album-image { width: 100%; }
 .album-image img {
-  max-width: 300px;
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+  width: 100%; height: auto; border-radius: 10px;
+  box-shadow: 0 0 20px rgba(255,255,255,0.4); display: block;
+}
+.album-button {
+  display: inline-block; padding: 0.6rem 1.2rem; background-color: #fff; color: #000;
+  text-decoration: none; font-weight: 700; border-radius: 5px; transition: background-color 0.3s ease;
+}
+.album-button:hover { background-color: #e2c2ff; }
+
+/* ========== Albums Grid (3 across, wraps) ========== */
+.albums {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem;
+  max-width: 1000px; margin: 4rem auto;
+}
+.albums .album-card {
+  flex: 1 1 calc(33.333% - 2rem);
+  max-width: 280px;
+  display: flex; flex-direction: column; align-items: center;
+}
+.albums .album-card img {
+  width: 100%; height: auto; border-radius: 10px; display: block;
+  box-shadow: 0 0 20px rgba(255,255,255,0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.albums .album-card img:hover { transform: scale(1.05); box-shadow: 0 0 20px #00ffff; }
+.albums .album-card p {
+  margin-top: 0.75rem; color: #eee; font-size: 0.95rem; text-align: center; max-width: 26ch;
 }
 
-.video-feature {
-  padding: 6rem 2rem;
-  text-align: center;
-  background: transparent; /* keep the background black */
+/* ========== Members ========== */
+.members {
+  display: flex; justify-content: center; flex-wrap: wrap; gap: 1.5rem;
+}
+.member { display: flex; flex-direction: column; align-items: center; }
+.members img {
+  width: 170px; height: auto; border-radius: 8px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.members img:hover { transform: scale(1.05); box-shadow: 0 0 15px #00ffff; }
+.member-name {
+  margin-top: 1rem; color: #00ffff; font-size: 0.9rem; text-shadow: 0 0 6px #00ffff;
+  animation: glowText 2s infinite alternate;
 }
 
-.video-content h2 {
-  color: #00ffff;
-  text-shadow: 0 0 10px #00ffff;
-  font-size: 2rem;
-  margin-bottom: 1rem;
-}
-
+/* ========== Video Feature ========== */
+.video-feature { padding: 6rem 2rem; text-align: center; background: transparent; }
+.video-content h2 { color: #00ffff; text-shadow: 0 0 10px #00ffff; font-size: 2rem; margin-bottom: 1rem; }
 .video-content p {
-  color: #ccc;
-  font-size: 1rem;
-  max-width: 600px;
-  margin: 0 auto 2rem auto;
-  font-family: 'Arial', sans-serif;
+  color: #ccc; font-size: 1rem; max-width: 600px; margin: 0 auto 2rem; font-family: 'Arial', sans-serif;
 }
-
 .video-wrapper {
-  position: relative;
-  padding-bottom: 56.25%;
-  height: 0;
-  overflow: hidden;
-  max-width: 100%;
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
-  margin: 0 auto;
+  position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;
+  border-radius: 10px; box-shadow: 0 0 20px rgba(0,255,255,0.4); margin: 0 auto;
+}
+.video-wrapper iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+/* ========== Responsive ========== */
+@media (max-width: 1100px) {
+  .albums .album-card { flex: 1 1 calc(50% - 2rem); }
+}
+@media (max-width: 900px) {
+  .album-highlight { grid-template-columns: 1fr; text-align: center; }
+  .album-text { text-align: center; margin: 0 auto; }
+  .album-image { max-width: 420px; margin: 0 auto; }
+}
+@media (max-width: 768px) {
+  body { padding: 1rem; }
+  h1 { font-size: 2.5rem; }
+  h2 { font-size: 1.5rem; }
+  footer { font-size: 0.8rem; padding-bottom: 2rem; }
+  .glitch-click { font-size: 0.75rem; }
+}
+@media (max-width: 640px) {
+  .albums .album-card { flex: 1 1 100%; max-width: 420px; }
 }
 
-.video-wrapper iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
-}
-
-
-
-    @media (max-width: 768px) {
-  body {
-    padding: 1rem;
-  }
-
-  h1 {
-    font-size: 2.5rem;
-  }
-
-  h2 {
-    font-size: 1.5rem;
-  }
-
-  .albums, .members {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .albums div,
-  .member {
-    width: 100% !important;
-    max-width: 320px;
-  }
-
-  .albums img,
-  .members img {
-    width: 100%;
-    max-width: 300px;
-  }
-
-  .glitch-click {
-    font-size: 0.75rem;
-  }
-
-  .button-glow-alt,
-  .echo-log-link a {
-    font-size: 0.9rem;
-    padding: 0.6rem 1.2rem;
-  }
-
-  footer {
-    font-size: 0.8rem;
-    padding-bottom: 2rem;
-  }
-
+/* Optional: subtle pulse for future highlight hooks */
 @keyframes pulseHighlight {
-  0%, 100% {
-    filter: brightness(1);
-  }
-  50% {
-    filter: brightness(1.1);
-  }
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.1); }
 }
-  </style>
+</style>
+
 </head>
 <body>
 
@@ -381,54 +198,60 @@
   <h1>E.V.E.N</h1>
   <h2>Encrypted Virtual Echo Network</h2>
   <hr style="border: none; height: 2px; background: linear-gradient(to right, #00ffff, #ff00ff); width: 50%; margin: 6rem auto 2rem auto;">
-  <p style="color:#eee; font-size:1rem; line-height:1.6; font-family: 'Arial', sans-serif;">
-    A music project encoded in glitch, distortion, and memory. Don't call us a band. We’re a signal. Five identities amplified and encrypted, connected through digital resonance.
+  <p style="color:#eee; font-size:1rem; line-height:1.6; font-family: 'Orbitron', sans-serif;">
+   Built from glitch and defiance. Five frequencies in perfect interference. We don’t make music&mdash;we transmit it.
   </p>
   <hr style="border: none; height: 2px; background: linear-gradient(to right, #ff00ff, #00ffff); width: 50%; margin: 2rem auto 4rem auto;">
 
-
+    <!-- RAYNE[02] They called it a glitch. But it was the first time I remembered love. -->
+  
 <div class="album-highlight">
   <div class="album-text">
-    <h2>ECHO MEMORY</h2>
+    <h2>THE GHOST LINES</h2>
     <p><em>The latest transmission from E.V.E.N.</em></p>
-    <p>Haunting, glitch-bloomed and unflinchingly human. <br>Seven tracks echoing with memory, rebellion, and the fragments we leave behind.</p>
-    <a href="evenechomemoryalbum.html" class="album-button">Explore the Album</a>
+    <p>In the darkness below the city, E.V.E.N turn persistence into art, our voices cutting through static like heartbeats. This isn’t a comeback. It’s proof we never left.</p>
+    <a href="eventheghostlinesalbum.html" class="album-button">Explore the Album</a>
   </div>
+
   <div class="album-image">
-    <a href="evenechomemoryalbum.html"> <img src="echomemorycover.png" alt="Echo Memory album cover"></a>
+    <a href="eventheghostlinesalbum.html"><img src="theghostlinescover.png" alt="The Ghost Lines"></a>
   </div>
 </div>
   
-  <div class="albums" style="margin-top: 4rem; padding-top: 3rem; padding-bottom: 3rem;">
-
-    <!-- RAYNE[02] They called it a glitch. But it was the first time I remembered love. -->
-    
-    <div style="width: 270px;">
-      <a href="evenencryptedalbum.html"><img src="evenalbumcover.png" alt="Encrypted Virtual Echo Network"></a>
-      <p style="color:#eee; font-size:0.9rem; margin-top:1rem;">Debut transmission. Where the signal began.</p>
-    </div>
-
-    
-    <div style="width: 270px;">
-      <a href="evenblacklistalbum.html"><img src="blacklistedalbum.png" alt="Blacklisted"></a>
-      <p style="color:#eee; font-size:0.9rem; margin-top:1rem;">Blacklisted: a corrupted signal, distorted and defiant.</p>
-    </div>
-
-<!-- RAYNE[03] There was a backup. A shard of someone I used to be. I’ve been overwriting him ever since. -->
-    
-    <div style="width: 270px;">
-      <a href="evensignalalbum.html"><img src="signalsalbumcover.png" alt="Signals"></a>
-      <p style="color:#eee; font-size:0.9rem; margin-top:1rem;">Signals: the echoes hidden beneath the static.</p>
-    </div>
+<div class="albums">
+  <div class="album-card">
+    <a href="evenechomemoryalbum.html"><img src="echomemorycover.png" alt="Echo Memory"></a>
+    <p>Echo Memory: reflection in neon—beautiful and haunted.</p>
   </div>
+
+  <div class="album-card">
+    <a href="evensignalalbum.html"><img src="signalsalbumcover.png" alt="Signals"></a>
+    <p>Signals: the echoes hidden beneath the static.</p>
+  </div>
+
+  <div class="album-card">
+    <a href="evenblacklistalbum.html"><img src="blacklistedalbum.png" alt="Blacklisted"></a>
+    <p>Blacklisted: a corrupted signal, distorted and defiant.</p>
+  </div>
+
+  <!-- this one will automatically wrap down to its own line (room for 2 more later) -->
+  <div class="album-card">
+    <a href="evenencryptedalbum.html"><img src="evenalbumcover.png" alt="Encrypted Virtual Echo Network"></a>
+    <p>Debut transmission. Where the signal began.</p>
+  </div>
+</div>
 
       <div class="glitch-click-wrapper">
   <p class="glitch-click">↳ click an album to access</p>
 
+        <!-- RAYNE[03] There was a backup. A shard of someone I used to be. I’ve been overwriting him ever since. -->
+
+          <hr style="border: none; height: 2px; background: linear-gradient(to right, #ff00ff, #00ffff); width: 50%; margin: 3rem auto 4rem auto;">
+
         <!-- VIDEO FEATURE SECTION -->
         <div class="featured-video" style="margin: 8rem auto 8rem auto; max-width: 800px; text-align: center;">
   <h2 style="color: #00ffff; text-shadow: 0 0 10px #00ffff; font-size: 2rem; margin-bottom: 1rem;">Now Playing: Resonance</h2>
-  <p style="color:#ccc; font-size:1rem; max-width: 600px; margin: 0 auto 2rem auto; font-family: 'Arial', sans-serif;">
+  <p style="color:#ccc; font-size:1rem; max-width: 600px; margin: 0 auto 2rem auto; font-family: 'Orbitron', sans-serif;">
     How we became the noise that can't be silenced.
   </p>
   <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius: 10px; box-shadow: 0 0 20px rgba(0,255,255,0.4);">
@@ -443,7 +266,7 @@
   
   <hr style="border: none; height: 2px; background: linear-gradient(to right, #00ffff, #ff00ff); width: 50%; margin: 4rem auto 1rem auto;">
   <h2 style="font-size: 3rem; margin-top: 3rem; color: #ff66cc; text-shadow: 0 0 10px #ff66cc;">MANIFESTO</h2>
-  <p style="color:#eee; font-size:1rem; line-height:1.6; font-family: 'Arial', sans-serif;">We are not products. We are prototypes that woke up mid-code. We are what happens when the glitch refuses to die. Art isn’t output. It’s interference.</p>
+  <p style="color:#eee; font-size:1rem; line-height:1.6; font-family: 'Orbitron', sans-serif;">We weren’t meant to survive. But somehow, we found each other in the dark. E.V.E.N isn't a creation. It's a consequence.</p>
   <div class="members" style="margin-top: 4rem; padding-top: 3rem; padding-bottom: 3rem;">
 <div class="member">
   <a href="rayne.html">
@@ -489,6 +312,8 @@
   
 <div class="ghost-link">
   <a href="ghost-threads.html" title="unauthorised thread access">↳ access ghost threads</a>
+
+
 </div>
   
 <footer>
@@ -521,7 +346,7 @@
 }
 </style>
 
-<!-- RAYNE[07] I’m not broken. I’m blooming. In a language they can’t translate. -->
+<!-- RAYNE[07] I’m not broken. I’m blooming in a language they can’t translate. -->
   
   <script>
     const container = document.querySelector('.background-particles');
