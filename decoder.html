@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>MINJAE // DECODER</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a0a; --ink:#eaeaea; --muted:#8aa; --accent:#ff9bd6; 
+    --good:#9af5c3; --bad:#ff95a3; --edge:#333; --ghost:rgba(255,255,255,.03);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100dvh; display:grid; place-items:center;
+    background: radial-gradient(1200px 800px at 70% -10%, #1a0f18 0%, #0a0a0a 55%),
+                radial-gradient(900px 700px at 20% 110%, #111822 0%, #0a0a0a 60%);
+    color:var(--ink); font-family:'Share Tech Mono', monospace;
+  }
+  .wrap{
+    width:min(920px,92vw); padding:2rem 1.5rem; border:1px solid var(--edge); border-radius:12px;
+    background:linear-gradient(120deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+    box-shadow:0 0 18px rgba(255,155,214,.25);
+  }
+  h1{font-family:'Orbitron',sans-serif; letter-spacing:.08em; margin:0 0 .25rem}
+  .sub{color:var(--muted); margin:0 0 1.25rem; font-size:.9rem}
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:1.25rem}
+  .grid > section{border:1px solid var(--edge); border-radius:10px; background:var(--ghost); padding:1rem}
+  label{display:block; font-size:.8rem; color:#9bb; margin-bottom:.4rem}
+  input, textarea{
+    width:100%; padding:.75rem 1rem; border:1px solid #3b3b3b; border-radius:10px;
+    background:transparent; color:var(--ink); outline:none;
+  }
+  .controls{display:flex; gap:.6rem; margin:.9rem 0 .25rem}
+  button{
+    border:1px solid var(--accent); background:transparent; color:var(--accent);
+    padding:.55rem .9rem; border-radius:999px; cursor:pointer; font-weight:600;
+    transition:.2s ease; text-transform:uppercase; letter-spacing:.04em;
+  }
+  button:hover{background:rgba(255,155,214,.1)}
+  .status{font-size:.85rem; margin-top:.25rem}
+  .ok{color:var(--good)}
+  .err{color:var(--bad)}
+  .mono{white-space:pre-wrap; line-height:1.6}
+  .hint{color:#789; font-size:.8rem; text-align:center; margin-top:1rem}
+  @media (max-width:900px){ .grid{grid-template-columns:1fr} }
+  a.home{display:inline-block; margin-top:1rem; color:#9ad; text-decoration:none}
+  a.home:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+  <main class="wrap" role="main" aria-labelledby="t">
+    <h1 id="t">DECODER</h1>
+    <p class="sub">// Paste a cipher like <code>mjn:QmVpbmcgYnJhdmUu.2a</code>. If the checksum passes, Minjae will reveal the original input.</p>
+
+    <div class="grid">
+      <!-- INPUT -->
+      <section>
+        <label for="c">CIPHER INPUT</label>
+        <input id="c" placeholder="mjn:BASE64.CHK" spellcheck="false" />
+        <div class="controls">
+          <button id="decode">Decode</button>
+          <button id="clear">Clear</button>
+        </div>
+        <div id="status" class="status"></div>
+      </section>
+
+      <!-- OUTPUT -->
+      <section>
+        <label>DECODED TEXT</label>
+        <textarea id="out" class="mono" rows="6" readonly placeholder="—"></textarea>
+        <div id="aside" class="status" aria-live="polite"></div>
+      </section>
+    </div>
+
+    <p class="hint">Tip: ciphers from <em>Cipher Chorus</em> look like <code>mjn:[base64].[hex-checksum]</code>. The checksum is a simple char-sum % 97.</p>
+    <a href="minjae.html" class="home">// back to Minjae’s Comms Lab</a>
+  </main>
+
+<script>
+  const $ = s => document.querySelector(s);
+  const cIn = $('#c'), out = $('#out'), status = $('#status'), aside = $('#aside');
+
+  const ASIDES = [
+    "Yeah, I knew you’d crack it.",
+    "Checksum holds. Nice and tidy.",
+    "Next time, keep it under 200 chars. Signals travel faster.",
+    "Don’t paste anything you plan to regret.",
+    "Encryption’s a door. Honesty’s the room."
+  ];
+
+  function checksum(str){
+    let sum = 0; for(let i=0;i<str.length;i++) sum += str.charCodeAt(i);
+    return (sum % 97).toString(16).padStart(2,'0');
+  }
+
+  function fromBase64(b64){
+    try{
+      // handle missing padding & unicode
+      const pad = b64.length % 4 === 0 ? b64 : b64 + '='.repeat(4 - (b64.length % 4));
+      return decodeURIComponent(escape(atob(pad)));
+    }catch(e){ return null; }
+  }
+
+  function decodeCipher(raw){
+    if(!raw) return { ok:false, msg:'No input.' };
+    const m = raw.trim().match(/^mjn:([A-Za-z0-9+/_-]+)\.([0-9a-fA-F]{2})$/);
+    if(!m) return { ok:false, msg:'Format must be mjn:BASE64.CHK' };
+
+    const b64 = m[1], chk = m[2].toLowerCase();
+    const text = fromBase64(b64);
+    if(text === null) return { ok:false, msg:'Invalid base64 segment.' };
+
+    const calc = checksum(text);
+    if(calc !== chk) return { ok:false, msg:`Checksum mismatch (got ${calc}, expected ${chk}).` };
+
+    return { ok:true, text };
+  }
+
+  function run(){
+    const res = decodeCipher(cIn.value);
+    if(res.ok){
+      out.value = res.text;
+      status.textContent = '✔ Valid cipher';
+      status.className = 'status ok';
+      aside.textContent = ASIDES[Math.floor(Math.random()*ASIDES.length)];
+    }else{
+      out.value = '';
+      status.textContent = '✖ ' + res.msg;
+      status.className = 'status err';
+      aside.textContent = '';
+    }
+  }
+
+  $('#decode').addEventListener('click', run);
+  $('#clear').addEventListener('click', ()=>{ cIn.value=''; out.value=''; status.textContent=''; aside.textContent=''; cIn.focus(); });
+  cIn.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); run(); }});
+</script>
+</body>
+</html>
