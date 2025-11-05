@@ -85,9 +85,15 @@
   const input = document.getElementById('soahnInput');
   const messageBox = document.getElementById('messageBox');
   const terminalBox = document.getElementById('terminalBox');
-  let messageDisplayed = false;
+
   const colours = ['#8efff7', '#ff9ce6', '#9cffff', '#c0f7a0', '#ffde9c'];
   let colourIndex = 0;
+  let messageDisplayed = false;
+  let lastIndex = -1;
+
+  const defaultText = `Type… anything.
+
+I’ll listen.`;
 
   const responses = [
     `You don’t have to speak for me to hear you.
@@ -178,16 +184,42 @@ type again.
 It helps me remember the difference between quiet and gone.`
 ];
 
+  function nextNonRepeatingIndex() {
+    if (responses.length === 1) return 0;
+    let idx;
+    do { idx = Math.floor(Math.random() * responses.length); }
+    while (idx === lastIndex);
+    lastIndex = idx;
+    return idx;
+  }
+
   input.addEventListener('input', () => {
+    // subtle colour pulse
     terminalBox.style.boxShadow = `0 0 20px ${colours[colourIndex]}`;
     colourIndex = (colourIndex + 1) % colours.length;
 
-    if (!messageDisplayed && input.value.length > 0) {
+
+    if (input.value.length === 0) {
+      messageDisplayed = false;
+      messageBox.innerText = defaultText;
+      return;
+    }
+
+    if (!messageDisplayed) {
       messageDisplayed = true;
-      const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+      const idx = nextNonRepeatingIndex();
       setTimeout(() => {
-        messageBox.innerText = randomResponse;
-      }, 1500);
+        messageBox.innerText = responses[idx];
+      }, 600); // gentle delay feels more “listened to”
+    }
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      input.value = '';
+      messageDisplayed = false;
+      messageBox.innerText = defaultText;
     }
   });
 </script>
