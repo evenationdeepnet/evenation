@@ -7,73 +7,97 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
-   /* Container that keeps the slanted vibe but prevents overflow */
-.wall{
-  max-width: 680px;      /* keeps everything safely inside the page */
-  margin: 0 auto;
-  position: relative;
+/* ===== Page base ===== */
+:root { --cyan:#00ffff; --pink:#ff66cc; }
+html, body { height: 100%; }
+body{
+  margin:0;
+  padding:2rem;
+  background:#000;              /* <-- restores black background */
+  color:var(--cyan);
+  font-family:'Share Tech Mono', monospace;
+  text-align:center;
 }
 
-/* Base sticker look */
+/* Page container so header/note/wall share the same width */
+.page{
+  max-width: 720px;             /* matches the wall nicely */
+  margin: 0 auto;
+}
+
+/* Headings / note */
+h1{
+  font-size:3rem;
+  color:var(--cyan);
+  margin: 0 0 .5rem 0;
+}
+.note{
+  color:#8aa;
+  font-size:.9rem;
+  margin: 0 0 2rem 0;
+  line-height:1.4;
+  text-align:left;              /* keeps the console-log vibe */
+}
+
+/* ===== The wall (slanted vibe, safely contained) ===== */
+.wall{ width:100%; margin:0 auto; position:relative; }
+
 .sticker{
-  font-family:'Share Tech Mono', monospace;
-  background: rgba(0,255,255,0.05);
-  border-left:3px solid #00ffff;
+  background: rgba(0,255,255,.05);
+  border-left:3px solid var(--cyan);
   padding:1rem;
   margin:1rem auto;
   max-width: 560px;
   text-align:left;
   box-shadow:0 0 5px #00ffff33;
-  transform: rotate(-0.9deg);      /* core tilt */
+  transform: rotate(-0.9deg);
   transform-origin: left center;
   transition: transform .2s ease, box-shadow .2s ease;
 }
+.sticker:hover{ transform: rotate(-0.6deg) translateY(-2px); box-shadow:0 0 10px #00ffff55; }
 
-/* Gentle hover “lift” without killing the vibe */
-.sticker:hover{
-  transform: rotate(-0.6deg) translateY(-2px);
-  box-shadow:0 0 10px #00ffff55;
-}
-
-/* Micro-variation so the wall feels hand-placed, but never too slanted */
+/* gentle variation without breaking layout */
 .wall .sticker:nth-child(3n){ transform: rotate(-1.1deg); }
 .wall .sticker:nth-child(5n){ transform: rotate(-0.7deg); }
 
-/* Optional labels / colour pops */
-.sticker--pink{ border-left-color:#ff66cc; box-shadow:0 0 5px #ff66cc33; }
+/* colour pops */
+.sticker--pink{ border-left-color:var(--pink); box-shadow:0 0 5px #ff66cc33; }
 .sticker--amber{ border-left-color:#ffc266; box-shadow:0 0 5px #ffc26633; }
 
-/* Glitch + vanish (unchanged, kept for your existing effect) */
+/* replies */
+.kairo-reply{
+  font-style:italic;
+  color:var(--pink);
+  font-size:.9rem;
+  text-align:left;
+  max-width:560px;
+  margin:0 auto 2rem auto;
+  transform: rotate(-0.6deg);
+}
+
+/* effects you already had */
 .glitchy{ animation: glitch 1.5s infinite; }
 .disappearing{ animation: fadeOut 12s ease-in-out forwards; }
 
-/* Kairo replies */
-.kairo-reply{
-  font-style: italic; color:#ff66cc; font-size:0.9rem;
-  padding-bottom:1rem; text-align:left; max-width:560px;
-  margin:0 auto 2rem auto; transform: rotate(-0.6deg);
-}
-
-/* Motion safety */
+/* motion safety */
 @media (prefers-reduced-motion: reduce){
   .glitchy, .disappearing, .sticker:hover{ animation:none; transform:none; }
 }
 
-/* Your existing effects kept */
-@keyframes fadeOut{
-  0%,90%{ opacity:1; } 100%{ opacity:0; display:none; }
-}
+/* keyframes */
+@keyframes fadeOut{ 0%,90%{opacity:1} 100%{opacity:0; display:none} }
 @keyframes glitch{
-  0% { text-shadow: 1px 0 #00ffff, -1px 0 #ff00ff; }
-  25%{ text-shadow: -1px 0 #00ffff, 1px 0 #ff00ff; }
-  50%{ text-shadow: 1px 1px #00ffff, -1px -1px #ff00ff; }
-  75%{ text-shadow: -1px -1px #00ffff, 1px 1px #ff00ff; }
-  100%{ text-shadow: 0 0 2px #00ffff; }
+  0%{ text-shadow:1px 0 var(--cyan), -1px 0 #ff00ff }
+  25%{ text-shadow:-1px 0 var(--cyan), 1px 0 #ff00ff }
+  50%{ text-shadow:1px 1px var(--cyan), -1px -1px #ff00ff }
+  75%{ text-shadow:-1px -1px var(--cyan), 1px 1px #ff00ff }
+  100%{ text-shadow:0 0 2px var(--cyan) }
 }
 
   </style>
 </head>
 <body>
+  <main class="page">
   <h1>Sticker Wall</h1>
   <div class="note">// NOTE: Input system unstable. Only select data fragments appear.<br>// Kairo reviews signals intermittently.<br>// Legacy logs below.</div>
 
@@ -119,5 +143,6 @@
     ← return.to.network
   </a>
 </p>
+  </main>
 </body>
 </html>
