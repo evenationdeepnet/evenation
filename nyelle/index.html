@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nyelle — Official Site | Prism Entertainment</title>
+  <meta name="description" content="Nyelle — the voice of genuine connection. Explore the debut album REFACTOR, biography, and official updates from Prism Entertainment." />
+  <meta property="og:title" content="Nyelle — Official Site" />
+  <meta property="og:description" content="Explore REFACTOR, Nyelle’s debut album. Official news and media by Prism Entertainment." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="assets/nyelle-cover.jpg" />
+  <meta name="theme-color" content="#e9e6ff" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#ffffff;
+      --text:#0e0f12;
+      --muted:#6b7481;
+      --lilac:#dcd4ff; /* soft lilac */
+      --cyan:#a6f1ff; /* soft cyan */
+      --mint:#c7ffe7; /* soft green tint */
+      --line:rgba(110,130,255,.25);
+      --glass:rgba(255,255,255,.6);
+      --accent:#9ae7ff;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:linear-gradient(180deg,#fcfdff 0%, #f6f7ff 40%, #faffff 100%);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.6}
+    a{color:#2563eb;text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    /* Layout */
+    .container{width:min(1100px,92vw);margin-inline:auto}
+    header{position:sticky;top:0;backdrop-filter:saturate(1.2) blur(10px);background:linear-gradient( to right, rgba(255,255,255,.8), rgba(255,255,255,.6));border-bottom:1px solid var(--lilac);z-index:50}
+    .nav{display:flex;gap:2rem;align-items:center;justify-content:space-between;padding:.9rem 0}
+    .brand{display:flex;align-items:center;gap:.75rem}
+    .brand-mark{width:28px;height:28px;border:2px solid #111;border-radius:6px;position:relative}
+    .brand-mark:after{content:"";position:absolute;inset:4px;border:2px solid #111;border-radius:4px;opacity:.2}
+    .brand h1{font-size:1rem;margin:0;letter-spacing:.16em;text-transform:uppercase}
+    nav a{font-weight:500;color:#1f2937}
+
+    /* Hero */
+    .hero{position:relative;isolation:isolate;padding:clamp(2rem,8vw,6rem) 0 2rem}
+    .hero-grid{display:grid;grid-template-columns: 1.1fr .9fr;gap:clamp(1.2rem,4vw,2.5rem);align-items:center}
+    .hero img{width:100%;height:auto;border-radius:18px;box-shadow:0 18px 50px rgba(70,80,140,.25)}
+    .hero h2{font-size:clamp(2.2rem,5vw,3.25rem);line-height:1.15;margin:.25rem 0 .5rem}
+    .tag{display:inline-flex;align-items:center;gap:.5rem;background:linear-gradient(180deg, var(--glass), rgba(255,255,255,.35));border:1px solid var(--lilac);border-radius:999px;padding:.45rem .85rem;font-size:.85rem;color:#334155;backdrop-filter:blur(6px)}
+    .hero p{color:#3a4453;margin:.75rem 0 1.25rem}
+
+    .cta-row{display:flex;flex-wrap:wrap;gap:.75rem}
+    .btn{display:inline-flex;align-items:center;gap:.55rem;padding:.8rem 1.1rem;border-radius:12px;border:1px solid #d8def7;background:#fff;box-shadow:0 6px 20px rgba(50,60,120,.08);font-weight:600}
+    .btn.primary{background:linear-gradient(180deg,#e9f7ff,#f4f9ff);border-color:#cfe7ff}
+
+    /* Decorative lines */
+    .geo{position:absolute;inset:0;pointer-events:none;opacity:.55}
+    .geo svg{position:absolute;width:100%;height:100%}
+
+    /* Sections */
+    section{padding:clamp(2.2rem,6vw,4.5rem) 0;border-top:1px solid rgba(120,140,255,.12)}
+    h3.section-title{font-size:clamp(1.4rem,3.3vw,1.9rem);letter-spacing:.08em;text-transform:uppercase;margin:0 0 1.2rem;color:#222}
+    .sub{color:var(--muted);max-width:70ch}
+
+    /* Album card */
+    .album{display:grid;grid-template-columns: 380px 1fr;gap:1.4rem;align-items:start}
+    .cover{border-radius:16px;overflow:hidden;border:1px solid #e8edff;box-shadow:0 14px 40px rgba(80,120,200,.18)}
+    .tracklist{list-style:none;padding:0;margin:0;display:grid;gap:.35rem}
+    .track{display:flex;justify-content:space-between;gap:1rem;padding:.55rem .7rem;border:1px dashed rgba(110,130,255,.25);border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,.75),rgba(255,255,255,.55))}
+    .track span{opacity:.7}
+    .meta{display:flex;gap:1rem;flex-wrap:wrap;margin:.75rem 0 0;color:#4b5563}
+
+    /* Bio grid */
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+
+    /* Footer */
+    footer{padding:2.5rem 0;border-top:1px solid rgba(120,140,255,.12);color:#4b5563}
+
+    /* Optional animated waveform divider */
+    .ny-wave{margin:2rem 0 1.2rem}
+    .ny-wave svg{width:100%;height:48px;display:block;opacity:.85;filter:drop-shadow(0 4px 16px rgba(120,140,255,.18))}
+    .ny-wave-path{stroke-linecap:round;stroke-dasharray:12 14;animation:nyDash 6s linear infinite}
+    @keyframes nyDash{to{stroke-dashoffset:-520}}
+    @media (prefers-reduced-motion:reduce){.ny-wave-path{animation:none}}
+    .no-border{border-top:none}
+
+    /* Responsive */
+    @media (max-width: 880px){
+      .hero-grid, .album, .grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"></div>
+        <h1>Prism Entertainment</h1>
+      </div>
+      <nav aria-label="Primary">
+        <a href="#album">Album</a>
+        <a href="#bio">About</a>
+        <a href="#press">Press</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="geo" aria-hidden="true">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="l" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="var(--lilac)" stop-opacity="0.6"/>
+              <stop offset="100%" stop-color="var(--cyan)" stop-opacity="0.4"/>
+            </linearGradient>
+          </defs>
+          <path d="M0 5 H100" stroke="url(#l)" stroke-width=".35" fill="none"/>
+          <path d="M0 25 H100" stroke="url(#l)" stroke-width=".35" fill="none"/>
+          <path d="M0 45 H100" stroke="url(#l)" stroke-width=".35" fill="none"/>
+          <path d="M0 65 H100" stroke="url(#l)" stroke-width=".35" fill="none"/>
+          <path d="M0 85 H100" stroke="url(#l)" stroke-width=".35" fill="none"/>
+        </svg>
+      </div>
+      <div class="container hero-grid">
+        <img src="assets/nyelle-hero.jpg" alt="Nyelle in a transparent raincoat under lilac and cyan light"/>
+        <div>
+          <span class="tag" aria-label="Artist tag">NYELLE — Official Site</span>
+          <h2>REFACTOR</h2>
+          <p class="sub">In an era defined by light, rhythm, and reinvention, <strong>Nyelle</strong> stands as the voice of genuine connection. Her debut album traces the evolution of feeling in a world where emotion and technology move in quiet harmony.</p>
+          <div class="cta-row">
+            <a class="btn primary" href="#album" aria-label="Jump to album section">Listen / Tracklist</a>
+            <a class="btn" href="#press">Read the press note</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ALBUM -->
+    <section id="album">
+      <div class="container">
+        <h3 class="section-title">Album — REFACTOR <span style="font-size:.8rem;color:var(--muted);font-weight:500">(Prism Entertainment, 2096)</span></h3>
+        <div class="album">
+          <figure class="cover">
+            <img src="assets/nyelle-cover.jpg" alt="REFACTOR album cover — Nyelle in a transparent hooded raincoat"/>
+          </figure>
+          <div>
+            <p class="sub">Eight tracks moving from awakening to afterglow — ambient electronica and melancholic trance with Nyelle’s signature, ethereal vocal design.</p>
+            <ul class="tracklist" role="list">
+              <li class="track"><strong>1. LUMEN (Intro)</strong> <span>1:12</span></li>
+              <li class="track"><strong>2. Touch Simulation</strong> <span>—</span></li>
+              <li class="track"><strong>3. Refactor</strong> <span>—</span></li>
+              <li class="track"><strong>4. Glassheart</strong> <span>—</span></li>
+              <li class="track"><strong>5. Ghost</strong> <span>—</span></li>
+              <li class="track"><strong>6. When You Look in the Mirror</strong> <span>—</span></li>
+              <li class="track"><strong>7. Say It’s Forever</strong> <span>—</span></li>
+              <li class="track"><strong>8. DUSK (Outro)</strong> <span>—</span></li>
+            </ul>
+            <div class="meta" aria-label="Album metadata">
+              <span>Genre: ambient electronica · trance</span>
+              <span>Label: Prism Entertainment (NuYu)</span>
+              <span>Runtime: 41:23</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Optional decorative waveform divider (use as separator) -->
+    <!-- Example insertion point: place this block between sections where you DON'T want the straight border. Also add class 'no-border' to the following section. -->
+    <!--
+    <div class="ny-wave" aria-hidden="true">
+      <svg viewBox="0 0 800 120" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="nyGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"  stop-color="var(--lilac)"/>
+            <stop offset="50%" stop-color="var(--cyan)"/>
+            <stop offset="100%" stop-color="var(--mint)"/>
+          </linearGradient>
+        </defs>
+        <path d="M0,60 C80,10 160,110 240,60 S400,10 480,60 640,110 720,60 800,10 880,60" fill="none" stroke="url(#nyGrad)" stroke-width="2.5" class="ny-wave-path"/>
+      </svg>
+    </div>
+    -->
+    <!-- Animated waveform separator -->
+    <div class="ny-wave" aria-hidden="true">
+      <svg viewBox="0 0 800 120" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="nyGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"  stop-color="var(--lilac)"/>
+            <stop offset="50%" stop-color="var(--cyan)"/>
+            <stop offset="100%" stop-color="var(--mint)"/>
+          </linearGradient>
+        </defs>
+        <path d="M0,60 C80,10 160,110 240,60 S400,10 480,60 640,110 720,60 800,10 880,60" fill="none" stroke="url(#nyGrad)" stroke-width="2.5" class="ny-wave-path"/>
+      </svg>
+    </div>
+
+    <!-- BIO -->
+    <section id="bio" class="no-border">
+      <div class="container grid">
+        <div>
+          <h3 class="section-title">About Nyelle</h3>
+          <p>Nyelle Ward is a British vocalist and songwriter under <strong>Prism Entertainment</strong>, a NuYu subsidiary specialising in sensory‑immersive performance. Known as “the voice that feels,” her PAY SKIN is tuned to resonate with live biometric data, creating performances that feel intimate, cinematic, and impossibly human.</p>
+          <p>Raised within Prism’s education pipeline, Nyelle emerged as the flagship artist for the Neuro‑Vocal Synchronisation Project — a programme designed to amplify authentic emotion on stage. Her debut album, <em>REFACTOR</em>, blends reflective ambient textures with melancholic trance to explore light, memory, and the spaces between truth and illusion.</p>
+          <p>Nyelle lives in New London with her partner, sound engineer <strong>Adam Ward</strong>. Offstage, she is an avid listener and archivist of historic synth works and early twenty‑first‑century club culture.</p>
+        </div>
+        <figure class="cover" style="margin:0">
+          <img src="assets/nyelle-portrait.jpg" alt="Portrait of Nyelle in soft lilac and cyan light"/>
+        </figure>
+      </div>
+    </section>
+
+    <!-- PRESS NOTE -->
+    <section id="press">
+      <div class="container">
+        <h3 class="section-title">Press Note</h3>
+        <p class="sub"><strong>REFACTOR</strong> traces the evolution of feeling in a world where emotion and technology move in perfect harmony. From the slow awakening of <em>LUMEN</em> to the sweeping brilliance of <em>Refactor</em> and the quiet dissolve of <em>DUSK</em>, Nyelle guides listeners through an intimate, reflective soundscape. It’s not rebellion. It’s resonance.</p>
+        <div class="cta-row" style="margin-top:1rem">
+          <a class="btn" href="#contact">Press enquiries</a>
+          <a class="btn" href="#album">Tracklist</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT / NEWSLETTER PLACEHOLDER -->
+    <section id="contact">
+      <div class="container grid">
+        <div>
+          <h3 class="section-title">Contact</h3>
+          <p class="sub">For licensing, press, or live performance queries, please contact <strong>Prism Entertainment</strong>. Use the placeholder email below or replace with your live form service.</p>
+          <p><strong>Email:</strong> press@prismentertainment.example</p>
+        </div>
+        <div>
+          <h3 class="section-title">Updates</h3>
+          <p class="sub">Subscribe for official announcements, release notes, and live performance dates.</p>
+          <form onsubmit="event.preventDefault();this.querySelector('button').innerText='Thanks — you’re on the list!';" aria-label="Subscribe form">
+            <input type="email" required placeholder="your@email" style="padding:.9rem 1rem;border:1px solid #dbe3ff;border-radius:12px;width:100%;margin-bottom:.6rem" />
+            <button class="btn primary" type="submit" style="width:100%;justify-content:center">Subscribe</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container" style="display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap">
+      <div>© 2096 Prism Entertainment · Nyelle</div>
+      <div style="opacity:.7">Do you remember the sound of sunlight?</div>
+    </div>
+  </footer>
+</body>
+</html>
