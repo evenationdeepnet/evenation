@@ -434,6 +434,26 @@
   .album-card{ flex-basis: 180px; }
 }
 
+    /* --- SoundCloud embed: responsive, tidy, on-brand --- */
+.sc-embed{
+  position: relative;
+  z-index: 1;
+  margin-top: 10px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.22);
+  box-shadow: 0 14px 45px rgba(0,0,0,.25);
+  height: 300px; /* fill the tile nicely */
+}
+.sc-embed iframe{
+  display:block;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0;
+}
+
+
 
     /* --- members roster --- */
     .roster{
