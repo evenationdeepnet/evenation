@@ -173,6 +173,24 @@
       animation: pulse 2.4s infinite;
       flex:none;
     }
+
+    .pulse-link{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+}
+
+.pulse-link .pulse{
+  cursor:pointer;
+}
+
+.pulse-link:focus-visible{
+  outline: 2px solid rgba(120,255,255,.6);
+  outline-offset: 4px;
+  border-radius: 50%;
+}
+  
     @keyframes pulse{
       0%{ box-shadow: 0 0 0 0 rgba(120,255,170,.30); }
       70%{ box-shadow: 0 0 0 12px rgba(120,255,170,0); }
@@ -749,7 +767,12 @@
 
     <section class="hero">
       <div class="card hero-left">
-        <div class="kicker"><span class="pulse" aria-hidden="true"></span> Signal acquired // London Ghost Lines</div>
+<div class="kicker">
+  <a href="/signalmap.html" class="pulse-link" aria-label="Open Ghost Lines map">
+    <span class="pulse"></span>
+  </a>
+  Signal acquired // London Ghost Lines
+</div>
 
         <h1>
           <span class="glitch" data-text="GHOST-LINES BROADCAST">ENCRYPTED VIRTUAL ECHO NETWORK</span>
