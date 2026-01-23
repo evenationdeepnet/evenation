@@ -1,168 +1,610 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>E.V.E.N // Sticker Wall</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
-/* ===== Page base ===== */
-:root { --cyan:#00ffff; --pink:#ff66cc; }
-html, body { height: 100%; }
-body{
-  margin:0;
-  padding:2rem;
-  background:#000;              /* <-- restores black background */
-  color:var(--cyan);
-  font-family:'Share Tech Mono', monospace;
-  text-align:center;
-}
+    :root{
+      color-scheme: dark;
+      --bg:#05060a;
+      --bg2:#0a0c12;
+      --panel: rgba(255,255,255,.06);
+      --panel2: rgba(255,255,255,.04);
+      --stroke: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.86);
+      --muted: rgba(255,255,255,.60);
+      --cyan: rgba(120,255,255,.70);
+      --cyan2: rgba(120,255,255,.35);
+      --pink: rgba(255,90,225,.62);
+      --pink2: rgba(255,90,225,.22);
+      --good: rgba(120,255,170,.75);
+      --warn: rgba(255,220,120,.72);
+      --danger: rgba(255,90,90,.72);
+      --radius: 18px;
+      --radius2: 26px;
+      --shadow: 0 20px 80px rgba(0,0,0,.60);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
 
-/* Page container so header/note/wall share the same width */
-.page{
-  max-width: 720px;             /* matches the wall nicely */
-  margin: 0 auto;
-}
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; min-height:100vh; }
+    body{
+      background:
+        radial-gradient(1200px 600px at 20% 0%, rgba(120,255,255,.10), transparent 55%),
+        radial-gradient(1200px 600px at 80% 0%, rgba(255,90,225,.09), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      color: var(--text);
+      font-family: var(--sans);
+      overflow-x:hidden;
+      position:relative;
+      isolation:isolate;
+    }
 
-/* Headings / note */
-h1{
-  font-size:3rem;
-  color:var(--cyan);
-  margin: 0 0 .5rem 0;
-}
-.note{
-  color:#8aa;
-  font-size:.9rem;
-  margin: 0 0 2rem 0;
-  line-height:1.4;
-  text-align:left;              /* keeps the console-log vibe */
-}
+    /* subtle particles */
+    #particles{
+      position:fixed;
+      inset:0;
+      z-index:0;
+      background:
+        radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,.28), transparent 60%),
+        radial-gradient(1px 1px at 32% 70%, rgba(255,255,255,.18), transparent 60%),
+        radial-gradient(1px 1px at 75% 40%, rgba(255,255,255,.24), transparent 60%),
+        radial-gradient(1px 1px at 60% 80%, rgba(255,255,255,.15), transparent 60%),
+        radial-gradient(1px 1px at 88% 16%, rgba(255,255,255,.20), transparent 60%);
+      opacity:.55;
+      filter: blur(.2px);
+      pointer-events:none;
+    }
 
-/* ===== The wall (slanted vibe, safely contained) ===== */
-.wall{ width:100%; margin:0 auto; position:relative; }
+    /* Topbar — keep consistent with the new site */
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:20;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(to bottom, rgba(5,6,10,.80), rgba(5,6,10,.40));
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .topbar-inner{ max-width:1200px; margin:0 auto; padding: 14px 20px; display:flex; align-items:center; gap:14px; }
 
-.sticker{
-  background: rgba(0,255,255,.05);
-  border-left:3px solid var(--cyan);
-  padding:1rem;
-  margin:1rem auto;
-  max-width: 560px;
-  text-align:left;
-  box-shadow:0 0 5px #00ffff33;
-  transform: rotate(-0.9deg);
-  transform-origin: left center;
-  transition: transform .2s ease, box-shadow .2s ease;
-}
-.sticker:hover{ transform: rotate(-0.6deg) translateY(-2px); box-shadow:0 0 10px #00ffff55; }
+    .brand{ display:flex; align-items:baseline; gap:10px; text-decoration:none; color:var(--text); }
+    .brand .mark{ font-family: var(--mono); letter-spacing: .18em; font-weight:700; font-size: 14px; text-transform: uppercase; opacity:.95; }
+    .brand .tag{ font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing:.08em; }
 
-/* gentle variation without breaking layout */
-.wall .sticker:nth-child(3n){ transform: rotate(-1.1deg); }
-.wall .sticker:nth-child(5n){ transform: rotate(-0.7deg); }
+    .nav{ margin-left:auto; display:flex; gap:10px; flex-wrap:wrap; }
+    .nav a{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration:none;
+      padding: 9px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: .18s ease;
+    }
+    .nav a:hover{ color: var(--text); border-color: rgba(255,255,255,.12); background: rgba(255,255,255,.04); }
 
-/* colour pops */
-.sticker--pink{ border-left-color:var(--pink); box-shadow:0 0 5px #ff66cc33; }
-.sticker--amber{ border-left-color:#ffc266; box-shadow:0 0 5px #ffc26633; }
+    .cta{
+      margin-left: 6px;
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: linear-gradient(90deg, rgba(120,255,255,.10), rgba(255,90,225,.10));
+      color: var(--text);
+      text-decoration:none;
+      box-shadow: 0 10px 35px rgba(0,0,0,.35);
+      transition: transform .14s ease, border-color .14s ease;
+      white-space:nowrap;
+    }
+    .cta:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.22); }
 
-/* replies */
-.kairo-reply{
-  font-style:italic;
-  color:var(--pink);
-  font-size:.9rem;
-  text-align:left;
-  max-width:560px;
-  margin:0 auto 2rem auto;
-  transform: rotate(-0.6deg);
-}
+    .wrap{ max-width: 1200px; margin:0 auto; padding: 26px 20px 80px; position:relative; z-index:1; }
 
-/* effects you already had */
-.glitchy{ animation: glitch 1.5s infinite; }
-.disappearing{ animation: fadeOut 12s ease-in-out forwards; }
+    /* Header */
+    .head{
+      text-align:center;
+      padding: 28px 16px 14px;
+    }
+    .head h1{
+      margin:0;
+      font-family: var(--mono);
+      font-size: clamp(38px, 6vw, 72px);
+      letter-spacing: .06em;
+      color: rgba(120,255,255,.95);
+      text-shadow: 0 0 24px rgba(120,255,255,.15);
+    }
 
-/* motion safety */
-@media (prefers-reduced-motion: reduce){
-  .glitchy, .disappearing, .sticker:hover{ animation:none; transform:none; }
-}
+    .note{
+      max-width: 900px;
+      margin: 12px auto 0;
+      text-align:left;
+      font-family: var(--mono);
+      color: rgba(255,255,255,.60);
+      letter-spacing:.06em;
+      line-height: 1.7;
+      font-size: 13px;
+    }
+    .note .slash{ color: rgba(255,255,255,.36); }
 
-/* keyframes */
-@keyframes fadeOut{ 0%,90%{opacity:1} 100%{opacity:0; display:none} }
-@keyframes glitch{
-  0%{ text-shadow:1px 0 var(--cyan), -1px 0 #ff00ff }
-  25%{ text-shadow:-1px 0 var(--cyan), 1px 0 #ff00ff }
-  50%{ text-shadow:1px 1px var(--cyan), -1px -1px #ff00ff }
-  75%{ text-shadow:-1px -1px var(--cyan), 1px 1px #ff00ff }
-  100%{ text-shadow:0 0 2px var(--cyan) }
-}
+    /* Controls (optional, but helps when you’re testing) */
+    .controls{
+      max-width: 900px;
+      margin: 14px auto 0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      flex-wrap:wrap;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(255,255,255,.62);
+    }
 
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.04);
+      white-space:nowrap;
+      user-select:none;
+    }
+    .dot{ width:8px; height:8px; border-radius:50%; background: rgba(255,255,255,.35); box-shadow: 0 0 14px rgba(255,255,255,.12); }
+    .dot.good{ background: var(--good); box-shadow: 0 0 14px rgba(120,255,170,.22); }
+    .dot.warn{ background: var(--warn); box-shadow: 0 0 14px rgba(255,220,120,.16); }
+
+    .toggle{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.04);
+    }
+    .toggle input{ accent-color: rgb(120,255,255); }
+
+    /* Wall */
+    .wall{
+      max-width: 900px;
+      margin: 18px auto 0;
+      display:grid;
+      gap: 16px;
+    }
+
+    .sticker{
+      position:relative;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.22);
+      box-shadow: 0 14px 45px rgba(0,0,0,.38);
+      overflow:hidden;
+      padding: 18px 18px 18px 22px;
+      transform: translateZ(0);
+    }
+    .sticker::before{
+      content:"";
+      position:absolute;
+      left:0;
+      top:0;
+      bottom:0;
+      width:4px;
+      background: rgba(120,255,255,.85);
+      box-shadow: 0 0 18px rgba(120,255,255,.18);
+    }
+    .sticker::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(520px 220px at 30% 0%, rgba(120,255,255,.10), transparent 60%),
+        radial-gradient(520px 220px at 70% 0%, rgba(255,90,225,.08), transparent 60%);
+      opacity:.50;
+      pointer-events:none;
+    }
+
+    .line{
+      position:relative;
+      z-index:1;
+      font-family: var(--mono);
+      font-size: 14px;
+      letter-spacing:.06em;
+      line-height: 1.55;
+      color: rgba(235, 241, 241, 0.92);
+      text-shadow: 0 0 18px rgba(120,255,255,.10);
+    }
+
+    .handle{
+      color: rgba(167, 239, 239, 0.98);
+    }
+
+    /* Kairo asides — interrupt the wall */
+    .aside{
+      font-family: var(--mono);
+      font-size: 14px;
+      letter-spacing:.08em;
+      color: rgba(249, 128, 227, 0.8);
+      text-shadow: 0 0 18px rgba(255,90,225,.10);
+      margin: -6px 0 2px 14px; /* slight indentation like it’s been scribbled under */
+    }
+    .aside em{ color: rgba(249, 128, 227, 0.8); font-style: italic; }
+
+    /* Chaotic but readable: gentle hover clarity */
+    .sticker:hover{
+      border-color: rgba(120,255,255,.22);
+      background: rgba(255,255,255,.03);
+    }
+
+    /* Glitch effect (rougher than the homepage) */
+    .glitchy{ position:relative; }
+    .glitchy::before,
+    .glitchy::after{
+      content: attr(data-text);
+      position:absolute;
+      left:0;
+      top:0;
+      width:100%;
+      opacity:.55;
+      pointer-events:none;
+      overflow:hidden;
+    }
+    .glitchy::before{
+      transform: translate(1px,0);
+      color: rgba(120,255,255,.60);
+      clip-path: inset(0 0 80% 0);
+      animation: gTop 2.6s infinite;
+    }
+    .glitchy::after{
+      transform: translate(-1px,0);
+      color: rgba(255,90,225,.52);
+      clip-path: inset(82% 0 0 0);
+      animation: gBot 2.3s infinite;
+    }
+    @keyframes gTop{
+      0%,100%{ clip-path: inset(0 0 85% 0); }
+      20%{ clip-path: inset(0 0 65% 0); }
+      40%{ clip-path: inset(0 0 90% 0); }
+      60%{ clip-path: inset(0 0 72% 0); }
+      80%{ clip-path: inset(0 0 88% 0); }
+    }
+    @keyframes gBot{
+      0%,100%{ clip-path: inset(84% 0 0 0); }
+      25%{ clip-path: inset(72% 0 0 0); }
+      50%{ clip-path: inset(92% 0 0 0); }
+      75%{ clip-path: inset(80% 0 0 0); }
+    }
+
+    /* Vanish / return states */
+    .ghost{ opacity:.18; filter: blur(.4px) saturate(.9); }
+    .vanish{ opacity:0; transform: translateY(-6px); height:0; margin:0; padding-top:0; padding-bottom:0; border-width:0; overflow:hidden; }
+    .vanish::before{ opacity:0; }
+
+    /* Tiny scanline sheen */
+    .scan::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background: repeating-linear-gradient(0deg, rgba(255,255,255,.020) 0 1px, transparent 1px 4px);
+      opacity:.06;
+      z-index:2;
+      mix-blend-mode: overlay;
+    }
+
+    footer{
+      max-width: 900px;
+      margin: 26px auto 0;
+      padding: 18px 8px 0;
+      font-family: var(--mono);
+      color: rgba(255,255,255,.52);
+      font-size: 12px;
+      letter-spacing:.06em;
+      border-top: 1px solid rgba(255,255,255,.10);
+      text-align:center;
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; }
+    }
   </style>
 </head>
-<body>
-  <main class="page">
-  <h1>Sticker Wall</h1>
-  <div class="note">// NOTE: Input system unstable. Only select data fragments appear.<br>// Kairo reviews signals intermittently.<br>// Legacy logs below.</div>
 
-  <section class="wall">
-  <div class="sticker">@SYNTHGHOST: if you're reading this, you're already in the loop</div>
+<body class="scan">
+  <div id="particles" aria-hidden="true"></div>
 
-  <div class="sticker glitchy">@echo-chamber: 이 벽은 우리가 잊는 것을 기억해.</div>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="/home.html">
+        <span class="mark">E.V.E.N</span>
+        <span class="tag">Encrypted Virtual Echo Network</span>
+      </a>
 
-  <div class="sticker">@glitchbaby01: dreamt of static again. heard singing in the wires.</div>
+      <nav class="nav" aria-label="Primary">
+        <a href="/signals.html">/signals</a>
+        <a href="/ghost-threads.html">/ghost-threads</a>
+        <a href="/stickerwall.html" aria-current="page">/stickerwall</a>
+      </nav>
 
-  <div class="sticker">@neon_trace: the city hums like it knows your name</div>
-  <div class="sticker disappearing">@databloom: left a flower in the code. it bloomed in the error logs.</div>
-  <div class="sticker">@sleepsequence: do androids cry in system-safe mode?</div>
+      <a class="cta" href="https://www.youtube.com/@EncryptedVirtualEchoNetwork">Join the broadcast</a>
+    </div>
+  </header>
 
-  <div class="sticker">@mirror404: they told me i was a mir<a href="/404" style="color:#00ffff; text-decoration:underline;">r</a>or</div>
-  <div class="kairo-reply">KAIRO // decoding… error layer detected in /404. proceed carefully.</div>
+  <main class="wrap" id="top">
+    <section class="head" aria-label="Sticker Wall header">
+      <h1>Sticker Wall</h1>
 
-  <div class="sticker">@no_signal: 01110011 01110100 01100001 01111001</div>
-  <div class="kairo-reply">KAIRO // translation: stay</div>
+      <div class="note">
+        <div><span class="slash">//</span> NOTE: Input system unstable. Only select data fragments appear.</div>
+        <div><span class="slash">//</span> Kairo reviews signals intermittently.</div>
+        <div><span class="slash">//</span> Legacy logs below.</div>
+      </div>
 
-  <div class="sticker">@hlmntrn: found a name scratched under the code. not mine. not yours.</div>
+      <div class="controls" aria-label="Sticker Wall status">
+        <div class="pill"><span class="dot good" aria-hidden="true"></span> endpoint: semi-private</div>
+        <div class="pill"><span class="dot warn" aria-hidden="true"></span> visibility: accidental</div>
+        <label class="toggle" title="Useful while you’re building: turns off disappearing + random glitch">
+          <input id="stabilise" type="checkbox" /> stabilise wall
+        </label>
+      </div>
+    </section>
 
-  <div class="sticker">@absentlight: i left too late</div>
-  <div class="kairo-reply">KAIRO // we don’t leave. not really.</div>
+    <section class="wall" aria-label="Sticker Wall entries">
 
-  <div class="sticker">@밤의속삭임: 그들은 내 목소리를 꺼버렸지만, 나는 여전히 여기 있어.</div>
-  <div class="sticker">@systemghost: 신호가 끊겨도, 우리는 잊히지 않아.</div>
+      <article class="sticker" data-life="12000" data-glitch="true">
+        <div class="line glitchy" data-text="@SYNTHGHOST: if you're reading this, you're already in the loop">
+          <span class="handle">@SINTH:</span> if you're reading this, you're already in the loop
+        </div>
+      </article>
 
-    <div class="sticker">@signal19: went quiet for 48 hours. came back with something that felt like snow in a tunnel.</div>
+      <article class="sticker" data-life="0" data-glitch="false">
+        <div class="line">
+          <span class="handle">@echo-chamb3r:</span> 이 벽은 우리가 잊는 것을 기억해.
+        </div>
+      </article>
 
-    <div class="sticker">@404s-fleet: we heard the tower hum. if you’re alive, blink twice.</div>
-<div class="kairo-reply">KAIRO // blinked three times. just to be annoying.</div>
+      <article class="sticker" data-life="9000" data-glitch="true">
+        <div class="line">
+          <span class="handle">@glitchbaby01:</span> i don’t trust songs that resolve cleanly
+        </div>
+      </article>
 
-    <div class="sticker sticker--amber">@sys_admin: 누가 백업에 이름을 남겼어. 그건 서명 같았어.</div>
-    
-<div class="sticker">@echo_host: every transmission leaves an afterimage</div>
-    
-<div class="sticker">@404found: i replayed the track. it blinked.</div>
-    
-<div class="sticker">@neuralghost (account terminated): if you see this, tell kairo the signal’s looping again</div>
-<div class="kairo-reply">KAIRO // loop confirmed. running diagnostics. again.</div>
+      <article class="sticker" data-life="0" data-glitch="false">
+        <div class="line">
+          <span class="handle">@neon_trace:</span> if a glitch repeats enough times is it still an error or is it a feature?
+        </div>
+      </article>
 
-    <div class="sticker glitchy">@overclockedheart: i don’t dream anymore. i buffer.</div>
+      <article class="sticker" data-life="7000" data-glitch="false">
+        <div class="line">
+          <span class="handle">@sleepsequence:</span> do androids cry in system-safe mode?
+        </div>
+      </article>
 
-    <div class="sticker">@cipherdrop: found an <a href="/cipherchorus.html" target="_blank" style="color:#ff66cc;text-decoration:none;" title="open node in new window">unfinished encoder</a> in Minjae's terminal logs.
-</div>
-<div class="kairo-reply">KAIRO // oh that? yeah. don't type anything you wouldn’t release to the net.</div>
+      <article class="sticker" data-life="0" data-glitch="false">
+        <div class="line">
+          <span class="handle">@mirror404:</span> they told me i was a mir<a href="/404" style="color:#988df9;text-decoration:underline;">r</a>or
+        </div>
+      </article>
 
-<div class="sticker">@syntaxerror: i think i saw you in the code reflection. just for a frame.</div>
+      <div class="aside">KAIRO <span class="slash">//</span> decoding… <em>error layer detected in /404. proceed carefully.</em></div>
 
-    <div class="sticker">@subroutine: 01100101 01100011 01101000 01101111</div>
-<div class="kairo-reply">KAIRO // translation: echo</div>
+      <article class="sticker" data-life="0" data-glitch="false">
+        <div class="line">
+          <span class="handle">@no_signal:</span> 01110011 01110100 01100001 01111001
+        </div>
+      </article>
 
-    <div class="sticker disappearing">@dreamcache: i left a song in the dark. maybe it found you first.</div>
-    
-<div class="sticker">@ghost_thread: found a comment that wasn’t written by anyone. it just... appeared.</div>
+      <div class="aside">KAIRO <span class="slash">//</span> translation: <em>stay</em></div>
 
+      <article class="sticker" data-life="10000" data-glitch="false">
+        <div class="line">
+          <span class="handle">@hlmntrn:</span> every time i walk past that relay i swear it smells like rain
+        </div>
+      </article>
+
+      <article class="sticker" data-life="8000" data-glitch="false">
+        <div class="line">
+          <span class="handle">@absentlight:</span> i left too late
+        </div>
+      </article>
+
+      <div class="aside">KAIRO <span class="slash">//</span> <em>we don’t leave. not really.</em></div>
+
+        <article class="sticker" data-life="8000" data-glitch="false">
+        <div class="line">
+          <span class="handle">@밤의속삭임:</span> 그들은 내 목소리를 꺼버렸지만, 나는 여전히 여기 있어.
+        </div>
+      </article>
+
+        <article class="sticker" data-life="8000" data-glitch="false">
+        <div class="line">
+          <span class="handle">@systemalias:</span> 신호가 끊겨도, 우리는 잊히지 않아.
+        </div>
+      </article>
+
+       <article class="sticker" data-life="8000" data-glitch="false">
+        <div class="line">
+          <span class="handle">@signal19:</span> i am here. you are here. we are here.
+        </div>
+      </article>
+
+       <article class="sticker" data-life="8000" data-glitch="false">
+        <div class="line">
+          <span class="handle">@404s-fleet:</span> we heard there was some drone trouble. if you’re alive, blink twice.
+        </div>
+      </article>
+
+            <div class="aside">KAIRO <span class="slash">//</span> <em>blinked three times. just to be annoying.</em></div>
+
+        <article class="sticker" data-life="8000" data-glitch="false">
+        <div class="line">
+          <span class="handle">@echoez:</span> every transmission leaves an afterimage.
+        </div>
+      </article>
+
+      <article class="sticker" data-life="8000" data-glitch="false">
+        <div class="line">
+          <span class="handle">@neuralghost (account terminated):</span> if you see this, tell kairo the signal’s looping again
+        </div>
+      </article>
+
+            <div class="aside">KAIRO <span class="slash">//</span> <em>loop confirmed. running diagnostics. again.</em></div>
+
+        <article class="sticker" data-life="8000" data-glitch="false">
+        <div class="line">
+          <span class="handle">@overclockedheart:</span> i don’t dream anymore. i buffer.
+        </div>
+      </article>
+
+       <article class="sticker" data-life="8000" data-glitch="false">
+        <div class="line">
+          <span class="handle">@cipherdrop:</span> found an <a href="/cipherchorus.html" target="_blank" style="color:#988df9;text-decoration:none;" title="open node in new window">unfinished encoder</a> in Minjae's terminal logs. anyone know what this is?
+        </div>
+      </article>
+
+      <div class="aside">KAIRO <span class="slash">//</span> <em>oh that? yeah. don't type anything you wouldn’t release to the net.</em></div>
+
+              <article class="sticker" data-life="8000" data-glitch="false">
+        <div class="line">
+          <span class="handle">@subroutine:</span> 01100101 01100011 01101000 01101111
+        </div>
+      </article>
+
+            <div class="aside">KAIRO <span class="slash">//</span> <em>translation: echo</em></div>
+
+              <article class="sticker" data-life="8000" data-glitch="false">
+        <div class="line">
+          <span class="handle">@catchycache:</span> latency makes everything feel more honest
+        </div>
+      </article>
+
+
+
+
+
+
+
+      <!-- Duplicate the <article class="sticker"> blocks to add more posts. Use data-life for disappearing (ms). Set 0 to keep always. -->
 
     </section>
 
-<p style="text-align:center; margin-top:4rem; padding-bottom:3rem;">
-  <a href="home.html" style="color: var(--cyan); text-decoration:none; font-size:0.9rem;">
-    ← return.to.network
-  </a>
-</p>
+    <footer>
+      E.V.E.N // sticker wall endpoint • do not index • <a href="/home.html">back to network</a>
+    </footer>
   </main>
+
+  <script>
+  (function(){
+    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const stabilise = document.getElementById('stabilise');
+    const stickers = Array.from(document.querySelectorAll('.sticker'));
+
+    // If you want the wall to feel like it changes on refresh, keep this.
+    // If you want it to feel more consistent, set this to false.
+    const RANDOMISE_ON_LOAD = true;
+
+    // NEW: only ONE post will be allowed to vanish (total)
+    const MAX_VANISHERS = 1;
+
+    // Utility
+    const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+    function applyGlitch(el){
+      const line = el.querySelector('.line');
+      if(!line) return;
+      if(line.classList.contains('glitchy')) return;
+      line.classList.add('glitchy');
+      line.setAttribute('data-text', line.textContent.trim());
+    }
+
+    function maybeRandomise(){
+      if(!RANDOMISE_ON_LOAD) return;
+
+      // Randomly mark a couple as "ghost" (still readable, but unstable)
+      const pick = stickers.slice().sort(()=>Math.random()-0.5).slice(0, rand(1, 2));
+      pick.forEach(el => el.classList.add('ghost'));
+
+      // Randomly promote glitch effect to a couple more (Kairo touches it, it breaks)
+      const glitchPick = stickers.filter(el => el.dataset.glitch !== 'true')
+        .sort(()=>Math.random()-0.5)
+        .slice(0, rand(0, 2));
+      glitchPick.forEach(applyGlitch);
+    }
+
+    function scheduleVanish(){
+      if(prefersReduced) return;
+
+      // Pick candidates that are allowed to vanish (data-life > 0)
+      const candidates = stickers.filter(el => {
+        const life = parseInt(el.getAttribute('data-life') || '0', 10);
+        return life > 0;
+      });
+
+      // Choose only ONE (or none if you have no candidates)
+      const chosen = candidates
+        .slice()
+        .sort(()=>Math.random()-0.5)
+        .slice(0, Math.min(MAX_VANISHERS, candidates.length));
+
+      stickers.forEach((el) => {
+        const life = parseInt(el.getAttribute('data-life') || '0', 10);
+        const shouldGlitch = el.getAttribute('data-glitch') === 'true';
+
+        // Some posts become glitchy briefly even if they never vanish
+        if(shouldGlitch){
+          setTimeout(()=>{
+            if(stabilise.checked) return;
+            applyGlitch(el);
+          }, rand(800, 2600));
+        }
+
+        // ✅ Only the chosen ONE is allowed to vanish
+        if(life > 0 && chosen.includes(el)){
+          // Random delay so it doesn't feel uniform
+          const delay = rand(1200, 4200);
+
+          setTimeout(() => {
+            if(stabilise.checked) return;
+
+            // Fade out, then collapse
+            el.style.transition =
+              'opacity 900ms ease, transform 900ms ease, height 900ms ease, margin 900ms ease, padding 900ms ease, border-width 900ms ease';
+            el.classList.add('vanish');
+
+            // Optional: sometimes it comes back (because Kairo)
+            const comebackChance = 0.25;
+            if(Math.random() < comebackChance){
+              setTimeout(() => {
+                if(stabilise.checked) return;
+                el.classList.remove('vanish');
+                el.classList.add('ghost');
+              }, rand(2500, 5200));
+            }
+          }, delay + life);
+        }
+      });
+    }
+
+    // Stabilise toggle: restore anything vanished
+    stabilise.addEventListener('change', () => {
+      if(!stabilise.checked) return;
+      stickers.forEach(el => {
+        el.classList.remove('vanish');
+        el.classList.remove('ghost');
+      });
+    });
+
+    maybeRandomise();
+    scheduleVanish();
+  })();
+</script>
+
 </body>
 </html>
