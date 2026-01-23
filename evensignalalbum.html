@@ -1,216 +1,600 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>E.V.E.N. // Signals Feed</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>E.V.E.N // ALBUM ARCHIVE</title>
+
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Share Tech Mono', monospace;
-      background: radial-gradient(circle at center, #000 0%, #020202 100%);
-      color: #00ff6a;
-      overflow-x: hidden;
+    :root{
+      /* Album pages: “light archive terminal” */
+      color-scheme: light;
+
+      --bg: #e7e9ee;
+      --paper: rgba(255,255,255,.78);
+      --paper2: rgba(255,255,255,.62);
+      --stroke: rgba(10,14,22,.12);
+
+      --text: rgba(10,14,22,.86);
+      --muted: rgba(10,14,22,.60);
+
+      --glow: rgba(0,190,200,.35);
+      --glow2: rgba(210,70,200,.28);
+
+      --good: rgba(30,165,110,.85);
+      --warn: rgba(210,140,40,.85);
+      --danger: rgba(205,65,65,.82);
+
+      --radius: 16px;
+      --radius2: 24px;
+      --shadow: 0 18px 60px rgba(0,0,0,.12);
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
     }
 
-    .glitch {
-      font-size: 2.5rem;
-      position: relative;
-      text-align: center;
-      margin-top: 10vh;
-      animation: flicker 2s infinite;
+    *{ box-sizing:border-box; }
+    html,body{
+      margin:0;
+      min-height:100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      overflow-x:hidden;
+      position:relative;
     }
 
-    @keyframes flicker {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.8; }
+    /* subtle “paper terminal” texture */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(900px 320px at 18% 0%, rgba(0,190,200,.14), transparent 60%),
+        radial-gradient(900px 320px at 82% 0%, rgba(210,70,200,.10), transparent 60%),
+        repeating-linear-gradient(0deg, rgba(0,0,0,.03) 0 1px, transparent 1px 5px);
+      mix-blend-mode:multiply;
+      opacity:.55;
+      z-index:0;
     }
 
-    .terminal {
-      text-align: center;
-      font-size: 1.1rem;
-      margin: 30px auto;
-      width: 90%;
-      max-width: 700px;
-      background: rgba(0, 0, 0, 0.6);
-      border: 1px solid #00ff6a;
-      padding: 1rem;
-      box-shadow: 0 0 15px #00ff6a;
+    .wrap{
+      max-width: 1100px;
+      margin:0 auto;
+      padding: 26px 18px 80px;
+      position:relative;
+      z-index:1;
     }
 
-    .audio-player {
-      width: 100%;
-      max-width: 600px;
-      margin: 1rem auto;
-      padding: 1rem;
-      border: 1px solid #00ff6a;
-      background: #111;
-      box-shadow: 0 0 10px #00ff6a;
-      text-align: center;
+    /* topbar (lighter variant) */
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:20;
+      backdrop-filter: blur(12px);
+      background: linear-gradient(to bottom, rgba(231,233,238,.82), rgba(231,233,238,.55));
+      border-bottom: 1px solid rgba(10,14,22,.10);
+    }
+    .topbar-inner{
+      max-width: 1100px;
+      margin:0 auto;
+      padding: 12px 18px;
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+    .brand{
+      display:flex;
+      align-items:baseline;
+      gap:10px;
+      text-decoration:none;
+      color: var(--text);
+    }
+    .brand .mark{
+      font-family: var(--mono);
+      letter-spacing:.18em;
+      font-weight:800;
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+    .brand .tag{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing:.08em;
+    }
+    .nav{
+      margin-left:auto;
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+    }
+    .nav a{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration:none;
+      padding: 9px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: .16s ease;
+    }
+    .nav a:hover{
+      color: var(--text);
+      border-color: rgba(10,14,22,.12);
+      background: rgba(255,255,255,.45);
     }
 
-    .audio-player h3 {
-      color: #00ff6a;
-      margin-bottom: 0.5rem;
-      font-size: 1.2rem;
+    .cta{
+      margin-left:6px;
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(10,14,22,.14);
+      background: linear-gradient(90deg, rgba(0,190,200,.14), rgba(210,70,200,.10));
+      color: var(--text);
+      text-decoration:none;
+      box-shadow: 0 10px 30px rgba(0,0,0,.08);
+      transition: transform .14s ease, border-color .14s ease;
+      white-space:nowrap;
+    }
+    .cta:hover{ transform: translateY(-1px); border-color: rgba(10,14,22,.22); }
+
+    /* page header */
+    .card{
+      border-radius: var(--radius2);
+      background: linear-gradient(180deg, var(--paper), var(--paper2));
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      pointer-events:none;
+      background:
+        radial-gradient(780px 260px at 25% 0%, rgba(0,190,200,.18), transparent 60%),
+        radial-gradient(780px 260px at 75% 0%, rgba(210,70,200,.12), transparent 60%);
+      opacity:.55;
     }
 
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 20px;
-      padding: 2rem 1rem;
-      max-width: 1000px;
-      margin: 0 auto;
+    .album-head{
+      padding: 20px 20px 18px;
+      position:relative;
+      z-index:1;
+    }
+    .kicker{
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.16em;
+      text-transform: uppercase;
+      color: rgba(10,14,22,.70);
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .pulse{
+      width:10px; height:10px;
+      border-radius:50%;
+      background: var(--good);
+      box-shadow: 0 0 0 0 rgba(30,165,110,.35);
+      animation: pulse 2.4s infinite;
+    }
+    @keyframes pulse{
+      0%{ box-shadow: 0 0 0 0 rgba(30,165,110,.28); }
+      70%{ box-shadow: 0 0 0 12px rgba(30,165,110,0); }
+      100%{ box-shadow: 0 0 0 0 rgba(30,165,110,0); }
     }
 
-    .img-wrapper {
-      text-align: center;
+    h1{
+      margin: 12px 0 8px;
+      font-size: clamp(26px, 4vw, 42px);
+      letter-spacing:-0.02em;
+      line-height:1.05;
+    }
+    .mono{ font-family: var(--mono); }
+    .muted{ color: var(--muted); }
+
+    .sub{
+      margin:0;
+      max-width: 78ch;
+      line-height:1.65;
+      font-size: 14px;
+      color: var(--muted);
     }
 
-    .img-wrapper img {
-      width: 100%;
-      height: auto;
-      max-height: 200px;
-      object-fit: cover;
-      border-radius: 12px;
-      border: 1px solid #00ff6a;
-      transition: transform 0.3s ease;
+    .meta-row{
+      margin-top: 14px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 820px){
+      .meta-row{ grid-template-columns: 1fr; }
     }
 
-    .img-wrapper img:hover {
-      transform: scale(1.05);
+    .meta-box{
+      border-radius: var(--radius);
+      border: 1px solid rgba(10,14,22,.12);
+      background: rgba(255,255,255,.58);
+      padding: 12px;
     }
 
-    @keyframes nameFlicker {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.6; }
+    .meta-line{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      padding: 6px 0;
+      border-bottom: 1px dashed rgba(10,14,22,.12);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.08em;
+      text-transform: uppercase;
+    }
+    .meta-line:last-child{ border-bottom:none; }
+    .meta-line b{
+      font-weight:800;
+      color: rgba(10,14,22,.86);
+      letter-spacing:.10em;
     }
 
-    .img-placeholder {
-      background: #111;
-      border: 2px dashed #00ff6a;
-      height: 300px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #00ff6a;
-      font-size: 1rem;
-      transition: all 0.3s ease-in-out;
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(10,14,22,.12);
+      background: rgba(255,255,255,.55);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.08em;
+      text-transform: uppercase;
+      color: rgba(10,14,22,.70);
+      white-space:nowrap;
+    }
+    .dot{ width:8px; height:8px; border-radius:50%; background: rgba(10,14,22,.35); }
+    .dot.good{ background: var(--good); }
+    .dot.warn{ background: var(--warn); }
+    .dot.danger{ background: var(--danger); }
+
+    .integrity{
+      margin-top: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(10,14,22,.10);
+      overflow:hidden;
+      border: 1px solid rgba(10,14,22,.10);
+    }
+    .integrity > span{
+      display:block;
+      height:100%;
+      width: 52%; /* change per album */
+      background: linear-gradient(90deg, rgba(0,190,200,.55), rgba(210,70,200,.45));
     }
 
-    .img-placeholder img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+    .actions{
+      margin-top: 14px;
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(10,14,22,.14);
+      background: rgba(255,255,255,.52);
+      color: rgba(10,14,22,.86);
+      text-decoration:none;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.08em;
+      text-transform: uppercase;
+      transition: transform .14s ease, background .14s ease, border-color .14s ease;
+      white-space:nowrap;
+    }
+    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.70); border-color: rgba(10,14,22,.22); }
+    .btn.primary{
+      background: linear-gradient(90deg, rgba(0,190,200,.20), rgba(210,70,200,.14));
+      border-color: rgba(10,14,22,.18);
     }
 
-    .img-placeholder:hover {
-      background: #222;
-      transform: scale(1.03);
-      cursor: pointer;
+    /* tracks */
+    .tracks{
+      margin-top: 16px;
+      display:grid;
+      gap: 12px;
     }
 
-    footer {
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.8rem;
-      color: #555;
+    .track{
+      border-radius: var(--radius2);
+      border: 1px solid rgba(10,14,22,.12);
+      background: rgba(255,255,255,.58);
+      box-shadow: 0 16px 45px rgba(0,0,0,.10);
+      overflow:hidden;
+      position:relative;
     }
 
-        .return-link {
-      margin-top: 50px;
-      text-align: center;
-      padding: 20px;
+    /* tiny “tech corner” decoration */
+    .track::before{
+      content:"";
+      position:absolute;
+      right:-40px;
+      top:-40px;
+      width:120px;
+      height:120px;
+      border-radius: 24px;
+      background: radial-gradient(circle at 30% 30%, rgba(0,190,200,.22), transparent 55%),
+                  radial-gradient(circle at 70% 70%, rgba(210,70,200,.16), transparent 55%);
+      transform: rotate(18deg);
+      opacity:.9;
+      pointer-events:none;
     }
 
-    .return-link a {
-      font-family: 'Orbitron', sans-serif;
-      border: 2px dashed #00ff6a;
-      color: #00ff6a;
-      text-decoration: none;
-      font-size: 1rem;
-      letter-spacing: 1px;
-      border: 1px solid #00ff6a;
-      padding: 10px 20px;
-      border-radius: 8px;
-      transition: background 0.3s ease, color 0.3s ease;
+    .track-inner{
+      position:relative;
+      z-index:1;
+      padding: 14px;
+      display:grid;
+      grid-template-columns: 1fr 420px;
+      gap: 12px;
+      align-items:start;
+    }
+    @media (max-width: 980px){
+      .track-inner{ grid-template-columns: 1fr; }
     }
 
-    .return-link a:hover {
-      background: #00ff6a;
-      color: #0d0d0d;
-      cursor: pointer;
+    .track-kicker{
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing:.14em;
+      text-transform: uppercase;
+      color: rgba(10,14,22,.62);
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 7px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(10,14,22,.12);
+      background: rgba(255,255,255,.52);
+      white-space:nowrap;
+    }
+
+    .track-title{
+      margin: 10px 0 6px;
+      font-size: 18px;
+      letter-spacing:.01em;
+    }
+    .track-notes{
+      margin:0;
+      color: rgba(10,14,22,.62);
+      line-height:1.65;
+      font-size: 13px;
+      max-width: 72ch;
+    }
+
+    .fileline{
+      margin-top: 10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(10,14,22,.62);
+      letter-spacing:.06em;
+    }
+    .fileline code{
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 10px;
+      border: 1px solid rgba(10,14,22,.12);
+      background: rgba(255,255,255,.50);
+      color: rgba(10,14,22,.80);
+    }
+
+    /* SoundCloud embed */
+    .sc-embed{
+      border-radius: 16px;
+      overflow:hidden;
+      border: 1px solid rgba(10,14,22,.12);
+      background: rgba(255,255,255,.66);
+      height: 166px; /* compact player */
+      box-shadow: 0 12px 35px rgba(0,0,0,.08);
+    }
+    .sc-embed iframe{
+      width:100% !important;
+      height:100% !important;
+      border:0;
+      display:block;
+    }
+
+    footer{
+      margin-top: 20px;
+      padding: 18px 4px 0;
+      border-top: 1px solid rgba(10,14,22,.12);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.06em;
+      color: rgba(10,14,22,.55);
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; }
     }
   </style>
 </head>
+
 <body>
-  <div class="glitch">// SIGNAL FEED: ACTIVE //</div>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="/home.html">
+        <span class="mark">E.V.E.N</span>
+        <span class="tag">Encrypted Virtual Echo Network</span>
+      </a>
 
-  <div class="terminal">
-    <p>Signal bursts detected from encrypted echo layers.</p>
-    <p>Fragments recovered: 3<br>Status: Clean but distorted</p>
-    <p>Listen below.</p>
-  </div>
+      <nav class="nav" aria-label="Primary">
+        <a href="/signals.html">/signals</a>
+        <a href="/ghost-threads.html">/ghost-threads</a>
+      </nav>
 
-  <!-- AUDIO PLAYER PLACEHOLDERS -->
-<!-- Signal 18 -->
-<div class="audio-player">
-  <h3>Signal 18</h3>
+      <a class="cta" href="https://www.youtube.com/@EncryptedVirtualEchoNetwork">Join the broadcast</a>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <!-- ALBUM HEADER -->
+    <section class="card album-head">
+      <div class="kicker">
+        <span class="pulse"></span>
+        Welcome to E.V.E.N // <span class="mono">Signals</span>
+      </div>
+
+      <h1>Signals</h1>
+
+      <p class="sub">
+        Status readouts, recovered visuals, and audio files pulled from a compromised relay. Scroll to interact with what made it out intact.
+      </p>
+
+      <div class="meta-row">
+        <div class="meta-box">
+          <div class="meta-line"><span>Status</span> <b>UNSTABLE</b></div>
+          <div class="meta-line"><span>Link integrity</span> <b>FRAGMENTED</b></div>
+          <div class="meta-line"><span>Source</span> <b>ghostline://cache</b></div>
+          <div class="integrity" aria-label="Link integrity meter"><span></span></div>
+        </div>
+
+        <div class="meta-box">
+          <div class="meta-line"><span>Playback mode</span> <b>READ-ONLY</b></div>
+          <div class="meta-line"><span>Export</span> <b>PERMITTED</b></div>
+          <div class="meta-line"><span>Listener trace</span> <b>DETECTED</b></div>
+
+          <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+            <span class="pill"><span class="dot warn"></span> caution: distortion</span>
+            <span class="pill"><span class="dot good"></span> signal persists</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <a class="btn primary" href="#tracks">Jump to tracks</a>
+        <a class="btn" href="/home.html">Return to Network</a>
+      </div>
+    </section>
+
+    <!-- TRACKS -->
+    <section class="tracks" id="tracks" aria-label="Album tracklist">
+
+      <!-- TRACK CARD (copy/paste this block for each track) -->
+      <article class="track">
+        <div class="track-inner">
+          <div>
+            <div class="track-kicker">
+              <span class="chip"><span class="dot good"></span> recovered</span>
+              <span class="chip">track 01</span>
+              <span class="chip">runtime: 02:44</span>
+            </div>
+
+            <h2 class="track-title">Signal 18</h2>
+
+            <p class="track-notes">
+
+            </p>
+
+            <div class="fileline">
+              file: <code>signal18//finalmix.wav</code> • hash: <code>5h8v-42n9</code>
+            </div>
+          </div>
+
+          <div class="sc-embed" aria-label="SoundCloud player">
 <iframe width="100%" height="120" scrolling="no" frameborder="no" allow="autoplay"
   src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%3Atracks%3A2252696774%3Fsecret_token%3Ds-PM2JOAMeHot&color=%2334969e&auto_play=false&show_comments=false&show_user=false&show_reposts=false&show_teaser=false">
 </iframe>
-</div>
+          </div>
+        </div>
+      </article>
+      <!-- END TRACK CARD -->
 
-<!-- Signal 19 -->
-<div class="audio-player">
-  <h3>Signal 19</h3>
+      <!-- TRACK CARD (copy/paste this block for each track) -->
+      <article class="track">
+        <div class="track-inner">
+          <div>
+            <div class="track-kicker">
+              <span class="chip"><span class="dot good"></span> recovered</span>
+              <span class="chip">track 02</span>
+              <span class="chip">runtime: 02:15</span>
+            </div>
+
+            <h2 class="track-title">Signal 19</h2>
+
+            <p class="track-notes">
+
+            </p>
+
+            <div class="fileline">
+              file: <code>signal19//finalmix.wav</code> • hash: <code>3j9r-74r5</code>
+            </div>
+          </div>
+
+          <div class="sc-embed" aria-label="SoundCloud player">
 <iframe width="100%" height="120" scrolling="no" frameborder="no" allow="autoplay"
   src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%3Atracks%3A2252697401%3Fsecret_token%3Ds-ESGRI6CiDMp&color=%23092531&auto_play=false&show_comments=false&show_user=false&show_reposts=false&show_teaser=false">
 </iframe>
-</div>
+          </div>
+        </div>
+      </article>
+      <!-- END TRACK CARD -->
 
-<!-- Signal 20 -->
-<div class="audio-player">
-  <h3>Signal 20</h3>
+            <!-- TRACK CARD (copy/paste this block for each track) -->
+      <article class="track">
+        <div class="track-inner">
+          <div>
+            <div class="track-kicker">
+              <span class="chip"><span class="dot good"></span> recovered</span>
+              <span class="chip">track 03</span>
+              <span class="chip">runtime: 03:12</span>
+            </div>
+
+            <h2 class="track-title">Signal 20</h2>
+
+            <p class="track-notes">
+
+            </p>
+
+            <div class="fileline">
+              file: <code>signal20//finalmix.wav</code> • hash: <code>4k9u-79l3</code>
+            </div>
+          </div>
+
+          <div class="sc-embed" aria-label="SoundCloud player">
 <iframe width="100%" height="120" scrolling="no" frameborder="no" allow="autoplay"
   src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%3Atracks%3A2252697809%3Fsecret_token%3Ds-0NKPeCGOgOT&color=%23064641&auto_play=false&show_comments=false&show_user=false&show_reposts=false&show_teaser=false">
 </iframe>
-</div>
+          </div>
+        </div>
+      </article>
+      <!-- END TRACK CARD -->
 
-<!-- IMAGE PLACEHOLDERS -->
-<div class="gallery">
-  <div class="img-wrapper">
-    <h4>RAYNE</h4>
-    <img src="RAYNE.png" alt="Rayne">
-  </div>
-  <div class="img-wrapper">
-    <h4>SOAHN</h4>
-    <img src="Soahn.png" alt="Soahn">
-  </div>
-  <div class="img-wrapper">
-    <h4>ONYX</h4>
-    <img src="Onyx.png" alt="Onyx">
-  </div>
-  <div class="img-wrapper">
-    <h4>KAIRO</h4>
-    <img src="Kairo.png" alt="Kairo">
-  </div>
-  <div class="img-wrapper">
-    <h4>MINJAE</h4>
-    <img src="Minjae.png" alt="Minjae">
-  </div>
-</div>
+    </section>
 
-  <div class="return-link">
-    <a href="home.html">&larr; Return to the Network</a>
-  </div>
+    <footer>
+      E.V.E.N // album archive endpoint • <span class="muted">do not trust clean audio</span> • “if it sounds perfect, it’s probably a trap.” - Onyx • <a href="/home.html" style="color:#988df9;text-decoration:none;">return to network</a>
+    </footer>
 
-  <footer>
-    SIGNAL SERIES © E.V.E.N. ARCHIVE // Transmission Complete
-  </footer>
+  </main>
 </body>
 </html>
