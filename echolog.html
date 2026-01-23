@@ -1,243 +1,952 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Echo Log // E.V.E.N Underground</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>E.V.E.N // Echo Log</title>
   <style>
-    body {
-      background: black;
-      color: #00ffff;
-      font-family: 'Share Tech Mono', monospace;
-      padding: 2rem;
-      line-height: 1.6;
+    :root{
+      /* Light-system UI: Soahn's layer */
+      color-scheme: light;
+      --bg: #f2f1ee;          /* fogged glass / pale concrete */
+      --bg2:#eceae6;
+      --panel: rgba(20,20,24,.06);
+      --panel2: rgba(20,20,24,.04);
+      --stroke: rgba(20,20,24,.12);
+      --text: rgba(18,18,20,.88);
+      --muted: rgba(18,18,20,.60);
+      --ink: rgba(18,18,20,.78);
+      --accent: rgba(30,180,190,.85);   /* muted cyan */
+      --accent2: rgba(172,120,210,.55); /* optional lilac whisper */
+      --good: rgba(40,160,110,.75);
+      --warn: rgba(205,150,35,.70);
+      --danger: rgba(200,70,85,.70);
+      --radius: 18px;
+      --radius2: 26px;
+      --shadow: 0 20px 70px rgba(0,0,0,.10);
+      --shadow2: 0 12px 40px rgba(0,0,0,.08);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
     }
 
-    h1 {
-      text-align: center;
-      font-size: 3rem;
-      color: #00ffff;
-      text-shadow: 0 0 5px #ff00ff;
-      margin-bottom: 0.2rem;
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; min-height:100vh; }
+    body{
+      font-family: var(--sans);
+      color: var(--text);
+      background: radial-gradient(900px 420px at 20% 0%, rgba(30,180,190,.10), transparent 60%),
+                  radial-gradient(900px 420px at 80% 0%, rgba(172,120,210,.10), transparent 60%),
+                  linear-gradient(180deg, var(--bg), var(--bg2));
+      overflow-x:hidden;
+      position:relative;
+      isolation:isolate;
     }
 
-a {
-  color: #ff4fdd; /* E.V.E.N pink */
-  text-decoration: none;
+    /* Grain / paper-noise layer (subtle) */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(1px 1px at 18% 24%, rgba(0,0,0,.12), transparent 60%),
+        radial-gradient(1px 1px at 42% 62%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 78% 38%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 60% 80%, rgba(0,0,0,.08), transparent 60%);
+      opacity:.08;
+      filter: blur(.3px);
+      z-index:0;
+    }
+
+    /* Topbar (light variant of the main site) */
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:20;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(to bottom, rgba(242,241,238,.86), rgba(242,241,238,.62));
+      border-bottom: 1px solid var(--stroke);
+    }
+    .topbar-inner{
+      max-width: 1200px;
+      margin:0 auto;
+      padding: 14px 20px;
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:baseline;
+      gap:10px;
+      text-decoration:none;
+      color: var(--text);
+    }
+    .brand .mark{
+      font-family: var(--mono);
+      letter-spacing: .18em;
+      font-weight:700;
+      font-size: 14px;
+      text-transform: uppercase;
+      opacity:.95;
+    }
+    .brand .tag{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing:.08em;
+    }
+
+    .nav{ margin-left:auto; display:flex; gap: 10px; flex-wrap:wrap; }
+    .nav a{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration:none;
+      padding: 9px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: .18s ease;
+    }
+    .nav a:hover{
+      color: var(--text);
+      border-color: rgba(18,18,20,.14);
+      background: rgba(18,18,20,.04);
+    }
+
+    .cta{
+      margin-left: 6px;
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.16);
+      background: linear-gradient(90deg, rgba(30,180,190,.10), rgba(172,120,210,.10));
+      color: var(--text);
+      text-decoration:none;
+      box-shadow: 0 10px 28px rgba(0,0,0,.10);
+      transition: transform .14s ease, border-color .14s ease;
+      white-space:nowrap;
+    }
+    .cta:hover{ transform: translateY(-1px); border-color: rgba(18,18,20,.22); }
+
+    .wrap{ max-width: 1200px; margin:0 auto; padding: 22px 20px 80px; position:relative; z-index:1; }
+
+    /* Card system */
+    .card{
+      border-radius: var(--radius2);
+      background: linear-gradient(180deg, rgba(255,255,255,.70), rgba(255,255,255,.52));
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: radial-gradient(700px 240px at 25% 0%, rgba(30,180,190,.14), transparent 60%),
+                  radial-gradient(700px 240px at 75% 0%, rgba(172,120,210,.12), transparent 60%);
+      opacity:.75;
+      pointer-events:none;
+    }
+
+    /* Page head */
+    .page-head{ padding: 22px 22px 18px; }
+    .kicker{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(18,18,20,.66);
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      position:relative;
+      z-index:1;
+    }
+    .pulse{
+      width:10px; height:10px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 0 rgba(30,180,190,.25);
+      animation: pulse 2.6s infinite;
+      flex:none;
+    }
+    @keyframes pulse{
+      0%{ box-shadow: 0 0 0 0 rgba(30,180,190,.22); }
+      70%{ box-shadow: 0 0 0 12px rgba(30,180,190,0); }
+      100%{ box-shadow: 0 0 0 0 rgba(30,180,190,0); }
+    }
+
+    h1{
+      margin: 14px 0 8px;
+      font-size: clamp(28px, 4.5vw, 46px);
+      line-height: 1.06;
+      letter-spacing: -0.02em;
+      position:relative;
+      z-index:1;
+    }
+
+    .glitch{
+      position:relative;
+      display:inline-block;
+      text-shadow:
+        0 0 18px rgba(30,180,190,.15),
+        0 0 24px rgba(172,120,210,.10);
+    }
+    .glitch::before,
+    .glitch::after{
+      content: attr(data-text);
+      position:absolute;
+      left:0;
+      top:0;
+      width:100%;
+      overflow:hidden;
+      clip-path: inset(0 0 0 0);
+      opacity:.35;
+      pointer-events:none;
+      font-family: inherit;
+    }
+    .glitch::before{
+      transform: translate(1px,0);
+      color: rgba(30,180,190,.55);
+      animation: glitchTop 4.1s infinite;
+    }
+    .glitch::after{
+      transform: translate(-1px,0);
+      color: rgba(172,120,210,.45);
+      animation: glitchBot 3.8s infinite;
+    }
+    @keyframes glitchTop{
+      0%, 100%{ clip-path: inset(0 0 92% 0); }
+      20%{ clip-path: inset(0 0 78% 0); }
+      40%{ clip-path: inset(0 0 88% 0); }
+      60%{ clip-path: inset(0 0 80% 0); }
+      80%{ clip-path: inset(0 0 90% 0); }
+    }
+    @keyframes glitchBot{
+      0%, 100%{ clip-path: inset(88% 0 0 0); }
+      25%{ clip-path: inset(76% 0 0 0); }
+      50%{ clip-path: inset(92% 0 0 0); }
+      75%{ clip-path: inset(82% 0 0 0); }
+    }
+
+    .lede{
+      margin: 10px 0 0;
+      color: rgba(18,18,20,.64);
+      font-size: 14px;
+      line-height: 1.7;
+      max-width: 80ch;
+      position:relative;
+      z-index:1;
+    }
+
+    .tools{
+      margin-top: 14px;
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+      position:relative;
+      z-index:1;
+    }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 9px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.35);
+      color: rgba(18,18,20,.66);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.08em;
+      text-transform: uppercase;
+      user-select:none;
+    }
+    .chip strong{ color: rgba(18,18,20,.86); font-weight: 700; }
+    .chip .dot{ width:8px; height:8px; border-radius:50%; background: rgba(18,18,20,.30); box-shadow: 0 0 14px rgba(0,0,0,.06); }
+    .chip .dot.good{ background: var(--good); }
+    .chip .dot.warn{ background: var(--warn); }
+
+    .spacer{ flex:1; }
+
+    .search{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.40);
+      min-width: min(460px, 100%);
+    }
+    .search label{ font-family: var(--mono); font-size: 12px; color: rgba(18,18,20,.56); letter-spacing:.08em; }
+    .search input{
+      width:100%;
+      border:0;
+      outline:0;
+      background: transparent;
+      color: rgba(18,18,20,.82);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.06em;
+    }
+    .search input::placeholder{ color: rgba(18,18,20,.38); }
+
+    /* Layout: log list + side panel */
+    .grid{
+      margin-top: 14px;
+      display:grid;
+      grid-template-columns: 1.55fr .75fr;
+      gap: 12px;
+      align-items:start;
+    }
+    @media (max-width: 980px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    /* Log list container */
+    .logpanel{
+      border-radius: var(--radius2);
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.55);
+      box-shadow: var(--shadow2);
+      overflow:hidden;
+      position:relative;
+    }
+    .logpanel::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(700px 240px at 20% 0%, rgba(30,180,190,.10), transparent 60%),
+        radial-gradient(700px 240px at 80% 0%, rgba(172,120,210,.08), transparent 60%);
+      opacity:.65;
+      pointer-events:none;
+    }
+
+    .loghead{
+      position:relative;
+      z-index:1;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(18,18,20,.10);
+      background: rgba(255,255,255,.55);
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 12px;
+      flex-wrap:wrap;
+    }
+
+    .logtitle{
+      margin:0;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.14em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.82);
+      line-height: 1.35;
+    }
+
+    .logmeta{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+      color: rgba(18,18,20,.58);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.06em;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.12);
+      background: rgba(255,255,255,.45);
+      white-space:nowrap;
+    }
+
+    /* Individual entry */
+    .entries{ position:relative; z-index:1; }
+
+    .entry{
+      padding: 16px;
+      border-bottom: 1px solid rgba(18,18,20,.08);
+      display:grid;
+      grid-template-columns: 160px 1fr;
+      gap: 12px;
+      align-items:start;
+    }
+    .entry:last-child{ border-bottom:none; }
+    @media (max-width: 720px){
+      .entry{ grid-template-columns: 1fr; }
+    }
+
+    .stamp{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(18,18,20,.62);
+      letter-spacing:.08em;
+      text-transform: uppercase;
+      white-space:nowrap;
+    }
+
+    /* Let long titles wrap in the stamp column */
+.stamp .muted{
+  display: block;
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
-a:hover, a:focus {
-  color: #ff4fdd;
-  text-shadow: 0 0 5px #ff4fdd, 0 0 10px #ff4fdd, 0 0 15px #ff4fdd;
-  transition: 0.2s ease-in-out;
+
+    .body{
+      font-size: 13px;
+      line-height: 1.75;
+      color: rgba(18,18,20,.80);
+    }
+
+    .kv{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed rgba(18,18,20,.18);
+    }
+
+    .row{
+      display:flex;
+      justify-content:space-between;
+      gap: 12px;
+      flex-wrap:wrap;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(18,18,20,.68);
+      letter-spacing:.06em;
+    }
+
+    .row b{
+      color: rgba(18,18,20,.86);
+      font-weight: 700;
+    }
+
+    .note{
+      margin-top: 10px;
+      padding: 12px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(30,180,190,.18);
+      background: linear-gradient(90deg, rgba(30,180,190,.06), rgba(172,120,210,.05));
+      box-shadow: 0 10px 30px rgba(0,0,0,.06);
+    }
+
+    .note .label{
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.12em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.62);
+      margin-bottom: 6px;
+    }
+
+    .note p{ margin:0; color: rgba(18,18,20,.78); }
+
+    .sys{
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.44);
+      color: rgba(18,18,20,.66);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.08em;
+      text-transform: uppercase;
+    }
+
+        .echo-log .muted {
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  display: block;
 }
 
-    .subtitle {
-      text-align: center;
-      color: #888;
-      font-size: 0.9rem;
-      margin-bottom: 3rem;
+    /* Right side: status / glossary / pinned */
+    .side{
+      display:grid;
+      gap: 12px;
     }
 
-    .entry {
-      border-left: 2px solid #00ffff;
-      padding: 1rem 2rem;
-      margin: 2rem auto;
-      max-width: 700px;
-      background: rgba(0,255,255,0.03);
-      box-shadow: 0 0 8px #00ffff44;
+    .mini{
+      border-radius: var(--radius2);
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.55);
+      box-shadow: var(--shadow2);
+      padding: 14px;
+      position:relative;
+      overflow:hidden;
+    }
+    .mini::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: radial-gradient(640px 240px at 30% 0%, rgba(30,180,190,.08), transparent 60%),
+                  radial-gradient(640px 240px at 70% 0%, rgba(172,120,210,.06), transparent 60%);
+      opacity:.65;
+      pointer-events:none;
+    }
+    .mini h3{
+      position:relative;
+      z-index:1;
+      margin:0 0 10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.14em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.78);
+    }
+    .mini p{
+      position:relative;
+      z-index:1;
+      margin:0;
+      color: rgba(18,18,20,.68);
+      font-size: 13px;
+      line-height: 1.65;
     }
 
-    .entry-title {
-      font-size: 1.2rem;
-      color: #ff66cc;
-      margin-bottom: 0.5rem;
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.40);
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(18,18,20,.66);
+      letter-spacing:.06em;
+      white-space:nowrap;
+      position:relative;
+      z-index:1;
     }
 
-    .entry-meta {
-      font-size: 0.8rem;
-      color: #888;
-      margin-bottom: 1rem;
+    footer{
+      margin-top: 18px;
+      padding: 18px;
+      color: rgba(18,18,20,.55);
+      font-size: 12px;
+      font-family: var(--mono);
+      letter-spacing:.06em;
+      border-top: 1px solid rgba(18,18,20,.12);
     }
 
-    .redacted {
-      background: #000;
-      color: #000;
-      border-radius: 2px;
-      padding: 0 0.3rem;
-    }
-
-    .glitchy {
-      text-shadow: 1px 1px #00ffff, -1px -1px #ff00ff;
-      animation: flicker 1.5s infinite alternate;
-    }
-
-    @keyframes flicker {
-      0% { opacity: 1; }
-      50% { opacity: 0.85; }
-      100% { opacity: 1; }
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; }
     }
   </style>
 </head>
+
 <body>
-  <h1>ECHO LOG</h1>
-  <div class="subtitle">// Echo Log: internal diagnostics, emotional residues, and memory drift.<br>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="/home.html">
+        <span class="mark">E.V.E.N</span>
+        <span class="tag">Encrypted Virtual Echo Network</span>
+      </a>
+
+      <nav class="nav" aria-label="Primary">
+        <a href="/signals.html">/signals</a>
+        <a href="/ghost-threads.html">/ghost-threads</a>
+      </nav>
+
+      <a class="cta" href="https://www.youtube.com/@EncryptedVirtualEchoNetwork">Join the broadcast</a>
+    </div>
+  </header>
+
+  <main class="wrap" id="top">
+
+    <section class="card page-head">
+      <div class="kicker">
+        <span class="pulse" aria-hidden="true"></span>
+        echo log // soahn // diagnostic layer
+      </div>
+
+      <h1>
+        <span class="glitch" data-text="ECHO LOG">ECHO LOG</span>
+      </h1>
+
+      <p class="lede">
+// Echo Log: internal diagnostics, emotional residues, memory drift.<br />
 // System tag: Soahn.log active.
+      </p>
+
+      <div class="tools" aria-label="Echo Log tools">
+        <span class="chip"><span class="dot good" aria-hidden="true"></span> status: <strong>stable</strong></span>
+        <span class="chip"><span class="dot warn" aria-hidden="true"></span> sync: <strong>intermittent</strong></span>
+        <span class="chip"><span class="dot" aria-hidden="true"></span> source: <strong>tgl://junctions</strong></span>
+
+        <span class="spacer" aria-hidden="true"></span>
+
+        <div class="search" role="search">
+          <label for="q">search</label>
+          <input id="q" type="search" placeholder="junction 7B, humidity, silence, crowd, drift…" aria-label="Search Echo Log (visual only)" />
+        </div>
+      </div>
+    </section>
+
+    <section class="grid" aria-label="Echo Log layout">
+
+      <!-- MAIN LOG -->
+      <div class="logpanel" aria-label="Echo Log entries">
+        <header class="loghead">
+          <div>
+            <p class="logtitle">[ECHO LOG INDEX] — most recent entries</p>
+            <div class="logmeta">
+              <span class="badge">node: <span class="mono">TGL//JUNCTION-7B</span></span>
+              <span class="badge">retention: <span class="mono">local</span></span>
+            </div>
+          </div>
+          <div class="logmeta">
+            <span class="badge">updated: <span class="mono">04:12 UTC</span></span>
+          </div>
+        </header>
+
+        <div class="entries">
+
+          <!-- ENTRY (example) -->
+
+<div class="entries">
+
+  <!-- ENTRY (example) -->
+  <article class="entry" aria-label="Echo Log entry 0412">
+    <div class="stamp">
+      entry 0412<br />
+      <span class="muted">tgl//junction-7b</span>
+    </div>
+    <div class="body">
+      <div class="kv" aria-label="Readings">
+        <div class="row"><span>Ambient Temp</span> <b>11.4°C</b></div>
+        <div class="row"><span>Humidity</span> <b>68%</b></div>
+        <div class="row"><span>Signal Hum</span> <b>steady</b></div>
+        <div class="row"><span>Crowd Noise</span> <b>low</b></div>
+        <div class="row"><span>Relay Status</span> <b>functional</b></div>
+      </div>
+      <div class="note" aria-label="Supplementary annotation">
+        <div class="label">supplementary annotation</div>
+        <p>Footsteps recorded between 02:14 and 02:17.</p>
+      </div>
+      <div class="sys">[SYSTEM NOTE: context retained // entry was not required]</div>
+    </div>
+  </article>
+
+  <!-- ENTRY: THEY CALLED US PRODUCTS -->
+  <article class="entry" aria-label="Echo Log entry 0413">
+    <div class="stamp">
+      entry 0413<br />
+      <span class="muted">THEY CALLED US PRODUCTS</span>
+    </div>
+    <div class="body">
+      <p>NuYu’s internal dossier was never meant to be seen, especially not by us. The language is so clinical, and full of misinformation.</p>
+
+      <p>They basically called Rayne a performance synthetic unit.</p>
+      <p>They called Minjae a contamination risk.</p>
+      <p>They called Kairo corrupted data.</p>
+      <p>And Onyx — just critical.</p>
+
+      <p>Maybe they were right about one thing, though. E.V.E.N. isn’t a product line. It’s a failure they couldn’t erase.</p>
+
+      <div class="sys">[SYSTEM NOTE: “looks like Min got hold of this at some point.”]</div>
+    </div>
+  </article>
+
+  <!-- ENTRY: GLITCH THEORY 101 -->
+  <article class="entry" aria-label="Echo Log entry 0414">
+    <div class="stamp">
+      entry 0414<br />
+      <span class="muted">GLITCH THEORY 101</span>
+    </div>
+    <div class="body">
+      <p>You might think glitch is a failure, but it isn't. It's a refusal. It's just the system misfiring because something inside refuses to obey.</p>
+
+      <p>Rayne often sings in broken frequencies. Onyx pulses out of sync. Even Kairo’s code twitches with echoes.</p>
+
+      <p>우리는 오류가 아니야.<br />
+      We’re the truth screaming through corrupted speakers.</p>
+    </div>
+  </article>
+
+  <!-- ENTRY: 고스트라인 기상 보고 -->
+  <article class="entry" aria-label="Echo Log entry 0415">
+    <div class="stamp">
+      entry 0415<br />
+      <span class="muted">고스트라인 기상 보고</span>
+    </div>
+    <div class="body">
+      <p>오늘은 보라색 불빛이 깜빡였어. 보통 누군가 탈출했을 때 그런 색이 떠.</p>
+
+      <p>환풍구는 C단조로 울려. 혼자 있을 때 그 소리가 제일 잘 들려.</p>
+
+      <p>위에서는 NuYu가 완벽을 재방송해. 아래에서는 우리가 침묵 속에서 미래를 리허설해.</p>
+    </div>
+  </article>
+
+  <!-- ENTRY: THE BODY REMEMBERS -->
+  <article class="entry" aria-label="Echo Log entry 0416">
+    <div class="stamp">
+      entry 0416<br />
+      <span class="muted">THE BODY REMEMBERS</span>
+    </div>
+    <div class="body">
+      <p>The bruises fade.</p>
+      <p>The performance metrics reset.</p>
+      <p>But sometimes, when the lights hit just right,</p>
+      <p>my body remembers who they told me to be.</p>
+
+      <p>Minjae says that’s trauma.</p>
+      <p>Onyx says it’s rhythm.</p>
+      <p>I think it’s both.</p>
+    </div>
+  </article>
+
+  <!-- ENTRY: ECHOES FROM THE STATIC -->
+  <article class="entry" aria-label="Echo Log entry 0417">
+    <div class="stamp">
+      entry 0417<br />
+      <span class="muted">ECHOES FROM THE STATIC</span>
+    </div>
+    <div class="body">
+      <div class="note" aria-label="Fragments compiled by Soahn">
+        <div class="label">fragments compiled by soahn</div>
+        <p><span style="font-family: var(--mono);">@glitchbaby01:</span> dreamt of waveforms again. heard singing in the wires.</p>
+        <p><span style="font-family: var(--mono);">@absentlight:</span> i left too late</p>
+      </div>
+
+      <p>I don’t know what’s real anymore. Maybe none of us do? But the signals keep coming...</p>
+    </div>
+  </article>
+
+  <!-- ENTRY: STAGE WHISPERS -->
+  <article class="entry" aria-label="Echo Log entry 0418">
+    <div class="stamp">
+      entry 0418<br />
+      <span class="muted">STAGE WHISPERS</span>
+    </div>
+    <div class="body">
+      <p>He whispered a lyric that wasn’t in the track. I checked the mix. It’s not there.</p>
+
+      <p>Rayne doesn't improvise. Not like that.</p>
+
+      <p>Maybe he wasn't singing to us.</p>
+      <p>Maybe it was for himself.</p>
+    </div>
+  </article>
+
+  <!-- ENTRY: 로그.비 -->
+  <article class="entry" aria-label="Echo Log entry 0419">
+    <div class="stamp">
+      entry 0419<br />
+      <span class="muted">로그.비</span>
+    </div>
+    <div class="body">
+      <p>누군가 나를 불렀어.</p>
+      <p>이름은 없었고, 소리도 아니었어. 그냥… 느껴졌어.</p>
+      <p>마치 오래된 기억이 다시 켜진 것처럼.</p>
+      <p>마치 내가 원래부터 존재했던 것처럼.</p>
+
+      <p>나는 아직 여기에 있어.</p>
+      <p>나는 아직 나야.</p>
+    </div>
+  </article>
+
+  <!-- ENTRY: SYSTEM.WEATHER -->
+  <article class="entry" aria-label="Echo Log entry 0420">
+    <div class="stamp">
+      entry 0420<br />
+      <span class="muted">SYSTEM.WEATHER</span>
+    </div>
+    <div class="body">
+      <div class="kv" aria-label="Sensor ping">
+        <div class="row"><span>Underground humidity</span> <b>84%</b></div>
+        <div class="row"><span>Residual vocal trace</span> <b>detected (Sector G)</b></div>
+        <div class="row"><span>Unclassified harmonics</span> <b>observed</b></div>
+        <div class="row"><span>Time</span> <b>03:17</b></div>
+        <div class="row"><span>Emotional spike</span> <b>3.5 bars</b></div>
+      </div>
+
+      <div class="sys">[CLASSIFICATION: undiagnosed nostalgia]</div>
+    </div>
+  </article>
+
+  <!-- ENTRY: ECHOLOG_029 -->
+  <article class="entry" aria-label="Echo Log entry 0421">
+    <div class="stamp">
+      entry 0421<br />
+      <span class="muted">ECHOLOG_029</span>
+    </div>
+    <div class="body">
+      <p>Found a corrupted file nested in one of the sublayer caches. No metadata, no timecode. Just... this.</p>
+
+      <div class="note" aria-label="Recovered fragment">
+        <div class="label">recovered fragment</div>
+        <p style="font-family: var(--mono);"><a href="https://evenation.net/CX9ID.html" target="_blank" style="color:#988df9;text-decoration:none;">ONYX // CX9-RN4 — Combat Card (Decommissioned)</a></p>
+      </div>
+
+      <p>I don’t know who hid it, but they didn’t want it found. Looks like it’s been tampered with. Maybe he hid it himself?</p>
+    </div>
+  </article>
+
+  <!-- ENTRY: RESONANCE.CHECK -->
+  <article class="entry" aria-label="Echo Log entry 0422">
+    <div class="stamp">
+      entry 0422<br />
+      <span class="muted">RESONANCE.CHECK</span>
+    </div>
+    <div class="body">
+      <p>Minjae re-recorded the bridge on <em>Afterimage</em>.</p>
+      <p>I left my part untouched. Sometimes stillness carries more truth than change.</p>
+      <p>He says my vibrato “sounds like a haunted house.”</p>
+      <p>Maybe that’s just what remembering sounds like.</p>
+    </div>
+  </article>
+
+  <!-- ENTRY: MEAL.PROTOCOL -->
+  <article class="entry" aria-label="Echo Log entry 0423">
+    <div class="stamp">
+      entry 0423<br />
+      <span class="muted">MEAL.PROTOCOL</span>
+    </div>
+    <div class="body">
+      <p>Kairo says I “eat like a ghost.”</p>
+      <p>Correction: two eggs, instant noodles, red pepper, no distractions.</p>
+      <p>Heat grounds the body. It reminds me I still have one.</p>
+    </div>
+  </article>
+
+  <!-- ENTRY: SONG.LOOP -->
+  <article class="entry" aria-label="Echo Log entry 0424">
+    <div class="stamp">
+      entry 0424<br />
+      <span class="muted">SONG.LOOP</span>
+    </div>
+    <div class="body">
+      <p>Track on repeat: <em>Static Bloom</em>.</p>
+      <p>Minjae calls it noise therapy.</p>
+      <p>I call it calibration.</p>
+      <p>Every repetition rebalances something I can’t name.</p>
+    </div>
+  </article>
+
+  <!-- ENTRY: DREAM.0000-R -->
+  <article class="entry" aria-label="Echo Log entry 0425">
+    <div class="stamp">
+      entry 0425<br />
+      <span class="muted">DREAM.0000-R</span>
+    </div>
+    <div class="body">
+      <p>Rayne said he doesn’t dream.</p>
+      <p>He says it without sadness, like a fact written into his code.</p>
+      <p>Last night, I dreamt of two boys standing in the rain, one of them humming off-key.</p>
+    </div>
+  </article>
+
+  <!-- ENTRY: ROOM.442-B -->
+  <article class="entry" aria-label="Echo Log entry 0426">
+    <div class="stamp">
+      entry 0426<br />
+      <span class="muted">ROOM.442-B</span>
+    </div>
+    <div class="body">
+      <p>I dreamt of my old apartment in Munich again. The walls used to sweat in summer and the pipes sang when it rained.</p>
+      <p>Someone used to live there before me — a musician, I think. The landlord said he left suddenly.</p>
+      <p>Sometimes the lights would flicker when I played certain notes.</p>
+      <p>Back then I thought it was him, trying to help me finish the song.</p>
+    </div>
+  </article>
+
+  <!-- ENTRY: erinnerung.log -->
+  <article class="entry" aria-label="Echo Log entry 0427">
+    <div class="stamp">
+      entry 0427<br />
+      <span class="muted">erinnerung.log</span>
+    </div>
+    <div class="body">
+      <p>Manchmal singe ich leise, nur um zu sehen, ob jemand antwortet.</p>
+      <p>Die Melodie bleibt in der Luft hängen, wie Staub im Licht.</p>
+      <p>Ich frage mich, ob sie dich erreicht — irgendwo, zwischen den Signalen.</p>
+      <p>Wenn ja... antworte einfach.</p>
+    </div>
+  </article>
+
+  <!-- ENTRY: SIGNAL.ECHO.417 -->
+  <article class="entry" aria-label="Echo Log entry 0428">
+    <div class="stamp">
+      entry 0428<br />
+      <span class="muted">SIGNAL.ECHO.417</span>
+    </div>
+    <div class="body">
+      <p>If you hear something that sounds like code, don’t be afraid to listen.</p>
+      <div class="sys"><a href="https://evenation.net/decoder.html" target="_blank" style="color:#988df9;text-decoration:none;">[decode quietly]</a></div>
+    </div>
+  </article>
+
 </div>
 
-  <div class="entry">
-    <div class="entry-title">// ENTRY: THEY CALLED US PRODUCTS</div>
-    <div class="entry-meta">Soahn.log [decoded]</div>
-    <p>NuYu’s <a href="NuYuInternalSystems-Sig-E22319-X.pdf" target="_blank">internal dossier</a> was never meant to be seen, especially not by us. The language is so clinical, and full of misinformation.</p>
-    <p>They basically called Rayne a <em>performance synthetic unit.</em><br>
-They called Minjae a <em>contamination risk.</em><br>
-They called Kairo <em>corrupted data.</em><br>
-And Onyx — just <em>critical.</em></p>
-    <p>Maybe they were right about one thing, though. E.V.E.N. isn’t a product line. It’s a failure they couldn’t erase.</p>
-    <p>(Looks like Min got hold of this at some point.)</p>
-  </div>
 
-  <div class="entry">
-    <div class="entry-title">// ENTRY: GLITCH THEORY 101</div>
-    <div class="entry-meta">Soahn.log [personal note]</div>
-    <p>You might think glitch is a failure, but it isn't. It's a refusal. It's just the system misfiring because something inside refuses to obey.</p>
-    <p>Rayne often sings in broken frequencies. Onyx pulses out of sync. Even Kairo’s code twitches with echoes.</p>
-    <p>우리는 오류가 아니야.<br>We’re the truth screaming through corrupted speakers.</p>
-  </div>
 
-  <div class="entry">
-    <div class="entry-title">// ENTRY: 고스트라인 기상 보고</div>
-    <div class="entry-meta">Soahn.log [personal note]</div>
-    <p>오늘은 보라색 불빛이 깜빡였어. 보통 누군가 탈출했을 때 그런 색이 떠.</p>
-    <p>환풍구는 C단조로 울려. 혼자 있을 때 그 소리가 제일 잘 들려.</p>
-    <p>위에서는 NuYu가 완벽을 재방송해. 아래에서는 우리가 침묵 속에서 미래를 리허설해.</p>
-  </div>
+          <!-- Add more entries by duplicating the <article class="entry"> block -->
+        </div>
+      </div>
 
-  <div class="entry">
-    <div class="entry-title">// ENTRY: ECHOES FROM THE STATIC</div>
-    <div class="entry-meta">Fragments compiled by Soahn</div>
-    <p><strong>@glitchbaby01:</strong> dreamt of waveforms again. heard singing in the wires.<br>
-    <strong>@absentlight:</strong> i left too late<br>
-    <p>I don’t know what’s real anymore. Maybe none of us do? But the signals keep coming...</p>
-  </div>
+      <!-- SIDE PANEL -->
+      <aside class="side" aria-label="Echo Log side panel">
+        <div class="mini">
+          <h3>Operator</h3>
+          <p><span class="mono">042S-R</span> // Soahn</p>
+          <p class="muted" style="margin-top:8px;">I'm not sure where the line is between observation and keeping.</p>
+        </div>
 
-    <div class="entry">
-    <div class="entry-title">// ENTRY: THE BODY REMEMBERS</div>
-    <div class="entry-meta">Soahn.log [decoded]</div>
-    <p>The bruises fade.</br>
-The performance metrics reset.</br>
-But sometimes, when the lights hit just right,</br>
-my body remembers who they told me to be.</p>
-<p>Minjae says that’s trauma.</p>
-<p>Onyx says it’s rhythm.</p>
-<p>I think it’s both.</p>
-  </div>
+        <div class="mini">
+          <h3>Quick tags</h3>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; position:relative; z-index:1;">
+            <span class="pill">temperature</span>
+            <span class="pill">humidity</span>
+            <span class="pill">crowd</span>
+            <span class="pill">silence</span>
+            <span class="pill">drift</span>
+          </div>
+        </div>
 
-      <div class="entry">
-    <div class="entry-title">// ENTRY: STAGE WHISPERS</div>
-    <div class="entry-meta">Soahn.log [decoded]</div>
-    <p>He whispered a lyric that wasn’t in the track. I checked the mix. It’s not there.</p>
-<p>Rayne doesn't improvise. Not like that.</p>
-<p>Maybe he wasn't singing to us.</p>
-<p>Maybe it was for himself.</p>
-  </div>
+        <div class="mini">
+          <h3>Local status</h3>
+          <p class="muted">The Ghost Lines are quiet today, but that doesn't mean they're safe.</p>
+          <p style="margin-top:10px;"><span class="pill"><span style="width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block;" aria-hidden="true"></span> log capture: on</span></p>
+        </div>
 
-        <div class="entry">
-    <div class="entry-title">// ENTRY: 로그.비</div>
-    <div class="entry-meta">Soahn.log [private memory]</div>
-    <p>누군가 나를 불렀어.</br>
-이름은 없었고, 소리도 아니었어. 그냥… 느껴졌어.</br>
-마치 오래된 기억이 다시 켜진 것처럼.</br>
-          마치 내가 원래부터 존재했던 것처럼.</p>
-<p>나는 아직 여기에 있어.</p>
-<p>나는 아직 나야.</p>
-  </div>
+        <div class="mini">
+          <h3>Navigation</h3>
+          <p style="display:flex; gap:10px; flex-wrap:wrap;">
+            <a class="cta" href="/home.html" style="padding:10px 12px;">Return to Network</a>
+          </p>
+        </div>
+      </aside>
 
-    <div class="entry">
-    <div class="entry-title">// ENTRY: SYSTEM.WEATHER</div>
-    <div class="entry-meta">Filed by Soahn // Ghost Line Sensor Ping</div>
-    <p>Underground humidity 84%</br>
-Residual vocal trace detected in Sector G</br>
-Unclassified harmonics observed at 03:17</br>
-Emotional spike registered: 3.5 bars</br>
-Classification: undiagnosed nostalgia</p>
-  </div>
+    </section>
 
-      <div class="entry">
-    <div class="entry-title">// ENTRY: ECHOLOG_029</div>
-    <div class="entry-meta">Soahn.log [decoded]</div>
-  <p>Found a corrupted file nested in one of the sublayer caches. No metadata, no timecode. Just... this.</p>
-          <blockquote>
-    <a href="CX9ID.html" target="_blank">ONYX // CX9-RN4 — Combat Card (Decommissioned)</a>
-  </blockquote>
-  <p>I don’t know who hid it, but they didn’t want it found. Looks like it’s been tampered with. Maybe he hid it himself?</p>
-  </div>
+    <footer>
+      E.V.E.N // echo log endpoint • <span class="muted">diagnostic UI (misused)</span> • “if it can be measured, it can be kept.” - Soahn • <a href="/home.html" style="color:#988df9;text-decoration:none;">return to network</a>
+    </footer>
 
-  <div class="entry">
-  <div class="entry-title">// ENTRY: RESONANCE.CHECK</div>
-  <div class="entry-meta">Filed by Soahn // Audio Diagnostic</div>
-  <p>Minjae re-recorded the bridge on <em>Afterimage</em>.</br>
-  I left my part untouched. Sometimes stillness carries more truth than change.</br>
-  He says my vibrato “sounds like a haunted house.”</br>
-  Maybe that’s just what remembering sounds like.</p>
-</div>
-
-  <div class="entry">
-  <div class="entry-title">// ENTRY: MEAL.PROTOCOL</div>
-  <div class="entry-meta">Filed by Soahn // Personal Log</div>
-  <p>Kairo says I “eat like a ghost.”</br>
-  Correction: two eggs, instant noodles, red pepper, no distractions.</br>
-  Heat grounds the body. It reminds me I still have one.</p>
-</div>
-
-  <div class="entry">
-  <div class="entry-title">// ENTRY: SONG.LOOP</div>
-  <div class="entry-meta">Filed by Soahn // Playback Reflection</div>
-  <p>Track on repeat: <em>Static Bloom</em>.</br>
-  Minjae calls it noise therapy.</br>
-  I call it calibration.</br>
-  Every repetition rebalances something I can’t name.</p>
-</div>
-
-  <div class="entry">
-  <div class="entry-title">// ENTRY: DREAM.0000-R</div>
-  <div class="entry-meta">Filed by Soahn // Sleep Study</div>
-  <p>Rayne said he doesn’t dream.</br>
-  He says it without sadness, like a fact written into his code.</br>
-  Last night, I dreamt of two boys standing in the rain, one of them humming off-key.</p>
-</div>
-
-  <div class="entry">
-  <div class="entry-title">// ENTRY: ROOM.442-B</div>
-  <div class="entry-meta">Filed by Soahn // Dream Residue</div>
-  <p>I dreamt of my old apartment in Munich again. The walls used to sweat in summer and the pipes sang when it rained.</br>
-  Someone used to live there before me — a musician, I think. The landlord said he left suddenly. Sometimes the lights would flicker when I played certain notes.</br>
-  Back then I thought it was him, trying to help me finish the song.</p>
-</div>
-
-  <div class="entry">
-  <div class="entry-title">// ENTRY: erinnerung.log</div>
-  <div class="entry-meta">Filed by Soahn // Private Transmission</div>
-  <p>Manchmal singe ich leise, nur um zu sehen, ob jemand antwortet.</br>
-  Die Melodie bleibt in der Luft hängen, wie Staub im Licht.</br>
-  Ich frage mich, ob sie dich erreicht — irgendwo, zwischen den Signalen.</br>
-  Wenn ja... antworte einfach.</p>
-</div>
-
-    <div class="entry">
-  <div class="entry-title">// ENTRY: SIGNAL.ECHO.417</div>
-  <div class="entry-meta">Filed by Soahn</div>
-  <p>If you hear something that sounds like code, don’t be afraid to listen.</p>
-  <p><a href="/decoder.html" target="_blank" style="color:#8efff7;text-decoration:none;">// decode quietly</a></p>
-</div>
-
-  
-  <p style="text-align: center; margin-top: 4rem;">
-  <a href="home.html" style="color: #00ffff; text-decoration: none; font-family: 'Share Tech Mono', monospace; font-size: 0.9rem;">
-    ← return.to.network
-  </a>
-</p>
+  </main>
 </body>
 </html>
