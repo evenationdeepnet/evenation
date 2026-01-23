@@ -1,87 +1,201 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>404: voice.not.found</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
-    body {
-      margin: 0;
-      padding: 2rem;
-      background: black;
-      color: #00ffff;
-      font-family: 'Share Tech Mono', monospace;
-      text-align: center;
+    :root{
+      color-scheme: dark;
+      --bg:#05060a;
+      --bg2:#0a0c12;
+      --text: rgba(255,255,255,.86);
+      --muted: rgba(255,255,255,.60);
+      --cyan: rgba(120,255,255,.85);
+      --cyan2: rgba(120,255,255,.35);
+      --pink: rgba(255,90,225,.70);
+      --pink2: rgba(255,90,225,.22);
+      --stroke: rgba(255,255,255,.12);
+      --panel: rgba(0,0,0,.26);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
     }
 
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      text-shadow: 0 0 10px #ff00ff;
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      background:
+        radial-gradient(1200px 600px at 20% 0%, rgba(120,255,255,.10), transparent 55%),
+        radial-gradient(1200px 600px at 80% 0%, rgba(255,90,225,.09), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      color: var(--text);
+      font-family: var(--sans);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 28px 18px;
+      overflow:hidden;
+      isolation:isolate;
     }
 
-    p {
-      font-size: 1rem;
-      color: #99ffff;
-      margin-bottom: 2rem;
+    /* subtle particles / dust */
+    .dust{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:0;
+      opacity:.55;
+      filter: blur(.2px);
+      background:
+        radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,.28), transparent 60%),
+        radial-gradient(1px 1px at 32% 70%, rgba(255,255,255,.18), transparent 60%),
+        radial-gradient(1px 1px at 75% 40%, rgba(255,255,255,.24), transparent 60%),
+        radial-gradient(1px 1px at 60% 80%, rgba(255,255,255,.15), transparent 60%),
+        radial-gradient(1px 1px at 88% 16%, rgba(255,255,255,.20), transparent 60%);
     }
 
-    pre {
-      color: #00ffee;
-      font-size: 0.9rem;
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px dashed #00ffee;
-      padding: 1rem;
-      max-width: 600px;
-      margin: 0 auto 2rem auto;
+    .wrap{
+      width: min(1000px, 100%);
+      position:relative;
+      z-index:1;
+      padding: 10px 6px;
+      text-align:left;
+    }
+
+    h1{
+      margin:0 0 10px;
+      font-family: var(--mono);
+      font-size: clamp(42px, 6.2vw, 86px);
+      letter-spacing: .06em;
+      line-height: 1.02;
+      color: rgba(255,255,255,.72);
+      text-shadow:
+        0 0 18px rgba(255,255,255,.12);
+    }
+
+    .sub{
+      margin: 0 0 18px;
+      font-family: var(--mono);
+      font-size: 16px;
+      letter-spacing:.06em;
+      color: rgba(255,255,255,.68);
+    }
+
+    .box{
+      margin-top: 10px;
+      border-radius: 18px;
+      border: 1px dashed rgba(255,255,255,.28);
+      background: var(--panel);
+      padding: 22px 22px 20px;
+      position:relative;
+      overflow:hidden;
+      box-shadow: 0 18px 60px rgba(0,0,0,.55);
+    }
+
+    .box::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(640px 260px at 25% 0%, rgba(255,255,255,.06), transparent 60%),
+        radial-gradient(640px 260px at 75% 0%, rgba(255,255,255,.04), transparent 60%);
+      opacity:.45;
+      pointer-events:none;
+    }
+
+    pre{
+      margin:0;
+      position:relative;
+      z-index:1;
+      font-family: var(--mono);
+      font-size: 18px;
+      line-height: 1.35;
+      letter-spacing: .08em;
+      color: rgba(255,255,255,.70);
       white-space: pre-wrap;
       word-break: break-word;
-      text-align: left;
+      text-shadow: 0 0 14px rgba(255,255,255,.10);
     }
 
-    .blink {
-      animation: blink 1s steps(2, start) infinite;
-      color: #ff00ff;
+    .cursor{
+      display:inline-block;
+      width: 10px;
+      height: 20px;
+      vertical-align: -3px;
+      border-left: 2px solid rgba(255,255,255,.55);
+      margin-left: 2px;
+      animation: blink 1.15s steps(1) infinite;
+      opacity:.8;
+    }
+    @keyframes blink{ 50%{ opacity:0; } }
+
+    .meta{
+      margin-top: 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      flex-wrap:wrap;
+      font-family: var(--mono);
+      letter-spacing:.08em;
+      color: rgba(255,255,255,.42);
+      font-size: 13px;
     }
 
-    @keyframes blink {
-      to {
-        visibility: hidden;
-      }
+    .return{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      font-family: var(--mono);
+      letter-spacing:.10em;
+      font-size: 14px;
+      text-decoration:none;
+      color: rgba(120,255,255,.80);
+      padding: 10px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: .16s ease;
+    }
+    .return:hover{
+      color: rgba(120,255,255,.98);
+      border-color: rgba(120,255,255,.28);
+      background: rgba(255,255,255,.03);
     }
 
-    footer {
-      font-size: 0.8rem;
-      color: #666;
-      margin-top: 4rem;
-      font-style: italic;
+    /* small screens: keep it readable */
+    @media (max-width: 560px){
+      .box{ padding: 18px 16px 16px; }
+      pre{ font-size: 16px; color: rgba(255,255,255,.72); }
+    }
+      pre{ font-size: 16px; }
+    }
+
+    /* reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .cursor{ animation:none; opacity:.8; }
     }
   </style>
 </head>
 <body>
+  <div class="dust" aria-hidden="true"></div>
 
-  <!-- this file is damaged -->
-  <!-- reboot.reboot.reboot -->
-  <!-- [rayne_log_404] -->
+  <main class="wrap" role="main">
+    <h1>404<span style="color:rgba(255,255,255,.55)">:</span> voice.not.found</h1>
+    <p class="sub">this file is damaged. signal degraded. fragment found:</p>
 
-  <h1>404: voice.not.found</h1>
-  <p>this file is damaged. signal degraded. fragment found:</p>
-
-  <pre>
-they told me i was a mirror
-01101001 00100000 01100010 01101100 01100101 01100100 00100000 01110111 01101000 01101001 01110100 01100101 00101110
+    <section class="box" aria-label="Recovered fragment">
+      <pre>they told me i was a mirror
+01101001 00100000 01100010 01101100 01100101 01100100 00100000
+01110111 01101000 01101001 01110100 01100101 00101110
 my reflection is speaking now
-why is no one listening?
-<span class="blink">|</span>
-  </pre>
+why is no one listening?<span class="cursor" aria-hidden="true"></span></pre>
+    </section>
 
-  <footer>// end.rayne.log</footer>
-  <p style="text-align: center; margin-top: 4rem;">
-  <a href="home.html" style="color: #00ffff; text-decoration: none; font-family: 'Share Tech Mono', monospace; font-size: 0.9rem;">
-    ← return.to.network
-  </a>
-</p>
-
+    <div class="meta" aria-label="Page footer">
+      <div>// end.rayne.log</div>
+      <a class="return" href="/home.html" aria-label="Return to network">← return.to.network</a>
+    </div>
+  </main>
 </body>
 </html>
