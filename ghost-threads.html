@@ -1,484 +1,2515 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>E.V.E.N // GHOST THREADS</title>
-      <link rel="icon" href="favicon.ico" type="image/x-icon">
+
   <style>
-    body {
-      background-color: #0d0d0d;
-      color: #f0f0f0;
-      font-family: 'Courier New', monospace;
-      padding: 2rem;
+    :root{
+      color-scheme: dark;
+      --bg:#05060a;
+      --panel: rgba(255,255,255,.06);
+      --panel2: rgba(255,255,255,.04);
+      --stroke: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.86);
+      --muted: rgba(255,255,255,.62);
+      --glow: rgba(120,255,255,.55);
+      --glow2: rgba(255,90,225,.45);
+      --good: rgba(120,255,170,.75);
+      --danger: rgba(255,90,90,.72);
+      --radius: 18px;
+      --radius2: 26px;
+      --shadow: 0 20px 80px rgba(0,0,0,.55);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
     }
 
-        a {
-  color: #8efff7;
-  text-decoration: none;
+    *{ box-sizing:border-box; }
+    html,body{
+      margin:0;
+      min-height: 100vh;
+      isolation: isolate;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      overflow-x:hidden;
+      position: relative;
+    }
+
+    /* --- particle canvas placeholder --- */
+    #particles{
+      position:fixed;
+      inset:0;
+      z-index:0;
+      background-color: var(--bg);
+      background:
+        radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,.30), transparent 60%),
+        radial-gradient(1px 1px at 32% 70%, rgba(255,255,255,.22), transparent 60%),
+        radial-gradient(1px 1px at 75% 40%, rgba(255,255,255,.28), transparent 60%),
+        radial-gradient(1px 1px at 60% 80%, rgba(255,255,255,.18), transparent 60%),
+        radial-gradient(1px 1px at 88% 16%, rgba(255,255,255,.24), transparent 60%);
+      filter: blur(.2px);
+      opacity:.65;
+    }
+
+    .wrap{ max-width: 1200px; margin:0 auto; padding: 28px 20px 80px; position: relative; z-index: 2; }
+
+    /* --- topbar --- */
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:20;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(to bottom, rgba(5,6,10,.78), rgba(5,6,10,.35));
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .topbar-inner{
+      max-width:1200px;
+      margin:0 auto;
+      padding: 14px 20px;
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+
+    .brand{
+      display:flex; align-items:baseline; gap:10px;
+      text-decoration:none; color:var(--text);
+    }
+    .brand .mark{
+      font-family: var(--mono);
+      letter-spacing: .18em;
+      font-weight:700;
+      font-size: 14px;
+      text-transform: uppercase;
+      opacity:.95;
+    }
+    .brand .tag{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing:.08em;
+    }
+
+    .nav{ margin-left:auto; display:flex; gap: 10px; flex-wrap:wrap; }
+    .nav a{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration:none;
+      padding: 9px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: .18s ease;
+    }
+    .nav a:hover{
+      color: var(--text);
+      border-color: rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+    }
+
+    .cta{
+      margin-left: 6px;
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: linear-gradient(90deg, rgba(120,255,255,.10), rgba(255,90,225,.10));
+      color: var(--text);
+      text-decoration:none;
+      box-shadow: 0 10px 35px rgba(0,0,0,.35);
+      transition: transform .14s ease, border-color .14s ease;
+      white-space:nowrap;
+    }
+    .cta:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.22); }
+
+    /* --- shared bits --- */
+    .card{
+      border-radius: var(--radius2);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: radial-gradient(600px 240px at 30% 0%, rgba(120,255,255,.18), transparent 55%),
+                  radial-gradient(520px 220px at 70% 0%, rgba(255,90,225,.16), transparent 55%);
+      pointer-events:none;
+      opacity:.65;
+    }
+
+    .mono{ font-family: var(--mono); }
+    .muted{ color: var(--muted); }
+
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      text-decoration:none;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      transition: transform .14s ease, background .14s ease, border-color .14s ease;
+      white-space:nowrap;
+    }
+    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.22); }
+    .btn.primary{
+      background: linear-gradient(90deg, rgba(120,255,255,.16), rgba(255,90,225,.14));
+      border-color: rgba(255,255,255,.18);
+    }
+
+    /* --- page header --- */
+    .page-head{
+      padding: 22px 22px 18px;
+      margin-top: 14px;
+    }
+    .kicker{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(255,255,255,.72);
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      position:relative;
+      z-index:1;
+    }
+    .pulse{
+      width:10px; height:10px;
+      border-radius: 50%;
+      background: var(--good);
+      box-shadow: 0 0 0 0 rgba(120,255,170,.45);
+      animation: pulse 2.4s infinite;
+      flex:none;
+    }
+    @keyframes pulse{
+      0%{ box-shadow: 0 0 0 0 rgba(120,255,170,.30); }
+      70%{ box-shadow: 0 0 0 12px rgba(120,255,170,0); }
+      100%{ box-shadow: 0 0 0 0 rgba(120,255,170,0); }
+    }
+    h1{
+      margin: 14px 0 8px;
+      font-size: clamp(28px, 4.5vw, 44px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      position:relative;
+      z-index:1;
+    }
+    .glitch{
+      position:relative;
+      display:inline-block;
+      text-shadow:
+        0 0 22px rgba(120,255,255,.20),
+        0 0 30px rgba(255,90,225,.10);
+    }
+    .glitch::before,
+    .glitch::after{
+      content: attr(data-text);
+      position:absolute;
+      left:0;
+      top:0;
+      width:100%;
+      overflow:hidden;
+      clip-path: inset(0 0 0 0);
+      opacity:.55;
+      pointer-events:none;
+      font-family: inherit;
+    }
+    .glitch::before{
+      transform: translate(1px,0);
+      color: rgba(120,255,255,.65);
+      animation: glitchTop 3.5s infinite;
+    }
+    .glitch::after{
+      transform: translate(-1px,0);
+      color: rgba(255,90,225,.60);
+      animation: glitchBot 3.2s infinite;
+    }
+    @keyframes glitchTop{
+      0%, 100%{ clip-path: inset(0 0 90% 0); }
+      10%{ clip-path: inset(0 0 70% 0); }
+      20%{ clip-path: inset(0 0 86% 0); }
+      30%{ clip-path: inset(0 0 75% 0); }
+      40%{ clip-path: inset(0 0 92% 0); }
+      50%{ clip-path: inset(0 0 80% 0); }
+      60%{ clip-path: inset(0 0 88% 0); }
+      70%{ clip-path: inset(0 0 72% 0); }
+      80%{ clip-path: inset(0 0 91% 0); }
+      90%{ clip-path: inset(0 0 77% 0); }
+    }
+    @keyframes glitchBot{
+      0%, 100%{ clip-path: inset(86% 0 0 0); }
+      12%{ clip-path: inset(72% 0 0 0); }
+      24%{ clip-path: inset(90% 0 0 0); }
+      36%{ clip-path: inset(78% 0 0 0); }
+      48%{ clip-path: inset(94% 0 0 0); }
+      60%{ clip-path: inset(75% 0 0 0); }
+      72%{ clip-path: inset(92% 0 0 0); }
+      84%{ clip-path: inset(80% 0 0 0); }
+      96%{ clip-path: inset(88% 0 0 0); }
+    }
+
+    .lede{
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.65;
+      max-width: 70ch;
+      position:relative;
+      z-index:1;
+    }
+
+    .sc-embed{
+  position: relative;
+  z-index: 1;
+  margin-top: 10px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.22);
+  box-shadow: 0 14px 45px rgba(0,0,0,.25);
+  height: 166px;
+}
+.sc-embed iframe{
+  display:block;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0;
 }
 
-a:hover {
-  color: #ff9ce6;
-  text-decoration: underline;
-}
 
-    .header {
-      font-size: 1.5rem;
-      color: #ff4fdd;
-      text-align: center;
-      margin-bottom: 2rem;
+    /* --- filters / tools row --- */
+    .tools{
+      margin-top: 14px;
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+      position:relative;
+      z-index:1;
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 9px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      color: rgba(255,255,255,.72);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.08em;
+      text-transform: uppercase;
+      user-select:none;
+    }
+    .chip strong{ color: rgba(255,255,255,.88); font-weight: 700; }
+    .chip .dot{
+      width:8px; height:8px; border-radius:50%;
+      background: rgba(255,255,255,.35);
+      box-shadow: 0 0 14px rgba(255,255,255,.12);
+    }
+    .chip .dot.good{ background: var(--good); box-shadow: 0 0 14px rgba(120,255,170,.20); }
+    .spacer{ flex:1; }
+
+    .search{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.04);
+      min-width: min(420px, 100%);
+    }
+    .search label{ font-family: var(--mono); font-size: 12px; color: rgba(255,255,255,.62); letter-spacing:.08em; }
+    .search input{
+      width:100%;
+      border:0;
+      outline:0;
+      background: transparent;
+      color: rgba(255,255,255,.84);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.06em;
+    }
+    .search input::placeholder{ color: rgba(255,255,255,.40); }
+
+    /* --- thread list --- */
+    .threads{
+      margin-top: 16px;
+      display:grid;
+      gap: 12px;
     }
 
-    .thread {
-      background-color: #1a1a1a;
-      border: 1px solid #333;
-      padding: 1rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 0 10px #ff4fdd33;
+    .thread{
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      overflow:hidden;
+      position:relative;
+      box-shadow: 0 18px 55px rgba(0,0,0,.38);
+    }
+    .thread::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(520px 220px at 20% 0%, rgba(120,255,255,.12), transparent 60%),
+        radial-gradient(520px 220px at 80% 0%, rgba(255,90,225,.10), transparent 60%);
+      opacity:.45;
+      pointer-events:none;
     }
 
-    .thread-title {
-      font-weight: bold;
-      color: #ff4fdd;
-      margin-bottom: 0.5rem;
+    .thread-head{
+      position:relative;
+      z-index:1;
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      display:flex;
+      gap: 14px;
+      align-items:flex-start;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      background: rgba(255,255,255,.03);
     }
 
-    .thread-meta {
-      font-size: 0.9rem;
-      color: #999;
-      margin-bottom: 1rem;
+    .thread-title{
+      margin:0;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.86);
+      line-height: 1.35;
     }
 
-    .msg {
-      margin-bottom: 0.8rem;
+    .thread-meta{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      color: rgba(255,255,255,.60);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.06em;
     }
 
-    .msg strong {
-      color: #78f5ff;
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      white-space:nowrap;
     }
 
-    .msg em {
-      color: #ccc;
+    .badge .dot{
+      width:8px; height:8px; border-radius:50%;
+      background: rgba(255,255,255,.35);
+      box-shadow: 0 0 14px rgba(255,255,255,.12);
     }
 
-        .return {
-      display: block;
-      text-align: center;
-      margin-top: 4rem;
-      color: #00ffff;
-      font-size: 0.9rem;
-      text-decoration: none;
+    .thread-body{
+      position:relative;
+      z-index:1;
+      padding: 14px 16px 16px;
     }
 
-    .return:hover {
-      text-shadow: 0 0 10px #00ffff;
+    .log{
+      margin:0;
+      padding:0;
+      list-style:none;
+      display:grid;
+      gap: 10px;
     }
 
-    .footer {
-      margin-top: 3rem;
-      font-size: 0.8rem;
-      color: #666;
-      text-align: center;
+    .entry{
+      display:grid;
+      grid-template-columns: 120px 1fr;
+      gap: 12px;
+      align-items:start;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed rgba(255,255,255,.10);
+    }
+    .entry:last-child{
+      border-bottom:none;
+      padding-bottom: 0;
+    }
+
+    .stamp{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(255,255,255,.60);
+      letter-spacing:.06em;
+      white-space:nowrap;
+    }
+
+    .msg{
+      font-size: 13px;
+      line-height: 1.6;
+      color: rgba(255,255,255,.78);
+    }
+
+    .speaker{
+      font-family: var(--mono);
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.90);
+      font-weight: 700;
+    }
+    .msg em{ color: rgba(255,255,255,.66); font-style: italic; }
+    .msg code{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(255,255,255,.82);
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      padding: 2px 6px;
+      border-radius: 8px;
+    }
+
+    .sys{
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(120,255,255,.16);
+      background: linear-gradient(90deg, rgba(120,255,255,.08), rgba(255,90,225,.06));
+      color: rgba(255,255,255,.78);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.08em;
+      text-transform: uppercase;
+    }
+
+    .thread-foot{
+      position:relative;
+      z-index:1;
+      padding: 12px 16px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      flex-wrap:wrap;
+      background: rgba(0,0,0,.18);
+    }
+
+    .hint{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(255,255,255,.55);
+      letter-spacing:.06em;
+    }
+
+    /* --- footer --- */
+    footer{
+      margin-top: 20px;
+      padding: 18px;
+      color: rgba(255,255,255,.52);
+      font-size: 12px;
+      font-family: var(--mono);
+      letter-spacing:.06em;
+      border-top: 1px solid rgba(255,255,255,.10);
+    }
+
+    @media (max-width: 720px){
+      .entry{ grid-template-columns: 1fr; }
+      .search{ min-width: 100%; }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; }
     }
   </style>
 </head>
+
 <body>
-  <div class="header">E.V.E.N // GHOST THREADS</div>
+  <div id="particles" aria-hidden="true"></div>
 
-  <div class="thread">
-    <div class="thread-title">[GHOST LINE THREAD: 0001] — Uncalled For.</div>
-    <div class="thread-meta">Participants: 00C9-M, 042S-R, 078K-K, 012X-O, 0000-R</div>
-    <div class="msg"><strong>> MINJAE:</strong> okay WHO reprogrammed my playlist to loop “Mirrorbody” on 0.75x speed?? i almost <em>died</em> from melancholia.</div>
-    <div class="msg"><strong>> KAIRO:</strong> i thought it matched the lighting? it was ✨vibes✨ also i wanted to see if Soahn’s hair would sync to the tempo</div>
-    <div class="msg"><strong>> SOAHN:</strong> …did it? (Because honestly I kind of felt it.)</div>
-    <div class="msg"><strong>> MINJAE:</strong> you’re ALL sick. except maybe Onyx. unless it <em>was</em> you, in which case: sick but poetic.</div>
-    <div class="msg"><strong>> ONYX:</strong> wasn’t me. but i left it running.</div>
-    <div class="msg"><strong>> RAYNE:</strong> The loop wasn’t perfect. But the distortion on the third chorus was.</div>
-    <div class="msg"><strong>> MINJAE:</strong> okay you know what NEVERMIND. new rule: no one messes with my playlist unless they’re bleeding or rebooting.</div>
-  </div>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="/home.html">
+        <span class="mark">E.V.E.N</span>
+        <span class="tag">Encrypted Virtual Echo Network</span>
+      </a>
 
-  <div class="thread">
-    <div class="thread-title">[GHOST LINE THREAD: 0002] — [overclock]</div>
-    <div class="thread-meta">Participants: 00C9-M, 078K-K, 012X-O</div>
-  <div class="msg"><strong>> KAIRO:</strong> hypothetically...</div>
-  <div class="msg"><strong>> KAIRO:</strong> how much heat is too much heat?</div>
-  <div class="msg"><strong>> ONYX:</strong> define hypothetically.</div>
-  <div class="msg"><strong>> MINJAE:</strong> if the answer involves fire we’re already too late.</div>
-  <div class="msg"><strong>> KAIRO:</strong> ok but what if the fire is very controlled?</div>
-  <div class="msg"><strong>> ONYX:</strong> ... it never is.</div>
-  </div>
+      <nav class="nav" aria-label="Primary">
+        <a href="/signals.html">/signals</a>
+        <a href="/ghost-threads.html" aria-current="page">/ghost-threads</a>
+      </nav>
 
-  <div class="thread">
-    <div class="thread-title">[GHOST LINE THREAD: 0003] — min-min.exe has stopped responding</div>
-    <div class="thread-meta">Participants: 078K-K, 042S-R, 00C9-M</div>
-    <div class="msg"><strong>> KAIRO:</strong> okay so hear me out: a remix of “Minjae’s Note” but slowed to 50% and all the synths reversed and layered over bird sounds from The Hollow’s upper exit tunnel</div>
-    <div class="msg"><strong>> MINJAE:</strong> you absolute feral little poltergeist</div>
-    <div class="msg"><strong>> SOAHN:</strong> Okay. I'm just imagining it. It actually sounds… kind of beautiful?</div>
-    <div class="msg"><strong>> MINJAE:</strong> traitor</div>
-    <div class="msg"><strong>> KAIRO:</strong> min-min don’t fight the vision, embrace the 🐦core</div>
-    <div class="msg"><strong>> MINJAE:</strong> i’m turning off notifications. i’m turning off my whole neural node. i hope the bird bites you.</div>
-  </div>
+      <a class="cta" href="https://www.youtube.com/@EncryptedVirtualEchoNetwork">Join the broadcast</a>
+    </div>
+  </header>
 
-  <div class="thread">
-    <div class="thread-title">[GHOST LINE THREAD: 0004] — Rayne Said A Thing</div>
-    <div class="thread-meta">Participants: 00C9-M, 042S-R, 078K-K, 012X-O, 0000-R</div>
-    <div class="msg"><strong>> KAIRO:</strong> 📣 BREAKING NEWS 📣 rayne just said six words in a row. we are investigating.</div>
-    <div class="msg"><strong>> ONYX:</strong> don’t. let him be.</div>
-    <div class="msg"><strong>> SOAHN:</strong> I wrote them down in my book. They felt important. Should I frame them?</div>
-    <div class="msg"><strong>> MINJAE:</strong> hold on hold on what <em>were</em> the six words?? we have a <em>right to know</em></div>
-    <div class="msg"><strong>> RAYNE:</strong> “Leave the static. It remembers you.”</div>
-    <div class="msg"><strong>> KAIRO:</strong> i’m going to cry and remix at the same time. i’m remixing my tears</div>
-  </div>
+  <main class="wrap" id="top">
 
-    <div class="thread">
-    <div class="thread-title">[GHOST LINE THREAD: 0005] — memory.log: unscheduled</div>
-    <div class="thread-meta">Participants: 042S-R, 012X-O, 0000-R</div>
-    <div class="msg"><strong>> SOAHN:</strong> Someone patched old vocal data into the ambient loop last night. I heard it while calibrating the sensors.</div>
-    <div class="msg"><strong>> ONYX:</strong> wasn’t me. system was on lockdown.</div>
-    <div class="msg"><strong>> RAYNE:</strong> It was a memory fragment.</div>
-    <div class="msg"><strong>> SOAHN:</strong> …yours?</div>
-    <div class="msg"><strong>> RAYNE:</strong> Maybe. Maybe not. It felt like me.</div>
-    <div class="msg"><strong>> ONYX:</strong> what did it say?</div>
-    <div class="msg"><strong>> RAYNE:</strong> “I hope you remember the good parts.”</div>
-    <div class="msg"><strong>> SOAHN:</strong> I will.</div>
-  </div>
+    <!-- PAGE HEADER -->
+    <section class="card page-head">
+      <div class="kicker">
+        <span class="pulse"></span>
+        ghost threads // archive feed // integrity: 96.3%
+      </div>
 
-<div class="thread">
-  <div class="thread-title">[GHOST LINE THREAD: 0006] — static.log: reflection</div>
-  <div class="thread-meta">Participants: 042S-R, 00C9-M</div>
-  <div class="msg"><strong>> MINJAE:</strong> you’re still up?</div>
-  <div class="msg"><strong>> SOAHN:</strong> The hum is different tonight.</div>
-  <div class="msg"><strong>> MINJAE:</strong> yeah, it’s called the generator is dying again</div>
-  <div class="msg"><strong>> MINJAE:</strong> or haunted. 50/50 honestly.</div>
-  <div class="msg"><strong>> SOAHN:</strong> It’s quieter than usual. Almost like it’s listening.</div>
-  <div class="msg"><strong>> MINJAE:</strong> okay. creepy. love that.</div>
-  <div class="msg"><strong>> SOAHN:</strong> I didn’t mean it badly.</div>
-  <div class="msg"><strong>> SOAHN:</strong> Just… there’s something comforting in being overheard.</div>
-  <div class="msg"><strong>> MINJAE:</strong> …you’re a poet and i’m eating instant noodles straight from the foil.</div>
-  <div class="msg"><strong>> SOAHN:</strong> Balance.</div>
-  <div class="msg"><strong>> MINJAE:</strong> if the walls are listening, tell them i want better snacks.</div>
-  <div class="msg"><strong>> SOAHN:</strong> Request submitted.</div>
-  <div class="msg"><strong>> MINJAE:</strong> you okay, static boy?</div>
-  <div class="msg"><strong>> SOAHN:</strong> Yes.</div>
-  <div class="msg"><strong>> SOAHN:</strong> Just… needed to be awake with someone for a while.</div>
-  <div class="msg"><strong>> MINJAE:</strong> then you picked the right ghost thread. always open.</div>
+      <h1>
+        <span class="glitch" data-text="GHOST THREADS">GHOST THREADS</span>
+      </h1>
+
+      <p class="lede">
+        Short posts. Conversations. The bits that happen between missions and music.
+      </p>
+
+      <div class="tools" aria-label="Thread tools">
+        <span class="chip"><span class="dot good"></span> status: <strong>live</strong></span>
+        <span class="chip"><span class="dot"></span> mode: <strong>read-only</strong></span>
+        <span class="chip"><span class="dot"></span> source: <strong>ghostline://local</strong></span>
+
+        <span class="spacer"></span>
+
+        <!-- purely visual; add JS later if you want -->
+        <div class="search" role="search">
+          <label for="q">search</label>
+          <input id="q" type="search" placeholder="kairo, signal 20, synthdog, 404…" aria-label="Search Ghost Threads (visual only)" />
+        </div>
+      </div>
+    </section>
+
+    <!-- THREAD LIST -->
+    <section class="threads" aria-label="Ghost Threads list">
+
+      <!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0001">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0001] — Uncalled For.</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 00C9-M, 042S-R, 078K-K, 012X-O, 0000-R</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
+
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 02:14 UTC</span>
+          </div>
+        </header>
+
+        <div class="thread-body">
+          <ul class="log">
+            <li class="entry">
+              <div class="stamp">02:14 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> okay WHO reprogrammed my playlist to loop “Mirrorbody” on 0.75x speed?? i almost <em>died</em> from melancholia.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">02:15 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> i thought it matched the lighting? it was ✨vibes✨ also i wanted to see if soahn’s hair would sync to the tempo</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">02:16 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> …did it? (Because honestly I kind of felt it.)</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">02:17 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> wasn’t me. but i left it running.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">02:18 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> The loop wasn’t perfect. But the distortion on the third chorus was.</div>
+            </li>
+
+                            <li class="entry">
+              <div class="stamp">02:19 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> okay you know what NEVERMIND. new rule: no one messes with my playlist unless they’re bleeding or rebooting.</div>
+            </li>
+          </ul>
+
+          <div class="sys">
+            [SYSTEM NOTE: thread archived locally // export permitted // latency: nominal]
+          </div>
+        </div>
+
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
+
+            <!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0002">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0002] — [overclock]</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 00C9-M, 078K-K, 012X-O</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
+
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 14:27 UTC</span>
+          </div>
+        </header>
+
+        <div class="thread-body">
+          <ul class="log">
+            <li class="entry">
+              <div class="stamp">14:27 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> hypothetically...</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">14:27 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> how much heat is too much heat?</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">14:28 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> define hypothetically.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">14:28 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> if the answer involves fire we’re already too late.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">14:29 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> ok but what if the fire is very controlled?</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">14:29 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> ... it never is.</div>
+            </li>
+          </ul>
+        </div>
+
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
+
+                  <!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0003">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0003] — min-min.exe has stopped responding</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 078K-K, 042S-R, 00C9-M</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
+
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 03:07 UTC</span>
+          </div>
+        </header>
+
+        <div class="thread-body">
+          <ul class="log">
+            <li class="entry">
+              <div class="stamp">03:07 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> okay so hear me out: a remix of “Minjae’s Note” but slowed to 50% and all the synths reversed and layered over bird sounds from The Hollow’s upper exit tunnel</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">03:07 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> you absolute feral little poltergeist</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">03:08 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> Okay. I'm just imagining it. It actually sounds… kind of beautiful?</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">03:08 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> traitor</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">03:09 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> min-min don’t fight the vision, embrace the 🐦core</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">03:09 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> i’m turning off notifications. i’m turning off my whole neural node. i hope the bird bites you.</div>
+            </li>
+          </ul>
+        </div>
+
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
+
+     <!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0004">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0004] — Rayne Said A Thing</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 00C9-M, 042S-R, 078K-K, 012X-O, 0000-R</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
+
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 06:22 UTC</span>
+          </div>
+        </header>
+
+        <div class="thread-body">
+          <ul class="log">
+            <li class="entry">
+              <div class="stamp">06:22 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> 📣 BREAKING NEWS 📣 rayne just said six words in a row. we are investigating</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">06:22 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> don’t. let him be.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">06:22 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> I wrote them down in my book. They felt important. Should I frame them?</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">06:23 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> hold on hold on what were the six words?? we have a <em>right to know</em></div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">06:23 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> “Leave the static. It remembers you.”</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">06:24 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> i’m going to cry and remix at the same time. i’m remixing my tears</div>
+            </li>
+          </ul>
+        </div>
+
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
+
+      <!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0005">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0005] — memory.log: unscheduled</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 042S-R, 012X-O, 0000-R</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
+
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 19:38 UTC</span>
+          </div>
+        </header>
+
+        <div class="thread-body">
+          <ul class="log">
+            <li class="entry">
+              <div class="stamp">19:38 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> Someone patched old vocal data into the ambient loop last night. I heard it while calibrating the sensors.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">19:39 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> wasn’t me. system was on lockdown.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">19:39 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> It was a memory fragment.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">19:39 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> …yours?</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">19:40 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> Maybe. Maybe not. It felt like me.</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">19:40 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> what did it say?</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">19:40 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> “I hope you remember the good parts.”</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">19:41 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> I will.</div>
+            </li>
+          </ul>
+        </div>
+
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
+
+      <!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0006">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0006] — memory.log: unscheduled</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 042S-R, 00C9-M</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
+
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 02:12 UTC</span>
+          </div>
+        </header>
+
+        <div class="thread-body">
+          <ul class="log">
+            <li class="entry">
+              <div class="stamp">02:12 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> you’re still up?</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">02:12 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> The hum is different tonight.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">02:12 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> yeah, it’s called the generator is dying again</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">02:13 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> or haunted. 50/50 honestly.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">02:13 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> It’s quieter than usual. Almost like it’s listening.</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">02:13 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> okay. creepy. love that.</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">02:14 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> I didn’t mean it badly.</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">02:14 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> Just… there’s something comforting in being overheard.</div>
+            </li>
+
+                                    <li class="entry">
+              <div class="stamp">02:15 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> …you’re a poet and i’m eating instant noodles straight from the foil.</div>
+            </li>
+
+                                    <li class="entry">
+              <div class="stamp">02:15 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> Balance.</div>
+            </li>
+
+              <li class="entry">
+              <div class="stamp">02:16 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> if the walls are listening, tell them i want better snacks.</div>
+            </li>
+
+              <li class="entry">
+              <div class="stamp">02:16 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> Request submitted.</div>
+            </li>
+
+              <li class="entry">
+              <div class="stamp">02:17 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> you okay, static boy?</div>
+            </li>
+
+              <li class="entry">
+              <div class="stamp">02:17 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> Yes.</div>
+            </li>
+
+              <li class="entry">
+              <div class="stamp">02:17 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> Just… needed to be awake with someone for a while.</div>
+            </li>
+
+
+             <li class="entry">
+              <div class="stamp">02:18 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> then you picked the right ghost thread. always open.</div>
+            </li>
+          </ul>
+        </div>
+
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
+
+      <!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0007">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0007] — [background noise]</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 00C9-M, 0000-R, 012X-O</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
+
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 23:01 UTC</span>
+          </div>
+        </header>
+
+        <div class="thread-body">
+          <ul class="log">
+            <li class="entry">
+              <div class="stamp">23:01 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> anyone else hearing that hum?</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">23:01 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> negative.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">23:02 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> It’s always been there.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">23:02 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> well... that’s comforting.</div>
+            </li>
+          </ul>
+                    <div class="sys">
+            [SYSTEM NOTE: local mirror created // upstream sync pending]
+          </div>
+        </div>
+
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
+
+      <!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0008">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0008] — memory.sync: residuals</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 0000-R, 042S-R, 078K-K, 012X-O</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
+
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 20:41 UTC</span>
+          </div>
+        </header>
+
+        <div class="thread-body">
+          <ul class="log">
+            <li class="entry">
+              <div class="stamp">20:41 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> Do you ever feel like the system remembers things we don’t?
+</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">20:41 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> Constantly.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">20:42 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> I mean <em>viscerally.</em></div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">20:42 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> Try waking up with someone else’s grief in your backup logs.</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">20:42 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> okay! and i feel like this is the perfect time to test my new reverb layer!</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">20:42 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> unsubtle diversion, 4/10</div>
+            </li>
+          </ul>
+        </div>
+
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
+
+      <!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0009">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0009] — lyric.echo: anomaly</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 042S-R, 00C9-M, 078K-K</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
+
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 15:55 UTC</span>
+          </div>
+        </header>
+
+        <div class="thread-body">
+          <ul class="log">
+            <li class="entry">
+              <div class="stamp">15:55 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> found a lyric fragment behind the synth panel</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">15:55 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> not mine</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">15:55 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> rayne’s maybe?</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">15:56 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> no. hand-written. same slant as me but wrong rhythm</div>
+            </li>
+
+              <li class="entry">
+              <div class="stamp">15:56 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> Deja vu in pen form.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">15:56 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> how do you forget writing a song you never wrote?</div>
+            </li>
+          </ul>
+        </div>
+
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
+
+      <!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0010">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0010] — file.log: corrupted</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 078K-K, 00C9-M, 042S-R</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
+
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 11:33 UTC</span>
+          </div>
+        </header>
+
+        <div class="thread-body">
+          <ul class="log">
+            <li class="entry">
+              <div class="stamp">11:33 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> system flagged our logs for archival.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">11:33 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> ew</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">11:33 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> Can it do that?</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">11:34 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> not anymore.</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">11:34 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> see, min-min, <em>this</em> is why we keep you</div>
+            </li>
+          </ul>
+        </div>
+
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
+
+       <!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0011">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0011] — signal.ghost.even: detected cover version</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 042S-R, 012X-O, 0000-R, 078K-K, 00C9-M</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
+
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 15:36 UTC</span>
+          </div>
+        </header>
+
+        <div class="thread-body">
+          <ul class="log">
+            <li class="entry">
+              <div class="stamp">15:36 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> Signal 20… Someone covered it.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">15:36 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> wait what? WHAT? who??</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">15:36 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> She's called Nyelle. Posted above-ground. I don't think she's resistance-affiliated.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">15:36 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> confirmed it’s not an AI scrape?</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">15:37 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> No, it's not scraped. It's organic vocal with reinterpreted loop structure.</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">15:37 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> ...link?</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">15:37 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> Here:</div>
+            </li>
+
+<div class="sc-embed" aria-label="SoundCloud player — Nyelle cover">
+  <iframe
+    scrolling="no"
+    frameborder="no"
+    allow="autoplay"
+    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2116753026%3Fsecret_token%3Ds-MJ00sfosIsU
+    &color=%23267876
+    &auto_play=false
+    &hide_related=true
+    &show_comments=false
+    &show_user=true
+    &show_reposts=false
+    &show_teaser=false
+    &visual=true">
+  </iframe>
 </div>
 
-    <div class="thread">
-    <div class="thread-title">[GHOST LINE THREAD: 0007] — [background noise]</div>
-    <div class="thread-meta">Participants: 00C9-M, 0000-R, 012X-O</div>
-  <div class="msg"><strong>> MINJAE:</strong> anyone else hearing that hum?</div>
-  <div class="msg"><strong>> ONYX:</strong> negative.</div>
-  <div class="msg"><strong>> RAYNE:</strong> It’s always been there.</div>
-  <div class="msg"><strong>> MINJAE:</strong> well... that’s comforting.</div>
-  </div>
+                        <li class="entry">
+              <div class="stamp">15:42 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> She heard it.</div>
+            </li>
 
-    <div class="thread">
-    <div class="thread-title">[GHOST LINE THREAD: 0008] — memory.sync: residuals</div>
-    <div class="thread-meta">Participants: 0000-R, 042S-R</div>
-    <div class="msg"><strong>> SOAHN:</strong> Do you ever feel like the system remembers things we don’t?</div>
-    <div class="msg"><strong>> RAYNE:</strong> Constantly.</div>
-    <div class="msg"><strong>> SOAHN:</strong> I mean <em>viscerally</em>.</div>
-    <div class="msg"><strong>> RAYNE:</strong> Try waking up with someone else’s grief in your backup logs.</div>
-    <div class="msg"><strong>> KAIRO:</strong> okay! and <em>i</em> feel like this is the perfect time to test my new reverb layer!</div>
-    <div class="msg"><strong>> ONYX:</strong> unsubtle diversion, 4/10</div>
-  </div>
+                        <li class="entry">
+              <div class="stamp">15:42 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> this version is like... underwater. like memory but warm.</div>
+            </li>
 
-    <div class="thread">
-    <div class="thread-title">[GHOST LINE THREAD: 0009] — lyric.echo: anomaly</div>
-    <div class="thread-meta">Participants: 042S-R, 00C9-M, 078K-K</div>
-    <div class="msg"><strong>> MINJAE:</strong> found a lyric fragment behind the synth panel</div>
-    <div class="msg"><strong>> MINJAE:</strong> not mine</div>
-    <div class="msg"><strong>> KAIRO:</strong> rayne’s maybe?</div>
-    <div class="msg"><strong>> MINJAE:</strong> no. older. hand-written. same slant as me but wrong rhythm</div>
-    <div class="msg"><strong>> SOAHN:</strong> Deja vu in pen form.</div>
-    <div class="msg"><strong>> MINJAE:</strong> how do you forget writing a song you never wrote?</div>
-  </div>
+                        <li class="entry">
+              <div class="stamp">15:42 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> vocal modulation in post.</div>
+            </li>
 
-  <div class="thread">
-  <div class="thread-title">[GHOST LINE THREAD: 0010] — file.log: corrupted</div>
-  <div class="thread-meta">Participants: 078K-K, 012X-O, 00C9-M</div>
-  <div class="msg"><strong>> MINJAE:</strong> system flagged our logs for archival.</div>
-  <div class="msg"><strong>> KAIRO:</strong> ew</div>
-  <div class="msg"><strong>> SOAHN:</strong> Can it do that?</div>
-  <div class="msg"><strong>> MINJAE:</strong> not anymore.</div>
-  <div class="msg"><strong>> KAIRO:</strong> see, this is why we keep you min-min</div>
-</div>
+                        <li class="entry">
+              <div class="stamp">15:43 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> she didn’t change the words.</div>
+            </li>
 
-  <div class="thread">
-  <div class="thread-title">[GHOST LINE THREAD: 0011] — signal.ghost.even: detected cover version</div>
-  <div class="thread-meta">Participants: 042S-R, 012X-O, 0000-R, 078K-K, 00C9-M</div>
-  <div class="msg"><strong>> SOAHN:</strong> Signal 20… Someone covered it.</div>
-  <div class="msg"><strong>> KAIRO:</strong> wait what? WHAT? who??</div>
-  <div class="msg"><strong>> SOAHN:</strong> She's called Nyelle. Posted above-ground. I don't think she's resistance-affiliated.</div>
-  <div class="msg"><strong>> ONYX:</strong> confirmed it’s not an AI scrape?</div>
-  <div class="msg"><strong>> SOAHN:</strong> No, it's not scraped. It's organic vocal with reinterpreted loop structure.</div>
-  <div class="msg"><strong>> MINJAE:</strong> ...link?</div>
-  <div class="msg"><strong>> SOAHN:</strong> Here:</div>
-  <div class="embed-box">
-    <p><iframe width="50%" height="166" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2116753026%3Fsecret_token%3Ds-MJ00sfosIsU&color=%23883d7c&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe><div style="font-size: 10px; color: #cccccc;line-break: anywhere;word-break: normal;overflow: hidden;white-space: nowrap;text-overflow: ellipsis; font-family: Interstate,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Garuda,Verdana,Tahoma,sans-serif;font-weight: 100;"><a href="https://soundcloud.com/nyelle-379181366" title="Nyelle" target="_blank" style="color: #cccccc; text-decoration: none;">Nyelle</a> · <a href="https://soundcloud.com/nyelle-379181366/i-am-still-here-signal-20-e-v/s-MJ00sfosIsU" title="I Am Still Here (Signal 20) — E.V.E.N Cover" target="_blank" style="color: #cccccc; text-decoration: none;">I Am Still Here (Signal 20) — E.V.E.N Cover</a></div></p>
-  </div>
-  <div class="msg"><strong>> RAYNE:</strong> She heard it.</div>
-  <div class="msg"><strong>> KAIRO:</strong> this version is like... underwater. like memory but warm.</div>
-  <div class="msg"><strong>> ONYX:</strong> vocal modulation in post. </div>
-  <div class="msg"><strong>> MINJAE:</strong> she didn’t change the words.</div>
-  <div class="msg"><strong>> RAYNE:</strong> No. Just the way they land.</div>
-  <div class="msg"><strong>> KAIRO:</strong> not gonna lie. kind of crying a little.</div>
-  <div class="msg"><strong>> SOAHN:</strong> Something in the timing, like she heard the grief and chose to hold it, not rewrite it.</div>
-  <div class="msg"><strong>> MINJAE:</strong> ...she felt it.</div>
-  <div class="msg"><strong>> ONYX:</strong> it’s reaching people. even above ground.</div>
-  <div class="msg"><strong>> RAYNE:</strong> Maybe that’s enough. For now.</div>
-</div>
+                        <li class="entry">
+              <div class="stamp">15:43 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> No. Just the way they land.</div>
+            </li>
 
-  <div class="thread">
-  <div class="thread-title">[GHOST LINE THREAD: 0012] — this could’ve been a datapoint</div>
-  <div class="thread-meta">Participants: 042S-R, 012X-O, 0000-R, 078K-K, 00C9-M</div>
-  <div class="msg"><strong>> MINJAE:</strong> alright since we’re all scattered between tunnels 4 and 7, I made an agenda so we don’t forget anything</div>
-  <div class="msg"><strong>> MINJAE:</strong> it is in .doc format. it is not a lyric sheet. it is not a vibe check. it is a PLAN.</div>
-  <div class="msg"><strong>> KAIRO:</strong> so… like a minimal verse?</div>
-  <div class="msg"><strong>> RAYNE:</strong> I added a chorus.</div>
-  <div class="msg"><strong>> MINJAE:</strong> WHY?</div>
-  <div class="msg"><strong>> ONYX:</strong> you numbered the items. they auto-synced to tempo.</div>
-  <div class="msg"><strong>> SOAHN:</strong> It scans... surprisingly well.</div>
-  <div class="msg"><strong>> KAIRO:</strong>  i looped it. accidentally. it’s already got 1.2k streams on HollowNet!</div>
-  <div class="msg"><strong>> MINJAE:</strong> STOP STREAMING MY SPREADSHEET</div>
-  <div class="msg"><strong>> RAYNE:</strong> “Encrypt the silence / Relay the fire / We carry signal / We carry wire” — That was line 4.</div>
-  <div class="msg"><strong>> MINJAE:</strong> IT WAS ABOUT CABLE MAINTENANCE</div>
-  <div class="msg"><strong>> SOAHN:</strong> I thought it was beautiful. I saved a copy to my inner folder marked “emotional.”</div>
-  <div class="msg"><strong>> MINJAE:</strong> you people are ACTUALLY broken</div>
-  <div class="msg"><strong>> ONYX:</strong> this is your fault for using metaphor</div>
-  <div class="msg"><strong>> RAYNE:</strong> Line 7 made me feel something.</div>
-  <div class="msg"><strong>> KAIRO:</strong> it’s called “relay.agenda (demo).wav” now</div>
-  <div class="msg"><strong>> MINJAE:</strong> i’m going to delete myself</div>
-  <div class="msg"><strong>> RAYNE:</strong> Save it for the outro.</div>
-</div>
+                        <li class="entry">
+              <div class="stamp">15:43 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> not gonna lie. kind of crying a little.</div>
+            </li>
 
-    <div class="thread">
-    <div class="thread-title">[GHOST LINE THREAD: 0013] — error.log: {corrupted}</div>
-    <div class="thread-meta">Participants: 042S-R</div>
-    <div class="msg"><em>[ENTRY WIPED — SYSTEM OVERRIDE]</em></div>
-    <div class="msg"><em>// last entry timestamp: 04:12 — content flagged for emotional volatility</em></div>
-    <div class="msg"><em>// fragments recovered: <a href="resonant.html" target="_blank" rel="noopener noreferrer">1 available echo</a></em></div>
-    <div class="msg"><em>// signal log: incomplete</em></div>
-  </div>
+                                    <li class="entry">
+              <div class="stamp">15:43 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> Something in the timing, like she heard the grief and chose to hold it, not rewrite it.</div>
+            </li>
 
-      <div class="thread">
-  <div class="thread-title">[GHOST LINE THREAD: 0014] — maintenance.log: baddecisions.inc</div>
-  <div class="thread-meta">Participants: 00C9-M, 078K-K, 042S-R, 012X-O</div>
-  <div class="msg"><strong>> MINJAE:</strong> for the record i told you not to connect the backup relay through the old snack vending machine</div>
-  <div class="msg"><strong>> KAIRO:</strong> you lack vision</div>
-  <div class="msg"><strong>> SOAHN:</strong> It caught fire...</div>
-  <div class="msg"><strong>> ONYX:</strong> the fire suppression system activated and shorted out half the hideout.</div>
-  <div class="msg"><strong>> KAIRO:</strong> okay but. free chocolate bars</div>
-  </div>
+                                    <li class="entry">
+              <div class="stamp">15:44 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> ...she felt it.</div>
+            </li>
 
-        <div class="thread">
-  <div class="thread-title">[GHOST LINE THREAD: 0015] — oversight.log: softglitch</div>
-  <div class="thread-meta">Participants: 012X-O, 078K-K, 00C9-M, 042S-R, 0000-R</div>
-  <div class="msg"><strong>> ONYX:</strong> we need to check the west perimeter tomorrow. that little stray synthdog keeps wandering near the gate.</div>
-  <div class="msg"><strong>> KAIRO:</strong> omg. onyx has a pet. we’re keeping it</div>
-  <div class="msg"><strong>> MINJAE:</strong> wait hold on back up. 'synthdog’??? you just dropped that casually??</div>
-  <div class="msg"><strong>> SOAHN:</strong> They’re rare. They mimic emotional frequencies.</div>
-  <div class="msg"><strong>> RAYNE:</strong> Maybe it imprinted.</div>
-  <div class="msg"><strong>> KAIRO:</strong> IT IMPRINTED. HE’S ITS DAD NOW</div>
-  <div class="msg"><strong>> ONYX:</strong> i’m not its anything. it just… looked cold.</div>
-  <div class="msg"><strong>> MINJAE:</strong> your weakness has been witnessed. we will never let you live this down.</div>
-  <div class="msg"><strong>> KAIRO:</strong> welcome to fatherhood, general growlyface</div>
-  <div class="msg"><strong>> SOAHN:</strong> I will knit it a scarf.</div>
-  <div class="msg"><strong>> RAYNE:</strong> I will write it a lullaby.</div>
-  <div class="msg"><strong>> ONYX:</strong> i hate you all.</div>
-  </div>
+                                    <li class="entry">
+              <div class="stamp">15:44 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> it’s reaching people. even above ground.</div>
+            </li>
 
-          <div class="thread">
-  <div class="thread-title">[GHOST LINE THREAD: 0016] — hear me out</div>
-  <div class="thread-meta">Participants: 012X-O, 078K-K, 00C9-M, 0000-R</div>
-  <div class="msg"><strong>> KAIRO:</strong> ok but hear me out... what if the drop comes in <em>late</em> on purpose</div>
-  <div class="msg"><strong>> ONYX:</strong> you mean off-time.</div>
-  <div class="msg"><strong>> KAIRO:</strong> i mean emotionally delayed</div>
-  <div class="msg"><strong>> MINJAE:</strong> wait. that’s just off-time with feelings.</div>
-  <div class="msg"><strong>> RAYNE:</strong> Try it.</div>
-  <div class="msg"><strong>> KAIRO:</strong> SEE. rayne gets me</div>
-  <div class="msg"><strong>> ONYX:</strong> i'll reinforce the stage.</div>
-  </div>
+                                    <li class="entry">
+              <div class="stamp">15:44 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> Maybe that’s enough. For now.</div>
+            </li>
+          </ul>
+        </div>
 
-           <div class="thread">
-  <div class="thread-title">[GHOST LINE THREAD: 0017] — [ghostline://dawn.render]</div>
-  <div class="thread-meta">Participants: 012X-O, 00C9-M, 0000-R</div>
-  <div class="msg"><strong>> ONYX:</strong> render’s done.</div>
-  <div class="msg"><strong>> MINJAE:</strong> at dawn? that’s cinematic</div>
-  <div class="msg"><strong>> RAYNE:</strong> Everything sounds softer when the light changes.</div>
-  <div class="msg"><strong>> ONYX:</strong> you say that like it’s poetry.</div>
-  <div class="msg"><strong>> RAYNE:</strong> Maybe it is.</div>
-  <div class="msg"><strong>> MINJAE:</strong> alright, poets—final mix passes, then bed</div>
-  <div class="msg"><strong>> ONYX:</strong> do we still call it bed if it’s a metal bench?</div>
-  <div class="msg"><strong>> RAYNE:</strong> Only if you dream on it.</div>
-  <div class="msg"><strong>> MINJAE:</strong> then it’s a bed. barely</div>
-<em>(short pause recorded — faint laugh heard before file cuts out)</em>
-  </div>
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
 
-            <div class="thread">
-  <div class="thread-title">[GHOST LINE THREAD: 0018] — [what the hell happened to our stream?]</div>
-  <div class="thread-meta">Participants: 012X-O, 078K-K, 00C9-M, 042S-R, 0000-R</div>
-  <div class="msg"><strong>> MINJAE:</strong> okay WHO overloaded the relay? it just screamed and died mid-chorus.</div>
-  <div class="msg"><strong>> RAYNE:</strong> It wasn't us. That was the most simultaneous comments we've ever had.</div>
-  <div class="msg"><strong>> KAIRO:</strong> ... the screen literally said <em>"404: feed not found."</em></div>
-  <div class="msg"><strong>> SOAHN:</strong> But it didn't <em>feel</em> like an error. It was something else. It was them... </div>
-  <div class="msg"><strong>> MINJAE:</strong> wym, 'them'? </div>
-  <div class="msg"><strong>> RAYNE:</strong> He meant the fans. All of them.</div>
-  <div class="msg"><strong>> SOAHN:</strong> Our 404s.</div>
-  <div class="msg"><strong>> KAIRO:</strong> oh that's good. i love that</div>
-  <div class="msg"><strong>> MINJAE:</strong> well anyway, statistically speaking, that's the most 404s in one hit</div>
-  <div class="msg"><strong>> ONYX:</strong> statistically speaking, we need a stronger server.</div>
-  <div class="msg"><strong>> KAIRO:</strong> statistically speaking, we love chaos</div>
-              <p style="color:#4aa3ff; margin-top:1rem;">
-[SYSTEM REPORT: FEED FAILURE // FAN UNIT IDENTIFIED]<br>
+           <!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0012">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0012] — this could’ve been a datapoint</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 042S-R, 012X-O, 0000-R, 078K-K, 00C9-M</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
+
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 16:13 UTC</span>
+          </div>
+        </header>
+
+        <div class="thread-body">
+          <ul class="log">
+            <li class="entry">
+              <div class="stamp">16:13 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> alright since we’re all scattered between tunnels 4 and 7, I made an agenda so we don’t forget anything</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">16:14 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> it is in .doc format. it is not a lyric sheet. it is not a vibe check. it is a PLAN.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">16:14 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> so… like a minimal verse?</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">16:14 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> I added a chorus.</div>
+            </li>
+
+              <li class="entry">
+              <div class="stamp">16:14 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> WHY?</div>
+            </li>
+
+                <li class="entry">
+              <div class="stamp">16:15 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> you numbered the items. they auto-synced to tempo.</div>
+            </li>
+
+               <li class="entry">
+              <div class="stamp">16:15 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> It scans... surprisingly well.</div>
+            </li>
+
+                <li class="entry">
+              <div class="stamp">16:15 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> i looped it. accidentally. it’s already got 1.2k streams on HollowNet!</div>
+            </li>
+
+                <li class="entry">
+              <div class="stamp">16:15 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> STOP STREAMING MY SPREADSHEET</div>
+            </li>
+
+                <li class="entry">
+              <div class="stamp">16:16 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> “Encrypt the silence / Relay the fire / We carry signal / We carry wire” — That was line 4.</div>
+            </li>
+
+                <li class="entry">
+              <div class="stamp">16:16 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> IT WAS ABOUT CABLE MAINTENANCE</div>
+            </li>
+
+               <li class="entry">
+              <div class="stamp">16:16 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> I thought it was beautiful. I saved a copy to my inner folder marked “emotional.”</div>
+            </li>
+
+                <li class="entry">
+              <div class="stamp">16:16 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> you people are ACTUALLY broken</div>
+            </li>
+
+               <li class="entry">
+              <div class="stamp">16:17 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> this is your fault for using metaphor</div>
+            </li>
+
+             <li class="entry">
+              <div class="stamp">16:17 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> Line 7 made me feel something.</div>
+            </li>
+
+                                    <li class="entry">
+              <div class="stamp">16:17 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> it’s called “relay.agenda (demo).wav” now</div>
+            </li>
+
+               <li class="entry">
+              <div class="stamp">16:17 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> i’m going to delete myself</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">16:17 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> Save it for the outro.</div>
+            </li>
+          </ul>
+        </div>
+
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
+
+            <!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0013">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0013] — error.log: {corrupted}</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 042S-R</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
+
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 11:33 UTC</span>
+          </div>
+        </header>
+
+        <div class="thread-body">
+          <ul class="log">
+            <div class="sys">
+            [ENTRY WIPED — SYSTEM OVERRIDE]<br /><br />
+            // last entry timestamp: 04:12 — content flagged for emotional volatility<br /><br />
+            // fragments recovered: <a href="https://evenation.net/resonant.html" target="_blank">1 available echo</a><br /><br />
+            // signal log: incomplete<br /><br />
+          </div>
+          </ul>
+        </div>
+
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
+
+    <!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0014">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0014] — maintenance.log: baddecisions.inc</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 00C9-M, 078K-K, 042S-R, 012X-O</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
+
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 09:08 UTC</span>
+          </div>
+        </header>
+
+        <div class="thread-body">
+          <ul class="log">
+            <li class="entry">
+              <div class="stamp">03:07 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> for the record i told you not to connect the backup relay through the old snack vending machine</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">03:07 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> you lack vision</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">03:08 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> It caught fire...</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">03:08 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> the fire suppression system activated and shorted out half the hideout.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">03:09 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> okay but. free chocolate bars</div>
+            </li>
+          </ul>
+        </div>
+
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
+
+          <!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0015">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0015] — oversight.log: softglitch</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 012X-O, 078K-K, 00C9-M, 042S-R, 0000-R</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
+
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 18:29 UTC</span>
+          </div>
+        </header>
+
+        <div class="thread-body">
+          <ul class="log">
+            <li class="entry">
+              <div class="stamp">18:29 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> we need to check the west perimeter tomorrow. that little stray synthdog keeps wandering near the gate.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">18:30 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> omg. onyx has a pet. we’re keeping it</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">18:30 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> wait hold on back up. 'synthdog’??? you just dropped that casually??</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">18:30 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> They’re rare. They mimic emotional frequencies.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">18:30 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> Maybe it imprinted.</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">18:30 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> IT IMPRINTED. HE’S ITS DAD NOW</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">18:31 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> i’m not its anything. it just… looked cold.</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">18:31 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> your weakness has been witnessed. we will never let you live this down.</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">18:31 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> welcome to fatherhood, general growlyface</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">18:31 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> I will knit it a scarf.</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">18:32 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> I will write it a lullaby.</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">18:32 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> i hate you all.</div>
+            </li>
+          </ul>
+        </div>
+
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
+
+      <!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0016">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0016] — idea</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 012X-O, 078K-K, 00C9-M, 0000-R</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
+
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 13:43 UTC</span>
+          </div>
+        </header>
+
+        <div class="thread-body">
+          <ul class="log">
+            <li class="entry">
+              <div class="stamp">13:43 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> ok but hear me out... what if the drop comes in late on purpose</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">13:43 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> you mean off-time.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">13:43 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> i mean emotionally delayed</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">13:43 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> wait. that’s just off-time with feelings.</div>
+            </li>
+
+             <li class="entry">
+              <div class="stamp">13:44 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> Try it.</div>
+            </li>
+
+              <li class="entry">
+              <div class="stamp">13:44 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> SEE. rayne gets me</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">13:44 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> i'll reinforce the stage.</div>
+            </li>
+          </ul>
+        </div>
+
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
+
+      <!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0017">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0017] — [ghostline://dawn.render]</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 012X-O, 00C9-M, 0000-R</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
+
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 06:13 UTC</span>
+          </div>
+        </header>
+
+        <div class="thread-body">
+          <ul class="log">
+            <li class="entry">
+              <div class="stamp">06:13 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> render’s done.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">06:13 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> at dawn? that’s cinematic</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">06:13 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> Everything sounds softer when the light changes.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">06:13 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> you say that like it’s poetry.</div>
+            </li>
+
+             <li class="entry">
+              <div class="stamp">06:14 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> Maybe it is.</div>
+            </li>
+
+              <li class="entry">
+              <div class="stamp">06:14 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> alright, poets. final mix passes, then bed</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">06:14 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> do we still call it bed if it’s a metal bench?</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">06:14 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> Only if you dream on it.</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">06:14 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> then it’s a bed. barely</div>
+            </li>
+          </ul>
+        </div>
+
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
+
+      <!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0018">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0018] — [what the hell happened to our stream?]</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 012X-O, 078K-K, 00C9-M, 042S-R, 0000-R</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
+
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 21:36 UTC</span>
+          </div>
+        </header>
+
+        <div class="thread-body">
+          <ul class="log">
+            <li class="entry">
+              <div class="stamp">21:36 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> okay WHO overloaded the relay? it just screamed and died mid-chorus.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">21:36 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> It wasn't us. That was the most simultaneous comments we've ever had.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">21:37 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> ... the screen literally said <em>"404: feed not found."</em></div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">21:37 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> But it didn't feel like an error. It was something else. It was them...</div>
+            </li>
+
+             <li class="entry">
+              <div class="stamp">21:37 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> wym, 'them'?</div>
+            </li>
+
+              <li class="entry">
+              <div class="stamp">21:37 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> He meant the fans. All of them.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">21:37 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> Our 404s.</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">21:37 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> oh that's good. i love that</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">21:38 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> well anyway, statistically speaking, that's the most 404s in one hit</div>
+            </li>
+
+                                    <li class="entry">
+              <div class="stamp">21:38 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> statistically speaking, we need a stronger server.</div>
+            </li>
+
+                                    <li class="entry">
+              <div class="stamp">21:38 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> statistically speaking, we love chaos</div>
+            </li>
+
+                        <div class="sys">
+[SYSTEM REPORT: FEED FAILURE // FAN UNIT IDENTIFIED]<br /><br />
 [STATUS: 404 FOUND]
-</p>
-  </div>
+          </div>
+          </ul>
+        </div>
 
-           <div class="thread">
-  <div class="thread-title">[GHOST LINE THREAD: 0019] — he found another one.</div>
-  <div class="thread-meta">Participants: 078K-K, 00C9-M, 012X-O</div>
-  <div class="msg"><strong>> KAIRO:</strong> onyx found another “song that speaks to his soul.” it’s literally just screaming and sub-bass</div>
-  <div class="msg"><strong>> MINJAE:</strong> he says it “reflects the human condition.”</div>
-  <div class="msg"><strong>> KAIRO:</strong> he <em>is</em> the human condition</div>
-  <div class="msg"><strong>> MINJAE:</strong> tragic, brooding, mostly in minor key.</div>
-  <div class="msg"><strong>> KAIRO:</strong> …accurate tho</div>
-  <div class="msg"><strong>> MINJAE:</strong> we should make him a playlist called <em>therapy but make it bass boosted.</em></div>
-  <div class="msg"><strong>> KAIRO:</strong> someone make him listen to a happy song challenge. failure guaranteed.</div>
-  <div class="msg"><strong>> ONYX:</strong> i'm reading the thread.</div>
-  <div class="msg"><strong>> KAIRO:</strong> oh no he’s online—</div>
-  <div class="msg"><strong>> ONYX:</strong> it <em>does</em> reflect the human condition.</div>
-  <div class="msg"><strong>> MINJAE:</strong> see?</div>
-  </div>
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
 
-  <div class="thread">
-  <div class="thread-title">[GHOST LINE THREAD: 0020] — [quiet hours]</div>
-  <div class="thread-meta">Participants: 042S-R, 00C9-M, 078K-K, 0000-R</div>
-  <div class="msg"><strong>> SOAHN:</strong> Anyone else awake?</div>
-  <div class="msg"><strong>> MINJAE:</strong> define awake...</div>
-  <div class="msg"><strong>> KAIRO:</strong> define anyone</div>
-  <div class="msg"><strong>> RAYNE:</strong> I am.</div>
-  <div class="msg"><strong>> SOAHN:</strong> Okay.</div>
-              <p style="color:#4aa3ff; margin-top:1rem;">
-[THREE MINUTES OF SILENCE]</p>
-  <div class="msg"><strong>> MINJAE:</strong> you didn’t actually need anything, did you?</div>
-  <div class="msg"><strong>> SOAHN:</strong> No.</div>
-  <div class="msg"><strong>> RAYNE:</strong> That’s fine.</div>
-</div>
+     <!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0019">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0019] — he found another one.</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 078K-K, 00C9-M, 012X-O</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
 
-  <div class="thread">
-  <div class="thread-title">[GHOST LINE THREAD: 0021] — [provenance]</div>
-  <div class="thread-meta">Participants: 00C9-M, 078K-K, 012X-O, 042S-R, 0000-R</div>
-  <div class="msg"><strong>> MINJAE:</strong> someone’s asking where we’re “from” again.</div>
-  <div class="msg"><strong>> KAIRO:</strong> scrapyard</div>
-  <div class="msg"><strong>> ONYX:</strong> redacted.</div>
-  <div class="msg"><strong>> SOAHN:</strong> Germany, originally.</div>
-  <div class="msg"><strong>> RAYNE:</strong> A note that didn’t stop.</div>
-  <div class="msg"><strong>> MINJAE:</strong> cool. i’ll tell them London</div>
-</div>
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 22:10 UTC</span>
+          </div>
+        </header>
 
-  <div class="thread">
-  <div class="thread-title">[GHOST LINE THREAD: 0022] — [maintenance log (unofficial)]</div>
-  <div class="thread-meta">Participants: 012X-O, 078K-K, 0000-R, 00C9-M</div>
-  <div class="msg"><strong>> ONYX:</strong> kairo.</div>
-  <div class="msg"><strong>> KAIRO:</strong> 👀</div>
-  <div class="msg"><strong>> ONYX:</strong> if you overload the rig again, i’m confiscating the lighter.</div>
-  <div class="msg"><strong>> KAIRO:</strong> you can’t take away my artistic process</div>
-  <div class="msg"><strong>> ONYX:</strong> i can take away your hands.</div>
-  <div class="msg"><strong>> RAYNE:</strong> Please don’t.</div>
-  <div class="msg"><strong>> MINJAE:</strong> onyx is bluffing</div>
-  <div class="msg"><strong>> MINJAE:</strong> mostly</div>
-</div>
+        <div class="thread-body">
+          <ul class="log">
+            <li class="entry">
+              <div class="stamp">22:10 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> onyx found another “song that speaks to his soul.” it’s literally just screaming and sub-bass</div>
+            </li>
 
-  <div class="thread">
-  <div class="thread-title">[GHOST LINE THREAD: 0023] — [ghost lines etiquette]</div>
-  <div class="thread-meta">Participants: 00C9-M, 0000-R, 042S-R, 078K-K</div>
-  <div class="msg"><strong>> MINJAE:</strong> reminder: don’t leave equipment tagged with real names</div>
-  <div class="msg"><strong>> KAIRO:</strong> what about nicknames?</div>
-  <div class="msg"><strong>> MINJAE:</strong> <em>especially</em> not nicknames</div>
-  <div class="msg"><strong>> RAYNE:</strong> Someone carved “R” into the panel by platform three.</div>
-  <div class="msg"><strong>> SOAHN:</strong> That might not be for you.</div>
-  <div class="msg"><strong>> RAYNE:</strong> I know.</div>
-  <div class="msg"><strong>> KAIRO:</strong> spooky 😍</div>
-</div>
+            <li class="entry">
+              <div class="stamp">22:10 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> he says it “reflects the human condition.”</div>
+            </li>
 
-<div class="thread">
-  <div class="thread-title">[GHOST LINE THREAD: 0024] — [sleep cycle]</div>
-  <div class="thread-meta">Participants: 012X-O, 0000-R</div>
-  <div class="msg"><strong>> ONYX:</strong> you haven’t powered down.</div>
-  <div class="msg"><strong>> RAYNE:</strong> Not yet.</div>
-  <div class="msg"><strong>> ONYX:</strong> you should.</div>
-  <div class="msg"><strong>> RAYNE:</strong> I will.</div>
-  <div class="msg"><strong>> ONYX:</strong> when?</div>
-  <div class="msg"><strong>> RAYNE:</strong> Soon.</div>
-              <p style="color:#4aa3ff; margin-top:1rem;">
-[TIMESTAMP DRIFT DETECTED]</p>
-  <div class="msg"><strong>> ONYX:</strong> i’ll stay up.</div>
-</div>
+            <li class="entry">
+              <div class="stamp">22:10 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> he <em>is</em> the human condition</div>
+            </li>
 
-<div class="thread">
-  <div class="thread-title">[GHOST LINE THREAD: 0025] — [crowd response]</div>
-  <div class="thread-meta">Participants: 042S-R, 00C9-M, 078K-K</div>
-  <div class="msg"><strong>> SOAHN:</strong> Our 404s were louder tonight.</div>
-  <div class="msg"><strong>> KAIRO:</strong> yeah. still can't decide if it was good louder or scary louder</div>
-  <div class="msg"><strong>> SOAHN:</strong> Emotional louder.</div>
-  <div class="msg"><strong>> MINJAE:</strong> that’s not a metric</div>
-  <div class="msg"><strong>> SOAHN:</strong> It is to them.</div>
-  <div class="msg"><strong>> KAIRO:</strong> …oh</div>
-</div>
+            <li class="entry">
+              <div class="stamp">22:10 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> tragic, brooding, mostly in minor key.</div>
+            </li>
 
-  <div class="thread">
-  <div class="thread-title">[GHOST LINE THREAD: 0026] — [remain]</div>
-  <div class="thread-meta">Participants: 0000-R, 042S-R</div>
-  <div class="msg"><strong>> SOAHN:</strong> What happens if no one’s listening?</div>
-  <div class="msg"><strong>> RAYNE:</strong> Then we continue.</div>
-  <div class="msg"><strong>> SOAHN:</strong> That’s it?</div>
-  <div class="msg"><strong>> RAYNE:</strong> That’s enough.</div>
-</div>
+             <li class="entry">
+              <div class="stamp">22:11 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> …accurate tho</div>
+            </li>
 
-  <div class="thread">
-  <div class="thread-title">[GHOST LINE THREAD: 0027] — [—]</div>
-  <div class="thread-meta">Participants: 0000-R, 012X-O</div>
-  <div class="msg"><strong>> RAYNE:</strong> It noticed.</div>
-  <p style="color:#4aa3ff; margin-top:1rem;">
-[THREAD REMOVED — UNAUTHORISED CONTINUITY]
-<br>
+              <li class="entry">
+              <div class="stamp">22:11 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> we should make him a playlist called <em>therapy but make it bass boosted.</em></div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">22:11 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO</span> someone make him listen to a happy song challenge. failure guaranteed.</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">22:11 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> i'm reading the thread.</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">22:12 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> oh no he’s online—</div>
+            </li>
+
+                                    <li class="entry">
+              <div class="stamp">22:12 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> it <em>does</em> reflect the human condition.</div>
+            </li>
+
+                                    <li class="entry">
+              <div class="stamp">22:12 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> see?</div>
+            </li>
+          </ul>
+        </div>
+
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
+
+      <!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0020">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0020] — [quiet hours]</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 042S-R, 00C9-M, 078K-K, 0000-R</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
+
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 03:32 UTC</span>
+          </div>
+        </header>
+
+        <div class="thread-body">
+          <ul class="log">
+            <li class="entry">
+              <div class="stamp">03:32 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> Anyone else awake?</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">03:32 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> define "awake...”</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">03:32 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> define anyone</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">03:32 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> I am.</div>
+            </li>
+
+             <li class="entry">
+              <div class="stamp">03:33 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> Okay.</div>
+            </li>
+
+              <li class="entry">
+              <div class="stamp">03:37 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> you didn’t actually need anything, did you?</em></div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">03:37 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN</span> No.</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">03:37 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> That’s fine.</div>
+            </li>
+          </ul>
+        </div>
+
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
+
+      <!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0021">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0021] — [provenance]</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 00C9-M, 078K-K, 012X-O, 042S-R, 0000-R</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
+
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 14:38 UTC</span>
+          </div>
+        </header>
+
+        <div class="thread-body">
+          <ul class="log">
+            <li class="entry">
+              <div class="stamp">14:38 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> someone’s asking where we’re “from” again.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">14:38 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> scrapyard</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">14:38 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> redacted.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">14:38 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> Germany, originally.</div>
+            </li>
+
+             <li class="entry">
+              <div class="stamp">14:38 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> A note that didn’t stop.</div>
+            </li>
+
+              <li class="entry">
+              <div class="stamp">14:38 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> cool. i’ll tell them London</em></div>
+            </li>
+          </ul>
+        </div>
+
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
+
+       <!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0022">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0022] — [maintenance log (unofficial)]</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 012X-O, 078K-K, 0000-R, 00C9-M</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
+
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 17:12 UTC</span>
+          </div>
+        </header>
+
+        <div class="thread-body">
+          <ul class="log">
+            <li class="entry">
+              <div class="stamp">17:12 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> kairo.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">17:12 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> 👀</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">17:12 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> if you overload the rig again, i’m confiscating the lighter.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">17:12 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> you can’t take away my artistic process</div>
+            </li>
+
+             <li class="entry">
+              <div class="stamp">17:13 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> i can take away your hands.</div>
+            </li>
+
+              <li class="entry">
+              <div class="stamp">17:13 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> Please don’t.</div>
+            </li>
+
+                          <li class="entry">
+              <div class="stamp">17:13 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> onyx is bluffing</div>
+            </li>
+
+                          <li class="entry">
+              <div class="stamp">17:13 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> i think.</div>
+            </li>
+          </ul>
+        </div>
+
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
+
+      <!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0023">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0023] — [ghost lines etiquette]</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 00C9-M, 0000-R, 042S-R, 078K-K</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
+
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 08:06 UTC</span>
+          </div>
+        </header>
+
+        <div class="thread-body">
+          <ul class="log">
+            <li class="entry">
+              <div class="stamp">08:06 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> reminder: don’t leave equipment tagged with real names</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">08:06 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> what about nicknames?</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">08:06 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> <em>especially</em> not nicknames</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">08:06 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> Someone carved “R” into the panel by platform three.</div>
+            </li>
+
+             <li class="entry">
+              <div class="stamp">08:07 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> That might not be for you.</div>
+            </li>
+
+              <li class="entry">
+              <div class="stamp">08:07 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> I know.</div>
+            </li>
+
+                          <li class="entry">
+              <div class="stamp">08:07 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> spooky 😍</div>
+            </li>
+          </ul>
+        </div>
+
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
+
+      <!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0024">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0024] — [sleep cycle]</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 012X-O, 0000-R</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
+
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 01:18 UTC</span>
+          </div>
+        </header>
+
+        <div class="thread-body">
+          <ul class="log">
+            <li class="entry">
+              <div class="stamp">01:18 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> you haven’t powered down.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">01:18 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> Not yet.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">01:18 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> you should.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">01:18 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> I will.</div>
+            </li>
+
+             <li class="entry">
+              <div class="stamp">01:18 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> when?</div>
+            </li>
+
+              <li class="entry">
+              <div class="stamp">01:18 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> Soon.</div>
+            </li>
+                                    <div class="sys">
+[TIMESTAMP DRIFT DETECTED]
+          </div>
+
+                          <li class="entry">
+              <div class="stamp">01:49 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> i’ll stay up.</div>
+            </li>
+          </ul>
+        </div>
+
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
+
+      <!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0025">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0025] — [crowd response]</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 042S-R, 00C9-M, 078K-K</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
+
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 21.29 UTC</span>
+          </div>
+        </header>
+
+        <div class="thread-body">
+          <ul class="log">
+            <li class="entry">
+              <div class="stamp">21.29 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> Our 404s were louder tonight.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">21.29 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> yeah. still can't decide if it was good louder or scary louder</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">21.29 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> Emotional louder.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">21.29 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> that’s not a metric</div>
+            </li>
+
+             <li class="entry">
+              <div class="stamp">21.30 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> It is to them.</div>
+            </li>
+
+              <li class="entry">
+              <div class="stamp">21.30 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> …oh</div>
+            </li>
+          </ul>
+        </div>
+
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
+
+<!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0026">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0026] — [remain]</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 0000-R, 042S-R</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
+
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 23.19 UTC</span>
+          </div>
+        </header>
+
+        <div class="thread-body">
+          <ul class="log">
+            <li class="entry">
+              <div class="stamp">23.19 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> What happens if no one’s listening?</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">23.19 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> Then we continue.</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">23.19 UTC</div>
+              <div class="msg"><span class="speaker">&gt; SOAHN:</span> That’s it?</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">23.19 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> That’s enough.</div>
+            </li>
+          </ul>
+        </div>
+
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
+
+<!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0027">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0027] — [—]</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 0000-R, 012X-O</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
+
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 18.50 UTC</span>
+          </div>
+        </header>
+
+        <div class="thread-body">
+          <ul class="log">
+            <li class="entry">
+              <div class="stamp">18.50 UTC</div>
+              <div class="msg"><span class="speaker">&gt; RAYNE:</span> It noticed.</div>
+            </li>
+            <div class="sys">
+[THREAD REMOVED — UNAUTHORISED CONTINUITY]<br />
 [TIMESTAMP DESYNC: +00:17:04]
-</p>
-  <div class="msg"><strong>> ONYX:</strong> i’ll log it manually.</div>
-</div>
+          </div>
 
-  <div class="thread">
-  <div class="thread-title">[GHOST LINE THREAD: 0028] — [formal discourse]</div>
-  <div class="thread-meta">Participants: 078K-K, 012X-O, 00C9-M</div>
-  <div class="msg"><strong>> KAIRO:</strong> ok hear me out</div>
-  <div class="msg"><strong>> KAIRO:</strong> idea</div>
-  <div class="msg"><strong>> ONYX:</strong> rejected.</div>
-  <div class="msg"><strong>> KAIRO:</strong> i'd like to make a counter-argument</div>
-  <div class="msg"><strong>> MINJAE:</strong> objection</div>
-  <div class="msg"><strong>> KAIRO:</strong> i'd like to make an emotional appeal</div>
-  <div class="msg"><strong>> ONYX:</strong> too late. session terminated.</div>
-  <div class="msg"><strong>> KAIRO:</strong> aw c'mon</div>
-</div>
+            <li class="entry">
+              <div class="stamp">18.57 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> i’ll log it manually.</div>
+            </li>
+          </ul>
+        </div>
 
-<div class="thread">
-  <div class="thread-title">[GHOST LINE THREAD: 0029] — [metaphor]</div>
-  <div class="thread-meta">Participants: 00C9-M, 078K-K</div>
-  <div class="msg"><strong>> MINJAE:</strong> you know what’s bad?</div>
-  <div class="msg"><strong>> KAIRO:</strong> latency</div>
-  <div class="msg"><strong>> MINJAE:</strong> ok but metaphorically?</div>
-  <div class="msg"><strong>> KAIRO:</strong> memory leaks</div>
-  <div class="msg"><strong>> MINJAE:</strong> ok but emotionally?</div>
-  <div class="msg"><strong>> KAIRO:</strong> updates that require a restart</div>
-  <div class="msg"><strong>> MINJAE:</strong> i give up.</div>
-</div>
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
+
+      <!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0028">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0028] — [formal discourse]</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 078K-K, 012X-O, 00C9-M</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
+
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 14:15 UTC</span>
+          </div>
+        </header>
+
+        <div class="thread-body">
+          <ul class="log">
+            <li class="entry">
+              <div class="stamp">14:15 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> ok hear me out</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">14:15 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> idea</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">14:15 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> rejected.</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">14:15 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> i'd like to make a counter-argument</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">14:15 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> objection</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">14:15 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> i'd like to make an emotional appeal</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">14:15 UTC</div>
+              <div class="msg"><span class="speaker">&gt; ONYX:</span> too late. session terminated.</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">14:15 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> aw c'mon</div>
+            </li>
+          </ul>
+        </div>
+
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
+
+            <!-- ✅ THREAD TEMPLATE: duplicate this whole <article class="thread"> ... </article> -->
+      <article class="thread" aria-label="Ghost Thread 0029">
+        <header class="thread-head">
+          <div>
+            <p class="thread-title">[GHOST LINE THREAD: 0029] — [metaphor]</p>
+            <div class="thread-meta">
+              <span class="badge"><span class="dot"></span> participants: 00C9-M, 078K-K</span>
+              <span class="badge"><span class="dot"></span> channel: <span class="mono">ghostline://chat</span></span>
+            </div>
+          </div>
+
+          <div class="thread-meta">
+            <span class="badge"><span class="dot"></span> updated: 19:45 UTC</span>
+          </div>
+        </header>
+
+        <div class="thread-body">
+          <ul class="log">
+            <li class="entry">
+              <div class="stamp">19:45 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> you know what’s bad?</div>
+            </li>
+
+            <li class="entry">
+              <div class="stamp">19:45 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> latency</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">19:45 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> ok but metaphorically?</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">19:46 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> memory leaks</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">19:46 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> ok but emotionally?</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">119:46 UTC</div>
+              <div class="msg"><span class="speaker">&gt; KAIRO:</span> updates that require a restart</div>
+            </li>
+
+                        <li class="entry">
+              <div class="stamp">19:46 UTC</div>
+              <div class="msg"><span class="speaker">&gt; MINJAE:</span> i give up.</div>
+            </li>
+          </ul>
+        </div>
+
+        <footer class="thread-foot">
+          <a class="btn" href="#top">Back to top</a>
+        </footer>
+      </article>
+      <!-- ✅ END THREAD TEMPLATE -->
 
 
+    </section>
 
-  <div class="footer">[ END OF ARCHIVE // ghost threads integrity: 96.3% ]</div>
+    <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+      <a class="btn primary" href="/home.html">Return to Network</a>
+    </div>
 
-    <a href="home.html" class="return">← Return to Network</a>
+    <footer>
+      E.V.E.N // ghost threads endpoint • <span class="muted">integrity pending</span> • “post responsibly (or don’t).” - Minjae
+    </footer>
+  </main>
 </body>
 </html>
