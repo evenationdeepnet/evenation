@@ -1,125 +1,293 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>E.V.E.N Official</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>E.V.E.N // Signal Found</title>
+  <meta name="description" content="Signal found. Transmission begins." />
+
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: black;
-      font-family: 'Orbitron', sans-serif;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      text-align: center;
-      color: white;
+    :root{
+      color-scheme: dark;
+
+      /* softened site palette */
+      --bg: #07080b;
+      --bg2:#06070a;
+
+      --text: rgba(240,240,242,.86);
+      --muted: rgba(240,240,242,.58);
+      --soft: rgba(240,240,242,.10);
+
+      /* restrained accents (not full neon) */
+      --cyan: rgba(120,255,255,.85);
+      --cyanSoft: rgba(120,255,255,.18);
+      --mag: rgba(255,90,225,.72);
+      --magSoft: rgba(255,90,225,.16);
+
+      --radius: 18px;
+      --radius2: 26px;
+
+      --shadow: 0 22px 80px rgba(0,0,0,.55);
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
     }
 
-    .container {
-      position: relative;
-      z-index: 2;
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      background:
+        radial-gradient(900px 520px at 20% 8%, var(--cyanSoft), transparent 55%),
+        radial-gradient(900px 520px at 80% 10%, var(--magSoft), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      color: var(--text);
+      font-family: var(--sans);
+      overflow:hidden;
+      position:relative;
+      isolation:isolate;
     }
 
-    
-
-    .subheading {
-      font-size: 1.2rem;
-      color: #ff66cc;
-      margin: 1rem 0 2rem;
-      text-shadow: 0 0 10px #ff66cc;
+    /* subtle stars (softened) */
+    .stars{
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      opacity:.55;
+      background:
+        radial-gradient(1px 1px at 10% 18%, rgba(120,255,255,.55), transparent 60%),
+        radial-gradient(1px 1px at 28% 42%, rgba(240,240,242,.35), transparent 60%),
+        radial-gradient(1px 1px at 40% 24%, rgba(120,255,255,.35), transparent 60%),
+        radial-gradient(1px 1px at 62% 30%, rgba(255,90,225,.30), transparent 60%),
+        radial-gradient(1px 1px at 74% 58%, rgba(240,240,242,.30), transparent 60%),
+        radial-gradient(1px 1px at 88% 22%, rgba(120,255,255,.28), transparent 60%),
+        radial-gradient(1px 1px at 18% 70%, rgba(255,90,225,.20), transparent 60%),
+        radial-gradient(1px 1px at 82% 78%, rgba(120,255,255,.22), transparent 60%),
+        radial-gradient(1px 1px at 52% 86%, rgba(240,240,242,.22), transparent 60%);
+      filter: blur(.2px);
     }
 
-    .btn {
-      display: inline-block;
-      padding: 10px 30px;
-      background-color: #00ffff;
-      color: black;
-      text-decoration: none;
-      font-weight: bold;
-      border-radius: 4px;
-      position: relative;
-      overflow: hidden;
-      transition: background-color 0.3s;
+    /* gentle noise/grain */
+    .grain{
+      position:fixed;
+      inset:-20px;
+      z-index:1;
+      pointer-events:none;
+      opacity:.10;
+      background:
+        radial-gradient(1px 1px at 18% 24%, rgba(255,255,255,.10), transparent 60%),
+        radial-gradient(1px 1px at 42% 62%, rgba(255,255,255,.08), transparent 60%),
+        radial-gradient(1px 1px at 78% 38%, rgba(255,255,255,.08), transparent 60%),
+        radial-gradient(1px 1px at 60% 80%, rgba(255,255,255,.07), transparent 60%);
+      filter: blur(.35px);
     }
 
-    .btn:hover {
-      background-color: #00cccc;
+    /* centre layout */
+    .wrap{
+      position:relative;
+      z-index:2;
+      height:100%;
+      display:grid;
+      place-items:center;
+      padding: 28px 18px;
     }
 
-    .btn::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: -75%;
-      width: 50%;
-      height: 100%;
-      background: rgba(255, 255, 255, 0.4);
-      transform: skewX(-20deg);
-      transition: left 0.5s ease-in-out;
-      pointer-events: none;
+    .card{
+      width:min(720px, 100%);
+      text-align:center;
+      padding: 56px 20px 44px;
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(10,11,14,.40);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      position:relative;
+      overflow:hidden;
     }
 
-    .btn:hover::before {
-      left: 125%;
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(780px 260px at 30% 0%, rgba(120,255,255,.16), transparent 60%),
+        radial-gradient(780px 260px at 70% 0%, rgba(255,90,225,.12), transparent 60%);
+      opacity:.65;
+      pointer-events:none;
     }
 
-    .glitch-particles {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    .glitch-particles span {
-      position: absolute;
-      width: 2px;
-      height: 2px;
-      background: #00ffff;
-      opacity: 0.4;
-      animation: glitch 3s infinite;
-    }
-
-    @keyframes glitch {
-      0% { transform: translate(0, 0) scale(1); opacity: 0.4; }
-      50% { transform: translate(-3px, 3px) scale(1.2); opacity: 0.7; }
-      100% { transform: translate(3px, -3px) scale(1); opacity: 0.4; }
-    }
-      .glitch {
-      font-size: 3.5rem;
-      color: white;
-      position: relative;
-      display: inline-block;
+    .brand{
+      position:relative;
+      display:inline-block;
+      font-family: var(--mono);
+      font-size: clamp(46px, 7vw, 84px);
+      letter-spacing: .12em;
       text-transform: uppercase;
-      text-shadow: 2px 2px 0 #00ffff, -2px -2px 0 #ff00ff;
+      line-height: 1.02;
+      margin: 0;
+      color: rgba(240,240,242,.92);
+      text-shadow:
+        0 0 0 rgba(0,0,0,0),
+        0 14px 60px rgba(0,0,0,.55);
     }
 
-</style>
-</head>
-<body>
-  <div class="glitch-particles" id="particles"></div>
-  <div class="container">
-    <div class="glitch">E.V.E.N</div>
-    <div class="subheading">Signal found. Transmission begins.</div>
-<a href="home.html" class="btn">ENTER THE NETWORK</a>
-  </div>
-  <script>
-    const particleContainer = document.getElementById('particles');
-    for (let i = 0; i < 100; i++) {
-      const dot = document.createElement('span');
-      dot.style.top = Math.random() * 100 + '%';
-      dot.style.left = Math.random() * 100 + '%';
-      dot.style.animationDuration = (Math.random() * 3 + 2) + 's';
-      particleContainer.appendChild(dot);
+    /* softened glitch: subtle colour separation only */
+    .brand::before,
+    .brand::after{
+      content: attr(data-text);
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      opacity:.16;
+      clip-path: inset(0 0 0 0);
+      letter-spacing: inherit;
+      text-transform: inherit;
+      font-family: inherit;
     }
-  </script>
+
+    .brand::before{
+      transform: translate(1px,0);
+      color: rgba(120,255,255,.55);
+      animation: glitchTop 5.3s infinite;
+    }
+
+    .brand::after{
+      transform: translate(-1px,0);
+      color: rgba(255,90,225,.42);
+      animation: glitchBot 4.9s infinite;
+    }
+
+    @keyframes glitchTop{
+      0%,100%{ clip-path: inset(0 0 92% 0); }
+      22%{ clip-path: inset(0 0 72% 0); }
+      44%{ clip-path: inset(0 0 88% 0); }
+      66%{ clip-path: inset(0 0 78% 0); }
+      88%{ clip-path: inset(0 0 90% 0); }
+    }
+
+    @keyframes glitchBot{
+      0%,100%{ clip-path: inset(88% 0 0 0); }
+      26%{ clip-path: inset(76% 0 0 0); }
+      52%{ clip-path: inset(92% 0 0 0); }
+      78%{ clip-path: inset(80% 0 0 0); }
+      90%{ clip-path: inset(94% 0 0 0); }
+    }
+
+    .tagline{
+      margin: 18px auto 0;
+      font-family: var(--mono);
+      font-size: 16px;
+      letter-spacing: .06em;
+      color: rgba(255,90,225,.72); /* softened magenta */
+      text-shadow: 0 0 18px rgba(255,90,225,.12);
+      max-width: 52ch;
+      position:relative;
+      z-index:1;
+    }
+
+    .cta{
+  margin-top: 26px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding: 14px 22px;
+  border-radius: 14px;
+  border: 1px solid rgba(120,255,255,.45);
+  background: linear-gradient(
+    180deg,
+    rgba(120,255,255,.75),
+    rgba(120,255,255,.60)
+  );
+  color: rgba(8,12,16,.95); /* darker text = higher contrast */
+  font-family: var(--mono);
+  font-size: 14px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  text-decoration:none;
+  box-shadow:
+    0 14px 40px rgba(0,0,0,.35),
+    inset 0 1px 0 rgba(255,255,255,.35);
+  transition:
+    transform .16s ease,
+    box-shadow .16s ease,
+    background .16s ease;
+}
+
+.cta:hover{
+  transform: translateY(-1px);
+  background: linear-gradient(
+    180deg,
+    rgba(140,255,255,.85),
+    rgba(120,255,255,.70)
+  );
+  box-shadow:
+    0 18px 55px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.45);
+}
+
+    .cta:focus-visible{
+      outline: 2px solid rgba(120,255,255,.45);
+      outline-offset: 3px;
+    }
+
+    .meta{
+      margin: 18px auto 0;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: .08em;
+      color: var(--muted);
+      text-transform: uppercase;
+      position:relative;
+      z-index:1;
+    }
+
+    .meta .dot{
+      display:inline-block;
+      width:6px;
+      height:6px;
+      border-radius:50%;
+      background: rgba(120,255,255,.75);
+      box-shadow: 0 0 12px rgba(120,255,255,.25);
+      margin: 0 8px;
+      vertical-align: middle;
+      opacity:.9;
+    }
+
+    /* small footer hint (optional, but nice for first-timers) */
+    .hint{
+      margin-top: 10px;
+      font-size: 12px;
+      color: rgba(240,240,242,.46);
+      font-family: var(--mono);
+      letter-spacing: .06em;
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .brand::before,.brand::after{ animation:none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="stars" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <main class="wrap" aria-label="E.V.E.N landing">
+    <section class="card" aria-label="Signal found intro">
+      <h1 class="brand" data-text="E.V.E.N">E.V.E.N</h1>
+
+      <p class="tagline">Signal found. Transmission begins.</p>
+
+      <a class="cta" href="/home.html" aria-label="Enter the Network">
+        Enter the Network
+      </a>
+
+      <div class="meta" aria-hidden="true">
+        <span>index</span><span class="dot"></span><span>handoff: /home.html</span>
+      </div>
+    </section>
+  </main>
 </body>
 </html>
