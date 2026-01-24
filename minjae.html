@@ -1,135 +1,363 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MINJAE // E.V.E.N</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      padding: 3rem;
-      background: black;
-      font-family: 'Orbitron', sans-serif;
-      color: white;
-    }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>E.V.E.N // Minjae</title>
+<style>
+  :root{
+    /* Members = dark site layer */
+    color-scheme: dark;
 
-    h1 {
-      font-size: 4rem;
-      color: white;
-      text-align: center;
-      text-shadow: 2px 2px 0 #00ffff, -2px -2px 0 #ff00ff;
-    }
+    --bg: #0b0b0d;              /* near-black */
+    --bg2:#0a0a0c;              /* optional second tone (kept very subtle) */
 
-    h2 {
-      text-align: center;
-      color: #ff66cc;
-      font-size: 1.5rem;
-      text-shadow: 0 0 10px #ff66cc;
-      margin-top: -1.5rem;
-    }
+    --text: rgba(240,240,242,.86);     /* pale grey text */
+    --muted: rgba(240,240,242,.58);    /* muted copy */
+    --soft: rgba(240,240,242,.12);     /* borders */
+    --soft2: rgba(240,240,242,.08);    /* secondary borders */
 
-    .container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: flex-start;
-      gap: 3rem;
-      margin-top: 4rem;
-    }
+    /* restrained accents (keep consistent with your site) */
+    --cool: rgba(142,255,247,.14);     /* soft cyan */
+    --warm: rgba(255,156,230,.12);     /* soft pink */
 
-    .text-block {
-      max-width: 500px;
-      font-family: 'Arial', sans-serif;
-      font-size: 1rem;
-      line-height: 1.6;
-      color: #ddd;
-    }
+    --radius: 22px;
+    --radius2: 28px;
+    --shadow: 0 18px 70px rgba(0,0,0,.55);
 
-    .data-block {
-      margin-top: 2rem;
-      font-size: 0.9rem;
-      color: #00ffff;
-      font-family: monospace;
-      background: rgba(0,255,255,0.05);
-      padding: 1rem;
-      border-left: 2px solid #00ffff;
-    }
+    --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  }
 
-.video-block {
-  max-width: 320px;
-  width: 100%;
-}
+  *{ box-sizing:border-box; }
+  html,body{ height:100%; }
 
-.video-block video {
-  width: 100%;
-  height: auto;
-  border-radius: 10px;
-  box-shadow: 0 0 20px #00ffff;
-}
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    overflow-x:hidden;
+    position:relative;
+    isolation:isolate;
+  }
 
-    .quote {
-      margin-top: 3rem;
-      font-style: italic;
-      color: #ff66cc;
-      text-align: center;
-      font-size: 1.1rem;
-    }
+  /* (Optional) subtle noise — safe on black */
+  .grain{
+    position:fixed;
+    inset:-20px;
+    pointer-events:none;
+    z-index:0;
+    opacity:.12;
+    background-image:
+      radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.06), transparent 60%),
+      radial-gradient(1px 1px at 35% 75%, rgba(255,255,255,.05), transparent 60%),
+      radial-gradient(1px 1px at 72% 40%, rgba(255,255,255,.05), transparent 60%),
+      radial-gradient(1px 1px at 58% 82%, rgba(255,255,255,.04), transparent 60%),
+      radial-gradient(1px 1px at 90% 18%, rgba(255,255,255,.05), transparent 60%);
+    filter: blur(.25px);
+  }
 
-    .return {
-      display: block;
-      text-align: center;
-      margin-top: 4rem;
-      color: #00ffff;
-      font-size: 0.9rem;
-      text-decoration: none;
-    }
+  .wrap{
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 46px 20px 70px;
+    position:relative;
+    z-index:1;
+  }
 
-    .return:hover {
-      text-shadow: 0 0 10px #00ffff;
-    }
-  </style>
+  /* title block */
+  .title{
+    text-align:center;
+    margin-bottom: 26px;
+  }
+
+  .name{
+    margin:0;
+    font-family: var(--mono);
+    font-size: clamp(54px, 7.2vw, 92px);
+    letter-spacing: .10em;
+    text-transform: uppercase;
+    line-height: 1.02;
+    color: rgba(240,240,242,.88);
+    text-shadow: 0 12px 40px rgba(0,0,0,.55);
+    position:relative;
+    display:inline-block;
+  }
+
+  /* ultra-gentle glitch shimmer */
+  .name::before,
+  .name::after{
+    content: attr(data-text);
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    opacity:.14;
+    clip-path: inset(0 0 0 0);
+    font-family: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+  }
+  .name::before{
+    transform: translate(1px,0);
+    color: rgba(142,255,247,.55);
+    animation: memTop 5.2s infinite;
+  }
+  .name::after{
+    transform: translate(-1px,0);
+    color: rgba(255,156,230,.45);
+    animation: memBot 4.8s infinite;
+  }
+  @keyframes memTop{
+    0%, 100%{ clip-path: inset(0 0 92% 0); }
+    18%{ clip-path: inset(0 0 70% 0); }
+    36%{ clip-path: inset(0 0 86% 0); }
+    54%{ clip-path: inset(0 0 78% 0); }
+    72%{ clip-path: inset(0 0 90% 0); }
+  }
+  @keyframes memBot{
+    0%, 100%{ clip-path: inset(88% 0 0 0); }
+    22%{ clip-path: inset(76% 0 0 0); }
+    44%{ clip-path: inset(92% 0 0 0); }
+    66%{ clip-path: inset(80% 0 0 0); }
+    88%{ clip-path: inset(94% 0 0 0); }
+  }
+
+  .role{
+    margin: 10px 0 0;
+    font-family: var(--mono);
+    font-size: 16px;
+    letter-spacing: .08em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* layout */
+  .grid{
+    display:grid;
+    grid-template-columns: 1.1fr .9fr;
+    gap: 18px;
+    align-items:start;
+    margin-top: 24px;
+  }
+  @media (max-width: 980px){
+    .grid{ grid-template-columns: 1fr; }
+  }
+
+  .card{
+    border-radius: var(--radius2);
+    border: 1px solid var(--soft);
+    background: rgba(255,255,255,.04);
+    box-shadow: var(--shadow);
+    overflow:hidden;
+    position:relative;
+  }
+
+  .card::before{
+    content:"";
+    position:absolute;
+    inset:-2px;
+    background:
+      radial-gradient(700px 240px at 25% 0%, rgba(142,255,247,.10), transparent 60%),
+      radial-gradient(700px 240px at 75% 0%, rgba(255,156,230,.08), transparent 60%);
+    opacity:.45;
+    pointer-events:none;
+  }
+
+  .copy{
+    padding: 26px 26px 20px;
+    position:relative;
+    z-index:1;
+  }
+
+  .copy p{
+    margin: 0 0 14px;
+    line-height: 1.75;
+    color: rgba(240,240,242,.78);
+    font-size: 15px;
+  }
+  .copy p.small-gap{ margin-bottom: 10px; }
+
+  .copy .break{
+    margin: 18px 0 18px;
+    padding-left: 14px;
+    border-left: 3px solid rgba(240,240,242,.14);
+    color: rgba(240,240,242,.72);
+    font-style: italic;
+  }
+
+  .side{
+    padding: 18px;
+    position:relative;
+    z-index:1;
+    display:grid;
+    gap: 14px;
+  }
+
+  .portrait{
+    border-radius: 22px;
+    border: 1px solid rgba(240,240,242,.14);
+    background: rgba(255,255,255,.03);
+    overflow:hidden;
+    box-shadow: 0 16px 60px rgba(0,0,0,.55);
+    position:relative;
+  }
+
+  .portrait::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.06), transparent 28%),
+      radial-gradient(800px 300px at 20% 0%, rgba(142,255,247,.10), transparent 60%),
+      radial-gradient(800px 300px at 80% 0%, rgba(255,156,230,.08), transparent 60%);
+    pointer-events:none;
+    opacity:.55;
+  }
+
+  .portrait img,
+  .portrait video{
+    width:100%;
+    height:auto;
+    display:block;
+    object-fit:cover;
+    filter: contrast(1.06) saturate(1.05);
+  }
+
+  .databox{
+    border-radius: 20px;
+    border: 1px solid rgba(240,240,242,.14);
+    background: rgba(255,255,255,.03);
+    padding: 16px 16px 14px;
+    font-family: var(--mono);
+    letter-spacing: .06em;
+    color: rgba(240,240,242,.74);
+    box-shadow: 0 14px 50px rgba(0,0,0,.45);
+  }
+
+  .databox .row{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap: 12px;
+    padding: 6px 0;
+    border-bottom: 1px dashed rgba(240,240,242,.16);
+  }
+  .databox .row:last-child{ border-bottom:none; }
+
+  .label{ color: rgba(240,240,242,.52); font-size: 12px; text-transform: uppercase; }
+  .value{ color: rgba(240,240,242,.80); font-size: 12px; text-transform: uppercase; }
+
+  .quote{
+    border-radius: 20px;
+    border: 1px solid rgba(240,240,242,.12);
+    background: rgba(255,255,255,.03);
+    padding: 16px 16px 14px;
+    box-shadow: 0 14px 50px rgba(0,0,0,.45);
+  }
+
+  .quote p{
+    margin:0;
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgba(240,240,242,.74);
+  }
+
+  .quote .mark{
+    font-family: var(--mono);
+    letter-spacing:.06em;
+    color: rgba(240,240,242,.48);
+    font-size: 12px;
+    margin-top: 10px;
+    text-transform: uppercase;
+  }
+
+  .back{
+    margin-top: 22px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .back a{
+    text-decoration:none;
+    font-family: var(--mono);
+    letter-spacing:.10em;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: rgba(240,240,242,.62);
+    padding: 10px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(240,240,242,.14);
+    background: rgba(255,255,255,.03);
+    transition: .16s ease;
+  }
+
+  .back a:hover{
+    color: rgba(240,240,242,.84);
+    border-color: rgba(240,240,242,.22);
+    box-shadow: 0 12px 40px rgba(0,0,0,.55);
+    transform: translateY(-1px);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .name::before,.name::after{ animation:none !important; }
+  }
+</style>
+
 </head>
 <body>
-  <h1>MINJAE</h1>
-  <h2>The Hacker / Vocalist / Backup Rapper</h2>
+  <div class="grain" aria-hidden="true"></div>
 
-  <div class="container">
-    <div class="text-block">
+  <main class="wrap">
+    <header class="title">
+      <h1 class="name" data-text="MINJAE">MINJAE</h1>
+      <p class="role">Hacker / Vocalist / Backup Rapper</p>
+    </header>
 
- <p>Minjae is a bio-enhanced human with neural relay implants that once made him useful to NuYu. Before E.V.E.N, he worked inside the company as a low-tier systems admin, trusted with parts of the code no one thought to protect, obedient and invisible, another disposable name badge. Learning how NuYu’s systems fit together, he quickly understood where they didn’t.</p>
+    <section class="grid" aria-label="Minjae profile">
+      <article class="card">
+        <div class="copy">
+          <p>Minjae is a bio-enhanced human with neural relay implants that once made him useful to NuYu. Before E.V.E.N, he worked inside the company as a low-tier systems admin, trusted with parts of the code no one thought to protect, obedient and invisible, another disposable name badge. Learning how NuYu’s systems fit together, he quickly understood where they didn’t.</p>
 
-<p>Before he disappeared, Minjae sabotaged one of NuYu’s internal systems. By the time the company realised what he’d taken with him, he was already gone. His hands are scarred from the breach, where he burned his way out to freedom. </p>
+          <p>Before he disappeared, Minjae sabotaged one of NuYu’s internal systems. By the time the company realised what he’d taken with him, he was already gone. His hands are scarred from the breach, where he burned his way out to freedom.</p>
 
-<p>What surfaces in his music now isn’t just rebellion, but understanding.</p>
+          <p>What surfaces in his music now isn’t just rebellion, but understanding.</p>
+          <p>Mainly serving as the band’s backup rapper and co-songwriter, Minjae breaks apart belief systems as effortlessly as he once cut through firewalls. Fans say that you don’t listen to Minjae, you decode him.</p>
+          <p>There’s a rumour floating around online that he once rapped so fast in binary it crashed a venue’s mainframe. Minjae has never confirmed it. He just smirks like it could be true.</p>
+        </div>
+      </article>
 
-<p>Mainly serving as the band’s backup rapper and co-songwriter, Minjae breaks apart belief systems as effortlessly as he once cut through firewalls. Fans say that you don’t listen to Minjae, you decode him.</p>
-
-      <p>There’s a rumour floating around online that he once rapped so fast in binary it crashed a venue’s mainframe. Minjae has never confirmed it. He just smirks like it could be true.</p>
-
-      <div class="data-block">
-        SIGNAL ID: 00C9-M<br>
-        AUGMENTATION: 18%<br>
-        ALIGNMENT: RESISTANCE NODE<br>
-        ROLE: HACKER / VOCALIST / BACKUP RAPPER<br>
-      </div>
-    </div>
-
-    <div class="video-block">
-<video src="Minjaeglitch.mp4" autoplay muted loop playsinline preload="none">
+      <aside class="card">
+        <div class="side">
+          <div class="portrait" aria-label="Minjae portrait">
+            <!-- Swap this for your looping GIF: rayne.gif (or a short MP4 video) -->
+<video autoplay muted loop playsinline preload="metadata" aria-label="Minjae looping portrait">
+  <source src="Minjaeglitch.mp4" type="video/mp4" />
   Your browser does not support the video tag.
 </video>
-    </div>
-  </div>
+          </div>
 
-  <div class="quote">
-    “Truth is just code waiting to be cracked.<br>
-They say I feel too much —<br>
-but when the track hits, I sing what the system buried.<br>
-I’m not here to follow orders. I’m here to expose them.”
-  </div>
+          <div class="databox" aria-label="Signal data">
+            <div class="row"><span class="label">Signal ID</span><span class="value">00C9-M</span></div>
+            <div class="row"><span class="label">Augmentation</span><span class="value">18%</span></div>
+            <div class="row"><span class="label">Alignment</span><span class="value">RESISTANCE NODE</span></div>
+            <div class="row"><span class="label">Role</span><span class="value">HACKER / VOCALIST / BACKUP RAPPER</span></div>
+          </div>
 
-  <a href="home.html" class="return">← Return to Network</a>
+          <div class="quote" aria-label="Minjae quote">
+            <p>“Truth is just code waiting to be cracked.
+They say I feel too much —
+but when the track hits, I sing what the system buried.
+I’m not here to follow orders. I’m here to expose them.”</p>
+            <div class="mark">// recovered caption</div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <nav class="back" aria-label="Return">
+      <a href="/home.html">← Return to Network</a>
+    </nav>
+  </main>
 </body>
 </html>
