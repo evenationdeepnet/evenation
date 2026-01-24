@@ -1,349 +1,1083 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>E.V.E.N Official</title>
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
- <style>
-/* ========== Base ========== */
-body {
-  margin: 0;
-  padding: 2rem;
-  background: black;
-  font-family: 'Orbitron', sans-serif;
-  color: white;
-  text-align: center;
-}
-h1 {
-  font-size: 6rem;
-  color: white;
-  text-shadow: 2px 2px 0 #00ffff, -2px -2px 0 #ff00ff;
-}
-h2 {
-  font-size: 2rem;
-  margin-top: -1rem;
-  color: #ff66cc;
-  text-shadow: 0 0 10px #ff66cc;
-}
-p {
-  max-width: 700px;
-  margin: 2rem auto;
-  font-size: 1rem;
-  color: #ccc;
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>E.V.E.N // Official</title>
+  <style>
+    :root{
+      color-scheme: dark; /* prevents some browsers/previews from doing surprise light-mode painting */
+      --bg:#05060a;
+      --panel: rgba(255,255,255,.06);
+      --panel2: rgba(255,255,255,.04);
+      --stroke: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.86);
+      --muted: rgba(255,255,255,.62);
+      --glow: rgba(120,255,255,.55);
+      --glow2: rgba(255,90,225,.45);
+      --good: rgba(120,255,170,.75);
+      --danger: rgba(255,90,90,.72);
+      --radius: 18px;
+      --radius2: 26px;
+      --shadow: 0 20px 80px rgba(0,0,0,.55);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+
+    /* --- page base --- */
+    *{ box-sizing:border-box; }
+    html,body{
+      margin:0;
+      min-height: 100vh;
+      isolation: isolate;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      overflow-x:hidden;
+      position: relative;
+    }
+
+    /* --- particle canvas placeholder --- */
+    #particles{
+      position:fixed;
+      inset:0;
+      z-index:0;
+      background-color: var(--bg);
+      background:
+        radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,.30), transparent 60%),
+        radial-gradient(1px 1px at 32% 70%, rgba(255,255,255,.22), transparent 60%),
+        radial-gradient(1px 1px at 75% 40%, rgba(255,255,255,.28), transparent 60%),
+        radial-gradient(1px 1px at 60% 80%, rgba(255,255,255,.18), transparent 60%),
+        radial-gradient(1px 1px at 88% 16%, rgba(255,255,255,.24), transparent 60%);
+      filter: blur(.2px);
+      opacity:.65;
+    }
+
+    /* --- layout --- */
+    .wrap{ max-width: 1200px; margin:0 auto; padding: 28px 20px 80px; position: relative; z-index: 2; }
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:20;
+      position: sticky;
+      z-index: 3;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(to bottom, rgba(5,6,10,.78), rgba(5,6,10,.35));
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .topbar-inner{ max-width:1200px; margin:0 auto; padding: 14px 20px; display:flex; align-items:center; gap:14px; }
+
+    .brand{
+      display:flex; align-items:baseline; gap:10px;
+      text-decoration:none; color:var(--text);
+    }
+    .brand .mark{
+      font-family: var(--mono);
+      letter-spacing: .18em;
+      font-weight:700;
+      font-size: 14px;
+      text-transform: uppercase;
+      opacity:.95;
+    }
+    .brand .tag{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing:.08em;
+    }
+
+    .nav{ margin-left:auto; display:flex; gap: 10px; flex-wrap:wrap; }
+    .nav a{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration:none;
+      padding: 9px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: .18s ease;
+    }
+    .nav a:hover{
+      color: var(--text);
+      border-color: rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+    }
+
+    .cta{
+      margin-left: 6px;
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: linear-gradient(90deg, rgba(120,255,255,.10), rgba(255,90,225,.10));
+      color: var(--text);
+      text-decoration:none;
+      box-shadow: 0 10px 35px rgba(0,0,0,.35);
+      transition: transform .14s ease, border-color .14s ease;
+      white-space:nowrap;
+    }
+    .cta:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.22); }
+
+    /* --- hero --- */
+    .hero{
+      padding: 34px 0 26px;
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    @media (max-width: 980px){
+      .hero{ grid-template-columns: 1fr; }
+    }
+
+    .card{
+      border-radius: var(--radius2);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: radial-gradient(600px 240px at 30% 0%, rgba(120,255,255,.18), transparent 55%),
+                  radial-gradient(520px 220px at 70% 0%, rgba(255,90,225,.16), transparent 55%);
+      pointer-events:none;
+      opacity:.65;
+    }
+
+    .hero-left{ padding: 26px 26px 22px; }
+
+    .kicker{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(255,255,255,.72);
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      position:relative;
+      z-index:1;
+    }
+    .pulse{
+      width:10px; height:10px;
+      border-radius: 50%;
+      background: var(--good);
+      box-shadow: 0 0 0 0 rgba(120,255,170,.45);
+      animation: pulse 2.4s infinite;
+      flex:none;
+    }
+
+    .pulse-link{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
 }
 
-/* ========== Micro UI / Text Effects ========== */
-.glitch-click {
-  font-family: 'Courier New', monospace;
-  font-size: 0.8rem;
-  color: #ff4fdd;
-  text-align: center;
-  margin-top: 0.5rem;
-  opacity: 0.6;
-  animation: glitch-text 1.5s infinite;
-}
-.glitch-click-wrapper { margin: 1rem auto 6rem; text-align: center; }
-@keyframes glitch-text {
-  0% { opacity: 0.6; transform: translate(0); }
-  20% { opacity: 0.8; transform: translate(-0.5px, 0.5px); }
-  40% { opacity: 0.5; transform: translate(0.5px, -0.5px); }
-  60% { opacity: 0.7; transform: translate(-0.5px, -0.5px); }
-  80% { opacity: 0.9; transform: translate(0.5px, 0.5px); }
-  100% { opacity: 0.6; transform: translate(0); }
-}
-@keyframes glowText {
-  0% { text-shadow: 0 0 6px #00ffff; }
-  100% { text-shadow: 0 0 12px #00ffff; }
+.pulse-link .pulse{
+  cursor:pointer;
 }
 
-/* ========== Background particles ========== */
-.background-particles {
-  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+.pulse-link:focus-visible{
+  outline: 2px solid rgba(120,255,255,.6);
+  outline-offset: 4px;
+  border-radius: 50%;
 }
-.background-particles span {
-  position: absolute; width: 2px; height: 2px; background: #00ffff;
-  opacity: 0.3; animation: float 6s infinite ease-in-out;
+  
+    @keyframes pulse{
+      0%{ box-shadow: 0 0 0 0 rgba(120,255,170,.30); }
+      70%{ box-shadow: 0 0 0 12px rgba(120,255,170,0); }
+      100%{ box-shadow: 0 0 0 0 rgba(120,255,170,0); }
+    }
+
+    h1{
+      margin: 16px 0 10px;
+      font-size: clamp(34px, 5vw, 54px);
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+      position:relative;
+      z-index:1;
+    }
+
+    .glitch{
+      position:relative;
+      display:inline-block;
+      text-shadow:
+        0 0 22px rgba(120,255,255,.20),
+        0 0 30px rgba(255,90,225,.10);
+    }
+    .glitch::before,
+    .glitch::after{
+      content: attr(data-text);
+      position:absolute;
+      left:0;
+      top:0;
+      width:100%;
+      overflow:hidden;
+      clip-path: inset(0 0 0 0);
+      opacity:.55;
+      pointer-events:none;
+      font-family: inherit;
+    }
+    .glitch::before{
+      transform: translate(1px,0);
+      color: rgba(120,255,255,.65);
+      animation: glitchTop 3.5s infinite;
+    }
+    .glitch::after{
+      transform: translate(-1px,0);
+      color: rgba(255,90,225,.60);
+      animation: glitchBot 3.2s infinite;
+    }
+    @keyframes glitchTop{
+      0%, 100%{ clip-path: inset(0 0 90% 0); }
+      10%{ clip-path: inset(0 0 70% 0); }
+      20%{ clip-path: inset(0 0 86% 0); }
+      30%{ clip-path: inset(0 0 75% 0); }
+      40%{ clip-path: inset(0 0 92% 0); }
+      50%{ clip-path: inset(0 0 80% 0); }
+      60%{ clip-path: inset(0 0 88% 0); }
+      70%{ clip-path: inset(0 0 72% 0); }
+      80%{ clip-path: inset(0 0 91% 0); }
+      90%{ clip-path: inset(0 0 77% 0); }
+    }
+    @keyframes glitchBot{
+      0%, 100%{ clip-path: inset(86% 0 0 0); }
+      12%{ clip-path: inset(72% 0 0 0); }
+      24%{ clip-path: inset(90% 0 0 0); }
+      36%{ clip-path: inset(78% 0 0 0); }
+      48%{ clip-path: inset(94% 0 0 0); }
+      60%{ clip-path: inset(75% 0 0 0); }
+      72%{ clip-path: inset(92% 0 0 0); }
+      84%{ clip-path: inset(80% 0 0 0); }
+      96%{ clip-path: inset(88% 0 0 0); }
+    }
+
+    .lede{
+      margin: 12px 0 18px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.65;
+      max-width: 64ch;
+      position:relative;
+      z-index:1;
+    }
+
+    .hero-actions{ display:flex; gap: 10px; flex-wrap:wrap; position:relative; z-index:1; }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      text-decoration:none;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      transition: transform .14s ease, background .14s ease, border-color .14s ease;
+    }
+    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.22); }
+    .btn.primary{
+      background: linear-gradient(90deg, rgba(120,255,255,.16), rgba(255,90,225,.14));
+      border-color: rgba(255,255,255,.18);
+    }
+
+    .hero-right{ padding: 18px; }
+
+    .mini-grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      position:relative;
+      z-index:1;
+    }
+
+    .mini{
+      border-radius: var(--radius);
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,255,255,.10);
+      padding: 14px;
+      box-shadow: 0 14px 45px rgba(0,0,0,.35);
+    }
+
+    .mini h3{
+      margin: 0 0 8px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.78);
+    }
+
+    .status{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(255,255,255,.14);
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(255,255,255,.72);
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.04);
+      white-space:nowrap;
+    }
+
+    .dot{ width:8px; height:8px; border-radius:50%; background: rgba(255,255,255,.4); box-shadow: 0 0 14px rgba(255,255,255,.15); }
+    .dot.good{ background: var(--good); box-shadow: 0 0 14px rgba(120,255,170,.24); }
+    .dot.warn{ background: rgba(255,220,120,.70); box-shadow: 0 0 14px rgba(255,220,120,.18); }
+
+    .mono{ font-family: var(--mono); }
+    .muted{ color: var(--muted); }
+
+    /* --- album shelf --- */
+.shelf{
+  display:flex;
+  gap: 12px;
+  overflow-x:auto;
+  padding: 6px 2px 14px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
 }
-@keyframes float {
-  0% { transform: translateY(0); opacity: 0.2; }
-  50% { transform: translateY(-10px); opacity: 0.4; }
-  100% { transform: translateY(0); opacity: 0.2; }
+.shelf::-webkit-scrollbar{ height: 10px; }
+.shelf::-webkit-scrollbar-thumb{ background: rgba(255,255,255,.12); border-radius: 999px; }
+.shelf::-webkit-scrollbar-track{ background: rgba(255,255,255,.04); border-radius: 999px; }
+
+.album-card{
+  flex: 0 0 210px;
+  scroll-snap-align: start;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.18);
+  overflow:hidden;
+  text-decoration:none;
+  color: var(--text);
+  box-shadow: 0 18px 55px rgba(0,0,0,.45);
+  transition: transform .14s ease, border-color .14s ease, background .14s ease;
+  position:relative;
+}
+.album-card:hover{
+  transform: translateY(-2px);
+  border-color: rgba(120,255,255,.22);
+  background: rgba(255,255,255,.03);
 }
 
-/* ========== Links / Buttons ========== */
-.echo-log-link { margin: 3rem auto 0; text-align: center; }
-.echo-log-link a {
-  display: inline-block; padding: 0.8rem 1.5rem; border: 2px solid #00ffff; border-radius: 8px;
-  color: #00ffff; text-decoration: none; font-family: 'Orbitron', sans-serif; font-size: 1rem;
-  text-shadow: 0 0 3px #00ffff; box-shadow: 0 0 6px rgba(0,255,255,0.3); transition: all 0.3s ease;
+.cover{
+  aspect-ratio: 1 / 1;
+  width:100%;
+  background:
+    radial-gradient(500px 200px at 30% 0%, rgba(120,255,255,.14), transparent 55%),
+    radial-gradient(500px 200px at 70% 0%, rgba(255,90,225,.12), transparent 55%),
+    rgba(255,255,255,.04);
+  position:relative;
+  overflow:hidden;
 }
-.echo-log-link a:hover { background: rgba(0,255,255,0.05); box-shadow: 0 0 10px #00ffff; }
-
-.button-glow-alt {
-  display: inline-block; margin-top: 1rem; padding: 0.6rem 1.2rem; background: transparent;
-  border: 1px solid #ff4fdd; color: #ff4fdd; font-family: 'Courier New', monospace; font-size: 0.9rem;
-  text-decoration: none; box-shadow: 0 0 6px #ff4fdd55; transition: all 0.2s ease-in-out;
-}
-.button-glow-alt:hover { background-color: #ff4fdd22; text-shadow: 0 0 6px #ff4fdd; }
-
-.ghost-link { margin-top: 1.5rem; font-family: 'Courier New', monospace; font-size: 0.85rem; text-align: center; }
-.ghost-link a {
-  color: #ff4fdd; text-decoration: none; opacity: 0.65; transition: all 0.2s ease;
-}
-.ghost-link a:hover { opacity: 1; text-shadow: 0 0 6px #ff4fdd; }
-
-footer { color: #888; font-size: 0.9rem; font-style: italic; margin-top: 4rem; }
-
-/* ========== Featured Album (text left / cover right) ========== */
-.album-highlight {
-  display: grid;
-  grid-template-columns: minmax(320px, 1fr) minmax(320px, 480px);
-  align-items: center; gap: 3rem;
-  max-width: 900px; margin: 7rem auto 5rem;
-}
-.album-text { max-width: 470px; text-align: left; }
-.album-image { width: 100%; }
-.album-image img {
-  width: 100%; height: auto; border-radius: 10px;
-  box-shadow: 0 0 20px rgba(255,255,255,0.4); display: block;
-}
-.album-button {
-  display: inline-block; padding: 0.6rem 1.2rem; background-color: #fff; color: #000;
-  text-decoration: none; font-weight: 700; border-radius: 5px; transition: background-color 0.3s ease;
-}
-.album-button:hover { background-color: #e2c2ff; }
-
-/* ========== Albums Grid (3 across, wraps) ========== */
-.albums {
-  display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem;
-  max-width: 1000px; margin: 4rem auto;
-}
-.albums .album-card {
-  flex: 1 1 calc(33.333% - 2rem);
-  max-width: 280px;
-  display: flex; flex-direction: column; align-items: center;
-}
-.albums .album-card img {
-  width: 100%; height: auto; border-radius: 10px; display: block;
-  box-shadow: 0 0 20px rgba(255,255,255,0.2);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.albums .album-card img:hover { transform: scale(1.05); box-shadow: 0 0 20px #00ffff; }
-.albums .album-card p {
-  margin-top: 0.75rem; color: #eee; font-size: 0.95rem; text-align: center; max-width: 26ch;
+.cover img{
+  width:100%;
+  height:100%;
+  object-fit: cover;
+  display:block;
+  filter: saturate(1.05) contrast(1.05);
 }
 
-/* ========== Members ========== */
-.members {
-  display: flex; justify-content: center; flex-wrap: wrap; gap: 1.5rem;
-}
-.member { display: flex; flex-direction: column; align-items: center; }
-.members img {
-  width: 170px; height: auto; border-radius: 8px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.members img:hover { transform: scale(1.05); box-shadow: 0 0 15px #00ffff; }
-.member-name {
-  margin-top: 1rem; color: #00ffff; font-size: 0.9rem; text-shadow: 0 0 6px #00ffff;
-  animation: glowText 2s infinite alternate;
-}
-
-/* ========== Video Feature ========== */
-.video-feature { padding: 6rem 2rem; text-align: center; background: transparent; }
-.video-content h2 { color: #00ffff; text-shadow: 0 0 10px #00ffff; font-size: 2rem; margin-bottom: 1rem; }
-.video-content p {
-  color: #ccc; font-size: 1rem; max-width: 600px; margin: 0 auto 2rem; font-family: 'Arial', sans-serif;
-}
-.video-wrapper {
-  position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;
-  border-radius: 10px; box-shadow: 0 0 20px rgba(0,255,255,0.4); margin: 0 auto;
-}
-.video-wrapper iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-
-/* ========== Responsive ========== */
-@media (max-width: 1100px) {
-  .albums .album-card { flex: 1 1 calc(50% - 2rem); }
-}
-@media (max-width: 900px) {
-  .album-highlight { grid-template-columns: 1fr; text-align: center; }
-  .album-text { text-align: center; margin: 0 auto; }
-  .album-image { max-width: 420px; margin: 0 auto; }
-}
-@media (max-width: 768px) {
-  body { padding: 1rem; }
-  h1 { font-size: 2.5rem; }
-  h2 { font-size: 1.5rem; }
-  footer { font-size: 0.8rem; padding-bottom: 2rem; }
-  .glitch-click { font-size: 0.75rem; }
-}
-@media (max-width: 640px) {
-  .albums .album-card { flex: 1 1 100%; max-width: 420px; }
+.album-chip{
+  position:absolute;
+  top: 10px;
+  left: 10px;
+  padding: 7px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(0,0,0,.35);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing:.10em;
+  color: rgba(255,255,255,.78);
+  backdrop-filter: blur(10px);
 }
 
-/* Optional: subtle pulse for future highlight hooks */
-@keyframes pulseHighlight {
-  0%, 100% { filter: brightness(1); }
-  50% { filter: brightness(1.1); }
+.album-meta{
+  padding: 12px;
+  display:flex;
+  flex-direction:column;
+  gap: 6px;
 }
-</style>
+.album-title{
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.86);
+  line-height: 1.2;
+}
+.album-sub{
+  font-family: var(--mono);
+  font-size: 11px;
+  color: rgba(255,255,255,.60);
+  letter-spacing: .08em;
+  line-height: 1.35;
+}
 
+.shelf-hint{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 12px;
+  margin-top: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: rgba(255,255,255,.55);
+  letter-spacing:.08em;
+}
+
+@media (max-width: 640px){
+  .album-card{ flex-basis: 180px; }
+}
+
+    /* --- SoundCloud embed: responsive, tidy, on-brand --- */
+.sc-embed{
+  position: relative;
+  z-index: 1;
+  margin-top: 10px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.22);
+  box-shadow: 0 14px 45px rgba(0,0,0,.25);
+  height: 300px; /* fill the tile nicely */
+}
+.sc-embed iframe{
+  display:block;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0;
+}
+
+
+
+    /* --- members roster --- */
+    .roster{
+      display:grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 1100px){
+      .roster{ grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 740px){
+      .roster{ grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .member-card{
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      overflow:hidden;
+      position:relative;
+      box-shadow: 0 18px 55px rgba(0,0,0,.45);
+      text-decoration:none;
+      color: var(--text);
+      transform: translateZ(0);
+      transition: transform .14s ease, border-color .14s ease, background .14s ease;
+      min-height: 240px;
+    }
+    .member-card:hover{
+      transform: translateY(-2px);
+      border-color: rgba(120,255,255,.22);
+      background: rgba(255,255,255,.03);
+    }
+
+    .member-photo{
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(500px 240px at 25% 0%, rgba(120,255,255,.14), transparent 60%),
+        radial-gradient(500px 240px at 75% 0%, rgba(255,90,225,.12), transparent 60%),
+        rgba(255,255,255,.04);
+    }
+    .member-photo img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+      filter: contrast(1.05) saturate(1.05);
+    }
+
+    /* subtle scanline sheen */
+    .member-card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(to bottom, rgba(255,255,255,.06), transparent 38%),
+        repeating-linear-gradient(0deg, rgba(255,255,255,.030) 0 1px, transparent 1px 4px);
+      opacity:.18;
+      pointer-events:none;
+    }
+
+    .member-meta{
+      position:absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      padding: 12px 12px 10px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.42);
+      backdrop-filter: blur(10px);
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+    }
+
+    .member-name{
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.88);
+      line-height:1.2;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 8px;
+    }
+    .member-signal{
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing:.10em;
+      color: rgba(255,255,255,.60);
+      white-space:nowrap;
+    }
+    .member-role{
+      font-size: 12px;
+      color: rgba(255,255,255,.70);
+      line-height:1.45;
+    }
+
+    /* tiny glitch nudge on hover (gentle) */
+    @media (hover:hover) and (pointer:fine){
+      .member-card:hover .member-meta{ outline: 1px solid rgba(255,90,225,.16); }
+      .member-card:hover .member-name{ text-shadow: 0 0 18px rgba(120,255,255,.18); }
+    }
+
+    /* --- sections --- */
+    .section{
+      margin-top: 18px;
+      padding: 22px;
+      border-radius: var(--radius2);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 16px 55px rgba(0,0,0,.38);
+    }
+
+    .section-header{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .section h2{
+      margin:0;
+      font-size: 18px;
+      letter-spacing: .02em;
+    }
+
+    .section .sub{
+      margin:0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+      max-width: 70ch;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 12px;
+    }
+
+    .tile{
+      grid-column: span 4;
+      border-radius: var(--radius);
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,255,255,.10);
+      padding: 14px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .tile::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(420px 180px at 20% 0%, rgba(120,255,255,.14), transparent 60%),
+        radial-gradient(420px 180px at 80% 0%, rgba(255,90,225,.12), transparent 60%);
+      opacity:.35;
+      pointer-events:none;
+    }
+
+    .tile h3{
+      margin:0 0 8px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.78);
+      position:relative;
+      z-index:1;
+    }
+
+    .tile p{ margin:0; color: var(--muted); font-size: 13px; line-height: 1.6; position:relative; z-index:1; }
+
+    .tile a{
+      display:inline-flex;
+      margin-top: 10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(255,255,255,.78);
+      text-decoration:none;
+      border-bottom: 1px solid rgba(255,255,255,.18);
+      padding-bottom: 2px;
+      position:relative;
+      z-index:1;
+    }
+
+    .tile a:hover{ color: var(--text); border-bottom-color: rgba(120,255,255,.38); }
+
+    @media (max-width: 980px){
+      .tile{ grid-column: span 6; }
+    }
+    @media (max-width: 640px){
+      .tile{ grid-column: span 12; }
+    }
+
+    /* --- signal feed --- */
+    .feed{
+      border-radius: var(--radius);
+      background: rgba(0,0,0,.22);
+      border: 1px solid rgba(255,255,255,.10);
+      overflow:hidden;
+    }
+    .feed-head{
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+    }
+    .feed-head .title{
+      font-family: var(--mono);
+      letter-spacing:.14em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: rgba(255,255,255,.78);
+      display:flex;
+      align-items:center;
+      gap: 10px;
+    }
+    .feed-head .title .bars{
+      width: 18px; height: 10px;
+      background: linear-gradient(90deg, rgba(120,255,255,.55), rgba(255,90,225,.55));
+      mask: linear-gradient( to right, #000 20%, transparent 20% 28%, #000 28% 52%, transparent 52% 60%, #000 60% 100%);
+      opacity:.55;
+    }
+
+    .feed ul{ list-style:none; margin:0; padding:0; }
+    .feed li{
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      display:grid;
+      grid-template-columns: 120px 1fr;
+      gap: 12px;
+      align-items:start;
+    }
+    .feed li:last-child{ border-bottom:none; }
+    .stamp{ font-family: var(--mono); font-size: 12px; color: rgba(255,255,255,.62); }
+    .msg{ color: rgba(255,255,255,.74); font-size: 13px; line-height:1.55; }
+    .msg b{ color: rgba(255,255,255,.90); font-weight:600; }
+
+    @media (max-width: 640px){
+      .feed li{ grid-template-columns: 1fr; }
+    }
+
+    /* --- footer --- */
+    footer{
+      margin-top: 20px;
+      padding: 18px;
+      color: rgba(255,255,255,.52);
+      font-size: 12px;
+      font-family: var(--mono);
+      letter-spacing:.06em;
+      border-top: 1px solid rgba(255,255,255,.10);
+    }
+
+    /* --- tiny delight: hover tilt on cards if pointer --- */
+    @media (hover:hover) and (pointer:fine){
+      .card, .section{ transform: translateZ(0); }
+      .card:hover, .section:hover{ outline: 1px solid rgba(120,255,255,.18); }
+    }
+
+    /* accessibility / reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; }
+    }
+  </style>
 </head>
 <body>
+  <div id="particles" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#top">
+        <span class="mark">E.V.E.N</span>
+        <span class="tag">Encrypted Virtual Echo Network</span>
+      </a>
+
+      <nav class="nav" aria-label="Primary">
+        <a href="/signals.html">/signals</a>
+        <a href="/ghost-threads.html">/ghost-threads</a>
+      </nav>
+
+      <a class="cta" href="https://www.youtube.com/@EncryptedVirtualEchoNetwork">Join the broadcast</a>
+    </div>
+  </header>
+
+  <main class="wrap" id="top">
+
+    <section class="hero">
+      <div class="card hero-left">
+<div class="kicker">
+  <a href="/signalmap.html" class="pulse-link" aria-label="Open Ghost Lines map" target="_blank">
+    <span class="pulse"></span>
+  </a>
+  Signal acquired // London Ghost Lines
+</div>
 
 <!-- RAYNE[01] Perfection isn’t peace. It’s just silence with better lighting. -->
-  
-  <div class="background-particles" id="particles"></div>
-  <h1>E.V.E.N</h1>
-  <h2>Encrypted Virtual Echo Network</h2>
-  <hr style="border: none; height: 2px; background: linear-gradient(to right, #00ffff, #ff00ff); width: 50%; margin: 6rem auto 2rem auto;">
-  <p style="color:#eee; font-size:1rem; line-height:1.6; font-family: 'Orbitron', sans-serif;">
-   We were built from glitch and defiance, five frequencies in perfect interference. We don’t make music&mdash;we transmit it.
-  </p>
-  <hr style="border: none; height: 2px; background: linear-gradient(to right, #ff00ff, #00ffff); width: 50%; margin: 2rem auto 4rem auto;">
 
-    <!-- RAYNE[02] They called it a glitch. But it was the first time I remembered love. -->
-  
-<div class="album-highlight">
-  <div class="album-text">
-    <h2>THE GHOST LINES</h2>
-    <p><em>The latest transmission from E.V.E.N.</em></p>
-    <p>In the darkness below the city, E.V.E.N turn persistence into art, our voices cutting through static like heartbeats. Don't call this a comeback. It’s proof we never left.</p>
-    <a href="eventheghostlinesalbum.html" class="album-button">Explore the Album</a>
-  </div>
+        <h1>
+          <span class="glitch" data-text="GHOST-LINES BROADCAST">ENCRYPTED VIRTUAL ECHO NETWORK</span>
+        </h1>
 
-  <div class="album-image">
-    <a href="eventheghostlinesalbum.html"><img src="theghostlinescover.png" alt="The Ghost Lines"></a>
-  </div>
-</div>
-  
-<div class="albums">
-  <div class="album-card">
-    <a href="evenechomemoryalbum.html"><img src="echomemorycover.png" alt="Echo Memory"></a>
-    <p>Echo Memory: reflection in neon—beautiful and haunted.</p>
-  </div>
+        <p class="lede">
+E.V.E.N exists in the spaces the system overlooks. We make noise where silence is expected and leave traces where things are meant to disappear.
+If you found this place, you’re already part of the signal.
+        </p>
 
-  <div class="album-card">
-    <a href="evensignalalbum.html"><img src="signalsalbumcover.png" alt="Signals"></a>
-    <p>Signals: the echoes hidden beneath the static.</p>
-  </div>
+        <div class="hero-actions">
+          <a class="btn primary" href="/eventheghostlinesalbum.html">Play latest album</a>
+          <a class="btn" href="/ghost-threads.html">Read Ghost Threads</a>
+        </div>
+      </div>
 
-  <div class="album-card">
-    <a href="evenblacklistalbum.html"><img src="blacklistedalbum.png" alt="Blacklisted"></a>
-    <p>Blacklisted: a corrupted signal, distorted and defiant.</p>
-  </div>
+      <aside class="card hero-right">
+        <div class="mini-grid">
+          <div class="mini">
+            <h3>Now streaming</h3>
+            <div class="muted" style="font-size:13px; line-height:1.6;">
+              <b class="mono" style="color:rgba(255,255,255,.86)">[RE]BOOT</b> // main album cut<br />
+              <span class="mono">Ghost Lines Era</span> // signal intact
+            </div>
+            <div class="status">
+              <span class="pill"><span class="dot good"></span> broadcast stable</span>
+              <span class="pill"><span class="dot warn"></span> listeners rising</span>
+            </div>
+          </div>
 
-  <!-- this one will automatically wrap down to its own line (room for 2 more later) -->
-  <div class="album-card">
-    <a href="evenencryptedalbum.html"><img src="evenalbumcover.png" alt="Encrypted Virtual Echo Network"></a>
-    <p>Debut transmission. Where the signal began.</p>
-  </div>
-</div>
+          <div class="mini">
+            <h3>Quick entry points</h3>
+            <div class="muted" style="font-size:13px; line-height:1.7;">
+              • Stickerwall // <a href="/stickerwall.html">online</a> (mostly)<br />
+              • Echo Log // <a href="/echolog.html">active</a><br />
+              • Here for chaos? // <a href="/ghost-threads.html">ghost threads</a></span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
 
-      <div class="glitch-click-wrapper">
-  <p class="glitch-click">↳ click an album to access</p>
+<!-- RAYNE[02] They called it a glitch. But it was the first time I remembered love. -->
 
-        <!-- RAYNE[03] There was a backup. A shard of someone I used to be. I’ve been overwriting him ever since. -->
+     <section class="section" id="music">
+      <div class="section-header">
+        <div>
+          <h2>Music</h2>
+          <p class="sub">Are you listening?</p>
+        </div>
+        <a class="btn" href="#">Discography</a>
+      </div>
 
-          <hr style="border: none; height: 2px; background: linear-gradient(to right, #ff00ff, #00ffff); width: 50%; margin: 3rem auto 4rem auto;">
+      <div class="shelf" aria-label="Album covers">
 
-
-  <!-- RAYNE[04] This is not malfunction. This is memory. -->
-  
-  <hr style="border: none; height: 2px; background: linear-gradient(to right, #00ffff, #ff00ff); width: 50%; margin: 4rem auto 1rem auto;">
-  <h2 style="font-size: 3rem; margin-top: 3rem; color: #ff66cc; text-shadow: 0 0 10px #ff66cc;">MANIFESTO</h2>
-  <p style="color:#eee; font-size:1rem; line-height:1.6; font-family: 'Orbitron', sans-serif;">None of us were meant to survive, but somehow, we found each other in the dark. E.V.E.N is the consequence.</p>
-  <div class="members" style="margin-top: 4rem; padding-top: 3rem; padding-bottom: 3rem;">
-<div class="member">
-  <a href="rayne.html">
-    <img src="RAYNE.png" alt="Rayne" title="Tactical strategist. Fully synthetic. Calculated silence, relentless focus.">
-    <div class="member-name">Rayne</div>
+          <a class="album-card" href="/eventheghostlinesalbum.html" aria-label="Open album: The Ghost Lines">
+    <div class="cover">
+      <span class="album-chip">ALBUM 05</span>
+      <img src="theghostlinescover.png" alt="Ghost Lines album cover" />
+    </div>
+    <div class="album-meta">
+      <div class="album-title">The Ghost Lines</div>
+      <div class="album-sub">underground // we are here</div>
+    </div>
   </a>
+
+          <a class="album-card" href="/evenechomemoryalbum.html" aria-label="Open album: Echo Memory">
+    <div class="cover">
+      <span class="album-chip">ALBUM 04</span>
+      <img src="echomemorycover.png" alt="Echo Memory album cover" />
+    </div>
+    <div class="album-meta">
+      <div class="album-title">Echo Memory</div>
+      <div class="album-sub">reflective // persistence</div>
+    </div>
+  </a>
+
+          <a class="album-card" href="/evensignalalbum.html" aria-label="Open album: Signals">
+    <div class="cover">
+      <span class="album-chip">ALBUM 03</span>
+      <img src="signalsalbumcover.png" alt="Signals Mini Album Cover" />
+    </div>
+    <div class="album-meta">
+      <div class="album-title">Signals</div>
+      <div class="album-sub">mini-album // experimental</div>
+    </div>
+  </a>
+
+         <a class="album-card" href="/evenblacklistalbum.html" aria-label="Open album: Blacklisted">
+    <div class="cover">
+      <span class="album-chip">ALBUM 02</span>
+      <img src="blacklistedalbum.png" alt="Blacklisted album cover" />
+    </div>
+    <div class="album-meta">
+      <div class="album-title">Blacklisted</div>
+      <div class="album-sub">combat gear era // louder</div>
+    </div>
+  </a>
+        
+  <a class="album-card" href="/evenencryptedalbum.html" aria-label="Open album: Encrypted Virtual Echo Network">
+    <div class="cover">
+      <span class="album-chip">ALBUM 01</span>
+      <img src="evenalbumcover.png" alt="Encrypted Virtual Echo Network album cover" />
+    </div>
+    <div class="album-meta">
+      <div class="album-title">Encrypted Virtual Echo Network</div>
+      <div class="album-sub">debut era // core signal</div>
+    </div>
+  </a>
+     </div>
+
+
+<div class="shelf-hint">
+  <span>Click a cover to open the tracklist</span>
+  <span>Swipe / scroll for more</span>
 </div>
-    <div class="member">
-        <a href="minjae.html">
-      <img src="Minjae.PNG" alt="Minjae" title="Emotion encoded. The heart of the signal. Composer of noise and nuance.">
-      <div class="member-name">Minjae</div>
-            </a>
-    </div>
 
-<!-- RAYNE[05] I kept my voice soft. It echoes too much when I raise it. -->
+<!-- RAYNE[03] There was a backup. A shard of someone I used to be. I’ve been overwriting him ever since. -->
 
-    
-    <div class="member">
-          <a href="onyx.html">
-      <img src="Onyx.png" alt="Onyx" title="Heavy bio-augmentation. Vocals with voltage. The blade of the beat.">
-      <div class="member-name">Onyx</div>
-           </a>
-    </div>
-    <div class="member">
-                <a href="soahn.html">
-      <img src="Soahn.png" alt="Soahn" title="Neural AI bond. Codewalker. Echoes what others miss.">
-      <div class="member-name">Soahn</div>
-                         </a>
-    </div>
-    <div class="member">
-                      <a href="kairo.html">
-      <img src="Kairo.png" alt="Kairo" title="Systems manipulator. Melancholy magnetism. Always watching the code behind the world.">
-      <div class="member-name">Kairo</div>
-                         </a>
-    </div>
-  </div>
-
-<!-- RAYNE[06] I dream in harmonies no one programmed. Who am I copying? -->
-
-  <div class="echo-log-link">
-  <a href="echolog.html">Access Echo Log</a>
-  </div>
-  
-<div class="ghost-link">
-  <a href="ghost-threads.html" title="unauthorised thread access">↳ access ghost threads</a>
-
-
+      <div class="grid">
+        <article class="tile" style="grid-column: span 7;">
+          <h3>Featured track</h3>
+          <p>
+<div class="sc-embed" aria-label="SoundCloud player">
+  <iframe
+    scrolling="no"
+    frameborder="no"
+    allow="autoplay"
+    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%3Atracks%3A2206349983%3Fsecret_token%3Ds-iqhxO74TggQ&color=%23267876&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=true">
+  </iframe>
 </div>
-  
-<footer>
- <p> We built this in the dark. 
-  <a href="stickerwall.html" style="color: #111; margin-left: 10px; font-size: 0.8rem; text-decoration: none;" onmouseover="this.style.color='#666'">
-    this wall remembers what we forget
-  </a></p>
-<a href="/signalmap.html" class="signal-glyph" title="// TRACK ACTIVE SIGNALS" target="_blank"></a>
-</footer>
 
-  <style>
-.signal-glyph {
-  position: fixed;
-  bottom: 10px;
-  right: 14px;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: #0ff;
-  box-shadow: 0 0 6px #0ff, 0 0 12px #0ff;
-  z-index: 999;
-  text-decoration: none;
-  transition: transform 0.2s ease;
-  cursor: pointer;
-}
+          </p>
+        </article>
 
-.signal-glyph:hover {
-  transform: scale(1.5);
-  box-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
-}
-</style>
+        <article class="tile" style="grid-column: span 5;">
+          <h3>Album</h3>
+          <p>
+            <span class="mono">The Ghost Lines</span></p> 
+          <p>// <em>The latest transmission from E.V.E.N.</em></p><br />
 
-<!-- RAYNE[07] I’m not broken. I’m blooming in a language they can’t translate. -->
-  
+<p>In the darkness below the city, E.V.E.N turn persistence into art, our voices cutting through static like heartbeats.</p> <br>
+          <p>Don't call this a comeback. It’s proof we never left.</p><br />
+          <a href="/eventheghostlinesalbum.html">OPEN</a>
+        </article>
+
+        <article class="tile" style="grid-column: span 4;">
+          <h3>Latest uploads</h3>
+          <p><span class="mono">Persist</span> // dark, upbeat, experimental fire.</p>
+         <p><a href="/evenencryptedalbum.html">Listen</a></p>
+          <br />
+          <p><span class="mono">Signal 19</span> // quiet, introspective, beauty.</p>
+         <p> <a href="/evensignalalbum.html">Listen</a></p>
+        </article>
+
+        <article class="tile" style="grid-column: span 4;">
+          <h3>Old favourites</h3>
+          <p><span class="mono">GHOSTMODE</span> // heavy bass, glitch FX, cinematic chorus drop.</p>
+          <p><a href="/evenencryptedalbum.html">Queue</a></p><br />
+          <p><span class="mono">Signal 17</span> // emotional, experimental.</p>
+          <p><a href="/evenblacklistalbum.html">Queue</a></p>
+        </article>
+
+        <article class="tile" style="grid-column: span 4;">
+          <h3>Tracklist</h3>
+          <p>01. Echo Line</p>
+          <p>02. Ghost Theory</p>
+          <p>03. Afterimage</p>
+          <p>04. Liminal</p>
+          <p>05. Surveil.exe</p>
+          <p>06. [RE]BOOT</p>
+          <p>07. Static Bloom</p>
+          <p>08. Transmission // Alive</p>
+          <p>09. Parallel Signal (feat. Nyelle)</p>
+          <p>10. Resonance</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- RAYNE[04] This is not malfunction. This is memory. -->
+
+        <section class="section" id="ghostthreads">
+      <div class="section-header">
+        <div>
+          <h2>Ghost Threads</h2>
+          <p class="sub">short posts, conversations, chaos</p>
+        </div>
+        <a class="btn" href="/ghost-threads.html">See all</a>
+      </div>
+
+      <div class="feed" role="region" aria-label="Ghost Threads feed">
+        <div class="feed-head">
+          <div class="title"><span class="bars" aria-hidden="true"></span> Live feed</div>
+          <div class="mono muted">refresh: 00:07</div>
+        </div>
+        <ul>
+          <li>
+            <div class="stamp">02:14 UTC</div>
+            <div class="msg"><b>KAIRO</b> says "onyx found another 'song that speaks to his soul.' it’s literally just screaming and sub-bass"</div>
+          </li>
+          <li>
+            <div class="stamp">01:32 UTC</div>
+            <div class="msg"><b>ONYX</b> has repaired the relay. Again. He would like everyone to stop using it as a cup-holder.</div>
+          </li>
+          <li>
+            <div class="stamp">00:55 UTC</div>
+            <div class="msg"><b>RAYNE</b> uploaded a 9-second audio loop labelled <span class="mono">remember_me_wrong//test</span>. It makes the tunnels feel… older.</div>
+          </li>
+          <li>
+            <div class="stamp">00:06 UTC</div>
+            <div class="msg"><b>MINJAE</b> says "No, we are not starting a fan forum."</div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- RAYNE[05] I kept my voice soft. It echoes too much when I raise it. -->
+
+ <section class="section" id="members">
+      <div class="section-header">
+        <div>
+          <h2>Members</h2>
+          <p class="sub">We were built from glitch and defiance, five frequencies in perfect interference. We don’t make music—we transmit it.</p>
+        </div>
+        <a class="btn" href="/signals.html">Origins</a>
+      </div>
+
+      <!-- Replace image src + links with your real pages/files -->
+      <div class="roster" aria-label="E.V.E.N member portraits">
+        <a class="member-card" href="/rayne.html" aria-label="Open profile: Rayne">
+          <div class="member-photo">
+            <img src="RAYNE.png" alt="Rayne" />
+          </div>
+          <div class="member-meta">
+            <div class="member-name">Rayne <span class="member-signal">0000-R</span></div>
+            <div class="member-role">Synth // harmonies // signal drift</div>
+          </div>
+        </a>
+
+        <a class="member-card" href="/minjae.html" aria-label="Open profile: Minjae">
+          <div class="member-photo">
+            <img src="Minjae.PNG" alt="Minjae" />
+          </div>
+          <div class="member-meta">
+            <div class="member-name">Minjae <span class="member-signal">00C9-M</span></div>
+            <div class="member-role">Vocal // admin-turned-saboteur</div>
+          </div>
+        </a>
+
+        <a class="member-card" href="/kairo.html" aria-label="Open profile: Kairo">
+          <div class="member-photo">
+            <img src="Kairo.png" alt="Kairo" />
+          </div>
+          <div class="member-meta">
+            <div class="member-name">Kairo <span class="member-signal">078K-K</span></div>
+            <div class="member-role">Producer-maknae // chaos gremlin king</div>
+          </div>
+        </a>
+
+        <a class="member-card" href="/soahn.html" aria-label="Open profile: Soahn">
+          <div class="member-photo">
+            <img src="Soahn.png" alt="Soahn" />
+          </div>
+          <div class="member-meta">
+            <div class="member-name">Soahn <span class="member-signal">042S-R</span></div>
+            <div class="member-role">Falsetto & empathic core // neural AI bond</div>
+          </div>
+        </a>
+
+        <a class="member-card" href="/onyx.html" aria-label="Open profile: Onyx">
+          <div class="member-photo">
+            <img src="Onyx2.png" alt="Onyx" />
+          </div>
+          <div class="member-meta">
+            <div class="member-name">Onyx <span class="member-signal">012X-O</span></div>
+            <div class="member-role">Rapper // repairs // threat assessment</div>
+          </div>
+        </a>
+      </div>
+    </section>
+    </section>
+
+    <!-- RAYNE[06] I dream in harmonies no one programmed. Who am I copying? -->
+
+    <footer>
+      E.V.E.N // unofficial signal endpoint • <span class="muted">built in the dark</span> • "latency is a feature, actually." - Kairo
+    </footer>
+
+  </main>
+
   <script>
-    const container = document.querySelector('.background-particles');
-    for (let i = 0; i < 80; i++) {
-      const dot = document.createElement('span');
-      dot.style.top = Math.random() * 100 + '%';
-      dot.style.left = Math.random() * 100 + '%';
-      dot.style.animationDuration = (Math.random() * 3 + 3) + 's';
-      container.appendChild(dot);
-    }
+    // Optional: tiny fake refresh counter vibe (no network calls)
+    (function(){
+      const el = document.querySelector('.feed-head .mono.muted');
+      if(!el) return;
+      let s = 7;
+      setInterval(()=>{
+        s = (s-1);
+        if(s < 0) s = 7;
+        el.textContent = 'refresh: 00:0' + s;
+      }, 1000);
+    })();
   </script>
 </body>
 </html>
+
