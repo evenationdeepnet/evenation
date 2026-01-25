@@ -1,129 +1,349 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>078K-K | Signals | E.V.E.N</title>
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
   <style>
-    body {
-      background-color: #0a0a0a;
-      color: #00ffcc;
-      font-family: 'Share Tech Mono', monospace;
-      padding: 2rem;
-      line-height: 1.6;
+    :root{
+      color-scheme: dark;
+
+      /* site-black + pale ink */
+      --bg: #0b0c10;
+      --bg2:#07080b;
+
+      --panel: rgba(255,255,255,.06);
+      --panel2: rgba(255,255,255,.04);
+      --stroke: rgba(255,255,255,.10);
+
+      --text: rgba(236,236,238,.88);
+      --muted: rgba(236,236,238,.62);
+      --faint: rgba(236,236,238,.45);
+
+      /* restrained accents (E.V.E.N style, not neon) */
+      --cyan: rgba(120,255,255,.85);
+      --lilac: rgba(190,140,255,.70);
+      --danger: rgba(255,110,130,.78);
+
+      --radius: 18px;
+      --radius2: 26px;
+      --shadow: 0 18px 70px rgba(0,0,0,.55);
+      --shadow2: 0 12px 40px rgba(0,0,0,.40);
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
     }
-    h1, h2 {
-      color: #ff00ff;
-      text-shadow: 0 0 5px #ff00ff;
+
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; min-height:100vh; }
+
+    body{
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(900px 420px at 20% 0%, rgba(120,255,255,.07), transparent 60%),
+        radial-gradient(900px 420px at 80% 0%, rgba(190,140,255,.06), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      overflow-x:hidden;
+      position:relative;
+      isolation:isolate;
     }
-    .terminal {
-      background-color: #111;
-      border: 1px solid #333;
-      padding: 1rem;
-      margin: 1.5rem 0;
-      box-shadow: 0 0 10px #00ffcc33;
+
+    /* subtle grain/noise */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(1px 1px at 18% 24%, rgba(255,255,255,.10), transparent 60%),
+        radial-gradient(1px 1px at 42% 62%, rgba(255,255,255,.08), transparent 60%),
+        radial-gradient(1px 1px at 78% 38%, rgba(255,255,255,.08), transparent 60%),
+        radial-gradient(1px 1px at 60% 80%, rgba(255,255,255,.06), transparent 60%);
+      opacity:.08;
+      filter: blur(.35px);
+      z-index:0;
     }
-    .glitch {
-      animation: glitch 1.5s infinite;
+
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 44px 20px 76px;
+      position:relative;
+      z-index:1;
     }
-    @keyframes glitch {
-      0% { text-shadow: 1px 0 #0ff, -1px 0 #f0f; }
-      50% { text-shadow: -1px 0 #0ff, 1px 0 #f0f; }
-      100% { text-shadow: 1px 0 #0ff, -1px 0 #f0f; }
+
+    /* header */
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.18em;
+      text-transform: uppercase;
+      color: var(--muted);
     }
-    .commentary {
-      color: #ccc;
-      margin-left: 1rem;
-      border-left: 2px solid #333;
-      padding-left: 1rem;
+
+    .pulse{
+      width:10px; height:10px;
+      border-radius:50%;
+      background: rgba(120,255,255,.85);
+      box-shadow: 0 0 0 0 rgba(120,255,255,.20);
+      animation: pulse 2.6s infinite;
+      flex:none;
+    }
+
+    @keyframes pulse{
+      0%{ box-shadow: 0 0 0 0 rgba(120,255,255,.20); }
+      70%{ box-shadow: 0 0 0 12px rgba(120,255,255,0); }
+      100%{ box-shadow: 0 0 0 0 rgba(120,255,255,0); }
+    }
+
+    h1{
+      margin: 14px 0 10px;
+      font-size: clamp(28px, 4.4vw, 46px);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+    }
+
+    .lede{
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+      max-width: 80ch;
+    }
+
+    /* panels */
+    .terminal{
+      border-radius: var(--radius2);
+      border: 1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.04));
+      box-shadow: var(--shadow2);
+      padding: 18px 18px 16px;
+      margin: 14px 0;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .terminal::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(700px 240px at 25% 0%, rgba(120,255,255,.10), transparent 60%),
+        radial-gradient(700px 240px at 75% 0%, rgba(190,140,255,.08), transparent 60%);
+      opacity:.55;
+      pointer-events:none;
+    }
+
+    .terminal > *{ position:relative; z-index:1; }
+
+    h2{
+      margin: 0 0 10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.16em;
+      text-transform: uppercase;
+      color: rgba(236,236,238,.78);
+    }
+
+    p{
+      margin: 0 0 12px;
+      line-height: 1.75;
+      color: rgba(236,236,238,.82);
+      font-size: 14px;
+    }
+
+    p:last-child{ margin-bottom:0; }
+
+    /* inline colours from your old page, softened */
+    .error{ color: var(--danger); }
+    .cyan{ color: rgba(120,255,255,.88); }
+    .magenta{ color: rgba(190,140,255,.85); }
+
+    /* commentary quotes */
+    .commentary{
+      color: rgba(236,236,238,.72);
+      margin-left: 0;
+      border-left: 3px solid rgba(255,255,255,.10);
+      padding-left: 14px;
       font-style: italic;
     }
-    .error {
-      color: #ff5555;
+
+    /* glitch text (gentle) */
+    .glitch{
+      position:relative;
+      display:inline-block;
+      text-shadow:
+        0 0 16px rgba(120,255,255,.10),
+        0 0 22px rgba(190,140,255,.08);
     }
-    .cyan {
-      color: #00ffff;
+
+    .glitch::before,
+    .glitch::after{
+      content: attr(data-text);
+      position:absolute;
+      left:0;
+      top:0;
+      width:100%;
+      overflow:hidden;
+      opacity:.22;
+      pointer-events:none;
+      font-family: inherit;
     }
-    .magenta {
-      color: #ff00ff;
+
+    .glitch::before{
+      transform: translate(1px,0);
+      color: rgba(120,255,255,.55);
+      clip-path: inset(0 0 72% 0);
+      animation: glitchTop 4.2s infinite;
     }
-        .back-link {
-      display: inline-block;
-      margin-top: 2rem;
-      padding: 0.5rem 1rem;
-      background-color: #111;
-      color: #00ffcc;
-      text-decoration: none;
-      border: 1px solid #00ffcc;
-      box-shadow: 0 0 8px #00ffcc33;
+
+    .glitch::after{
+      transform: translate(-1px,0);
+      color: rgba(190,140,255,.45);
+      clip-path: inset(74% 0 0 0);
+      animation: glitchBot 3.9s infinite;
     }
-    .back-link:hover {
-      background-color: #00ffcc;
-      color: #000;
+
+    @keyframes glitchTop{
+      0%, 100%{ clip-path: inset(0 0 78% 0); }
+      25%{ clip-path: inset(0 0 70% 0); }
+      50%{ clip-path: inset(0 0 86% 0); }
+      75%{ clip-path: inset(0 0 74% 0); }
+    }
+    @keyframes glitchBot{
+      0%, 100%{ clip-path: inset(78% 0 0 0); }
+      30%{ clip-path: inset(70% 0 0 0); }
+      60%{ clip-path: inset(88% 0 0 0); }
+      90%{ clip-path: inset(76% 0 0 0); }
+    }
+
+    pre{
+      margin: 10px 0 0;
+      padding: 12px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.22);
+      box-shadow: 0 12px 35px rgba(0,0,0,.35);
+      overflow:auto;
+      color: rgba(236,236,238,.80);
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    /* back link (matches your newer pills/buttons) */
+    .back{
+      margin-top: 18px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .back-link{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: rgba(236,236,238,.72);
+      text-decoration:none;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      transition: .16s ease;
+      box-shadow: 0 14px 45px rgba(0,0,0,.30);
+    }
+
+    .back-link:hover{
+      transform: translateY(-1px);
+      color: rgba(236,236,238,.88);
+      border-color: rgba(255,255,255,.22);
+      background: rgba(255,255,255,.08);
+      box-shadow: 0 18px 55px rgba(0,0,0,.38);
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; }
     }
   </style>
 </head>
+
 <body>
+  <main class="wrap">
 
-  <h1>📄 [KAIRO_078K-K]: ACCESS REQUESTED</h1>
-  <p><span class="error">⚠️ QUERY RETURNED: INCOMPLETE</span><br>
-  :: Archive integrity compromised.<br>
-  :: Playback distortion detected.<br>
-  :: Attempting to reconstruct profile...</p>
+    <div class="kicker"><span class="pulse" aria-hidden="true"></span> signals // origins // fragment layer</div>
 
-  <div class="terminal">
-    <h2>SIGNAL TRACE: 078K-K</h2>
-    <p>KNOWN ALIAS: <span class="magenta">KAIRO</span><br>
-    STATUS: ACTIVE<br>
-    CLASSIFICATION: <span class="error">UNSTABLE // UNRESTRICTED // CHAOS</span></p>
+    <h1>📄 [KAIRO_078K-K]: ACCESS REQUESTED</h1>
+    <p class="lede"><span class="error">⚠️ QUERY RETURNED: INCOMPLETE</span><br>
+    :: Archive integrity compromised.<br>
+    :: Playback distortion detected.<br>
+    :: Attempting to reconstruct profile...</p>
 
-    <p><strong>ORIGIN DATA:</strong><br>
-    🟥 [DATA MISSING]<br>
-    🟥 [DATA MISSING]<br>
-    🟥 [ENTRY REMOVED BY USER]</p>
+    <div class="terminal">
+      <h2>SIGNAL TRACE: 078K-K</h2>
+      <p>KNOWN ALIAS: <span class="magenta">KAIRO</span><br>
+      STATUS: ACTIVE<br>
+      CLASSIFICATION: <span class="error">UNSTABLE // UNRESTRICTED // CHAOS</span></p>
 
-    <p><em>"He said he played piano once. But it sounded like memory trying to rearrange itself."</em><br>
-    —Unknown, Ghost Lines Archive</p>
-  </div>
+      <p><strong>ORIGIN DATA:</strong><br>
+      🟥 [DATA MISSING]<br>
+      🟥 [DATA MISSING]<br>
+      🟥 [ENTRY REMOVED BY USER]</p>
 
-  <div class="terminal">
-    <h2>░ ░ ░ INTERACTIVE TERMINAL ░ ░ ░</h2>
-    <p>📂 <span class="cyan">&gt; run /memory-fragment.mp3</span><br>
-    [Glitchy piano loop plays — detuned, irregular, oddly beautiful]</p>
+      <p><em>"He said he played piano once. But it sounded like memory trying to rearrange itself."</em><br>
+      —Unknown, Ghost Lines Archive</p>
+    </div>
 
-    <p>📂 <span class="cyan">&gt; decrypt /childhood.log</span><br>
-    <span class="error">[Error 403: Emotional firewall active. Access denied.]</span></p>
+    <div class="terminal">
+      <h2>░ ░ ░ INTERACTIVE TERMINAL ░ ░ ░</h2>
+      <p>📂 <span class="cyan">&gt; run /memory-fragment.mp3</span><br>
+      [Glitchy piano loop plays — detuned, irregular, oddly beautiful]</p>
 
-    <p>📂 <span class="cyan">&gt; ping "Kairo"</span><br>
-    <strong>Response received:</strong><br>
-    <span class="glitch">“hey! you poking around in my code again? rude. at least buy me dinner first.”</span></p>
+      <p>📂 <span class="cyan">&gt; decrypt /childhood.log</span><br>
+      <span class="error">[Error 403: Emotional firewall active. Access denied.]</span></p>
 
-    <p>📂 <span class="cyan">&gt; override /bio-entry</span><br>
-    <span class="magenta">“He rewrote the interface mid-query. Added his own tagline. We let it stay.”</span></p>
+      <p>📂 <span class="cyan">&gt; ping "Kairo"</span><br>
+      <strong>Response received:</strong><br>
+      <span class="glitch" data-text="“hey! you poking around in my code again? rude. at least buy me dinner first.”">“hey! you poking around in my code again? rude. at least buy me dinner first.”</span></p>
 
-    <p>📂 <span class="cyan">&gt; view graffiti.png</span><br>
-    <pre class="glitch">
-    I EXIST, THEREFORE: GLITCH.
-    ♩♩♫//tempo_burn_140bpm//♩♩♫</pre></p>
-  </div>
+      <p>📂 <span class="cyan">&gt; override /bio-entry</span><br>
+      <span class="magenta">“He rewrote the interface mid-query. Added his own tagline. We let it stay.”</span></p>
 
-  <div class="terminal">
-    <h2>🔊 GHOST FEED COMMENTARY</h2>
-    <p class="commentary">"He’s a mess. But it’s a calculated mess." — Minjae</p>
-    <p class="commentary">"He rerouted six power lines just to make one beat drop harder. I respect that." — Rayne</p>
-    <p class="commentary">"I don’t know what his real name is. I don’t think he does either." — Soahn</p>
-    <p class="commentary">"Kairo? He's the noise between signals. The reason we have a warning label now." — Onyx</p>
-  </div>
+      <p>📂 <span class="cyan">&gt; view graffiti.png</span><br>
+      <pre class="glitch" data-text="I EXIST, THEREFORE: GLITCH.
+♩♩♫//tempo_burn_140bpm//♩♩♫">I EXIST, THEREFORE: GLITCH.
+♩♩♫//tempo_burn_140bpm//♩♩♫</pre></p>
+    </div>
 
-  <div class="terminal">
-    <h2>PROFILE STATUS:</h2>
-    <p><strong class="magenta">UNSTABLE BUT FUNCTIONAL</strong><br>
-    LAST SEEN: Ghost Lines // Song Loop: <em>“Static Bloom”</em></p>
+    <div class="terminal">
+      <h2>🔊 GHOST FEED COMMENTARY</h2>
+      <p class="commentary">"He’s a mess. But it’s a calculated mess." — Minjae</p>
+      <p class="commentary">"He rerouted six power lines just to make one beat drop harder. I respect that." — Rayne</p>
+      <p class="commentary">"I don’t know what his real name is. I don’t think he does either." — Soahn</p>
+      <p class="commentary">"Kairo? He's the noise between signals. The reason we have a warning label now." — Onyx</p>
+    </div>
 
-    <p><strong>Note:</strong> Subject is considered high value for creative output and emotional disruption. Proceed with caution.<br>
-    Or don’t. He’d prefer if you didn’t.</p>
-  </div>
-  <a class="back-link" href="/signals">&larr; Return to /signals</a>
+    <div class="terminal">
+      <h2>PROFILE STATUS:</h2>
+      <p><strong class="magenta">UNSTABLE BUT FUNCTIONAL</strong><br>
+      LAST SEEN: Ghost Lines // Song Loop: <em>“Static Bloom”</em></p>
+
+      <p><strong>Note:</strong> Subject is considered high value for creative output and emotional disruption. Proceed with caution.<br>
+      Or don’t. He’d prefer if you didn’t.</p>
+    </div>
+
+    <nav class="back" aria-label="Return">
+      <a class="back-link" href="/signals.html">← Return to /signals</a>
+    </nav>
+
+  </main>
 </body>
 </html>
