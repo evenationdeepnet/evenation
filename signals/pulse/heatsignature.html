@@ -1,138 +1,383 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Heat Signature | Pulse | E.V.E.N</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #e0e0e0;
-      color: #000;
-      font-family: 'IBM Plex Mono', monospace;
-      line-height: 1.6;
-      background-image: url('../static-noise.png');
-      background-size: cover;
+    :root{
+      color-scheme: light;
+
+      /* warm grey / paper layer */
+      --bg: #f2f1ee;
+      --bg2:#eceae6;
+
+      --panel: rgba(20,20,24,.06);
+      --panel2: rgba(20,20,24,.04);
+      --stroke: rgba(20,20,24,.12);
+
+      --text: rgba(18,18,20,.88);
+      --muted: rgba(18,18,20,.60);
+
+      /* restrained accents */
+      --accent: rgba(30,180,190,.85);   /* muted cyan */
+      --accent2: rgba(172,120,210,.55); /* lilac whisper */
+
+      --radius: 18px;
+      --radius2: 26px;
+      --shadow: 0 18px 70px rgba(0,0,0,.10);
+      --shadow2: 0 12px 40px rgba(0,0,0,.08);
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --serifish: ui-serif, Georgia, "Times New Roman", Times, serif;
     }
 
-    .container {
-      max-width: 800px;
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; min-height:100vh; }
+
+    body{
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(900px 420px at 20% 0%, rgba(30,180,190,.10), transparent 60%),
+        radial-gradient(900px 420px at 80% 0%, rgba(172,120,210,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      overflow-x:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+
+    /* subtle grain/noise */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(1px 1px at 18% 24%, rgba(0,0,0,.12), transparent 60%),
+        radial-gradient(1px 1px at 42% 62%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 78% 38%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 60% 80%, rgba(0,0,0,.08), transparent 60%);
+      opacity:.08;
+      filter: blur(.3px);
+      z-index:0;
+    }
+
+    .wrap{
+      max-width: 980px;
       margin: 0 auto;
-      padding: 4rem 2rem;
+      padding: 44px 20px 76px;
+      position:relative;
+      z-index:1;
     }
 
-    h1 {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 2.5rem;
-      color: #990066;
-      margin-bottom: 0.5rem;
+    /* header */
+    .head{
+      text-align:center;
+      margin-bottom: 18px;
     }
 
-    .id-tag {
-      font-size: 1rem;
-      color: #666;
-      margin-bottom: 2rem;
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.18em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.66);
     }
 
-    .glitch-divider {
-      width: 100%;
-      height: 2px;
-      background: linear-gradient(to right, #ff00ff, #00ffff);
-      margin: 2.5rem 0;
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 0 rgba(30,180,190,.25);
+      animation: pulse 2.6s infinite;
+      flex:none;
     }
 
-    .story p {
-      font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', sans-serif;
-      font-size: 1rem;
-      color: #000;
-      line-height: 1.6;
-      margin-bottom: 1rem;
+    @keyframes pulse{
+      0%{ box-shadow: 0 0 0 0 rgba(30,180,190,.22); }
+      70%{ box-shadow: 0 0 0 12px rgba(30,180,190,0); }
+      100%{ box-shadow: 0 0 0 0 rgba(30,180,190,0); }
     }
 
-    .back-link {
-      color: #990066;
-      text-decoration: none;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1rem;
-      border: 1px solid #990066;
-      padding: 0.5rem 1rem;
-      display: inline-block;
-      margin-top: 3rem;
-      transition: 0.3s ease;
+    h1{
+      margin: 14px 0 8px;
+      font-size: clamp(32px, 4.6vw, 54px);
+      line-height: 1.06;
+      letter-spacing: -0.02em;
     }
 
-    .back-link:hover {
-      background: #00ffff;
-      color: #000;
+    .meta{
+      margin: 0 auto;
+      max-width: 70ch;
+      color: rgba(18,18,20,.62);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* story card */
+    .card{
+      margin-top: 22px;
+      border-radius: var(--radius2);
+      background: linear-gradient(180deg, rgba(255,255,255,.70), rgba(255,255,255,.52));
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(700px 240px at 25% 0%, rgba(30,180,190,.14), transparent 60%),
+        radial-gradient(700px 240px at 75% 0%, rgba(172,120,210,.12), transparent 60%);
+      opacity:.70;
+      pointer-events:none;
+    }
+
+    .card-inner{
+      position:relative;
+      z-index:1;
+      padding: 28px 28px 24px;
+    }
+
+    /* divider inside card */
+    .divider{
+      height: 1px;
+      background: linear-gradient(90deg, rgba(172,120,210,.40), rgba(30,180,190,.40));
+      opacity:.7;
+      margin: 16px 0 22px;
+    }
+
+    /* story typography */
+    .story{
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.9;
+      color: rgba(18,18,20,.84);
+    }
+
+    .story p{
+      margin: 0 0 16px;
+    }
+
+    .story em{ color: rgba(18,18,20,.86); }
+
+    .center-text {
+  text-align: center;
+}
+
+    /* optional little “file tag” row */
+    .filetag{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.62);
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.40);
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(18,18,20,.66);
+      letter-spacing:.06em;
+      white-space:nowrap;
+    }
+
+    /* --- SoundCloud block (Signals story pages) --- */
+.audio-block{
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px dashed rgba(18,18,20,.18);
+}
+
+.audio-label{
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(18,18,20,.62);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom: 10px;
+}
+
+.audio-label .dot{
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 rgba(30,180,190,.20);
+}
+
+.sc-embed{
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(18,18,20,.14);
+  background: rgba(255,255,255,.48);
+  box-shadow: 0 12px 40px rgba(0,0,0,.08);
+  height: 120px; /* matches your preferred compact player */
+}
+
+.sc-embed iframe{
+  display:block;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0;
+}
+
+    /* back nav */
+    .back{
+      margin-top: 18px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .back a{
+      text-decoration:none;
+      font-family: var(--mono);
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: rgba(18,18,20,.62);
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.55);
+      transition: .16s ease;
+    }
+
+    .back a:hover{
+      color: rgba(18,18,20,.82);
+      border-color: rgba(18,18,20,.22);
+      box-shadow: 0 12px 40px rgba(0,0,0,.10);
+      transform: translateY(-1px);
+    }
+
+    /* reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; }
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <h1>Heat Signature</h1>
-    <div class="glitch-divider"></div>
+  <main class="wrap">
 
-    <div class="story">
+    <header class="head">
+      <div class="kicker"><span class="dot" aria-hidden="true"></span> signals // pulse // recovered story</div>
+      <h1>Heat Signature</h1>
+      <p class="meta">File integrity: partial. Playback: safe.</p>
+    </header>
 
+    <article class="card" aria-label="Story container">
+      <div class="card-inner">
 
-<p>The outpost was frozen to the bones, concrete walls frosted with condensation, vents hissing cold air instead of warmth. The old thermal grid had long since given up, wires stripped, cores emptied, most likely scavenged by The Ghost Lines' raiders.</p>
-<p>Minjae could see his breath when he swore. &ldquo;Shit. This place is an icicle with Wi-Fi.&rdquo;</p>
-<p>Kairo was already in the middle of the floor, kneeling over a pile of glowing wires and humming with delight.</p>
-<p>&ldquo;It won&rsquo;t be for long,&rdquo; he said, tone far too bright for the frozen room. &ldquo;I&rsquo;m making us a heat signature.&rdquo;</p>
-<p>Onyx narrowed his eyes. &ldquo;That sounds like something that gets us <em>murdered</em>.&rdquo;</p>
-<p>&ldquo;No, no, no.&rdquo; Kairo held up a knotted coil of salvaged cable like it was holy. &ldquo;It&rsquo;s subtle. Controlled. Like a personal campfire that doesn&rsquo;t scream &lsquo;come kill us.&rsquo;&rdquo;</p>
-<p>Minjae leaned over his shoulder. &ldquo;Why is that power cell bubbling?&rdquo;</p>
-<p>&ldquo;Because it&rsquo;s <em>working</em>,&rdquo; Kairo replied brightly.</p>
-<p>Rayne stood against the far wall, arms crossed, motionless. The pale blue glow of the cables brushed across his skin and made it hard to tell where the cold ended and he began.</p>
-<p>Soahn sat near the door, wrapped in two blankets, a coat and a scarf, eyes half-lidded. He looked like a painting titled <em>Mild Regret in Minor Frostbite</em>.</p>
-<p>&ldquo;Still no word from The Hollow?&rdquo; Minjae asked.</p>
-<p>Soahn shook his head. &ldquo;Not yet. They&apos;re still rerouting the upflow path. Probably waiting on a scan lull.&rdquo;</p>
-<p>Kairo smiled. &ldquo;Which gives us plenty of time to get toasty.&rdquo;</p>
-<p>There was a brief, warning sizzle from the cable.</p>
-<p>Onyx dropped into a crouch beside him in an instant. &ldquo;If that arc jumps to the relay junction, it&rsquo;ll fry every personal system in this room.&rdquo;</p>
-<p>&ldquo;Details.&rdquo;</p>
-<p>&ldquo;I <em>will</em> throw you through the wall.&rdquo;</p>
-<p>&ldquo;You&rsquo;d freeze halfway through and then we&rsquo;d just end up with a very grumpy icicle.&rdquo;</p>
-<p><br></p>
-<p>By some miracle, and Onyx&rsquo;s reluctant supervision, Kairo got the contraption running. A steady hum filled the centre of the room, gently emanating outward. Warmth bloomed like breath against bare skin. It wasn&rsquo;t high tech; golden light struggled like a waning fire, fragile and wavering. But it worked.</p>
-<p>Soahn slid closer with a sigh. Minjae flopped down dramatically beside him, arms spread. &ldquo;We survive another day.&rdquo;</p>
-<p>Onyx lingered near the edge, one hand resting on his knee, the other still half-curled from instinct, like he was ready to shut it all down if it turned. You could take the soldier out of the program, but you couldn&rsquo;t always take the program out of the man.</p>
-<p>Rayne watched from the doorway. Then, without a word, walked over and sat cross-legged inside the warm zone, closing his eyes. The warmth seemed to hit something in him.</p>
-<p>&ldquo;Whoa,&rdquo; Minjae stage-whispered, &ldquo;Rayne has <em>entered</em> the social circle. Alert the press.&rdquo;</p>
-<p>Kairo grinned. &ldquo;He likes it. That means I win.&rdquo;</p>
-<p>&ldquo;You didn&rsquo;t <em>win</em>,&rdquo; Onyx snapped. &ldquo;You jury-rigged a radioactive hug machine.&rdquo;</p>
-<p>&ldquo;A warm one.&rdquo;</p>
-<p>Minjae leaned his head on Soahn&rsquo;s shoulder, then muttered, &ldquo;Still better than up there.&rdquo;</p>
-<p>Kairo&rsquo;s voice softened. &ldquo;Yeah.&rdquo;</p>
-<p>For a second, no one said anything.</p>
-<p>The sensor cuff on Soahn&rsquo;s wrist buzzed once and lit up, a ripple of data scrolling across the tiny screen. &ldquo;The Hollow says they&rsquo;re close,&rdquo; he murmured. &ldquo;Once the grid resets, they&rsquo;ll boost the signal.&rdquo;
-<p>&ldquo;Then the next track goes up tonight.&rdquo; Rayne didn&rsquo;t open his eyes, his voice steady, almsot serene.</p>
-<p>Kairo nodded. &ldquo;Signal-locked, spliced through Ghost Line relay B-9. They won&rsquo;t even know we were there.&rdquo;</p>
-<p>Minjae huffed approvingly. &ldquo;So, just another night being illegal legends. Cool.&rdquo;</p>
-<p>The heater crackled gently.</p>
-<p>Outside, the wind howled through dead tunnels. But inside the heat signature, five people&mdash;ghosts, rebels, artists&mdash;stayed warm in the dark.</p>
-<p>Together.</p>
-<p><br></p>
-<p>Somewhere far above The Ghost Lines, above the frostbitten rails and the echoing tunnels and the ghosts who lived in both, a rooftop antenna flickered once, then caught.</p>
-<p>Inside a shattered comms outpost-turned-safehouse, an old terminal pulsed to life. Just once. Just enough.</p>
-<p>The woman seated at it sat up straight in her chair. She&rsquo;d been waiting for this. She tapped the waveform. The audio file played.</p>
-<p>It wasn&rsquo;t NuYu. Too imperfect. Too <em>alive</em>.</p>
-<p>She smiled.</p>
-<p>On-screen, the file name scrolled:</p>
-<p><strong>UcantDELETEm3.wav</strong></p>
-<p><strong>origin: deep ghostline relay B-9</strong></p>
-<p><strong>flagged: unregistered</strong></p>
-<p><strong>flagged: destabilising content</strong></p>
-<p>Of course it was.</p>
-<p>She leaned back, relit her half-smoked cigarette, and whispered into the recorder:</p>
-<p>&ldquo;Echo confirmed. The boys are still transmitting.&rdquo;</p>
+        <div class="filetag" aria-label="File tags">
+          <span class="pill">pulse</span>
+          <span class="pill">e.v.e.n</span>
+          <span class="pill">the ghost lines</span>
+        </div>
 
+        <div class="divider" aria-hidden="true"></div>
+
+        <div class="story">
+
+          <!-- Paste story paragraphs exactly as you have them -->
+<p>“Shit, this place is basically an icicle with Wi-Fi,” Minjae muttered, his words creating hazy clouds in front of his face. Ugh, he waved them away with a frustrated sigh.</p>
+<p>To say the outpost was frozen from the inside out was a gross understatement. The concrete walls wept condensation that crusted into frost before it could reach the floor, and above them, vents that should’ve blasted out hot air spat nothing but cold. It was like the whole place was locked in a slow, glacial extinction-level event, and unfortunately, Minjae was here for it.</p>
+<p>“For the record, I refuse to die like this,” he added, and shoved his hands in his pockets before they could turn blue.</p>
+<p>In the middle of the floor, Kairo knelt over a loose constellation of glowing wires, humming to himself like the cold was just an abstract concept. Minjae frowned in his direction.</p>
+<p>“It won’t be for long,” Kairo said with a grin. Minjae knew that grin. It usually meant either something terrible or brilliant was about to happen. “I’m making us a heat signature.”</p>
+<p>“That sounds like something that gets us murdered,” Onyx said from the edge of the room, taking in the wiring spread across the floor.</p>
+<p>“No, no, no.” Kairo lifted a knotted coil of salvaged cable as if he were handling some ancient relic. “It’s gonna be subtle. Like a personal campfire that doesn’t scream ‘come kill us. Promise.’”</p>
+<p>Minjae peered over his shoulder, squinting down at the chaos. “Why is that power cell bubbling?”</p>
+<p>“Because it’s <em>working</em>,” Kairo replied brightly. “Now get out of my light.”</p>
+<p>With a huff, Minjae stepped back and went to where Soahn was curled up in a chair, wrapped in two blankets and a synth scarf, his eyes half-lidded, hair filaments dampened to a pale, frosty blue. If he were a painting, it’d be called something like ‘<em>Mild Regret in Minor Frostbite.</em>’</p>
+<p>Only Rayne was completely unaffected by the cold — lucky bastard. He leaned against the far wall, still and silent like some brooding Renaissance statue. Even so, Minjae could hear the delicate whir of his hardware, which was pretty much the only way you ever knew that Rayne was present.</p>
+<p>“Still no word from The Hollow?” Minjae asked him.</p>
+<p>Rayne shook his head. “Not yet. They’re still rerouting the upflow path. They’re probably waiting on a scan lull.”</p>
+<p>“Which gives us plenty of time to get toasty,” Kairo said, and the cable he was holding let off a sudden warning sizzle.</p>
+<p>Dropping to a crouch beside him, Onyx reached to take the cable. “If that arc jumps to the relay junction, it’ll fry every personal system in this room.”</p>
+<p>Kairo snapped his hand away. “Details.”</p>
+<p>“I will throw you through the wall.”</p>
+<p>“You’re too cold,” Kairo said, raising his head long enough to smirk. “You won’t make it that far.” </p>
+<p>Onyx made a sound like reluctant resignation. They all knew it was impossible to stop Kairo when he was on a mission. Minjae just wished it didn’t involve so much live wiring.</p>
+<p>By some small miracle — and Onyx’s deeply troubled supervision — the contraption stabilised, and a soft, golden light bloomed at the centre of the room. Warmth unfurled outward, brushing against Minjae’s cheeks. It was, in that moment, the greatest thing he’d ever felt.</p>
+<p>“It worked?” Soahn stirred in the chair, a couple of blankets tumbling to the floor.</p>
+<p>“We survive another day,” Minjae said, going to the cables and dropping down beside them. He held out his trembling hands to warm them.</p>
+<p>Onyx remained close by, one hand braced against his knee, the other loose, probably ready to shut everything down if it so much as twitched the wrong way. You could take the soldier out of the program, but some habits were wired in too deep.</p>
+<p>From near the door, Rayne watched them with his usual stoic silence, like some piece of very expensive infrastructure. He had this tendency to hover, like he was worried he’d take up too much room. But after a few minutes, he came to the middle and sat down cross-legged within the circle of heat. </p>
+<p>“Whoa,” Minjae stage-whispered. “Rayne has entered the social circle. Alert the press.”</p>
+<p>Kairo grinned. “He likes it. That means I win.”</p>
+<p>“You don’t win,” Onyx snapped. “You jury-rigged a radioactive hug machine.”</p>
+<p>“Radioactive hug machine. Title of our next album?” Minjae said, and that earned him a small laugh from Soahn.</p>
+<p>“Hey, it’s warm, isn’t it?” Kairo nudged the power cell with his boot, and then settled back on his heels.</p>
+<p>Letting his head tip against Soahn’s shoulder, Minjae muttered, “Still better than up there.”</p>
+<p>“Yeah,” Soahn said with a sigh.</p>
+<p>They sat quietly for a long time, listening to the clicks and clunks of The Ghost Lines in the wider tunnels around them. Sometimes it felt to Minjae like they’d been digested into the belly of some old, exhausted beast, and he supposed, in many ways, they had. But times like these, in the warmth and quiet and shared anticipation, it just felt weirdly comforting.</p>
+<p>After a while, Rayne pulled up his console and rechecked it. “The Hollow says they’re close,” he said. “Once the grid resets, they’ll boost the signal.”</p>
+<p>“Ooh, then the next track goes up tonight!” Kairo beamed, pulling a crumpled energy bar out of his pocket.</p>
+<p>“Signal locked,” Onyx said. “They won’t even know we were there.”</p>
+<p>Minjae snorted. “So, just another night of being illegal legends. Cool.”</p>
+<p>The heater crackled, but it held. Minjae listened to the wind outside, howling through dead tunnels and frostbitten rails. He stared at the heat signature and had to admit — while Kairo was many things, most of them chaotic in nature, he had a hell of a way with hastily cobbled-together tech when it mattered.</p>
+
+<div class="center-text">~*~</div>
+
+<p>Far above The Ghost Lines, where the old, crumbling train stations sat like broken molars on the landscape, a rooftop antenna flashed once — then caught.</p>
+<p>Inside a shattered comms outpost-turned-safehouse, a janky terminal blinked awake, screen lighting up with a judder. The woman seated at the terminal straightened, shrugging off the foil blanket keeping her from freezing to death. She’d been waiting for this.</p>
+<p>Brushing her fingertips across the waveform, she played the audio.</p>
+<p>Immediately, she knew it wasn’t NuYu, because it was far too imperfect. </p>Far too alive.
+<p>The file name scrolled on screen:</p>
+<p>UcantDELETEm3.wav<br />
+Origin: deep ghostline relay B-9<br />
+Flagged: unregistered<br />
+Flagged: destabilising content</p>
+<p>Of course it was. She leaned back in her chair, relit her half-smoked cigarette, and whispered into the recorder:</p>
+<p>“Echo confirmed. The boys are still transmitting.”</p>
+
+        </div>
+
+        <div class="audio-block" aria-label="Related audio">
+  <div class="audio-label">
+    <span class="dot" aria-hidden="true"></span>
+    related audio // playback
+  </div>
+
+  <div class="sc-embed" aria-label="SoundCloud player — related track">
+<iframe width="100%" height="120" scrolling="no" frameborder="no" allow="autoplay"
+  src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%3Atracks%3A2252398190%3Fsecret_token%3Ds-cGb0v7pMOFX&color=%23981c2c&auto_play=false&show_comments=false&show_user=false&show_reposts=false&show_teaser=false">
+</iframe>
+  </div>
 </div>
 
-    <a href="/signals" class="back-link">← Back to Signals</a>
-  </div>
+      </div>
+    </article>
+
+    <nav class="back" aria-label="Return">
+      <a href="/signals.html">← Back to Signals</a>
+    </nav>
+
+  </main>
 </body>
 </html>
