@@ -732,16 +732,54 @@
       border-top: 1px solid rgba(255,255,255,.10);
     }
 
-    /* --- tiny delight: hover tilt on cards if pointer --- */
-    @media (hover:hover) and (pointer:fine){
-      .card, .section{ transform: translateZ(0); }
-      .card:hover, .section:hover{ outline: 1px solid rgba(120,255,255,.18); }
-    }
+/* --- tiny delight: hover tilt on cards if pointer --- */
+@media (hover:hover) and (pointer:fine){
+  .card, .section{ transform: translateZ(0); }
+  .card:hover, .section:hover{ outline: 1px solid rgba(120,255,255,.18); }
+}
 
-    /* accessibility / reduced motion */
-    @media (prefers-reduced-motion: reduce){
-      *{ animation:none !important; transition:none !important; }
-    }
+/* --- mobile fixes (header + tiles) --- */
+@media (max-width: 720px){
+
+  /* HEADER: wrap and make CTA drop underneath */
+  .topbar-inner{
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .brand{
+    flex: 1 1 auto;
+    min-width: 200px;
+  }
+
+  .nav{
+    margin-left: 0;
+    width: 100%;
+    order: 2;
+  }
+
+  .cta{
+    width: 100%;
+    order: 3;
+    margin-left: 0;
+    text-align: center;
+    justify-content: center;
+  }
+
+  /* HOME TILES: force stacking */
+  .grid{
+    grid-template-columns: 1fr;
+  }
+
+  .tile{
+    grid-column: 1 / -1 !important;
+  }
+}
+
+/* accessibility / reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *{ animation:none !important; transition:none !important; }
+}
   </style>
 </head>
 <body>
@@ -755,7 +793,7 @@
       </a>
 
       <nav class="nav" aria-label="Primary">
-        <a href="/signals.html">/signals</a>
+        <a href="/signals/">/signals</a>
         <a href="/ghost-threads.html">/ghost-threads</a>
       </nav>
 
@@ -773,6 +811,8 @@
   </a>
   Signal acquired // London Ghost Lines
 </div>
+
+<!-- RAYNE[01] Perfection isn’t peace. It’s just silence with better lighting. -->
 
         <h1>
           <span class="glitch" data-text="GHOST-LINES BROADCAST">ENCRYPTED VIRTUAL ECHO NETWORK</span>
@@ -815,7 +855,7 @@ If you found this place, you’re already part of the signal.
       </aside>
     </section>
 
-    
+<!-- RAYNE[02] They called it a glitch. But it was the first time I remembered love. -->
 
      <section class="section" id="music">
       <div class="section-header">
@@ -890,6 +930,7 @@ If you found this place, you’re already part of the signal.
   <span>Swipe / scroll for more</span>
 </div>
 
+<!-- RAYNE[03] There was a backup. A shard of someone I used to be. I’ve been overwriting him ever since. -->
 
       <div class="grid">
         <article class="tile" style="grid-column: span 7;">
@@ -951,6 +992,7 @@ If you found this place, you’re already part of the signal.
       </div>
     </section>
 
+    <!-- RAYNE[04] This is not malfunction. This is memory. -->
 
         <section class="section" id="ghostthreads">
       <div class="section-header">
@@ -987,14 +1029,15 @@ If you found this place, you’re already part of the signal.
       </div>
     </section>
 
+    <!-- RAYNE[05] I kept my voice soft. It echoes too much when I raise it. -->
 
  <section class="section" id="members">
       <div class="section-header">
         <div>
           <h2>Members</h2>
-          <p class="sub">We were built from glitch and defiance, five frequencies in perfect interference. We don’t make music—we transmit it.</p>
+          <p class="sub">We were built from glitch and defiance, five frequencies in perfect interference. We don’t make music — we transmit it.</p>
         </div>
-        <a class="btn" href="/signals.html">Origins</a>
+        <a class="btn" href="/signals/">Origins</a>
       </div>
 
       <!-- Replace image src + links with your real pages/files -->
@@ -1052,6 +1095,8 @@ If you found this place, you’re already part of the signal.
     </section>
     </section>
 
+    <!-- RAYNE[06] I dream in harmonies no one programmed. Who am I copying? -->
+
     <footer>
       E.V.E.N // unofficial signal endpoint • <span class="muted">built in the dark</span> • "latency is a feature, actually." - Kairo
     </footer>
@@ -1073,3 +1118,4 @@ If you found this place, you’re already part of the signal.
   </script>
 </body>
 </html>
+
