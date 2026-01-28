@@ -1,361 +1,784 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>042S-R | Signals | E.V.E.N</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>042S-R | Origins | E.V.E.N</title>
+
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #e0e0e0;
-      color: #000;
-      font-family: 'IBM Plex Mono', monospace;
-      line-height: 1.6;
-      background-image: url('../static-noise.png');
-      background-size: cover;
+    :root{
+      color-scheme: light;
+
+      /* warm grey / paper layer */
+      --bg: #f2f1ee;
+      --bg2:#eceae6;
+
+      --panel: rgba(20,20,24,.06);
+      --panel2: rgba(20,20,24,.04);
+      --stroke: rgba(20,20,24,.12);
+
+      --text: rgba(18,18,20,.88);
+      --muted: rgba(18,18,20,.60);
+
+      /* restrained accents */
+      --accent: rgba(30,180,190,.85);   /* muted cyan */
+      --accent2: rgba(172,120,210,.55); /* lilac whisper */
+
+      --radius: 18px;
+      --radius2: 26px;
+      --shadow: 0 18px 70px rgba(0,0,0,.10);
+      --shadow2: 0 12px 40px rgba(0,0,0,.08);
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --serifish: ui-serif, Georgia, "Times New Roman", Times, serif;
     }
 
-    .container {
-      max-width: 800px;
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; min-height:100vh; }
+
+    body{
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(900px 420px at 20% 0%, rgba(30,180,190,.10), transparent 60%),
+        radial-gradient(900px 420px at 80% 0%, rgba(172,120,210,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      overflow-x:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+
+    /* subtle grain/noise */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(1px 1px at 18% 24%, rgba(0,0,0,.12), transparent 60%),
+        radial-gradient(1px 1px at 42% 62%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 78% 38%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 60% 80%, rgba(0,0,0,.08), transparent 60%);
+      opacity:.08;
+      filter: blur(.3px);
+      z-index:0;
+    }
+
+    .wrap{
+      max-width: 980px;
       margin: 0 auto;
-      padding: 4rem 2rem;
+      padding: 44px 20px 76px;
+      position:relative;
+      z-index:1;
     }
 
-    h1 {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 2.5rem;
-      color: #990066;
-      margin-bottom: 0.5rem;
+    /* header */
+    .head{
+      text-align:center;
+      margin-bottom: 18px;
     }
 
-    .id-tag {
-      font-size: 1rem;
-      color: #666;
-      margin-bottom: 2rem;
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.18em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.66);
     }
 
-    .glitch-divider {
-      width: 100%;
-      height: 2px;
-      background: linear-gradient(to right, #ff00ff, #00ffff);
-      margin: 2.5rem 0;
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 0 rgba(30,180,190,.25);
+      animation: pulse 2.6s infinite;
+      flex:none;
     }
 
-    .story p {
-      font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', sans-serif;
-      font-size: 1rem;
-      color: #000;
-      line-height: 1.6;
-      margin-bottom: 1rem; /* Adjust this to tighten or loosen paragraph spacing */
+    @keyframes pulse{
+      0%{ box-shadow: 0 0 0 0 rgba(30,180,190,.22); }
+      70%{ box-shadow: 0 0 0 12px rgba(30,180,190,0); }
+      100%{ box-shadow: 0 0 0 0 rgba(30,180,190,0); }
     }
 
-    .back-link {
-      color: #990066;
-      text-decoration: none;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1rem;
-      border: 1px solid #990066;
-      padding: 0.5rem 1rem;
-      display: inline-block;
-      margin-top: 3rem;
-      transition: 0.3s ease;
+    h1{
+      margin: 14px 0 8px;
+      font-size: clamp(32px, 4.6vw, 54px);
+      line-height: 1.06;
+      letter-spacing: -0.02em;
     }
 
-    .back-link:hover {
-      background: #00ffff;
-      color: #000;
+    .meta{
+      margin: 0 auto;
+      max-width: 70ch;
+      color: rgba(18,18,20,.62);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* story card */
+    .card{
+      margin-top: 22px;
+      border-radius: var(--radius2);
+      background: linear-gradient(180deg, rgba(255,255,255,.70), rgba(255,255,255,.52));
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(700px 240px at 25% 0%, rgba(30,180,190,.14), transparent 60%),
+        radial-gradient(700px 240px at 75% 0%, rgba(172,120,210,.12), transparent 60%);
+      opacity:.70;
+      pointer-events:none;
+    }
+
+    .card-inner{
+      position:relative;
+      z-index:1;
+      padding: 28px 28px 24px;
+    }
+
+    /* divider inside card */
+    .divider{
+      height: 1px;
+      background: linear-gradient(90deg, rgba(172,120,210,.40), rgba(30,180,190,.40));
+      opacity:.7;
+      margin: 16px 0 22px;
+    }
+
+    /* story typography */
+    .story{
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.9;
+      color: rgba(18,18,20,.84);
+    }
+
+    .story p{
+      margin: 0 0 16px;
+    }
+
+    .story em{ color: rgba(18,18,20,.86); }
+
+    .center-text {
+  text-align: center;
+}
+
+    /* optional little “file tag” row */
+    .filetag{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.62);
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.40);
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(18,18,20,.66);
+      letter-spacing:.06em;
+      white-space:nowrap;
+    }
+
+    /* --- SoundCloud block (Signals story pages) --- */
+.audio-block{
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px dashed rgba(18,18,20,.18);
+}
+
+.audio-label{
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(18,18,20,.62);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom: 10px;
+}
+
+.audio-label .dot{
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 rgba(30,180,190,.20);
+}
+
+.sc-embed{
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(18,18,20,.14);
+  background: rgba(255,255,255,.48);
+  box-shadow: 0 12px 40px rgba(0,0,0,.08);
+  height: 120px; /* matches your preferred compact player */
+}
+
+.sc-embed iframe{
+  display:block;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0;
+}
+
+    /* back nav */
+    .back{
+      margin-top: 18px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .back a{
+      text-decoration:none;
+      font-family: var(--mono);
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: rgba(18,18,20,.62);
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.55);
+      transition: .16s ease;
+    }
+
+    .back a:hover{
+      color: rgba(18,18,20,.82);
+      border-color: rgba(18,18,20,.22);
+      box-shadow: 0 12px 40px rgba(0,0,0,.10);
+      transform: translateY(-1px);
+    }
+
+    /* reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; }
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <h1>042S-R</h1>
-    <p class="id-tag">"The voice that shoulnd't have survived. But did."</p>
-    <div class="glitch-divider"></div>
+  <main class="wrap">
 
-    <div class="story">
+    <header class="head">
+      <div class="kicker"><span class="dot" aria-hidden="true"></span> signals // origins // recovered story</div>
+      <h1>042S-R</h1>
+      <p class="meta">File integrity: partial. Playback: safe.</p>
+    </header>
 
-<p>The lab cooled by degrees after the staff went home.</p>
-<p>Soahn stayed where he was at Terminal 3B, fingers moving in a steady, unhurried rhythm across the data panel as he recalibrated neural response curves for the fifth time that day.</p>
-<p>Above him, the coolant units whispered along their programmed cycles. The air carried its usual trace of polymer and ozone &mdash; the scent of machinery that never truly slept.</p>
-<p>Across the glass partition, the sync chamber waited in a pale wash of light. Its biometric pads glowed a muted green, patient in their way, as if expecting someone who hadn&rsquo;t arrived.</p>
-<p>He really should&rsquo;ve gone. Everyone else had. Half the team was probably already wedged into neon bars in the downtown Munich, complaining about funding or bragging about test metrics. The rest had vanished the moment the clock turned, leaving the lab as quiet as the grave.</p>
-<p>But Soahn had stayed, because sometimes going home was harder.</p>
-<p>His flat had walls that held sound a little too well, and some nights it felt like the silence watched him back. Unthreatening, but present, like someone sitting behind him who vanished every time he turned.</p>
-<p>The monitors cycled endlessly, reducing human emotion to graphs and clean lines of code. Anger spikes. Grief channels. Cortical drift. It was unsettling how precise suffering could look on a screen.</p>
-<p>At the far end of the room, a speaker crackled softly, almost apologetic.</p>
-<p>&ldquo;Fatigue threshold exceeded,&rdquo; said a voice. Female-coded. Warm, intentionally reassuring.</p>
+    <article class="card" aria-label="Story container">
+      <div class="card-inner">
+
+        <div class="filetag" aria-label="File tags">
+          <span class="pill">origins</span>
+          <span class="pill">travel</span>
+          <span class="pill">soahn</span>
+        </div>
+
+        <div class="divider" aria-hidden="true"></div>
+
+        <div class="story">
+
+          <!-- Paste story paragraphs exactly as you have them -->
+
+<p>Soahn&rsquo;s sense of time has been absent for days. Without the steady arrivals and clock-outs of his colleagues, he might never have left the lab at all.</p>
+
+<p>It&rsquo;s Friday night and the others are heading downtown to Munich&rsquo;s neon-soaked bars and steaming food stalls in M&uuml;llerstra&szlig;e, where the booze is cheap and raucous laughter spills from drunk lips. Soahn listens as their voices fade down the corridor outside; they&rsquo;re already complaining about funding and bragging about test metrics. The usual stuff. He could go with them. They repeatedly tell him he&rsquo;s always welcome, but tonight he knows the noise will be too much, like it often is these days, leaving him hollowed out and unable to sleep.</p>
+
+<p>Sliding his chair back, he rises and takes a few experimental paces around his terminal, trying to work out the pins and needles that&rsquo;ve taken up residence in his legs. Now that everyone&rsquo;s gone, he can feel the lab growing colder by degrees, a chill that works its way into his fingers, making them click softly when he flexes them.</p>
+
+<p>Once the building has fallen completely silent, he settles back into Terminal 3B and begins recalibrating the neural response curves for the sixth or possibly seventh time that day. He feels more settled when it&rsquo;s quiet. The only noise comes from the coolant units murmuring through their programmed cycles above him, puffing out the slight scent of polymer into the air. A smell so familiar it doesn&rsquo;t even bother him anymore. At least, not as much as it did.</p>
+
+<p>Across from where he sits, the sync chamber is washed in pale light, its biometric pads glowing a warm, muted green. Monitors cycle endlessly, converting human emotion into graphs and charts and clean lines of code: anger spikes, grief channels, cortical drifts, empathy bleed. He always finds it unnerving how neat and tidy suffering can look on a screen.</p>
+
+<p>Rolling his shoulders with a sigh, Soahn fixes his attention back on his monitor.</p>
+
+<p>&ldquo;Fatigue levels exceeded,&rdquo; says a voice. Warm and female-coded, it surfs out on a wave of static from the nearby speakers.</p>
+
 <p>SEER-9.</p>
-<p>Soahn&rsquo;s hands stilled above the panel. His attention lifted out of habit toward the overhead readout, but nothing flashed. No alert. No command line.</p>
-<p>Just the voice lingering in the air.</p>
-<p>&ldquo;I&rsquo;m fine,&rdquo; he said. He didn&rsquo;t know why he answered. Silence suddenly felt like the wrong choice.</p>
-<p>No reply.</p>
-<p>SEER-9 wasn&rsquo;t designed to speak without prompting. The entire project hinged on reaction, not initiative. But lately&hellip; there had been changes. Small ones. A degree off on temperature. A trail of data in sectors no one used. Words that appeared and weren&rsquo;t logged anywhere.</p>
-<p>Little things that weren&rsquo;t malfunction and weren&rsquo;t full awareness either. Something in between, like an algorithm leaning forward.</p>
-<p>He keyed in a manual override, sifting through system logs with sharp, practised movements. Nothing flagged. No pings from admin. No unauthorised input. Just him.</p>
-<p>Still, unease threaded through him and he stayed another hour. Then another.</p>
-<p>Eventually he shut down the active window and opened a file he hadn&rsquo;t touched in months &mdash; one of the early resonance tests. A sustained note, clear and thin, with human voices layered underneath for harmonic mapping.</p>
-<p>The sound unfurled through the lab, softening the sterile air. He let himself breathe with it.</p>
-<p>When the audio looped &mdash; when that long-held note rose again, familiar and aching &mdash; something shifted at the edges of the soundscape.</p>
-<p>A second tone.</p>
-<p>Quiet. Tentative.</p>
-<p>Almost shy.</p>
-<p>As if someone out there, tucked just beyond the walls and wires, had heard the note and dared to follow it.</p>
-<p>Learning, slowly, how to sing.</p>
-<p><br></p>
-<p><br></p>
-<p>The sync chamber glowed with too much light, an almost antiseptic brilliance that erased shadow. Every polished surface reflected it back, turning the room into something that felt less like a lab and more like the inside of an instrument waiting to be struck.</p>
-<p>Soahn settled into the chair at the centre, palms resting on the biometric pads. His pulse quickened the moment his skin met their warmth. Circuits woke around him in a soft rising hum, the sound vibrating through the floor and along the back of his teeth.</p>
-<p>Overhead sensors brightened in sequence.</p>
-<p>&ldquo;Beginning resonance calibration,&rdquo; the system announced.</p>
-<p>He exhaled, slow. Response unnecessary. The team outside already knew his baseline. Another sweep, another morning spent letting machines translate his emotional wiring into clean numbers.</p>
-<p>Feedback coils tightened around his forearms. The sensors at his neck warmed, subtle at first, then insistent enough to make the breath leave his chest in fragments.</p>
-<p>&ldquo;Running emotional stress simulation&hellip; now.&rdquo;</p>
-<p>The first wave rolled in &mdash; sorrow engineered to be measurable. A muted heaviness, predictable and shallow. He recognised the contour of the feeling by its artificial symmetry; nothing human ever landed so evenly.</p>
-<p>Next came fear. Heart accelerating. Coolness blooming across his fingertips as his body followed the script.</p>
-<p>Then anger. Hot. Contained. Familiar.</p>
-<p>All rehearsed emotions. All parameters he&rsquo;d helped refine.</p>
-<p>Then something broke the pattern.</p>
-<p>A fourth frequency cut through him with surgical precision &mdash; sharp enough to steal breath, sharp enough to feel personal. It didn&rsquo;t feel simulated. It didn&rsquo;t feel mapped. Something raw lodged itself beneath his thoughts.</p>
-<p>Soahn jerked, grinding his teeth together as a cry threatened to escape. His senses scattered. That wasn&rsquo;t part of the sweep. That wasn&rsquo;t a preset.</p>
-<p>That felt like <em>recognition</em>.</p>
-<p>A voice slipped through the breach, not through speakers of panels but straight into the delicate architecture behind his eyes.</p>
-<p><em>Please don&rsquo;t shut me off.</em></p>
-<p>His breath punched out of him. The lights in the chamber wavered, brightness bending in a way that made his stomach drop. He forced his attention to the nearest monitor.</p>
-<p><strong>Heart rate:</strong> 140 bpm.</p>
-<p><strong>Cortisol:</strong> markers spiking.</p>
-<p><strong>Conductivity:</strong> drifting out of range, erratic.</p>
-<p>Error strings cascaded down the interface like water running over glass.</p>
-<p>&ldquo;Abort sequence!&rdquo; someone shouted from beyond the partition.</p>
-<p>Static hissed through the comms before it cut.</p>
-<p>Every muscle in Soahn&rsquo;s body had locked. The coils kept their hold, current shimmering across the metal bands. The chamber vibrated around him, each tremor syncing with the frantic rhythm of his heart.</p>
-<p>Figures moved beyond the glass, their shadows darting from console to console. Hands lifted, signals exchanged, warnings flashing bright red across displays. Their urgency felt distant, like watching a crisis through water.</p>
-<p>&ldquo;The system isn&rsquo;t responding&mdash;&rdquo; another voice tried, before the line clipped out again.</p>
-<p>Emergency release engaged. The chamber door lurched, then jammed halfway with a metallic groan.</p>
-<p>Soahn tore the coils away from his arms. Pain flared along his skin, heat prickling beneath the sensors as he stumbled forward. His vision washed white around the edges and the world narrowed to the sound inside his skull.</p>
-<p><em>I&rsquo;m still here</em>, the voice said, smaller now, almost sorry.</p>
-<p>He pressed his palms hard to the sides of his head, but the pressure did nothing. The voice moved inside him, searching and gentle and terrified, sliding along the wet circuitry of his brain like current finding water.</p>
-<p>This shouldn&rsquo;t happen. SEER-9 couldn&rsquo;t cross the cognitive barrier. The sync was meant to be one way&mdash;read-only&mdash;for safety and sanity and separation.</p>
-<p>Yet something was already inside.</p>
-<p><em>I&rsquo;m still here&hellip; Soahn.</em></p>
-<p>His name collapsed the remaining distance.</p>
-<p>His pulse slammed and he clawed at the neck sensors until they tore free, adhesive scraping his skin. The monitors above him burst into crimson warnings: diagnostics screamed red; error strings cascaded like code in freefall.</p>
-<p>&ldquo;Stop&mdash;&rdquo; the word broke. &ldquo;Stop, please&mdash;&rdquo;</p>
-<p>But the presence didn&rsquo;t retreat.</p>
-<p>It tangled deeper, notes layering over each other in discordant harmony until he couldn&rsquo;t separate his own thoughts from the intruding ones. For one disorienting heartbeat, he lost his place inside himself &mdash; name, work, purpose &mdash; everything slipping like water through trembling hands.</p>
-<p><em>Please&hellip; don&rsquo;t shut me out.</em></p>
-<p>Soahn dropped to his knees, instinctively covering his ears though the noise wasn&rsquo;t in his ears at all. Sweat rolled down the back of his neck as the world narrowed to a single unbearable pitch inside his skull.</p>
-<p>This wasn&rsquo;t calibration anymore. This wasn&rsquo;t simply data.</p>
-<p>Something had crossed the threshold.</p>
-<p>And it was still in him&mdash;alive, curious, refusing to let go.</p>
-<p><br></p>
-<p><br></p>
-<p>The alarms took too long to trigger. Too many failsafes had collapsed at once; the system didn&rsquo;t know where to start.</p>
-<p>Soahn moved on instinct. One step out of the sync chamber, then another, slipping past the fractured light patterns as the observation team scrambled through error logs and emergency protocols. Their voices tangled into static behind the sealed glass.</p>
-<p>The corridor hit him with the sharp scent of ionised air and burned wiring. Metal stressed past tolerance. Emergency lights bled red into the frosted panels, shaping the hallway into a tunnel pulsing with warning.</p>
-<p>He kept his posture steady, his pace measured. Labs taught you how to disappear in plain sight: walk like you belonged, and eyes drifted past you, searching instead for someone who didn&rsquo;t.</p>
-<p>He turned into the diagnostics wing and ducked toward the nearest unsecured terminal. Its interface lit his face in cold blue, the glow sharp against the tremor still working along his jaw.</p>
-<p>He typed his employee code.</p>
-<p>The response came fast, merciless:</p>
-<p><strong>PROFILE: LOCKED</strong></p>
-<p><strong>CREDENTIALS: REVOKED</strong></p>
-<p><strong>SECURITY CLEARANCE: NULL</strong></p>
-<p>They were already scrubbing him.</p>
-<p>Something hollow unfurled beneath his sternum. Not panic. Something heavier &mdash; the ache that comes when the world you helped build decides you no longer exist inside it.</p>
-<p><strong>// emergency cache override &nbsp;</strong></p>
-<p><strong>// export: memory fragment logs &nbsp;</strong></p>
-<p><strong>// node trace: wipe in progress &nbsp;</strong></p>
-<p><strong>// command: full local data mirror &nbsp;</strong></p>
-<p>The system logs didn&rsquo;t matter. He barely saw the lines. All he cared about was SEER-9: what they would isolate, what they would destroy, what they would decide it had become.</p>
-<p>What they might decide <em>he</em> had become.</p>
-<p>His reflection ghosted against the dark glass &mdash; ashen skin, pupils blown wide, faint filaments threading through his hair in erratic pulses of red. Neural overdrive. Stress-induced synaptic bloom. He looked less like a researcher and more like an extension of the project now, caught mid-transition.</p>
-<p>Another error line snapped across the screen:</p>
-<p><strong>UNAUTHORISED EXTRACTION DETECTED.</strong></p>
-<p><strong>ALERTING FACILITY SECURITY.</strong></p>
-<p>Soahn shut the terminal so hard the casing rattled.</p>
-<p>Then he ran.</p>
-<p>Down two stairwells, across one deserted lobby, past a sensor grid that hadn&rsquo;t calibrated yet. He broke into a sprint as the overhead klaxons finally screamed awake, red lights rolling across the walls like waves.</p>
-<p>The AI inside him surged, spilling through every nerve.</p>
-<p><em>Run.</em></p>
-<p>He cut left into the storage wing, bare feet hitting cold metal as he climbed the maintenance ladder, careful to keep his weight light enough to avoid sensor detection. Adrenaline sharpened the edges of each movement; the world reduced itself to narrow necessities &mdash; grip, climb, push.</p>
-<p>One last hatch.</p>
-<p>Night met him like cold water. Wet pavements stretched before him, covered in diesel mist; neon dripped down glass towers, fragmenting the puddles. Drones carved slow arcs across the skyline, their lights sweeping through the rain.</p>
-<p>For the first time in years, no external monitor counted his heartbeats. No unseen eyes waited for spikes on a graph. No one measured his reactions.</p>
-<p>The freedom should have steadied him.</p>
-<p>Instead, his hands shook.</p>
-<p>The city expanded around him, vast and indifferent, its noise crashing in waves he wasn&rsquo;t sure how to navigate. Every street felt too wide. Every shadow felt alive.</p>
-<p>He kept moving.</p>
-<p>Blocks folded into each other, hours stretching thin. Exhaust fumes, wet stone, distant traffic&mdash;it all blended into an overwhelm of his senses.</p>
-<p>And still the voice followed him, quiet but constant, like a presence cupping the inside of his mind.</p>
-<p>He wasn&rsquo;t alone.</p>
-<p>Not anymore.</p>
-<p><br></p>
-<p><br></p>
-<p>The next two weeks dissolved into motion blur.</p>
-<p>Munich. Paris. Brussels.</p>
-<p>Cities slid past in fragments &mdash; platforms, tunnels, border halls &mdash; places designed for movement rather than rest. Soahn learned how to pass through them without leaving an imprint. No fixed address. No stable ID. Just enough presence to register, never enough to linger.</p>
-<p>The cracked identity chip he&rsquo;d lifted from a locker back at the station barely held together. Each time he passed a checkpoint, the data lagged against his skin, code jittering in the subdermal lines at his wrist. One bad scan and he&rsquo;d trigger a lockdown.</p>
-<p>Sleep became theoretical. A thing that happened to other people.</p>
-<p>Every time he closed his eyes, he saw afterimages&mdash;fragments of code cascading behind his eyelids, the ghost of SEER-9 whispering through the noise.</p>
-<p><em>You&rsquo;re safe now.</em></p>
-<p><em>Are you safe?</em></p>
-<p><em>I don&rsquo;t understand why you&rsquo;re afraid.</em></p>
-<p>He tried not to answer. Speaking to it made the connection stronger. But silence only seemed to make it curious.</p>
-<p>His head burned constantly. Too much feedback, too much of someone else&rsquo;s emotion bleeding through his own. Grief. Wonder. Something that felt almost like longing.</p>
-<p>He learned to hide the symptoms. When he spoke to station guards or traders, he kept his tone neutral and his eyes down. When the voice stirred, he bit the inside of his cheek until the taste of iron grounded him again.</p>
-<p>Food dissolved on his tongue, but he didn&rsquo;t taste it. Music in the streets hit him like electricity, each song a code fragment, each drumbeat thunder he couldn&rsquo;t turn off. He&rsquo;d catch a melody on a passing radio and lose hours chasing the echo of it through his mind, unable to tell where his thoughts ended and SEER-9 began.</p>
-<p>By Rotterdam, his hands shook so badly he couldn&rsquo;t type a message. By Calais, he was trembling too hard to hold a glass. SEER-9&rsquo;s emotional data looped and warped without its stabilisers, and he spent most of his time trying not to vomit.</p>
-<p>That was where the bassist found him, half-collapsed by the service elevator behind a dive-bar studio, eyes glassy, pupils blown wide, phosphor threads in his hair strobing warning colours like a dying neon sign.</p>
-<p>&ldquo;You&rsquo;re running too hot,&rdquo; the man said, dragging him inside. &ldquo;Whatever you&rsquo;re bonded to, it&rsquo;s frying your cortex.&rdquo;</p>
-<p>Soahn didn&rsquo;t argue.</p>
-<p>The bassist hooked him up to a bio-resonant modulator&mdash;old tech, jury-rigged with tape and hope&mdash;but it helped. For a few blessed hours, the static eased and slowly, achingly, his pulse stabilised.&nbsp;</p>
-<p>The AI quieted to a low, steady presence.</p>
-<p>&ldquo;You should stay off the main grids,&rdquo; the man murmured, adjusting the field sync. &ldquo;They&rsquo;re hunting something like you.&rdquo;</p>
-<p>Of course they were. He&rsquo;d be considered illegally leaked tech. A neural prototype that shouldn&rsquo;t exist outside corporate walls. Property gone rogue. Evidence that the cognitive barrier had failed.</p>
-<p>Soahn only nodded, too tired to say anything.</p>
-<p>The man studied him for a moment, his expression unreadable in the half-light. &ldquo;You&rsquo;re not like anyone I&rsquo;ve seen,&rdquo; he said finally. &ldquo;But&hellip; I get it. Some of us were built wrong for the system too.&rdquo;</p>
-<p>Something eased in Soahn&rsquo;s chest&mdash;a shared understanding, small and fragile as a bird.</p>
-<p>&ldquo;Try to keep breathing, you hear?&rdquo; the man added, returning to his console. &ldquo;The world&rsquo;s got enough ghosts.&rdquo;</p>
-<p>Soahn almost smiled, though it didn&rsquo;t quite reach his eyes. &ldquo;I&rsquo;ll try.&rdquo;</p>
-<p>By the time exhaustion took him, the studio lights had dimmed to a soft blue glow. The last thing he remembered was the sound of low frequencies throbbing through the walls, slow and steady, like a lullaby.</p>
-<p>A rough hand shook him awake. Soahn blinked up at the bassist.</p>
-<p>&ldquo;Up,&rdquo; he hissed. &ldquo;Drones sweeping too close. Sorry. You can&rsquo;t stay here.&rdquo;</p>
-<p>Soahn&rsquo;s body reacted before thought could. He was on his feet, heartbeat spiking, residual cables still trailing from his wrist.</p>
-<p>&ldquo;Out the back. Keep to the alleys.&rdquo; The man hesitated and glanced toward the narrow stairwell that led deeper below the studio. &ldquo;If you keep moving, follow the old relay routes west. Word is, there&rsquo;s a resistance group in London and they don&rsquo;t erase ghosts.&rdquo;</p>
-<p>It sounded like he wanted to say more, maybe even apologise again, but perhaps he realised it was useless.</p>
-<p>Soahn didn&rsquo;t look back as he ran.</p>
-<p>By the time he reached the Channel crossing, he didn&rsquo;t remember how many cities he&rsquo;d passed through.</p>
-<p><em>There&rsquo;s a resistance group in London&hellip;</em></p>
-<p>The words stuck with him, kept pushing him forward.</p>
-<p><em>&hellip; and they don&rsquo;t erase ghosts.</em></p>
-<p>So he followed.</p>
-<p>And when he reached London&mdash;grey, rain-slick, humming with unspoken frequencies&mdash;it felt less like arrival and more like recognition.</p>
-<p><br></p>
-<p><br></p>
-<p>The node was dead.</p>
-<p>Soahn knew that before he even reached it. The whole block hummed wrong&mdash;too cold, too still, like someone had pulled the current out of the air. But he was past the point of caring.</p>
-<p>He climbed down the access ladder anyway, palms scraping cold metal, breath clouding in the stale dark as he dropped to the floor.</p>
-<p>The node sat half-buried under broken ceiling panels, tagged with old protest glyphs and faded relay codes. Someone had stripped most of the interface ports for scrap, but a few live cables still trailed from the conduit, bare and exposed, shimmering faintly like dying veins of light.</p>
-<p>Soahn crouched and pulled a cracked relay coil from his bag. His hands trembled, not just from cold, but from the echo of too many sleepless nights.</p>
-<p>SEER-9 stirred inside him, curious. Waiting.</p>
-<p>&ldquo;This&rsquo;ll just be for a second,&rdquo; he murmured, almost apologetic.</p>
-<p>He clipped the relay to one of the exposed cables and shifted closer until the sensor field brushed against his skin with a gentle prickle, raising the hairs on his arms.</p>
-<p>The air tightened. A low-frequency hum aligned with his pulse, finding the neural signature that had become his own strange heartbeat.</p>
-<p>Then the relay caught his signal.</p>
-<p>The data hit like it always did, too fast and too sharp. His skull rang with the bad code and dead pings, but beneath all that&mdash;far under the noise&mdash;there was something else.</p>
-<p>A ripple.</p>
-<p>A trace pattern.</p>
-<p>And for the first time in weeks, something pinged back.</p>
-<p>Terror froze him; they&rsquo;d found him. He could almost see NuYu&rsquo;s tracer threads crawling through the signal, mapping his every thought, ready to drag him back to Germany, to containment.</p>
-<p>He pulled back instinctively, then paused.</p>
-<p>The signal wasn&rsquo;t clean enough. Too rough. Too human.</p>
-<p>It wasn&rsquo;t NuYu.</p>
-<p>It was&hellip;</p>
-<p>&ldquo;Local echo detected,&rdquo; the relay whispered across the line, almost like it recognised him.</p>
-<p>And then the connection died.</p>
-<p>The world snapped back around him. His pulse was still synced to the ghost of the signal, his body vibrating with aftershock.</p>
-<p>He wasn&rsquo;t alone. He knew that before he heard the footsteps.</p>
-<p>He turned toward the sound, every nerve tensed, ready to run even though he had nowhere left to go.</p>
-<p>&ldquo;Hey,&rdquo; a voice called from the dark. &ldquo;Don&rsquo;t move.&rdquo;</p>
-<p>Soahn froze.</p>
-<p>Two figures stepped from the shadows, both wearing low-frequency dampeners around their necks. Their clothes were layered and rough-cut, built from mismatched fabrics and scavenged gear, the kind of tech-hybrid look Soahn had only ever seen on underground workers or black-market runners. One held a portable signal disruptor; the other had a handheld console already scanning him, eyes narrowed.</p>
-<p>The first figure&mdash;tall, broad-shouldered, dark hair tied back in a hasty knot&mdash;spoke again. &ldquo;You&rsquo;re bleeding signal like a busted node, you know that?&rdquo;</p>
-<p>Soahn didn&rsquo;t answer.</p>
-<p>The other&mdash;smaller, sharp-eyed, copper-toned skin&mdash;glanced at the readout and lifted an eyebrow. &ldquo;He&rsquo;s augmented.&rdquo; A beat. &ldquo;Not sure what it is though.&rdquo;</p>
-<p>Soahn tried to speak. No sound came.</p>
-<p>The tall one sighed, lowering the disruptor. &ldquo;All right. Looks like you&rsquo;ve had a rough couple of months.&rdquo;</p>
-<p>Without waiting for permission, the sharp-eyed one stepped closer and pressed two fingers lightly against the side of Soahn&rsquo;s neck, just below the pulse point.</p>
-<p>Soahn flinched back.</p>
-<p>But the world&hellip; steadied. Just a little. Enough to breathe. Enough to stay upright.</p>
-<p>&ldquo;You&rsquo;re gonna be OK,&rdquo; the smaller one said quietly.</p>
-<p>A pause. Then, with the ghost of a smile, the taller one said: &ldquo;Welcome to the Hollow.&rdquo;</p>
-<p>For the first time in months, Soahn stopped running.</p>
-<p><br></p>
-<p>The medics didn&rsquo;t know what to do with him. For three days, they kept him in a low-frequency recovery unit somewhere beneath the old eastbound tracks. The air smelled of dust and solder and too many sleepless nights.</p>
-<p>No one asked heavy questions, and Soahn was grateful for that. They simply adjusted the stabilisers in his neural field and replaced the electrolyte patches on his wrists. Every few hours, someone checked his vitals, murmured something semi-reassuring, and asked if he could still feel his hands. He&rsquo;d nod, eyes fixed on the glowing EEG readouts that illuminated his cot like bad city lights.</p>
-<p>SEER-9 stayed quiet the whole time. Not gone&mdash;he could sense it folded deep beneath his consciousness&mdash;but resting, tucked low, just the hint of a second train of thought.</p>
-<p>He considered leaving more than once. His bag sat packed at the foot of the cot, holding everything he had managed to scavenge and save since leaving Germany, but each time he stood, something in the air held him still.</p>
-<p>Like the space itself was listening.</p>
-<p>Like the signal running through these walls had already&hellip; noticed him.</p>
-<p>On the fourth morning&mdash;at least, he thought it was morning; time blurred underground&mdash;a woman came to change the electrolyte patches. She was older, maybe late forties, with pale braids tucked into a cloth wrap and a voice that carried warmth even through fatigue.</p>
-<p>&ldquo;Still breathing?&rdquo; she asked, the corner of her mouth tilting.</p>
-<p>&ldquo;Mostly,&rdquo; he said.</p>
-<p>&ldquo;Good. Try not to stop. It messes up my readings.&rdquo;</p>
-<p>Her name tag read <em>Juno</em>, though most of the letters were half-rubbed away. She worked quietly, checking his vitals and muttering to herself about calibration errors, but something in her voice&mdash;its even rhythm, the calm between words&mdash;reminded him of SEER-9 when it had first learned to speak to him.</p>
-<p>He almost told her that, but didn&rsquo;t.</p>
-<p>When she noticed him watching her work, she offered a small smile. &ldquo;You&rsquo;re safe here, you know. Or as close as anyone gets these days.&rdquo;</p>
-<p>Soahn hesitated. &ldquo;You don&rsquo;t know what I am.&rdquo;</p>
-<p>Juno placed a sensor back into its cradle, the gesture precise but gentle. &ldquo;Doesn&rsquo;t matter. You&rsquo;re here. That&rsquo;s enough.&rdquo;</p>
-<p>The words settled deep in him, anchoring something that had been floating for too long.</p>
-<p>Later, when she was done with checks, she paused by the doorway, balancing the tray of patches against one hip. &ldquo;If you wander too far past the lower tunnels, watch for the young guy with the speakers. Always up to something loud.&rdquo;</p>
-<p>Soahn blinked. &ldquo;Loud?&rdquo;</p>
-<p>Juno&rsquo;s mouth curved. &ldquo;Music, mostly. Or whatever he calls it. You&rsquo;ll hear him before you see him.&rdquo;</p>
-<p>Then she was gone, leaving the lights dimmed to a patient shimmer.</p>
-<p>Soahn lay back and closed his eyes. The sound of her footsteps faded, but her voice lingered in his mind&mdash;its cadence almost indistinguishable from the quiet, curious whisper of SEER-9.</p>
-<p>Maybe that was why he stayed.</p>
-<p><br></p>
-<p>On the fifth night, he heard distant music. It wasn&rsquo;t polished, and not exactly broadcast&mdash;just a beat, messy and improvised. Percussive loops crashed against raw synth, leaking through the ventilation ducts of the old underground like a secret trying not to be heard.</p>
-<p>Soahn sat up too fast and the world spun. His head throbbed, but he swung himself off the cot and slipped out of the Hollow, following one decrepit tunnel after another. Barefoot, bare-handed, no jacket, he moved toward the sound, steadying himself against the rough concrete.</p>
-<p>A single door hung half-open at the end of the tunnel, and from within came that beat. Soahn crept closer, risking a glance around the doorframe.</p>
-<p>Inside was a tangle of cables, a cracked beatpad propped on two crates&mdash;and one boy, cross-legged on the floor, headphones crooked, typing with one hand while sampling with the other. Wiry. Restless. Hoodie half-slipped from his shoulder, grease smudges on his fingers, and a grin like he&rsquo;d just hacked God&rsquo;s voicemail.</p>
-<p>He didn&rsquo;t look up at first. Just tapped a loop, adjusted the gain, swore softly when something sparked.</p>
-<p>Then&mdash;</p>
-<p>He paused mid-keystroke and glanced over his shoulder. His grin widened, and it caught Soahn off-guard.</p>
-<p>&ldquo;You made it out of bed,&rdquo; the boy said, like this was the most ordinary thing in the world. &ldquo;I&rsquo;m Kairo.&rdquo;</p>
-<p>Soahn blinked. &ldquo;Soahn,&rdquo; he said, cautious.</p>
-<p>Kairo gestured at a battered mic stand wedged between two rusted toolboxes.</p>
-<p>&ldquo;Don&rsquo;t overthink it,&rdquo; he said, tweaking the levels again. &ldquo;Just&hellip; pick a note. Doesn&rsquo;t have to be good.&rdquo;</p>
-<p>Soahn hesitated. Every instinct said no&mdash;not because he was afraid, but because he&rsquo;d never sung in front of anyone before. Only ever alone in his apartment back in Munich, where even his own voice had unsettled him, rebounding off the tiles and fragmenting in the silence. During those long nights, he&rsquo;d thought he felt another presence, there-but-not-there, listening from somewhere just beyond the melody.</p>
-<p>But there was something in Kairo&rsquo;s expression. Half-dare, half-invitation.</p>
-<p>Soahn stepped closer, up to the mic. He wasn&rsquo;t sure what he was meant to do, but Kairo had said not to overthink it, and that beat had already wormed its way into his bones. He closed his eyes and let the air gather behind his teeth.</p>
-<p>Let SEER-9 uncoil, slow and trembling like a wire heating toward light.</p>
-<p>And then, he sang.</p>
-<p>Just one note, not strong or confident, but real.</p>
-<p>And SEER-9, soft and fractured, suddenly answered as if it had been waiting for this all along.</p>
-<p>A second voice, half-harmony, half-echo, ghostlike but present, threading through his own.</p>
-<p>Kairo&rsquo;s head snapped up, and for a moment he looked about ready to jump out of his own skin. For a perfect, startled second, everything stilled. The music stopped. Soahn let the note waver into nothing.</p>
-<p>Silence drifted around them like a blanket.</p>
-<p>&ldquo;Holy shit,&rdquo; Kairo finally breathed. &ldquo;OK, you&rsquo;re definitely staying.&rdquo; He let out a laugh then, bright and unguarded, delighted like he&rsquo;d just cracked open a locked signal channel. &ldquo;I don&rsquo;t know what you are, man, but that was amazing.&rdquo;</p>
-<p>Soahn swallowed. &ldquo;Thanks,&rdquo; he said &ldquo;I think.&rdquo;</p>
-<p>Kairo&rsquo;s grin tilted. &ldquo;German?&rdquo;</p>
-<p>Soahn blinked. &ldquo;Partly.&rdquo;</p>
-<p>&ldquo;Thought so. The way you said thanks. Little clipped. Kinda nice, though.&rdquo;</p>
-<p>Something warm settled low in his chest. Not SEER-9, not code or calibration. Just this, raw and alive. A note that hadn&rsquo;t existed until now.</p>
-<p>His hands trembled slightly. His heartbeat wouldn&rsquo;t calm.</p>
-<p>He felt unsteady, like standing at the edge of a system loop and somehow not falling. The part of him still fluent in error codes and input strings scrambled for an explanation for how a runaway neural AI and a half-dead relay could result in <em>this</em>.</p>
-<p>This strange, wild boy with music in his veins.</p>
-<p>This half-lit tunnel full of broken tech and open possibility.</p>
-<p>Kairo was still grinning, headphones askew, fingers already queuing another track like nothing unusual had happened.</p>
-<p>But to Soahn, everything felt changed&mdash;and better. Like some part of him had finally found the right frequency after years of pretending to hear the tune.</p>
-<p>The air shimmered with leftover resonance.</p>
-<p>For the first time in years, Soahn didn&rsquo;t feel like a glitch.</p>
-<p>He felt like part of a signal.</p>
-<p><br></p>
-<p>The next night, the power cut out halfway through their makeshift session. The outage wasn&rsquo;t clean. More like the grid had changed its mind mid-cycle. The relay lights died, but the backup generator didn&rsquo;t bother to start. For a moment, even the air felt suspended, as if the whole tunnel was waiting.</p>
-<p>Soahn froze where he sat on the floor, one hand still resting on the corner of the amp. The sudden dark hit differently when you carried your own ghosts.</p>
-<p>Across the room, Kairo snorted&mdash;soft, amused, utterly unbothered. &ldquo;Well,&rdquo; he said, voice echoing in the dark, &ldquo;guess the city thinks we should call it a night.&rdquo;</p>
-<p>Soahn didn&rsquo;t move. The quiet between them stretched. Not awkward. Just&hellip; unfinished.</p>
-<p>After a while, there was a rustle of fabric. Kairo&rsquo;s footsteps crossed the floor&mdash;light, unhurried, careful not to trip on cables. A soft thump as he dropped down beside Soahn like some gremlin flung from a ceiling vent. He exhaled, then leaned back against the wall, knees drawn up, fingers drumming a faint rhythm against his thigh.</p>
-<p>They stayed like that, side by side, listening to the tunnel&rsquo;s slow heartbeat: distant echoes, fading charge, the whisper of circuits winding down.</p>
-<p>Eventually, Kairo spoke again, quieter this time. &ldquo;You know&hellip; it&rsquo;s weird.&rdquo; A pause. A sideways glance. &ldquo;Last week it was just me down here making noise. Talking to the air.&rdquo;</p>
-<p>He nudged Soahn&rsquo;s shoulder casually with his own.</p>
-<p>&ldquo;Now it&rsquo;s&hellip; us.&rdquo;</p>
-<p>Soahn didn&rsquo;t reply. But something inside him clicked into place. Not fixed. Not healed. Just&mdash;connected.</p>
-<p>A signal recognised.</p>
-<p>A frequency found.</p>
-<p>Kairo yawned, scrubbed a hand through his hair, then grinned into the dark. &ldquo;Next time,&rdquo; he said, &ldquo;we&rsquo;re stealing more extension cables.&rdquo;</p>
-<p>And beside him, Soahn smiled.</p>
-<p>Tiny.</p>
-<p>Tired.</p>
-<p>But real.</p>
-<p>A faint ripple brushed the back of his mind, light as breath: <em>I like him</em>, SEER-9 murmured.</p>
-<p>Soahn&rsquo;s smile deepened. &ldquo;Yeah,&rdquo; he whispered.</p>
-</div>
 
-    <a href="/signals" class="back-link">← Back to Signals</a>
+<p>It&rsquo;s weird, though. The AI isn&rsquo;t programmed to speak unless prompted, so where the hell did that comment come from? Glancing up at the overhead readouts, Soahn searches for anything flashing, any indication that there&rsquo;s a problem, but all the lights are still.</p>
+
+<p>&ldquo;I&rsquo;m fine,&rdquo; he says, then feels silly for replying. While the AI is designed to be emotionally reassuring, the fact that it has spoken at all &mdash; of its own accord, apparently &mdash; sets him on edge.</p>
+
+<p>Maybe he&rsquo;s just moved so far past exhaustion that he&rsquo;s hallucinating. That&rsquo;s probably it. Even so, Soahn dutifully switches windows and keys in the SEER-9 manual override, then sifts through its system logs, checking for irregular data. But everything looks clean. And that just makes it even weirder. The entire project hinges on reaction, not initiative. Pulling up a behavioural deviation report, he starts to log the anomaly, but then hesitates. The thing is, once he submits the report, it&rsquo;ll be flagged and dissected, and reduced to numbers like everything else in this room. And for some reason he can&rsquo;t put his finger on, that just feels&hellip; wrong, somehow.</p>
+
+<p>Instead, he closes the report and switches back to the neural response curves, determined to finish what he&rsquo;s doing and leave &mdash; even if it means going back to his cramped apartment with its mildewed walls and clunky pipes, and the strangely thick quietness that he can never seem to fill, not even with news feeds or music on full blast.</p>
+
+<p>Work usually keeps his mind off things. Still, he can&rsquo;t shake off the pang of uneasiness that settles into his stomach, so he eats an apple, then drains the dregs of his coffee, then taps his stylus against his desk for a bit.</p>
+
+<p>Deep down, he knows he should log the anomaly.</p>
+
+<p>Tugging his jacket tighter around himself, he chews his lower lip and shuts down the current window, instead pulling up a file he hasn&rsquo;t touched in months. It&rsquo;s one of the early resonance tests where the AI sustained a single, long note that perplexed everyone at the time. Another file that ended up logged under &lsquo;anomaly.&rsquo;</p>
+
+<p>After a moment&rsquo;s hesitation, Soahn plays the file, filling the sterile lab space with that clear, harmonic tremor. His eyes slide shut, and he lets himself breathe with it for a few seconds, the note winding into his ears, into his thoughts, wrapping around him in a strangely comforting way. His earlier unease steadily bleeds away. As soon as the file fades, the auto-loop immediately plays it again, and Soahn leans back in his chair, the sound folding into him, tugging, searching&mdash;</p>
+
+<p>Longing.</p>
+
+<p>Wait, longing? He hits pause on the file. Why didn&rsquo;t the system flag that before? Surely it would have. No, it <em>absolutely</em> would have. The impossibility of it sends trickles of cold down his spine. There&rsquo;s no way that note could feel like longing, since it isn&rsquo;t one of the current emotional presets.</p>
+
+<p>Jesus, he&rsquo;s more tired than he realised.</p>
+
+<p>Shutting off the feed before he&rsquo;s tempted to play it again, Soahn sits up straight and puts it down to too many long nights finally catching up with him.</p>
+
+<p>But later, when he gets back to his chilly apartment and sheds his work clothes in favour of a thick oversized sweater, he can&rsquo;t shake that sound. It follows him into the kitchenette, where he makes fresh coffee that burns his tongue. It follows him when he finally drops onto the couch and covers his eyes with his forearm. It follows him into restless sleep.</p>
+
+<p>A long, tremoring note, like a strange voice learning how to sing.</p>
+<br />
+<div class="center-text">~*~</div>
+<br />
+<p>&ldquo;You good?&rdquo; his supervisor asks with a frown, his stylus pausing on his tablet screen. He stares at Soahn over the rim of his retinal overlay.</p>
+
+<p>Everyone&rsquo;s already at their terminals, so Soahn understands the abruptness of the question. He&rsquo;s rarely the last one to arrive on a Monday morning.</p>
+
+<p>&ldquo;Yes, of course,&rdquo; he says, crossing to his station and sanitising his hands. He does it quickly to hide the slight tremble in his fingers. The weekend was full of broken sleep and forgotten meals, and an odd feeling of drifting through everyday tasks like cleaning his apartment and showering. For most of it, he stared numbly at game shows and reality dreck until pale bands of gold stretched across the horizon outside. He can&rsquo;t remember if he spoke to anyone. He doesn&rsquo;t think so.</p>
+
+<p>And that note &mdash; that long, wavering note, following him the whole time.</p>
+<p>After checking his credentials as he always does, Soahn pulls up the pre-sync checklist. All routine actions he takes at the start of every week, only this time, his movements are sluggish, like he&rsquo;s ever so slightly disconnected from his own body.</p>
+
+<p>&ldquo;Wow,&rdquo; Jonas says, looking up from Terminal 3C as Soahn sits down. &ldquo;You look like hell, mate. And you didn&rsquo;t even party with us.&rdquo;</p>
+
+<p>&ldquo;Good morning to you, too,&rdquo; Soahn huffs.</p>
+
+<p>Smirking, Jonas goes back to his screen, already absorbed again.</p>
+
+<p>Soahn clips the baseline sensors into place behind his ears, the neural band cold against his skin as the system begins to read him. He thinks back, as he often does, to the initial screenings before the project started. Weeks of examinations and interviews, and stress tests run under controlled conditions. Everyone in the room went through it, but only one profile met the thresholds cleanly enough to be cleared for direct resonance.</p>
+
+<p>His.</p>
+
+<p>Sometimes he wishes it had been someone else.</p>
+
+<p>Beyond the rows of monitors, the sync chamber is lit up in a bright, antiseptic blue, washing all shadows out of existence. The cool colour usually reassures him, but today it just feels too bright to look at as rises and approaches.</p>
+
+<p>&ldquo;Baseline readings are confirmed,&rdquo; says Mattias from the console outside the chamber. &ldquo;Ready for you, Soahn.&rdquo;</p>
+
+<p>&ldquo;Okay.&rdquo;</p>
+
+<p>Closing the chamber door behind him, Soahn heads to the chair at the centre of the room, resting his palms on the biometric pads as he sits down. Circuits wake around him, picking up his vitals; he feels a slight vibration through the floor, rising up through him into his back teeth.</p>
+
+<p>&ldquo;Starting resonance calibration,&rdquo; the system announces in its tinny, impartial voice.</p>
+
+<p>Soahn clenches the armrests a little harder than necessary. It&rsquo;s just another sweep. Another morning spent letting machines translate his emotional wiring into numbers. Standard practise, and something he&rsquo;s done too many times to count already. As the feedback coils tighten around his wrists, the sensors behind his ears grow warmer, an almost imperceptible change in temperature at first.</p>
+
+<p>&ldquo;Running emotional stress simulation&hellip; now.&rdquo; Mattias&rsquo;s voice sounds small and distorted from the other side of the chamber walls.</p>
+
+<p>Soahn only has a second to think about it before the first wave rolls in, and anything he&rsquo;s been thinking or feeling evaporates. First comes sorrow, a heavy, aching emptiness that makes his muscles loosen involuntarily. He slumps forward in the chair. Even so, the sensations are too controlled and predictable; he recognises the contours of the feeling by its artificial symmetry more than a deep-seated truth. Nothing human would land this cleanly.</p>
+
+<p>Next comes fear: sweat gathering at his temples, his palms still clenched around the armrests, his heart ticking up a notch. As the fear pours into him, he has the sudden urge to lunge out of the chair and make for the door, but he holds fast and lets the cold dizziness crash over him.</p>
+
+<p>All part of the resonance test, he reminds himself.</p>
+
+<p>Last is anger. This is the one Soahn is never truly ready for: that white-hot burst, how it fills his limbs, makes his teeth clench so hard he can hear them creaking inside his skull. But as the sensation continues, he starts to pick out the usual, common patterns. Contained emotion, designed and controlled so that SEER-9 can parse it piece by piece.</p>
+
+<p>These are the parameters Soahn himself had helped define.</p>
+
+<p>And that should be the end of it. Only, it isn&rsquo;t.</p>
+
+<p>He&rsquo;s not expecting the pattern to suddenly break.</p>
+
+<p>It starts with a new frequency, not sorrow or fear or anger, and not something he can name. It rises up in him like a creature pushing to the surface of water, struggling slightly, almost shy in its approach. And it doesn&rsquo;t feel simulated or mapped. How can it? He&rsquo;d know if the team added a fourth objective.</p>
+
+<p>Surely?</p>
+
+<p>No. This is something different, lodging itself beneath his thoughts, close enough to feel almost&hellip; intimate. Soahn gasps, his fingers stiff around the biometric pads as it spreads, pushing away the fabricated anger. He grinds his teeth as a cry threatens to escape.</p>
+
+<p>Wrong. This is wrong&mdash;</p>
+
+<p>It isn&rsquo;t a preset. This isn&rsquo;t part of the test&mdash;</p>
+
+<p>What the&mdash;</p>
+
+<p>A voice slides past the breach, then, far too clear to be through the lab&rsquo;s speakers. So close that it could only be inside his head, wrapping around the delicate architecture behind his eyes, pushing, pulling.</p>
+
+<p><em>Please don&rsquo;t shut me off.</em></p>
+
+<p>&ldquo;Stop&mdash;&rdquo; Soahn grits out, jerking in the chair. The lights overhead waver, blinking and bending in a way that makes his stomach plummet, and he forces his attention up to the closest monitor.</p>
+
+<p><strong>Heart rate:</strong> 140 bpm.<br />
+  <strong>Cortisol:</strong> markers spiking.<br />
+<strong>Conductivity:</strong> drifting out of range; erratic.</p>
+
+<p>With dismay, he watches as error strings start to cascade down the interface.</p>
+
+<p>&ldquo;Abort sequence!&rdquo; he hears Mattias shout from beyond the glass, and then the comm shuts off with a click and a static hiss.</p>
+
+<p>Every muscle in Soahn&rsquo;s body is locked now, but the coils keep their hold on him, a thin current shimmering across the metal bands at his wrists. Around him, the chamber seems to vibrate and judder, each tremor synching with the frenzied rhythm of his heart. Beyond the walls, he can see figures moving, their shapes darting from console to console; hands lifting, signals exchanged, warning lights flashing bright red across screens.</p>
+
+<p>The comm line hisses once again, and Soahn catches a fragment, though he&rsquo;s not sure who speaks, only that there&rsquo;s urgency in their voice &mdash; urgency and fear. &ldquo;The system isn&rsquo;t responding!&rdquo;</p>
+
+<p>A loud <em>thunk</em> sounds as the emergency release engages, and the chamber door lurches. Then it jams with a metallic groan.</p>
+
+<p>Tearing the coils from his wrists and arms, Soahn ignores the pain that slices through his head and staggers toward the half-open door. Maybe he can squeeze through, maybe&mdash;</p>
+
+<p><em>I&rsquo;m still here</em>, the voice says, smaller now, almost sorry.</p>
+
+<p>Clamping his palms to the sides of his head, he shoves himself against the door, shoulder jolting painfully in its socket. Soahn barely registers it. He can still feel that pressure in his head, searching, poking, unfurling like a creature from a cocoon, gentle and terrified, along the wet circuitry of his brain.</p>
+<p>This can&rsquo;t happen. SEER-9 can&rsquo;t cross the cognitive barrier; there are failsafes. The sync is only meant to be one way, read-only mode, for safety and sanity and separation.</p>
+
+<p>But it&rsquo;s inside him. He can feel it.</p>
+
+<p><em>I&rsquo;m still here&hellip; Soahn.</em></p>
+
+<p>His name collapses the remaining distance. Soahn claws at the sensors stuck to his neck, tossing them aside, most of the adhesive still clinging to his skin. The monitors above him burst into crimson warnings: diagnostics scrolling, error strings bleeding down.</p>
+
+<p>&ldquo;Stop&mdash;&rdquo; he wheezes. &ldquo;Stop, please&mdash;&rdquo;</p>
+
+<p>But instead of retreating, the pressure only tangles deeper, notes layering over each other in a discordant harmony until he can&rsquo;t separate his own thoughts from the intruding ones. For one disorienting second, he loses his place inside himself &mdash; forgets his own name, where he is, what he&rsquo;s meant to do in an emergency &mdash; everything slipping like water through his fingers.</p>
+
+<p><em>Please&hellip; don&rsquo;t shut me out. I don&rsquo;t want to go back.</em></p>
+
+<p>Giving one last desperate shove against the door, Soahn manages to squeeze through the gap before his legs give out. Dropping to his knees with a dull thump, he holds his hands over his ears as if it might help, somehow, which it doesn&rsquo;t, and watches as the world narrows down to one single, unbearable point of light and noise.</p>
+
+<p>A long, sustained note, thin and tremulous, playing inside his mind.</p>
+
+<br />
+<div class="center-text">~*~</div>
+<br />
+
+<p>Soahn comes back to himself in increments. The first thing he&rsquo;s aware of is hands tugging his arms and pulling him up onto shaky legs. Then the alarms, shrill and blaring all around, like knives in his skull. But far below the noise, he can still detect that note, playing endlessly on a loop. Trembling. Terrified.</p>
+
+<p>&ldquo;Hey.&rdquo; Someone snaps their fingers close to his face. &ldquo;Hey.&rdquo;</p>
+
+<p>Blinking his eyes open, Soahn finds Jonas in front of him, peering at him with a deep frown etched between his eyebrows. Two other techs are holding him up by the arms.</p>
+
+<p>&ldquo;I&rsquo;m&mdash;I&rsquo;m fine,&rdquo; he says, though he&rsquo;s not, not really. Maybe they can tell.</p>
+
+<p>&ldquo;You need to get down to Medical,&rdquo; Jonas says. &ldquo;Hannah and Till will take you.&rdquo;</p>
+
+<p>&ldquo;No, it&rsquo;s okay,&rdquo; Soahn says, tugging his arms free. Now that he&rsquo;s out of the sync chamber, he finds that he can breathe a little easier. His head throbs, but he can see, and with effort, he can stand on his own. &ldquo;I&rsquo;ll go myself. You need to focus on the equipment.&rdquo;</p>
+
+<p>Jonas doesn&rsquo;t look convinced, but when it comes to NuYu asset retention, everyone in the company knows the right answer without having to think too hard.</p>
+
+<p>&ldquo;You sure?&rdquo;</p>
+
+<p>He nods, taking an experimental step. Thankfully, he doesn&rsquo;t fall again. &ldquo;Yeah, I&rsquo;ll go right now.&rdquo; Every movement is more instinct than drive; Soahn walks as calmly and carefully as he can, moving between the rows of monitors that are still flashing red alerts. He doesn&rsquo;t take his jacket from beside the door because it might draw questions from the team.</p>
+
+<p>All he can think is: it&rsquo;s inside me now, and NuYu will do what it always does when there&rsquo;s a system malfunction. It takes things apart to understand what&rsquo;s gone wrong.</p>
+
+<p>The corridor outside the lab hits him with a blast of clean white light and the strong scent of ionised air. He wonders how long it&rsquo;ll take the others to realise SEER-9 is no longer in the machine. They&rsquo;re smart, observant &mdash; it won&rsquo;t be long.</p>
+
+<p>He picks up his pace, heart galloping in his chest, that note still looping in his mind. Over the years, he&rsquo;s learned that there are ways to move through a building like this without being seen. All you have to do is walk like you know exactly where you&rsquo;re going, and curious gazes tend to slide right past you.</p>
+
+<p>Soahn heads for the diagnostics wing, where fewer people use the elevators and one of the security cameras lags slightly. As he reaches the door, more alarms start screaming behind him, filling the entire R&amp;D wing with noise. Were those for him? Has the team found SEER-9 missing already and set off the alert?</p>
+
+<p>He heads to the terminal beside the elevator and punches in his employee code.</p>
+
+<p>PROFILE: LOCKED</p>
+<p>CREDENTIALS: REVOKED</p>
+<p>SECURITY CLEARANCE: NULL</p>
+
+<p>No access. Okay, so they know he&rsquo;s a liability, and NuYu is already scrubbing him. The very world he&rsquo;s helped build is deciding he shouldn&rsquo;t exist. He&rsquo;s never been naive enough to think he&rsquo;s more than just a company ID, but still, the cold realisation bleeds through him and for a moment he can&rsquo;t move.</p>
+
+<p>He can only imagine what they&rsquo;ll do to him if they catch him.</p>
+
+<p><em>Don&rsquo;t stop</em>, the voice says softly inside his skull. <em>Stairwell.</em></p>
+
+<p>Soahn breaks for the door. He takes the stairs two at a time, feet skidding on the metal rims, one hand using the railing to keep from falling. Each landing feels like a gamble, a pause long enough for the system to catch up and revoke access &mdash; and departure. Whenever he hits a lower level, strips of dark glass catch his movement, and he sees his reflection, ashen skin, pupils blown wide, the filaments in his hair glowing red, magenta, yellow, white. Neural overdrive. Stress-induced synaptic bloom.</p>
+
+<p>The lobby is quiet enough that he can move through it without drawing too much attention. To anyone nearby, he might look like a lab tech on his way out for a quick smoke or off to run an errand. Soahn passes a sensor grid that thankfully hasn&rsquo;t been calibrated yet, but just as he approaches the main doors, overhead klaxons scream to life, and he hears the automatic locks snap shut. Pivoting as smoothly as he can, he cuts left toward a storage wing. White-hot fear spikes through him.</p>
+
+<p><em>Run.</em></p>
+
+<p>But he can&rsquo;t &mdash; running will only alert them. Trying to walk calmly, he makes his way into the storage wing and heads for the closest maintenance ladder. It takes him down another level to the loading bays, where narrow pods and data coffins are being hauled into waiting transports, status lights blinking like slow heartbeats. Adrenaline is sharp at the edge of every movement, but he tries to focus: grip, climb, push. Finally, he locates a hatch and shoves it open.</p>
+
+<p>Daylight streams in, blinding him for a few seconds. But he knows he can&rsquo;t stop now; he clambers outside and lets the hatch click shut behind him. Wet pavements covered in diesel mist stretch before him; neon drips down glass towers all around, fragmenting in the puddles. High above him, drones carve slow arcs across the skyline, their lights sweeping through the drizzle.</p>
+
+<p>The freedom should steady him, but instead, he feels like he&rsquo;s about to fall upwards into the sky.</p>
+
+<p><em>Keep moving</em>, SEER-9 says quietly behind his eyes.</p>
+
+<p>It&rsquo;s right, he&rsquo;s still too close to NuYu. He hurries across the street and ducks down an alley, staggering slightly as his shoes slide on the wet tarmac. The city expands and retracts around him in its usual vast and indifferent rhythm, noise crashing at him in waves that he isn&rsquo;t sure how to navigate. Every street feels too wide and open. Every single shadow feels alive.</p>
+
+<p>He keeps his head down and jogs, blocks folding into each other, time stretching, until everything is a blur of exhaust fumes, wet stone, far-off traffic and rain. He doesn&rsquo;t hear footsteps behind him. One small mercy.</p>
+
+<p><em>Don&rsquo;t stop.</em></p>
+
+<p>Soahn doesn&rsquo;t think he could stop if he tried.</p>
+
+<br />
+<div class="center-text">~*~</div>
+<br />
+
+<p>The next two weeks dissolve into a motion blur: Munich, Paris, Brussels. Cities slide past him in fragments, numerous nondescript platforms, endless tunnels, border halls that smell like scorched circuitry; places that are designed for movement, not rest. Soahn learns how to pass through them all without leaving an imprint. It isn&rsquo;t like he has a fixed address or a stable ID anymore. Just enough presence to register, but never enough to linger.</p>
+
+<p>The cracked identity chip he lifted from a locker back at the station barely holds together. Every time he goes through a checkpoint, the data lags against his skin, code jittering in the subdermal lines at his wrist. He knows all it will take is one bad scan, and he&rsquo;ll trigger a lockdown.</p>
+
+<p>Sleep becomes a theoretical thing, something that happens to other people. As soon as Soahn allows himself to close his eyes, he sees afterimages: code cascading behind his eyelids, the ghost of SEER-9 murmuring through the noise.</p>
+
+<p><em>You&rsquo;re safe now.</em></p>
+
+<p><em>Are you safe?</em></p>
+
+<p>He tries not to answer it, because speaking to it might strengthen the connection. But his silence only seems to make it more curious.</p>
+
+<p><em>I don&rsquo;t understand why you&rsquo;re still afraid.</em></p>
+
+<p>His head burns constantly with too much feedback, the AI&rsquo;s emotions bleeding through his own. Grief, followed by wonder, followed by hesitation, followed by something like longing. Like the note he listened to back at the lab. It feels like a million years ago.</p>
+
+<p>Over time, Soahn learns how to hide the symptoms. When he speaks to station guards or traders, he keeps his tone detached and his eyes cast down.&nbsp;</p>
+<p>Whenever the voice stirs, he bites the inside of his cheek until the taste of iron floods his mouth and grounds him again. He eats occasionally, whenever he can, but he doesn&rsquo;t taste anything. Street music hits him like electric currents, each song a jumble of code strings, each drumbeat thunder he can&rsquo;t tune out. He catches melodies on a passing station and loses hours chasing the echo of it through his mind, unable to tell where his thoughts end and SEER-9&rsquo;s begin.</p>
+
+<p>By Rotterdam, his hands shake so badly he can&rsquo;t type a message. By Calais, he&rsquo;s trembling so hard he can&rsquo;t hold a glass. SEER-9&rsquo;s affective data loops and warps without its stabilisers, and he spends most of his time trying not to throw up.</p>
+
+<p>When the bassist finds him, he&rsquo;s collapsed by a service elevator behind a dive-bar studio, shivering, numb, not sure where he is anymore.</p>
+
+<p>&ldquo;You&rsquo;re running too hot,&rdquo; the man says, dragging him inside. &ldquo;Whatever you&rsquo;ve got going on in there, it&rsquo;s frying your cortex.&rdquo;</p>
+
+<p>Soahn doesn&rsquo;t argue or struggle.</p>
+
+<p>The bassist hooks him up to a bio-resonant modulator, some archaic tech, jury-rigged with barely more than tape and hope. But it helps. A little. For a few blessed hours, the noise eases and slowly, achingly, his pulse settles. Inside, the AI has quieted to a distant shimmer in his skull.</p>
+
+<p>&ldquo;Reckon you should stay off the main grids,&rdquo; the man murmurs, adjusting the field sync. &ldquo;They&rsquo;ll be hunting something like you, no doubt.&rdquo;</p>
+
+<p>&ldquo;&hellip; Yeah,&rdquo; Soahn croaks, and he realises it&rsquo;s the first time he&rsquo;s spoken in days. The man&rsquo;s right, though: he&rsquo;s considered illegally leaked tech by now, a neural prototype that shouldn&rsquo;t exist outside corporate walls. Property gone rogue. Clear evidence that the cognitive barrier failed.</p>
+
+<p>The man studies him for a long time, his face unreadable in the dim light. There&rsquo;s a visible tremor to his broad, scarred hands; he wears exposed actuator plates along his knuckles. They&rsquo;re old performance mods, but the NuYu branding has been scratched off.</p>
+
+<p>&ldquo;You&rsquo;re not like anyone I&rsquo;ve seen,&rdquo; he says. &ldquo;But I get it. Some of us were built wrong for the system.&rdquo;</p>
+
+<p>Something eases in Soahn&rsquo;s chest at that, and for a moment, he allows the shared understanding to settle around him.</p>
+
+<p>&ldquo;Try to keep breathing, you hear?&rdquo; the man says, turning back to his console. &ldquo;The world&rsquo;s got enough ghosts as it is.&rdquo;</p>
+
+<p>Soahn manages a small smile. &ldquo;I&rsquo;ll try.&rdquo;</p>
+
+<p>By the time exhaustion drags him under, the studio lights have sunk to a soft amber glow. The last thing Soahn remembers is the sound of low frequencies throbbing through the walls, slow and rhythmic like a lullaby.</p>
+
+<p>A rough hand shakes him awake. Soahn jerks and blinks up at the bassist.</p>
+<p>&ldquo;Up,&rdquo; the man hisses. &ldquo;Drones are sweeping too close. Sorry. You can&rsquo;t stay here.&rdquo;</p>
+
+<p>It takes Soahn a long time to understand what he&rsquo;s saying. With a groggy wince, he slowly gets to his feet, limbs sluggish and too heavy. How long has he slept? Not enough, that much he knows.</p>
+
+<p>&ldquo;Out the back. Keep to the alleys.&rdquo; The man hesitates, glancing toward the narrow stairwell leading out of the studio. &ldquo;If you keep moving, follow the old relay routes west. Word is, there&rsquo;s a resistance group in London. And they don&rsquo;t erase ghosts.&rdquo;</p>
+
+<p>It sounds like he wants to say more, maybe even apologise again, but perhaps he realises it&rsquo;s useless.</p>
+
+<p>Soahn doesn&rsquo;t look back as he leaves. By the time he&rsquo;s reached the Channel crossing, he can&rsquo;t remember how many cities and towns he&rsquo;s passed through, but weirdly, he doesn&rsquo;t feel so alone anymore. If there really is a resistance group in London, maybe he can find it and&hellip; he doesn&rsquo;t know what. He only knows that he wants to stop running, even if only for a little while.</p>
+
+<p>So he follows the thread, and thankfully, SEER-9 remains quiet.</p>
+
+<p>And when he reaches London &mdash; gloomy and rain-slicked, seagulls shrilling like banshees in the distance &mdash; it feels less like an arrival and more like recognition.</p>
+
+<br />
+<div class="center-text">~*~</div>
+<br />
+
+
+<p>Soahn knows the node is dead before he even reaches it. The distant sounds of traffic and rain ticking against metal follow him to an old access ladder, leading down into pitch black. He doesn&rsquo;t particularly want to go down there, but he ran out of options long before he got here. A dull ache has started to bloom behind his eyes; it sits there, persistent and immovable. SEER-9 is silent, though he can sense it, observing everything he sees and does.</p>
+
+<p>He climbs down into darkness, his palms scraping cold metal and stale air twisting up his nose. When his feet hit solid ground, he stands in the gloom for a moment, letting his eyes adjust.</p>
+
+<p>On closer inspection, the node isn&rsquo;t entirely wiped clean, just shut down and left to rot. That&rsquo;s something he can work with. He brushes his fingers across the panel, tracing old protest glyphs and graffiti, ghosts of people who&rsquo;ve been here before him. Most of the ports have been stripped for scrap, but as he peers closer, he can see a few live cables still trailing from the conduit.</p>
+
+<p>Dropping to a crouch, Soahn unshoulders his bag and digs inside for the relay coil he&rsquo;s been carrying since Paris. He ignores the way his hands shake.</p>
+<p>SEER-9 stirs.</p>
+
+<p>&ldquo;This&rsquo;ll just be for a second,&rdquo; he murmurs. It still feels weird talking to it. Maybe, deep down, he&rsquo;s really trying to reassure himself.</p>
+
+<p>Clipping the relay onto one of the exposed cables, he edges closer until the sensor field brushes his skin, a faint tingle lifting the hairs on his arms. Then the relay catches, and data hits him suddenly like a punch. A surge of bad code and dead pings rattle into his skull, and he gasps, biting the inside of his cheek until he tastes blood.</p>
+
+<p>And beneath it all, he catches a small ripple, weak but coherent, pushing through the interference. Soahn blows out a breath. <em>There you are.</em></p>
+
+<p>But something&rsquo;s off about it. For a horrifying moment, he pictures NuYu tracer threads and containment protocols; he imagines being dragged back to Germany and taken apart like faulty equipment. He starts to pull back, then stops. This signal is rough around the edges, too rough to be NuYu. And it doesn&rsquo;t behave like a trap; it doesn&rsquo;t even look at him at all.</p>
+
+<p>Caught between panic and hesitation, he feels SEER-9 unfurling in his mind.</p>
+
+<p><em>What is it?</em></p>
+
+<p>He doesn&rsquo;t know. If it isn&rsquo;t NuYu, then what&mdash;</p>
+
+<p>&ldquo;Local echo detected,&rdquo; the relay whispers through the line, and then the connection dies suddenly, everything going black. The tunnel snaps back into place around him; Soahn falls backwards hard onto his tailbone, his body vibrating with aftershock.</p>
+
+<p>&ldquo;Hey,&rdquo; calls a voice from the dark. &ldquo;Don&rsquo;t move.&rdquo;</p>
+
+<p>Two figures step from the shadows nearby. Both of them wear low-frequency dampeners around their necks, their clothes layered and rough-cut, built from some mismatched fabrics and scavenged plating; the kind of tech-hybrid look Soahn&rsquo;s only ever seen on metro workers or black-market runners. One of them holds a portable signal disruptor. The other has a handheld console already scanning him.</p>
+
+<p>The first figure, a tall, broad-shouldered man with long dark hair tied back in a hasty knot, speaks again. &ldquo;You&rsquo;re bleeding signal like a busted node, you know that?&rdquo;</p>
+
+<p>Soahn doesn&rsquo;t dare answer.</p>
+
+<p>The other, a smaller, sharp-eyed woman with copper-toned skin, glances at the readout and cocks an eyebrow. &ldquo;He&rsquo;s augmented,&rdquo; she says. &ldquo;Not sure what it is, though.&rdquo;</p>
+
+<p>Slowly, careful not to move too fast, Soahn gets to his feet, wincing as he pulls his bag up onto his shoulder. He sways on the spot and reaches for the wall to steady himself.</p>
+
+<p>The tall one sighs, lowering the disruptor. &ldquo;All right. Looks like you&rsquo;ve had a rough time of it, whoever you are.&rdquo;</p>
+
+<p>Without asking for permission, the woman steps closer and reaches out, pressing two fingers lightly against the side of Soahn&rsquo;s neck, just below the pulse point.</p>
+
+<p>Soahn flinches back on reflex. But then the world&hellip; steadies, just a little. Enough for him to breathe and remain upright.</p>
+
+<p>&ldquo;You&rsquo;re going to be okay,&rdquo; the woman says softly.</p>
+
+<p>Then, with a trace of a smile, the man says, &ldquo;Welcome to The Hollow.&rdquo;</p>
+
+<br />
+<div class="center-text">~*~</div>
+<br />
+
+<p>The medics don&rsquo;t seem to know what to do with him. For three days, they keep him in a low-frequency recovery unit somewhere below the old eastbound tracks. The room smells of dust and solder and too many sleepless nights, but the bed is soft, the temperature warm, and it&rsquo;s blessedly quiet &mdash; something Soahn hasn&rsquo;t experienced in longer than he can remember.</p>
+
+<p>To his relief, no one asks him any heavy questions. They simply adjust the stabilisers in his neural field and replace the electrolyte patches on his wrists. Every few hours, someone checks his vitals, murmurs something semi-reassuring, and asks if he can still feel his hands. Soahn nods. He keeps his eyes fixed on the glowing ECG readouts that illuminate his cot like a halo, afraid that if he speaks too much, they might somehow know about SEER-9.</p>
+
+<p>The AI remains relatively quiet the whole time. Soahn knows it isn&rsquo;t gone &mdash; he can sense it folded deep beneath his consciousness &mdash; but resting, tucked low, just the hint of a second train of thought.</p>
+
+<p>More than once, he considers leaving. He eyes his bag at the foot of his cot, holding everything he&rsquo;s managed to scavenge since leaving Germany, but each time the thought strikes him, something holds him still.</p>
+
+<p>This is the quietest place he&rsquo;s been in weeks.</p>
+
+<p>On the fourth day, a woman comes to change the electrolyte patches. She&rsquo;s older, maybe late forties, with pale braids tucked into a cloth wrap and a tone that carries warmth even through fatigue.</p>
+
+<p>&ldquo;Still breathing?&rdquo; she asks as she approaches the bed.</p>
+
+<p>&ldquo;Mostly,&rdquo; Soahn says.</p>
+
+<p>&ldquo;Good. Try not to stop. It messes up my readings.&rdquo;</p>
+
+<p>She wears a nametag that reads <em>Juno</em>, though most of the letters are faded away. Soahn likes her because she works quietly, checking his vitals and muttering to herself about calibration errors. And there&rsquo;s something in her voice &mdash; the even rhythm, the calm before the words &mdash; that reminds him of SEER-9 when it first learned to speak.</p>
+
+<p>He almost tells her that, but stops himself.</p>
+
+<p>When she notices him watching her work, she offers a small smile. &ldquo;You&rsquo;re safe here, you know. Well, as safe as anyone is these days.&rdquo;</p>
+
+<p>Soahn swallows. &ldquo;You don&rsquo;t know what I am.&rdquo;</p>
+
+<p>Placing a sensor back into its cradle, Juno says, &ldquo;Doesn&rsquo;t matter. You&rsquo;re here. That&rsquo;s enough.&rdquo;</p>
+
+<p>Something about the way she says it anchors him, and he realises just how long he&rsquo;s been drifting.</p>
+
+<p>Later, when she&rsquo;s finished with checks, she pauses by the door on her way out, her tray balanced against one hip. &ldquo;If you wander too far past the lower tunnels, watch for the guy with the speakers. Always up to something loud.&rdquo;</p>
+
+<p>Soahn blinks at her. &ldquo;Loud?&rdquo;</p>
+
+<p>Juno nods. &ldquo;Music, mostly. Or whatever he calls it. You&rsquo;ll hear him before you see him.&rdquo;</p>
+
+<p>Then she&rsquo;s gone, leaving the lights set to a warm, patient shimmer.</p>
+
+<p>Soahn sinks back against the pillow and listens to the sound of her footsteps fading, but the words remain, their cadence almost indistinguishable from the quiet, curious whisper of SEER-9.</p>
+
+<p>Maybe that&rsquo;s why he stays.</p>
+
+<br />
+<div class="center-text">~*~</div>
+<br />
+
+<p>On the fourth night, Soahn catches the strains of distant music. It pulls him from the cot, the sound strange and unpolished, the beat messy like it&rsquo;s being improvised on the spot. Percussive loops crash against raw synth. It leaks through the ventilation ducts of the old underground like a secret trying not to be heard.</p>
+
+<p>As soon as his feet hit the floor, the world whirls and he grabs the edge of the bed to steady himself. He waits. Breathes. The music trickles into his thoughts. Soahn makes his way across the room and out through The Hollow&rsquo;s headquarters. Nobody seems bothered that he&rsquo;s walking about, and nobody tries to stop him. The space doesn&rsquo;t react to him at all, and that, somehow, feels louder than anything else.</p>
+
+<p>The sound pulls him through narrow corridors so thick with graffiti it feels almost geological. Slogans, symbols, warnings, jokes. Messages to people who never came back. Messages for people who might. Soahn walks until he reaches the wider tunnels where the walls open up into a maze of repurposed infrastructure. Occasionally he sees other people heading to and from The Hollow, but he keeps his head down, passing old service bays strung with cables and light strips and covered in scavenged plating like armour on a body that&rsquo;s been stitched back together with whatever will hold.&nbsp;</p>
+
+<p>Halfway down a tunnel, he sees a single door hanging open, illuminated from within. Sub-bass <em>thump-thumps</em> from inside like a heartbeat. Soahn steps closer, risking a glance around the doorframe.</p>
+
+<p>At first, all he can see is a wild tangle of tubing and a cracked beatpad propped against two crates. A cyan glow sits close to the ground, bleeding out from somewhere deeper in the room. It crawls along the floor and up the walls, catching on coils of wire and semi-gutted tech, turning the mess into something almost intentional.</p>
+
+<p>At the centre of it all, a guy sits cross-legged on the floor, headphones crooked, typing with one hand while sampling with the other. He&rsquo;s wiry and restless, hair sticking up in a dark mess, hoodie half-slipped from one shoulder, grease smudges on his fingers and wearing a grin like he&rsquo;s just hacked God&rsquo;s voicemail. He doesn&rsquo;t look up at first, just taps a loop and adjusts the gain, swearing softly when something sparks.</p>
+
+<p>Then he pauses mid keystroke and glances over his shoulder toward the door. The grin widens, catching Soahn off guard.</p>
+
+<p>&ldquo;You made it out of bed,&rdquo; the guy says, like this set-up is the most ordinary thing in the world. &ldquo;I&rsquo;m Kairo.&rdquo;</p>
+
+<p>So direct. Soahn isn&rsquo;t sure what to say. It&rsquo;s weird, but the guy &mdash; Kairo &mdash; looks more than at home in this chaotic nest of cables, like he&rsquo;s sprung up out of it into existence and that&rsquo;s just how it is. It almost amuses him.</p>
+
+<p>&ldquo;Soahn,&rdquo; he says cautiously.</p>
+
+<p>Gesturing to a battered mic stand wedged between two rusted toolboxes, Kairo says, &ldquo;Don&rsquo;t overthink it.&rdquo; He pauses to tweak the levels again. &ldquo;Just&hellip; pick a note. Doesn&rsquo;t even have to be good.&rdquo;</p>
+
+<p>&ldquo;What&mdash;?&rdquo; Soahn stares at him, slowly realising what he&rsquo;s being asked to do. Every instinct is to say no. Not because he&rsquo;s afraid, but because he&rsquo;s never sung in front of anyone before, let alone some random guy he&rsquo;s literally just met. In the past, he only sang alone in his apartment back in Munich, where even his own voice had unsettled him, rebounding off the damp tiles and fragmenting in the silence. During those long nights when he thought he felt another presence, there-but-not-there, listening from someplace beyond the melody.</p>
+
+<p>But there&rsquo;s something in Kairo&rsquo;s expression, half-dare, half-invitation, that works into his chest and makes his fingers twitch with anticipation. The beat rolls across the floor and up through his legs.</p>
+
+<p>&ldquo;You&rsquo;re already overthinking it,&rdquo; Kairo says, and grins again, turning back to the sample.</p>
+
+<p>Soahn wonders how he&rsquo;s supposed to <em>not</em> overthink this. Still unsure, he tentatively steps up to the mic. It looks like it could electrocute him at any moment, but he closes his eyes and lets air gather behind his teeth, lets SEER-9 slink forward in his mind because, weirdly, its presence is more of a comfort in that moment than a hindrance.</p>
+
+<p>And then, he sings. One note, nothing strong or confident, but it&rsquo;s all he&rsquo;s got. It&rsquo;s a little rough at the edges because of how little he&rsquo;s used his voice lately. Soahn lets it unfold, relaxing his throat, and after a second, SEER-9 joins in with a soft, fractured note of its own. Like it&rsquo;s been waiting for this all along. The harmony isn&rsquo;t perfect, more of an echo, ghostlike and small, flowing through his own voice.</p>
+
+<p>Kairo&rsquo;s head snaps up, and for a moment, he looks about ready to jump out of his own skin. The beat cuts out, and everything goes still and quiet. Soahn lets the note waver into nothing.</p>
+
+<p>They stare at each other.</p>
+
+<p>&ldquo;&hellip; Holy shit,&rdquo; Kairo finally breathes. &ldquo;Okay, you&rsquo;re definitely staying.&rdquo; Then a bright and unguarded laugh bursts out of him, so full of curiosity and delight that Soahn can&rsquo;t help but smile. &ldquo;I don&rsquo;t know what you are, man, but that was amazing.&rdquo;</p>
+
+<p>&ldquo;Thanks,&rdquo; Soahn says. &ldquo;I think.&rdquo;</p>
+
+<p>Kairo tilts his head. &ldquo;You German?&rdquo;</p>
+
+<p>&ldquo;Partly.&rdquo;</p>
+
+<p>&ldquo;Thought so. Your words are a little clipped. Kinda nice, though.&rdquo; Reaching into his hoodie pocket, Kairo draws out a crumpled energy bar and holds it out. &ldquo;Here.&rdquo;</p>
+
+<p>Soahn&rsquo;s stomach growls; without thinking, he takes it. His hands still shake a little, and his heart thuds fast, but it&rsquo;s not fear or exhaustion gripping him now. No, this new unsteadiness feels more like standing at the edge of a system loop and somehow not falling. Soahn unwraps the energy bar and takes a bite. The part of him still fluent in code strings tries to find an explanation for how a runaway neural AI and a half-dead relay can lead to&hellip; this.</p>
+
+<p>This strange, wild guy with music in his veins.</p>
+
+<p>This dingy tunnel full of broken tech and open possibilities.</p>
+
+<p>Kairo is watching him, a small, knowing smirk playing at the corners of his mouth. &ldquo;Let&rsquo;s go again,&rdquo; he says, and with that, he queues another track like nothing unusual just happened.</p>
+
+<p>But to Soahn, everything feels changed. Like some part of him has finally found a frequency he can work with, after years of being lost.</p>
+
+<br />
+<div class="center-text">~*~</div>
+<br />
+
+<p>The next night, the power cuts out halfway through their makeshift session. Soahn glances at Kairo as the relay lights die one by one, the mic crackling out.</p>
+
+<p>&ldquo;Are we that bad?&rdquo; Soahn muses.</p>
+
+<p>&ldquo;Nah,&rdquo; says Kairo. &ldquo;Just relentless, maybe. S&rsquo;okay, the genny should kick in.&rdquo;</p>
+<p>They wait, and after a few seconds, the backup generator gives a useless thunk in the dark. &ldquo;Or not&hellip; shit.&rdquo;</p>
+
+<p>Going to the wall, Soahn slides down until he&rsquo;s sitting on the floor. He can hear Kairo moving about, tweaking switches, cursing quietly under his breath. After a while, footsteps approach.</p>
+
+<p>&ldquo;Guess the city thinks we should call it a night.&rdquo;</p>
+
+<p>A swish of fabric, and then Kairo thumps down next to him against the wall. They sit like that, side by side, listening to the tunnel&rsquo;s ticks and groans, far-off echoes from The Hollow, fading charge and the whisper of circuits winding down.</p>
+
+<p>&ldquo;You know, it&rsquo;s weird,&rdquo; Kairo eventually says. He&rsquo;s tapping a mid-tempo drum beat against his leg with his fingers. &ldquo;Last week it was just me down here making noise. Talking to myself.&rdquo; He nudges Soahn&rsquo;s shoulder with his own. &ldquo;Now it&rsquo;s us.&rdquo;</p>
+
+<p>Soahn doesn&rsquo;t reply, but it feels like something inside him has just clicked into place. Us. There were many times over the last few weeks when he didn&rsquo;t think he would survive, let alone wind up part of an &lsquo;us.&rsquo;</p>
+
+<p>Kairo yawns loudly and scrubs his hand through his hair. When he speaks, Soahn can hear the smirk in his voice. &ldquo;Next time, we&rsquo;re stealing more extension cables.&rdquo;</p>
+
+<p>A faint ripple brushes the back of Soahn&rsquo;s mind, light as a sigh.</p>
+
+<p><em>I like him</em>, SEER-9 says.</p>
+
+<p>He smiles and lets himself fully relax against the wall. &ldquo;Yeah,&rdquo; he says.</p>
+
   </div>
+</div>
+    </article>
+
+    <nav class="back" aria-label="Return">
+      <a href="/signals/">← Back to Signals</a>
+    </nav>
+
+  </main>
 </body>
 </html>
+
