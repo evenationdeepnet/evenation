@@ -783,6 +783,105 @@
   *{ animation:none !important; transition:none !important; }
 }
 
+    /* --- Bias Poll tile --- */
+.bias-poll .bias-lede{
+  margin-bottom: 10px;
+}
+
+.bias-actions{
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.bias-btn{
+  appearance: none;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.86);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .10em;
+  text-transform: uppercase;
+  padding: 10px 10px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: transform .14s ease, border-color .14s ease, background .14s ease;
+}
+
+.bias-btn:hover{
+  transform: translateY(-1px);
+  background: rgba(255,255,255,.08);
+  border-color: rgba(120,255,255,.22);
+}
+
+.bias-btn:focus-visible{
+  outline: 2px solid rgba(120,255,255,.55);
+  outline-offset: 3px;
+}
+
+.bias-btn.is-picked{
+  border-color: rgba(255,90,225,.32);
+  box-shadow: 0 0 0 1px rgba(255,90,225,.16), 0 12px 35px rgba(0,0,0,.25);
+}
+
+.bias-status{
+  margin-top: 12px;
+}
+
+.bias-results{
+  margin-top: 10px;
+  display:grid;
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.bias-row{
+  display:grid;
+  grid-template-columns: 72px 1fr 36px;
+  gap: 10px;
+  align-items:center;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: rgba(255,255,255,.72);
+}
+
+.bias-bar{
+  height: 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.20);
+  overflow:hidden;
+  position: relative;
+}
+
+.bias-fill{
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, rgba(120,255,255,.40), rgba(255,90,225,.35));
+  border-radius: 999px;
+  transition: width .35s ease;
+}
+
+.bias-row.is-leader .bias-fill{
+  background: linear-gradient(90deg, rgba(120,255,170,.45), rgba(120,255,255,.40));
+}
+
+.bias-note{
+  margin-top: 10px;
+  font-size: 12px;
+}
+
+/* slightly nicer layout for 5 buttons: last one spans */
+.bias-actions .bias-btn:last-child{
+  grid-column: 1 / -1;
+}
+
+
   </style>
 </head>
 <body>
@@ -985,13 +1084,28 @@ If you found this place, you’re already part of the signal.
          <p> <a href="/evensignalalbum.html">Listen</a></p>
         </article>
 
-        <article class="tile" style="grid-column: span 4;">
-          <h3>Old favourites</h3>
-          <p><span class="mono">GHOSTMODE</span> // heavy bass, glitch FX, cinematic chorus drop.</p>
-          <p><a href="/evenencryptedalbum.html">Queue</a></p><br />
-          <p><span class="mono">Signal 17</span> // emotional, experimental.</p>
-          <p><a href="/evenblacklistalbum.html">Queue</a></p>
-        </article>
+<article class="tile bias-poll" style="grid-column: span 4;">
+  <h3>Bias poll</h3>
+
+  <p class="bias-lede">Pick your bias. No judgement. (Lies. We will judge lovingly.)</p>
+
+  <div class="bias-actions" role="group" aria-label="E.V.E.N bias poll">
+    <button class="bias-btn" data-choice="Rayne" type="button">Rayne</button>
+    <button class="bias-btn" data-choice="Kairo" type="button">Kairo</button>
+    <button class="bias-btn" data-choice="Minjae" type="button">Minjae</button>
+    <button class="bias-btn" data-choice="Soahn" type="button">Soahn</button>
+    <button class="bias-btn" data-choice="Onyx" type="button">Onyx</button>
+  </div>
+
+  <p class="bias-status mono muted" id="biasStatus">Fetching signal…</p>
+
+  <div class="bias-results" id="biasResults" aria-live="polite"></div>
+
+  <p class="bias-note muted">
+    One vote per device. (Unless you open an incognito tab like a gremlin.)
+  </p>
+</article>
+
 
       </div>
     </section>
@@ -1120,6 +1234,123 @@ If you found this place, you’re already part of the signal.
       }, 1000);
     })();
   </script>
+
+  <script>
+(() => {
+  const API = "https://even-bias-poll.joliverdesigns.workers.dev";
+  const VOTED_KEY = "even_bias_voted_v1";
+
+  const statusEl = document.getElementById("biasStatus");
+  const resultsEl = document.getElementById("biasResults");
+  const buttons = Array.from(document.querySelectorAll(".bias-btn"));
+
+  function setStatus(text){ statusEl.textContent = text; }
+
+  function getPicked(){
+    return localStorage.getItem(VOTED_KEY);
+  }
+
+  function markPicked(choice){
+    buttons.forEach(b => b.classList.toggle("is-picked", b.dataset.choice === choice));
+  }
+
+  function safeNumber(n){
+    const x = Number(n);
+    return Number.isFinite(x) ? x : 0;
+  }
+
+  function renderResults(counts){
+    const entries = buttons.map(b => b.dataset.choice).map(name => [name, safeNumber(counts?.[name])]);
+    const total = entries.reduce((sum, [,v]) => sum + v, 0);
+    const max = Math.max(1, ...entries.map(([,v]) => v));
+
+    const leaderVal = Math.max(...entries.map(([,v]) => v));
+    resultsEl.innerHTML = "";
+
+    entries.forEach(([name, value]) => {
+      const pct = Math.round((value / max) * 100);
+      const isLeader = value === leaderVal && leaderVal > 0;
+
+      const row = document.createElement("div");
+      row.className = "bias-row" + (isLeader ? " is-leader" : "");
+
+      row.innerHTML = `
+        <div class="bias-name">${name}</div>
+        <div class="bias-bar" aria-label="${name} ${value} votes">
+          <div class="bias-fill" style="width:${pct}%"></div>
+        </div>
+        <div class="bias-count">${value}</div>
+      `;
+
+      resultsEl.appendChild(row);
+    });
+
+    if (total === 0){
+      setStatus("No votes yet. Be the first troublemaker.");
+    } else {
+      setStatus(`Signal received. Total votes: ${total}.`);
+    }
+  }
+
+  async function fetchResults(){
+    const res = await fetch(`${API}/results`, { method: "GET" });
+    if (!res.ok) throw new Error("Failed to fetch results");
+    return res.json();
+  }
+
+  async function sendVote(choice){
+    const res = await fetch(`${API}/vote`, {
+      method: "POST",
+      headers: { "Content-Type":"application/json" },
+      body: JSON.stringify({ choice })
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err?.error || "Vote failed");
+    }
+    return res.json();
+  }
+
+  async function init(){
+    const picked = getPicked();
+    if (picked) markPicked(picked);
+
+    try {
+      const data = await fetchResults();
+      renderResults(data.counts || {});
+    } catch (e){
+      setStatus("Signal lost. Try refreshing.");
+    }
+
+    buttons.forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const already = getPicked();
+        if (already){
+          setStatus(`You already voted for ${already}. (Loyalty noted.)`);
+          markPicked(already);
+          return;
+        }
+
+        const choice = btn.dataset.choice;
+        setStatus(`Voting for ${choice}…`);
+
+        try {
+          const data = await sendVote(choice);
+          localStorage.setItem(VOTED_KEY, choice);
+          markPicked(choice);
+          renderResults(data.counts || {});
+          setStatus(`Vote locked: ${choice}.`);
+        } catch (e){
+          setStatus(`Vote failed. ${e.message}`);
+        }
+      });
+    });
+  }
+
+  init();
+})();
+</script>
+
 </body>
 </html>
 
