@@ -1231,14 +1231,17 @@ If you found this place, you’re already part of the signal.
     })();
   </script>
 
-  <script>
+<script>
 (() => {
   const API = "https://even-bias-poll.joliverdesigns.workers.dev";
   const VOTED_KEY = "even_bias_voted_v1";
+  const COOLDOWN_MS = 1200;
 
   const statusEl = document.getElementById("biasStatus");
   const resultsEl = document.getElementById("biasResults");
   const buttons = Array.from(document.querySelectorAll(".bias-btn"));
+
+  let coolingDown = false;
 
   function setStatus(text){ statusEl.textContent = text; }
 
@@ -1246,8 +1249,19 @@ If you found this place, you’re already part of the signal.
     return localStorage.getItem(VOTED_KEY);
   }
 
+  function setPicked(choice){
+    localStorage.setItem(VOTED_KEY, choice);
+  }
+
   function markPicked(choice){
     buttons.forEach(b => b.classList.toggle("is-picked", b.dataset.choice === choice));
+  }
+
+  function setButtonsDisabled(disabled){
+    buttons.forEach(b => {
+      b.disabled = !!disabled;
+      b.setAttribute("aria-disabled", disabled ? "true" : "false");
+    });
   }
 
   function safeNumber(n){
@@ -1309,12 +1323,15 @@ If you found this place, you’re already part of the signal.
 
   async function init(){
     const picked = getPicked();
-    if (picked) markPicked(picked);
+    if (picked){
+      markPicked(picked);
+      setButtonsDisabled(true);
+    }
 
     try {
       const data = await fetchResults();
       renderResults(data.counts || {});
-    } catch (e){
+    } catch {
       setStatus("Signal lost. Try refreshing.");
     }
 
@@ -1324,20 +1341,30 @@ If you found this place, you’re already part of the signal.
         if (already){
           setStatus(`You already voted for ${already}. (Loyalty noted.)`);
           markPicked(already);
+          setButtonsDisabled(true);
           return;
         }
+
+        if (coolingDown) return;
 
         const choice = btn.dataset.choice;
         setStatus(`Voting for ${choice}…`);
 
+        coolingDown = true;
+        setButtonsDisabled(true);
+
         try {
           const data = await sendVote(choice);
-          localStorage.setItem(VOTED_KEY, choice);
+          setPicked(choice);
           markPicked(choice);
           renderResults(data.counts || {});
           setStatus(`Vote locked: ${choice}.`);
         } catch (e){
           setStatus(`Vote failed. ${e.message}`);
+          // If vote failed, re-enable so they can try again.
+          setButtonsDisabled(false);
+        } finally {
+          setTimeout(() => { coolingDown = false; }, COOLDOWN_MS);
         }
       });
     });
@@ -1346,6 +1373,7 @@ If you found this place, you’re already part of the signal.
   init();
 })();
 </script>
+
 
 </body>
 </html>
