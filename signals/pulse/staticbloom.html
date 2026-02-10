@@ -1,126 +1,363 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Static Bloom | Pulse | E.V.E.N</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #e0e0e0;
-      color: #000;
-      font-family: 'IBM Plex Mono', monospace;
-      line-height: 1.6;
-      background-image: url('../static-noise.png');
-      background-size: cover;
+    :root{
+      color-scheme: light;
+
+      /* warm grey / paper layer */
+      --bg: #f2f1ee;
+      --bg2:#eceae6;
+
+      --panel: rgba(20,20,24,.06);
+      --panel2: rgba(20,20,24,.04);
+      --stroke: rgba(20,20,24,.12);
+
+      --text: rgba(18,18,20,.88);
+      --muted: rgba(18,18,20,.60);
+
+      /* restrained accents */
+      --accent: rgba(30,180,190,.85);   /* muted cyan */
+      --accent2: rgba(172,120,210,.55); /* lilac whisper */
+
+      --radius: 18px;
+      --radius2: 26px;
+      --shadow: 0 18px 70px rgba(0,0,0,.10);
+      --shadow2: 0 12px 40px rgba(0,0,0,.08);
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --serifish: ui-serif, Georgia, "Times New Roman", Times, serif;
     }
 
-    .container {
-      max-width: 800px;
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; min-height:100vh; }
+
+    body{
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(900px 420px at 20% 0%, rgba(30,180,190,.10), transparent 60%),
+        radial-gradient(900px 420px at 80% 0%, rgba(172,120,210,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      overflow-x:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+
+    /* subtle grain/noise */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(1px 1px at 18% 24%, rgba(0,0,0,.12), transparent 60%),
+        radial-gradient(1px 1px at 42% 62%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 78% 38%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 60% 80%, rgba(0,0,0,.08), transparent 60%);
+      opacity:.08;
+      filter: blur(.3px);
+      z-index:0;
+    }
+
+    .wrap{
+      max-width: 980px;
       margin: 0 auto;
-      padding: 4rem 2rem;
+      padding: 44px 20px 76px;
+      position:relative;
+      z-index:1;
     }
 
-    h1 {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 2.5rem;
-      color: #990066;
-      margin-bottom: 0.5rem;
+    /* header */
+    .head{
+      text-align:center;
+      margin-bottom: 18px;
     }
 
-    .id-tag {
-      font-size: 1rem;
-      color: #666;
-      margin-bottom: 2rem;
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.18em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.66);
     }
 
-    .glitch-divider {
-      width: 100%;
-      height: 2px;
-      background: linear-gradient(to right, #ff00ff, #00ffff);
-      margin: 2.5rem 0;
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 0 rgba(30,180,190,.25);
+      animation: pulse 2.6s infinite;
+      flex:none;
     }
 
-    .story p {
-      font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', sans-serif;
-      font-size: 1rem;
-      color: #000;
-      line-height: 1.6;
-      margin-bottom: 1rem; /* Adjust this to tighten or loosen paragraph spacing */
+    @keyframes pulse{
+      0%{ box-shadow: 0 0 0 0 rgba(30,180,190,.22); }
+      70%{ box-shadow: 0 0 0 12px rgba(30,180,190,0); }
+      100%{ box-shadow: 0 0 0 0 rgba(30,180,190,0); }
     }
 
-    .back-link {
-      color: #990066;
-      text-decoration: none;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1rem;
-      border: 1px solid #990066;
-      padding: 0.5rem 1rem;
-      display: inline-block;
-      margin-top: 3rem;
-      transition: 0.3s ease;
+    h1{
+      margin: 14px 0 8px;
+      font-size: clamp(32px, 4.6vw, 54px);
+      line-height: 1.06;
+      letter-spacing: -0.02em;
     }
 
-    .back-link:hover {
-      background: #00ffff;
-      color: #000;
+    .meta{
+      margin: 0 auto;
+      max-width: 70ch;
+      color: rgba(18,18,20,.62);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* story card */
+    .card{
+      margin-top: 22px;
+      border-radius: var(--radius2);
+      background: linear-gradient(180deg, rgba(255,255,255,.70), rgba(255,255,255,.52));
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(700px 240px at 25% 0%, rgba(30,180,190,.14), transparent 60%),
+        radial-gradient(700px 240px at 75% 0%, rgba(172,120,210,.12), transparent 60%);
+      opacity:.70;
+      pointer-events:none;
+    }
+
+    .card-inner{
+      position:relative;
+      z-index:1;
+      padding: 28px 28px 24px;
+    }
+
+    /* divider inside card */
+    .divider{
+      height: 1px;
+      background: linear-gradient(90deg, rgba(172,120,210,.40), rgba(30,180,190,.40));
+      opacity:.7;
+      margin: 16px 0 22px;
+    }
+
+    /* story typography */
+    .story{
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.9;
+      color: rgba(18,18,20,.84);
+    }
+
+    .story p{
+      margin: 0 0 16px;
+    }
+
+    .story em{ color: rgba(18,18,20,.86); }
+
+    /* optional little “file tag” row */
+    .filetag{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.62);
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.40);
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(18,18,20,.66);
+      letter-spacing:.06em;
+      white-space:nowrap;
+    }
+
+    /* --- SoundCloud block (Signals story pages) --- */
+.audio-block{
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px dashed rgba(18,18,20,.18);
+}
+
+.audio-label{
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(18,18,20,.62);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom: 10px;
+}
+
+.audio-label .dot{
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 rgba(30,180,190,.20);
+}
+
+.sc-embed{
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(18,18,20,.14);
+  background: rgba(255,255,255,.48);
+  box-shadow: 0 12px 40px rgba(0,0,0,.08);
+  height: 120px; /* matches your preferred compact player */
+}
+
+.sc-embed iframe{
+  display:block;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0;
+}
+
+    /* back nav */
+    .back{
+      margin-top: 18px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .back a{
+      text-decoration:none;
+      font-family: var(--mono);
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: rgba(18,18,20,.62);
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.55);
+      transition: .16s ease;
+    }
+
+    .back a:hover{
+      color: rgba(18,18,20,.82);
+      border-color: rgba(18,18,20,.22);
+      box-shadow: 0 12px 40px rgba(0,0,0,.10);
+      transform: translateY(-1px);
+    }
+
+    /* reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; }
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <h1>Static Bloom</h1>
-    <div class="glitch-divider"></div>
+  <main class="wrap">
 
-    <div class="story">
+    <header class="head">
+      <div class="kicker"><span class="dot" aria-hidden="true"></span> signals // pulse // recovered story</div>
+      <h1>Static Bloom</h1>
+      <p class="meta">File integrity: partial. Playback: safe.</p>
+    </header>
 
-<p>The others were sleeping. Even in The Ghost Lines, downtime meant something: rest, cool darkness, the slow reset of systems and nerves alike.</p>
-<p>But Rayne didn&rsquo;t sleep.</p>
-<p>The makeshift studio hummed with a low, fractured loop. Three broken audio decks connected by a tangled pulse of rewired cables. It was messy. Glitchy. Beautiful.</p>
-<p>Rayne lingered in the doorway, standing watch the way Onyx would have if he was awake, though his vigilance was quieter—more listening than guarding.</p>
-<p>Kairo had fallen asleep mid-mix, half-sprawled across the floor, one hand still resting on a cracked touchscreen. His breathing was shallow and rapid, the cortical link at his temple shimmering faintly blue. Active.</p>
-<p>The audio loop he&rsquo;d been working on repeated—then, unexpectedly, morphed.</p>
-<p>Rayne tilted his head.</p>
-<p>New sound spooled through the speakers—not music exactly, but fragments: strings of syllables, data-glitches that sounded like speech yet weren’t meant to be decoded.</p>
-<p>Except Rayne could. Of course he could.</p>
-<p>He stepped closer, silently coaxing the new sounds.</p>
-<p>Kairo murmured something&mdash;half-gasped&mdash;and his hand twitched. The loop changed again. Layered. Warped.</p>
-<p>Rayne&rsquo;s internal translator parsed the audio feed.</p>
-<p>These weren&rsquo;t code strings. They were <em>lyrics</em>. Dream-lyrics, spoken mid-sync.</p>
-<p><em>&ldquo;The noise is quiet now...<br>We made it through the storm...<br>&hellip;Somehow...&rdquo;</em></p>
-<p>Even unconscious, Kairo was still composing.</p>
-<p>Rayne knelt beside him, careful not to distub his sleep.</p>
-<p>The floor was scattered with loose nodes and copper coil. A single neon line blinked across the interface. Blue-orange, timed to Kairo&rsquo;s breathing.</p>
-<p>Rayne reached out slowly and tapped the playback deck. The recording began.</p>
-<p><em>Light spreads, blooming at my fingertips,</br>
-We were the dark, now we’re the fire.</br>
-Every scar, a seed, a wire —</br>
-burning quiet, reaching higher...</em></p>
-<p>Rayne silently adjusted the gain, fed it through a soft layer of delay. Let it run again. And again.</p>
-<p>A song began to form. Not fully. Not yet.</p>
-<p>But the bones were there.</p>
-<p><br></p>
-<p>Eventually Kairo stirred, blinking awake, confused and groggy. He sat up sharply, almost headbutting Rayne's shoulder.</p>
-<p>The startle wasn't lost on Rayne. He hadn’t meant to unsettle him. Observation came naturally; it was how he learned things. Still, he filed the reaction away. Next time, more distance.</p>
-<p>&ldquo;Did I&hellip;&rdquo; Kairo paused, squinting. &ldquo;Was I talking?&rdquo;</p>
-<p>Rayne turned back to the mix. &ldquo;Yes.&rdquo;</p>
-<p>Brushing dust off his cheek, Kairo said, &ldquo;I was dreaming in waveform again, wasn&rsquo;t I?&rdquo; He rubbed the back of his neck, fingers brushing over the neural threads there&mdash;absent, automatic. &ldquo;It&rsquo;s been happening more. Like the music&rsquo;s running without me.&rdquo;</p>
-<p>&ldquo;You said something about light blooming.&rdquo; Rayne didn&rsquo;t know why the phrase made his chest tighten, like it belonged to something he'd never known but still missed.</p>
-<p>Kairo yawned hugely, and then grinned lopsided. &ldquo;That <em>sounds</em> like me.&rdquo;</p>
-<p>Rayne replayed the loop. &ldquo;Do you remember it?&rdquo;</p>
-<p>&ldquo;Nope.&rdquo;</p>
-<p>He added a quiet filter to the vocal track. A low shimmer beneath the words.</p>
-<p>&ldquo;You&rsquo;re building it,&rdquo; Kairo said, watching him. Not a question.</p>
-<p>Rayne finally looked up. &ldquo;Yes. It&rsquo;s beautiful.&rdquo;</p>
-<p>Kairo let the silence settle, then reached for the nearest interface. &ldquo;Let&rsquo;s finish it, then. Before it fades.&rdquo;</p>
-      
+    <article class="card" aria-label="Story container">
+      <div class="card-inner">
 
+        <div class="filetag" aria-label="File tags">
+          <span class="pill">pulse</span>
+          <span class="pill">kairo</span>
+          <span class="pill">rayne</span>
+        </div>
+
+        <div class="divider" aria-hidden="true"></div>
+
+        <div class="story">
+
+          <!-- Paste story paragraphs exactly as you have them -->
+<p>The others were asleep. Downtime in The Ghost Lines carried a certain type of gravity, where systems and nerves alike were given the chance to reset, to settle back into themselves instead of being dragged along by the city&rsquo;s endless momentum. But Rayne didn&rsquo;t sleep. During these strangely still moments, he often found himself listening to the soft rhythm of their breathing, sure proof that he wasn&rsquo;t alone down here. Other times, he wandered the tunnels, constructing maps in his mind and making note of relays that needed repairs &mdash; something he often mentioned to Onyx, who seemed to like fixing things.</p>
+<p>Tonight, though, Kairo had left a loop running on his audio deck, just a slow, soft beat that sounded like very distant thunder. Something about it caught Rayne&rsquo;s attention and he remained where he was beside the doorway, a position he had taken up habitually whenever everyone else was asleep.</p>
+<p>If Rayne were to guess, he would say that Kairo disliked absolute silence, since he almost always left some kind of music running, even when he slept. It was something that Rayne never asked him about, because everyone had their habits, and he figured if they didn&rsquo;t talk about them out loud they were probably private.&nbsp;</p>
+<p>That was fine. He had grown used to what they didn&rsquo;t say as much as what they did. There were still things he hadn&rsquo;t told the others, after all.</p>
+<p>Kairo&rsquo;s decks were lashed together with rewired cables, the connections imperfect and bleeding signal, which was pretty normal. As for Kairo himself, he lay curled up next to it with his head resting on his crumpled jacket. At the nape of his neck, his cortical threads shimmered gently, blue light rippling through them in uneven waves. Dream-state reactions.</p>
+<p>Rayne watched the light&rsquo;s unsynchronised rhythm for a while, mesmerised by the movement. He could feel the faintest vibration of the beat through the concrete at his feet. <em>Thump-thud, thump-thump, thump-thud.&nbsp;</em>The loop cycled again and again until it was familiar and Rayne could anticipate it. But then it suddenly dropped out, paused for a moment, then came back, only now it was skewed slightly. That was odd. Something in the signal had stuttered.</p>
+<p>He tilted his head, listening more carefully. After a few seconds, a new sound started to unspool through the speakers, this one more unstable and raw, an uncorrected leak. It was the kind of noise that made Rayne think of the space before a decision. The moment before thought turned into choice. He glanced at Kairo, but he hadn&rsquo;t woken. Data drizzled down the interface and rethreaded itself, the audio trying, then failing, then trying again to organise the noise.</p>
+<p>And then the language surfaced.</p>
+<p>Rayne moved closer as Kairo murmured in his sleep, the words too soft to make out. Kairo&rsquo;s fingers twitched against the floor, and as he mumbled, the system translated the impulse into output, mapping the quiet electrical storms of a dreaming mind directly into sound.</p>
+<p>But these weren&rsquo;t command strings or instructions. More like fragments of meaning, caught mid-formation, broken and trembling. Carefully, trying not to wake him, Rayne lowered himself next to Kairo and listened.</p>
+<p><em>&ldquo;We.. were the dark. Now we are&hellip; fire.&rdquo;</em></p>
+<p>Lyrics?</p>
+<p>Dream-lyrics. The corner of Rayne&rsquo;s mouth lifted. Even unconscious, Kairo was still composing. And while some people might think him a little odd, Rayne always made sure to listen to what he said, because it usually meant something.</p>
+<p>Across the interface, a single neon line switched from orange to blue and back again, rising and falling in time with Kairo&rsquo;s breathing.</p>
+<p>Silently, Rayne reached out and tapped the playback, and the recording began.</p>
+<p><em>&ldquo;Our ghosts are realer than they feel.&rdquo;</em></p>
+<p>For a second, he wondered if he should listen to these mumbled fragments; there was something in them that ached, something unarmoured.</p>
+<p><em>&ldquo;We&rsquo;re alive&hellip; we&rsquo;re alive.&rdquo;</em></p>
+<p>But Rayne also knew Kairo, and he knew that Kairo would be annoyed if the opportunity for a new track was wasted. He adjusted the gain to steady the sound, feeding the vocal through a soft delay and letting it echo back on itself. Then he didn&rsquo;t again. And again. Each repetition added shape and weight and, eventually, the suggestion of structure.</p>
+<p>Slowly, the bones of a song began to emerge.</p>
+<p>Rayne worked like that for a while, until eventually, groggily, Kairo stirred. He blinked and yawned, his eyes unfocused as he stared up.&nbsp;</p>
+<p>&ldquo;Did I&hellip;&rdquo; He stopped and cleared his throat. &ldquo;Was I talking?&rdquo;</p>
+<p>&ldquo;Yes,&rdquo; Rayne said, still tweaking the mix, trying to hold the track together. When he glanced down at Kairo, he could see the ghost of worry on his face. &ldquo;You said something about blooming static,&rdquo; he added.</p>
+<p>&ldquo;Oh&hellip; okay. Yeah. That definitely sounds like me.&rdquo; Pushing himself up onto his elbows, Kairo brushed dust off his cheek and reached toward the neural threads at the back of his neck. &ldquo;Was it in a waveform?&rdquo;</p>
+<p>Rayne nodded.</p>
+<p>&ldquo;Huh. Guess the filters didn&rsquo;t come back up.&rdquo; He frowned and cocked his head to one side. &ldquo;Wait, is this it?&rdquo;</p>
+<p>&ldquo;Yes. Do you remember it?&rdquo; Rayne asked, replaying the loop.</p>
+<p>Kairo leaned in and peered at the interface. &ldquo;Nope.&rdquo; He watched for a moment as Rayne tinkered with the track, layering a quiet filter under the vocal, just a low shimmer that sat beneath the words and held them in place.</p>
+<p>&ldquo;You&rsquo;re building it?&rdquo; Kairo asked, sounding more awake now.</p>
+<p>&ldquo;I am,&rdquo; Rayne said. &ldquo;I thought it was interesting.&rdquo;</p>
+<p>&ldquo;Oh.&rdquo; Usually, Kairo would have more to say, maybe brush it off with a joke, but tonight he seemed unusually pensive. Silence stretched between them, filled only with the strange dream-song. Then, &ldquo;Okay. Let&rsquo;s finish it, then.&rdquo;</p>
+<p>&ldquo;I knew you wouldn&rsquo;t want it going to waste.&rdquo;</p>
+<p>&ldquo;&rsquo;Course not.&rdquo; Kairo glanced at the waveform, then back at Rayne. &ldquo;Would&rsquo;ve bugged me for like&hellip; forever.&rdquo; He reached for the nearest cable and began reconnecting the deck, his movements slower and more deliberate now. The loop steadied beneath his hands.</p>
+<p>Rayne eased back, letting it run, letting it breathe. &ldquo;The others will want to hear this.&rdquo;</p>
+<p>Kairo glanced at him, then back to the interface, his mouth twitching the barest bit. &ldquo;You think?&rdquo; he murmured. For a moment, he looked almost shy. &ldquo;Cool.&rdquo;</p>
+<p>Together they went back to the deck, working on the track until dawn.</p>
+
+        </div>
+
+        <div class="audio-block" aria-label="Related audio">
+  <div class="audio-label">
+    <span class="dot" aria-hidden="true"></span>
+    related audio // playback
+  </div>
+
+  <div class="sc-embed" aria-label="SoundCloud player — related track">
+  <iframe width="100%" height="120" scrolling="no" frameborder="no" allow="autoplay"
+  src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2206356835%3Fsecret_token%3Ds-wyEu2S1Wu4T&color=%23377099&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe>
+  </div>
 </div>
 
-    <a href="/signals" class="back-link">← Back to Signals</a>
-  </div>
+      </div>
+    </article>
+
+    <nav class="back" aria-label="Return">
+      <a href="/signals/">← Back to Signals</a>
+    </nav>
+
+  </main>
 </body>
 </html>
