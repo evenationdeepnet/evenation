@@ -1,179 +1,415 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Minjae's Note | Pulse | E.V.E.N</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #e0e0e0;
-      color: #000;
-      font-family: 'IBM Plex Mono', monospace;
-      line-height: 1.6;
-      background-image: url('../static-noise.png');
-      background-size: cover;
+    :root{
+      color-scheme: light;
+
+      /* warm grey / paper layer */
+      --bg: #f2f1ee;
+      --bg2:#eceae6;
+
+      --panel: rgba(20,20,24,.06);
+      --panel2: rgba(20,20,24,.04);
+      --stroke: rgba(20,20,24,.12);
+
+      --text: rgba(18,18,20,.88);
+      --muted: rgba(18,18,20,.60);
+
+      /* restrained accents */
+      --accent: rgba(30,180,190,.85);   /* muted cyan */
+      --accent2: rgba(172,120,210,.55); /* lilac whisper */
+
+      --radius: 18px;
+      --radius2: 26px;
+      --shadow: 0 18px 70px rgba(0,0,0,.10);
+      --shadow2: 0 12px 40px rgba(0,0,0,.08);
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --serifish: ui-serif, Georgia, "Times New Roman", Times, serif;
     }
 
-    .container {
-      max-width: 800px;
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; min-height:100vh; }
+
+    body{
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(900px 420px at 20% 0%, rgba(30,180,190,.10), transparent 60%),
+        radial-gradient(900px 420px at 80% 0%, rgba(172,120,210,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      overflow-x:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+
+    /* subtle grain/noise */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(1px 1px at 18% 24%, rgba(0,0,0,.12), transparent 60%),
+        radial-gradient(1px 1px at 42% 62%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 78% 38%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 60% 80%, rgba(0,0,0,.08), transparent 60%);
+      opacity:.08;
+      filter: blur(.3px);
+      z-index:0;
+    }
+
+    .wrap{
+      max-width: 980px;
       margin: 0 auto;
-      padding: 4rem 2rem;
+      padding: 44px 20px 76px;
+      position:relative;
+      z-index:1;
     }
 
-    h1 {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 2.5rem;
-      color: #990066;
-      margin-bottom: 0.5rem;
+    /* header */
+    .head{
+      text-align:center;
+      margin-bottom: 18px;
     }
 
-    .id-tag {
-      font-size: 1rem;
-      color: #666;
-      margin-bottom: 2rem;
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.18em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.66);
     }
 
-    .glitch-divider {
-      width: 100%;
-      height: 2px;
-      background: linear-gradient(to right, #ff00ff, #00ffff);
-      margin: 2.5rem 0;
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 0 rgba(30,180,190,.25);
+      animation: pulse 2.6s infinite;
+      flex:none;
     }
 
-    .story p {
-      font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', sans-serif;
-      font-size: 1rem;
-      color: #000;
-      line-height: 1.6;
-      margin-bottom: 1rem; /* Adjust this to tighten or loosen paragraph spacing */
+    @keyframes pulse{
+      0%{ box-shadow: 0 0 0 0 rgba(30,180,190,.22); }
+      70%{ box-shadow: 0 0 0 12px rgba(30,180,190,0); }
+      100%{ box-shadow: 0 0 0 0 rgba(30,180,190,0); }
     }
 
-    .back-link {
-      color: #990066;
-      text-decoration: none;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1rem;
-      border: 1px solid #990066;
-      padding: 0.5rem 1rem;
-      display: inline-block;
-      margin-top: 3rem;
-      transition: 0.3s ease;
+    h1{
+      margin: 14px 0 8px;
+      font-size: clamp(32px, 4.6vw, 54px);
+      line-height: 1.06;
+      letter-spacing: -0.02em;
     }
 
-    .back-link:hover {
-      background: #00ffff;
-      color: #000;
+    .meta{
+      margin: 0 auto;
+      max-width: 70ch;
+      color: rgba(18,18,20,.62);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* story card */
+    .card{
+      margin-top: 22px;
+      border-radius: var(--radius2);
+      background: linear-gradient(180deg, rgba(255,255,255,.70), rgba(255,255,255,.52));
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(700px 240px at 25% 0%, rgba(30,180,190,.14), transparent 60%),
+        radial-gradient(700px 240px at 75% 0%, rgba(172,120,210,.12), transparent 60%);
+      opacity:.70;
+      pointer-events:none;
+    }
+
+    .card-inner{
+      position:relative;
+      z-index:1;
+      padding: 28px 28px 24px;
+    }
+
+    /* divider inside card */
+    .divider{
+      height: 1px;
+      background: linear-gradient(90deg, rgba(172,120,210,.40), rgba(30,180,190,.40));
+      opacity:.7;
+      margin: 16px 0 22px;
+    }
+
+    /* story typography */
+    .story{
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.9;
+      color: rgba(18,18,20,.84);
+    }
+
+    .story p{
+      margin: 0 0 16px;
+    }
+
+    .story em{ color: rgba(18,18,20,.86); }
+
+    .center-text {
+  text-align: center;
+}
+
+    /* optional little “file tag” row */
+    .filetag{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.62);
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.40);
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(18,18,20,.66);
+      letter-spacing:.06em;
+      white-space:nowrap;
+    }
+
+    /* --- SoundCloud block (Signals story pages) --- */
+.audio-block{
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px dashed rgba(18,18,20,.18);
+}
+
+.audio-label{
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(18,18,20,.62);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom: 10px;
+}
+
+.audio-label .dot{
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 rgba(30,180,190,.20);
+}
+
+.sc-embed{
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(18,18,20,.14);
+  background: rgba(255,255,255,.48);
+  box-shadow: 0 12px 40px rgba(0,0,0,.08);
+  height: 120px; /* matches your preferred compact player */
+}
+
+.sc-embed iframe{
+  display:block;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0;
+}
+
+    /* back nav */
+    .back{
+      margin-top: 18px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .back a{
+      text-decoration:none;
+      font-family: var(--mono);
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: rgba(18,18,20,.62);
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.55);
+      transition: .16s ease;
+    }
+
+    .back a:hover{
+      color: rgba(18,18,20,.82);
+      border-color: rgba(18,18,20,.22);
+      box-shadow: 0 12px 40px rgba(0,0,0,.10);
+      transform: translateY(-1px);
+    }
+
+    /* reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; }
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <h1>Minjae's Note</h1>
-    <div class="glitch-divider"></div>
+  <main class="wrap">
 
-    <div class="story">
+    <header class="head">
+      <div class="kicker"><span class="dot" aria-hidden="true"></span> signals // pulse // recovered story</div>
+      <h1>Minjae's Note</h1>
+      <p class="meta">File integrity: partial. Playback: safe.</p>
+    </header>
 
-<p>They&rsquo;d taken shelter in an old transit repeater station, gutted clean years ago. Most of it was useless, its power stripped, its data wiped, but the walls were thick and the ceiling didn&rsquo;t leak. Much. That made it one of the <em>nicer</em> stops on The Ghost Lines.</p>
+    <article class="card" aria-label="Story container">
+      <div class="card-inner">
+
+        <div class="filetag" aria-label="File tags">
+          <span class="pill">pulse</span>
+          <span class="pill">minjae</span>
+          <span class="pill">ensemble</span>
+        </div>
+
+        <div class="divider" aria-hidden="true"></div>
+
+        <div class="story">
+
+          <!-- Paste story paragraphs exactly as you have them -->
+
+<p>They&rsquo;d taken shelter in an old transit repeater station that had been gutted years earlier, its power stripped and its data wiped so thoroughly that the remaining consoles held nothing but dead circuits and dust. Even so, the walls were thick and the ceiling only leaked in two places instead of five, which on The Ghost Lines counted as a luxury.</p>
 <p>It was late. The kind of late that made silence feel heavier than sound.</p>
-<p>At some point, Kairo had passed out with his face half-buried in a coil of wires. Soahn sat cross-legged against a nearby wall, eyes closed, not sleeping exactly, but doing something quieter than being awake. Onyx was soldering a circuit board in the corner like it owed him money. Minjae had slipped out an hour ago, muttering something about ramyeon.</p>
-<p>Rayne was bored.</p>
-<p>He moved slowly through the back corridor, head tilted, eyes scanning the shadows with that synthetic stillness that made people forget he was there until he wasn&rsquo;t. The station&rsquo;s air vents were old and jagged, little more than rusting slats and forgotten dust. But something caught his eye.</p>
-<p>A gap.</p>
-<p>Not large, just&hellip; <em>off</em>. Like something had been nudged loose, then carefully&mdash;<em>too</em> carefully&mdash;put back.</p>
-<p>He pulled the vent cover away without a sound.</p>
-<p>Inside, nestled between dust-caked pipework and flaking thermal tape, was a small, battered notebook. It was worn, bent at the corners, tied shut with an old string. The black cover was blank—no name, no label, but across the font someone had scrawled "USELESS."</p>
-<p>Rayne turned it over in his hands. Then, almost absently, he walked back into the main room and held up the book. &ldquo;Found this in the wall.&rdquo;</p>
-<p>Soahn&rsquo;s neural filaments shifted from dark blue to azure as he stood up and crossed the room to get a better look.</p>
-<p>Onyx hitched an eyebrow. &ldquo;Yours?&rdquo;</p>
-<p>Rayne shook his head. &ldquo;Not mine.&rdquo;</p>
-<p>Kairo, stirring at the sound of voices, sat up slowly and squinted. &ldquo;Is that a <em>diary</em>?&rdquo;</p>
-<p>When Rayne held it out, Soahn accepted it with careful hands, as though it might come apart at a touch. Gingerly he opened the cover.</p>
-<p>The first page was blank. But the second had writing, slanted and scratchy, running not just left to right but curling down the page and across it at odd angles.</p>
-<p>"They're lyrics, I think," Soahn said.</p>
-<p>Ink bled into the paper like it had been written fast, or maybe under stress. Some verses were crossed out and lines rewritten, and some pages blurred with water damage, while others were marked with faint fingerprints, smudged like they&rsquo;d been read over and over.</p>
-<p>The lyrics were unpolished, raw and angry in places, tender and wistful in others.</p>
-<p>Kairo leaned in, blinking sleep away. &ldquo;Whose is it?&rdquo;</p>
-<p>No one answered, but they all knew. Somewhere in the quiet between the lines, it was obvious.</p>
+<p>Kairo was passed out with his face half-buried in a coil of wires. Soahn sat cross-legged against a wall, eyes closed, not meditating exactly, but doing that quiet internal drifting he slipped into whenever the world got too loud. Onyx was soldering a circuit board in the corner with the patient hostility of someone collecting an unpaid debt.</p>
+<p>Rayne was bored, or as close to bored as a synthetic could get. He moved through the space, his attention drifting the way other people&rsquo;s thoughts might wander, settling briefly on the old circuitry and the slow throb of Kairo&rsquo;s unattended loop.</p>
+<p>Eventually that wandering attention carried him down the back corridor, head tilted, eyes scanning the shadows with the same silence that made people forget he was there until he wasn&rsquo;t. The air vents along the walls were little more than rusted slats and collected dust, but something about one of them snagged his gaze as he passed by.</p>
+<p>Rayne stopped, leaning in to get a closer look. One of the plates sat at a slight angle, the edges lined up just well enough to suggest someone had nudged it loose and then returned it carefully, leaving the smallest gap most people probably wouldn&rsquo;t even notice.</p>
+<p>Removing the cover without a sound, Rayne reached inside, his fingers finding dust, old thermal tape, and then the worn edge of something soft but solid. When he drew his hand back, he held a small black notebook shut with a piece of string that had frayed nearly to a thread. Curious. There was no label or writing on the cover, but the pages were weathered from overuse, the corners uneven where they&rsquo;d been turned too often.</p>
+<p>Rayne studied it briefly before returning to the main room.</p>
+<p>&ldquo;I found this in the wall,&rdquo; he said.</p>
+<p>Soahn opened his eyes at once and sat up, his hair filaments moving smoothly from a muted pastel blue to a warmer, more inquisitive green.</p>
+<p>&ldquo;Yours?&rdquo; Onyx asked, glancing up from the circuit board resting in his lap.</p>
+<p>Rayne shook his head. &ldquo;Not mine, no.&rdquo;</p>
+<p>Kairo stirred at the sound of voices and pushed himself upright, squinting through layers of sleep toward the object in Rayne&rsquo;s hand. &ldquo;Is that a diary?&rdquo;</p>
+<p>&ldquo;I don&rsquo;t know what it is,&rdquo; Rayne said, and passed the book to Soahn. The string loosened easily under his fingers, though he untied it with a carefulness that suggested the pages inside mattered before he&rsquo;d even seen them.</p>
+<p>The first page carried writing that slanted sharply across the paper.</p>
+<p>&ldquo;Lyrics,&rdquo; Soahn muttered, running his fingertips over the words.</p>
+<p>Leaning in, Rayne scanned it, noticing the way the ink had bled where a pen had pressed too hard. Several lines had been crossed out with quick, frustrated strokes before new ones replaced them in tighter handwriting above the originals. Water damage had blurred entire stanzas so that words spilled into each other, while the margins showed signs of fingerprints where someone had returned again and again to the same passages.</p>
+<p>&ldquo;Whose is it, do you think?&rdquo; Kairo said, coming over to peer at the book.</p>
+<p>No one answered, though the truth moved quietly through the room all the same.</p>
 <p>Minjae.</p>
-<p>The jokes weren&rsquo;t there, though. Neither was the swagger or the snark. What filled these pages was something else entirely; guilt, confusion, grief that unfurled at the edges of every stanza like smoke. Some verses read like memories, others like secrets he couldn&rsquo;t say out loud.</p>
-<p>Soahn reverently turned another page.</p>
-<p>One line was written over and over again, layered like a mantra:</p>
-<p><em>I wasn&rsquo;t made for silence, but I keep finding it anyway.</em></p>
-<p>They stopped reading.</p>
-<p>Kairo let out a low breath. &ldquo;I thought he just&hellip; y&rsquo;know, free-styled everything. Didn&rsquo;t know he <em>wrote</em> like this.&rdquo;</p>
-<p>Onyx didn&rsquo;t look up from where he sat, but his voice was quieter than usual. &ldquo;He doesn&rsquo;t show it. But it doesn&rsquo;t mean it&rsquo;s not there.&rdquo;</p>
-<p>Rayne leaned back, head tilted. &ldquo;This is grief dressed as rhythm. It&rsquo;s not a song. It&rsquo;s an unraveling.&rdquo;</p>
-<p>Kairo blinked hard, like the air had changed. &ldquo;It&rsquo;s <em>really</em> good.&rdquo;</p>
-<p>They sat with it for a while. Just... sat. No commentary. No more page turning. Just the weight of it pressing in gently around them.</p>
-<p>Then&mdash;footsteps.</p>
-<p>Minjae&rsquo;s voice, from the hall: &ldquo;Hey, did someone move my&mdash;&rdquo; He stopped dead in the doorway when he spotted the notebook in Soahn&rsquo;s hands.</p>
-<p>The room stilled again, but it was a different kind of stillness. This was bated.</p>
-<p>&ldquo;You weren&rsquo;t supposed to read those,&rdquo; Minjae said quietly. Usually he&rsquo;d crack a joke when something made him uncomfortable, but he just stood there, his shoulders hunching slightly, a lost soul in the quiet.</p>
-<p>Soahn went to where Minjae stood in the doorway, holding the notebook out with both hands like he was returning something sacred.</p>
-<p>&ldquo;I&rsquo;m sorry,&rdquo; he said.</p>
-<p>Minjae took it without meeting his eyes.</p>
-<p>Onyx didn&rsquo;t move from his corner, but his voice carried: &ldquo;They&rsquo;re good, Minjae. Seriously good.&rdquo;</p>
-<p>Minjae swallowed thickly and looked down at the cover like it might disappear if he didn&rsquo;t hold it in his gaze.</p>
-<p>&ldquo;Next track.&rdquo; Kairo stood, stretching widely like a cat.</p>
-<p>Minjae blinked. &ldquo;What?&rdquo;</p>
-<p>Kairo smiled. No teasing in it. Just warm, tired certainty. &ldquo;Yours.&rdquo;</p>
-<p>For a long time, Minjae merely stared at him. Then, finally, he nodded. A small nod. A tight nod. He slumped down where he stood, back against the doorframe, dragging a battered pen out of his pocket. Nobody said anything as he opened the book and began rewriting one of the pages.</p>
-<p>Rayne moved away, just enough to give Minjae space.</p>
-<p>Soahn, however, went to him and sat beside him, quiet and present in the moment.</p>
-<p>And the silence that fell changed again: a hush that felt alive with promise.</p>
+<p>It was his handwriting, albeit a messier, more angry version of it. Although the voice inside the pages carried none of the swagger he usually wore like armour. The jokes had vanished as well, and what remained moved in a different register entirely, the rhythm of it loaded with guilt and confusion and a grief that hovered at the edge of every line.</p>
+<p>Soahn turned another page. One line appeared again and again, written over itself until the ink thickened into a dark seam of words.</p>
+<p><em>I wasn&rsquo;t made for silence, but I keep finding it anyway</em>.</p>
+<p>&ldquo;I&hellip; I thought he just freestyled everything,&rdquo; Kairo eventually said. &ldquo;Didn&rsquo;t know he wrote like this.&rdquo;</p>
+<p>Keeping his eyes on the circuit board in his hands, Onyx said, &ldquo;He doesn&rsquo;t show it, but that doesn&rsquo;t mean it&rsquo;s not there.&rdquo;</p>
+<p>Rayne stepped back and leaned against the nearest wall, watching the page while the others absorbed line after line. &ldquo;This sounds like grief dressed as rhythm,&rdquo; he said after a while. &ldquo;Like someone trying to organise something that won&rsquo;t stay still.&rdquo;</p>
+<p>&ldquo;Yeah,&rdquo; Kairo said, nodding slowly. &ldquo;And it&rsquo;s really, really good. Damn.&rdquo;</p>
+<p>They lingered for a long time with the notebook open between them. Rayne wasn&rsquo;t entirely sure why, but he suddenly felt that they maybe shouldn&rsquo;t read any more.</p>
+<p>&ldquo;Is this too private to be reading?&rdquo; he asked.</p>
+<p>&ldquo;Hm, yeah, I think so,&rdquo; Soahn agreed, and closed the book.</p>
+<p>&ldquo;Aw,&rdquo; Kairo said, though he didn&rsquo;t attempt to take it.</p>
+<p>But the lyrics stayed with Rayne, quietly running through his processor like an echo that refused to fade.</p>
+<p>Eventually, he heard footsteps approaching from the corridor outside.</p>
+<p>&ldquo;Hey,&rdquo; Minjae said as he appeared in the doorway, &ldquo;did someone move my&mdash;&rdquo; His eyes fell on the notebook resting closed in Soahn&rsquo;s hands, and something sharp crossed his face. &ldquo;You weren&rsquo;t supposed to see that,&rdquo; he added quietly.</p>
+<p>Rising, Soahn crossed the room and offered the notebook with both hands. &ldquo;I&rsquo;m sorry.&rdquo;</p>
+<p>Without meeting his eyes, Minjae took the book and pulled it in toward his chest. In that moment, he looked like he&rsquo;d rather be anywhere else.</p>
+<p>&ldquo;They&rsquo;re good,&rdquo; Onyx said from the corner, without looking up. &ldquo;Seriously good, Minjae.&rdquo;</p>
+<p>Minjae swallowed and studied the cover as though the paper might dissolve if he looked away.</p>
+<p>Stretching slowly to his feet, Kairo rolled his shoulders before saying, &ldquo;Next track, maybe?&rdquo;</p>
+<p>&ldquo;Huh?&rdquo; Minjae stared at him.</p>
+<p>&ldquo;Your track, but we&rsquo;ll build it together,&rdquo; Kairo said with an unusual seriousness.</p>
+<p>&ldquo;I agree,&rdquo; Soahn said. &ldquo;This is us. This is E.V.E.N if I&rsquo;ve ever heard it.&rdquo;</p>
+<p>&ldquo;Shit,&rdquo; Minjae muttered, looking away. &ldquo;Great to hear my internal bullshit is E.V.E.N levels of screwed up.&rdquo;&nbsp;</p>
+<p>If it was meant as a joke, it didn&rsquo;t land. Nobody laughed.</p>
+<p>For a moment Minjae just stood there with the notebook pressed against his chest, his gaze sliding anywhere except the faces around him.</p>
+<p>&ldquo;Are you guys actually serious?&rdquo; he asked at last.</p>
+<p>&ldquo;Yes,&rdquo; Soahn said, and offered him a small, sincere smile.</p>
+<p>Minjae watched him for a long moment before some of the tension in his shoulders gave out, and he nodded solemnly. Crossing the room, he lowered himself to the floor in the corner, and opened the notebook with the hesitance of someone unsure if they wanted to see what lived inside their own writing.</p>
+<p>Rayne moved quietly toward the wall, giving him space.</p>
+<p>Soahn did the opposite, settling down beside Minjae, close enough to feel present but far enough not to crowd him.</p>
+<p>Minjae stared down at the pages for several seconds.</p>
+<p>And then he picked up his pen.</p>
 <p><br></p>
-<p>The new safehouse wasn&rsquo;t much more than a hollowed-out access port beneath a collapsed rail station, its walls lined in broken monitor frames and mostly-dead cables like the carcass of something that once mattered.</p>
-<p>Kairo had claimed a corner for his gear, already looping signal through three ancient decks that groaned when touched. Rayne sat cross-legged on the raised platform, silent, watching the light patterns play across the broken glass embedded in the wall. Soahn dozed&mdash;or maybe just disconnected&mdash;a half-finished cup of tea cooling beside him. Onyx was tinkering with a cracked processor that wisely played dead.</p>
-<p>Minjae sat in the middle, notebook open, pencil stub scratching over the page.</p>
-<p>No one said anything. They knew it would be ready when it was ready.</p>
+<p><center>~*~</center></p>
 <p><br></p>
-<p>The page was messy again, ink lines slashing across older verses, graphite ghosts of thoughts he couldn&rsquo;t pin down. He didn&rsquo;t know why he was trying. The words looked wrong in this light. Sounded too fragile in his head.</p>
-<p>Still, he tapped out the rhythm, just against his leg.</p>
-<p><em>da-da. da &mdash; da &mdash; da.</em></p>
-<p>Kairo noticed first. Of course he did. His ears were wired for rhythm like some people breathed. He didn&rsquo;t say anything, but he shifted his interface, layered in a low tone beneath the beat.</p>
-<p>A base line. Barely there, but what was there sounded like a question.</p>
-<p>Minjae looked up.</p>
-<p>Kairo smiled. &ldquo;You tap, I build.&rdquo;</p>
-<p>“Wasn’t meant to be a song.”</p>
-<p>&ldquo;Too late.&rdquo;</p>
-<p>The loop played again, this time with a gentle synth echo. Something delicate and slow, like fingers trailing across fabric. It filled the space like gauze.</p>
-<p>Rayne unfolded himself from his spot and drifted over without a word. He crouched beside Minjae and passed him one of the battered headphones they used when they didn&rsquo;t want to disturb the whole team.</p>
-<p>Minjae slipped them on.</p>
-<p>The loop played again.</p>
-<p>This time, he let himself hum.</p>
-<p><br></p>
-<p>The melody bloomed haltingly, raw and low and full of hesitation.&nbsp;</p>
-<p>Soahn cracked one eye open. &ldquo;Is that the note?&rdquo;</p>
-<p>Minjae paused, chewing the inside of his cheek. &ldquo;No. I mean&hellip; maybe. It&rsquo;s not a full track.&rdquo;</p>
-<p>&ldquo;That&rsquo;s how all of them start,&rdquo; said Onyx.</p>
-<p>Minjae didn&rsquo;t reply, merely went back to humming.</p>
-<p>Across the room, Kairo caught the rhythm and began layering sounds, a pulse here, a shimmer there. The loop held. It didn’t push.</p>
-<p>Beside him, Rayne adjusted a dial on the old interface; faint distortion growled beneath Minjae’s voice, giving it a cracked-glass edge.</p>
-<p>Minjae reached for his notebook, flipping back to the water-damaged pages—the ones he’d never intended to share. He scanned them in silence, scratched out a few words, rewrote them, said one line under his breath. Tried again.</p>
-<p>This time, it came out music.</p>
-<p><em>&ldquo;You said don&rsquo;t disappear</em></br>
-<em>But I already had&hellip;&rdquo;</em></p>
-<p>He stopped.</p>
-<p>Soahn watched now, fully awake, a curious little tilt to the corners of his lips.</p>
-<p>Kairo froze the loop and played it back, just that one line. The rawness of it. The half-muttered truth tucked into static.</p>
-<p>Rayne swayed ever so slightly along to the line.</p>
-<p>Minjae exhaled hard. &ldquo;That sounded bad, yeah?&rdquo;</p>
-<p>&ldquo;No,&rdquo; Kairo said. &ldquo;It sounded <em>real</em>.&rdquo;</p>
-<p>&ldquo;Keep going,&rdquo; Onyx told him.</p>
-<p>Minjae looked dubious. &ldquo;You sure?&rdquo;</p>
-<p>Onyx didn&rsquo;t hesitate. &ldquo;We wouldn&rsquo;t be here if we weren&rsquo;t.&rdquo;</p>
-<p>Minjae sat back, eyes on the notebook, voice low. &ldquo;This song&hellip; it&rsquo;s not finished.&rdquo;</p>
-<p>Kairo reached over, tapped the recording panel once.</p>
-<p>&ldquo;Neither are we.&rdquo;</p>
-      
+<p>The next safe house was little more than an access port carved beneath a collapsed rail station, broken monitors lining the walls alongside dead cables that hung in loops like vines in a forgotten garden.</p>
+<p>Rayne settled cross-legged on the raised platform and watched light fracture and shift across broken glass embedded in the far wall, occasionally glancing up at the others as they went about their routines. Kairo immediately claimed a corner and began routing signal through three ancient decks that groaned in protest whenever he touched them.&nbsp;&nbsp;Soahn rested nearby with a half-finished cup of tea cooling beside him while Onyx occupied himself with another piece of malfunctioning hardware.</p>
+<p>And Minjae sat in the centre of the room with the notebook open on his knee, writing in short, uneven strokes. Everyone seemed careful not to interrupt him; the rhythm of the room settled into the quiet understanding that the song would emerge when it was ready.</p>
+<p>From his vantage point, Rayne watched as the pages filled quickly with Minjae&rsquo;s erratic scrawl, lines crossed out, rewritten, scrubbed again, and pencilled vertically down the narrow margins when he ran out of room. He noticed the way Minjae never left space unused; he worked across the paper until the blankness vanished, then only turned the page once there was nowhere left to write.</p>
+<p>Eventually he started to tap a beat against his knee.</p>
+<p>Da-da. Da &mdash; da &mdash; da. Da-da.</p>
+<p>Kairo noticed this immediately, and though he said nothing, he drifted to the nearest deck and slipped a low tone under the rhythm Minjae had set. The sound hovered in the room like a question waiting for its answer.</p>
+<p>Minjae looked up.&nbsp;</p>
+<p>&ldquo;You tap,&rdquo; Kairo said, meeting his gaze. &ldquo;I build.&rdquo;</p>
+<p>For a second it looked like Minjae was going to push back, but then he nodded. &ldquo;Okay.&rdquo;</p>
+<p>The loop cycled again while Kairo layered in a synth echo under the beat. Only then did Rayne rise from the platform and cross the room before crouching next to Minjae. Wordlessly, he handed over a pair of battered headphones that the group used whenever they needed to keep a new track contained.</p>
+<p>With a tight nod, Minjae took the headphones and slid them on.</p>
+<p>The loop played again, and this time he began humming along, letting a melody emerge gradually, low and uncertain at first before gathering a little more confidence with each repetition.</p>
+<p>Soahn leaned in closer. &ldquo;Is that the key?&rdquo;</p>
+<p>Minjae paused, chewing the inside of his cheek. &ldquo;Maybe. It&rsquo;s not a full track yet.&rdquo;</p>
+<p>&ldquo;That&rsquo;s how they all start,&rdquo; Onyx said. &ldquo;Keep going.&rdquo;</p>
+<p>Kairo raised an eyebrow. &ldquo;That&rsquo;s basically high praise coming from Onyx,&rdquo; he pointed out with a small grin.</p>
+<p>Minjae nodded and returned to the melody. As he wrote, Kairo continued adding little layers of sound, each one pulling gently around the central rhythm, tightening it, helping to find structure. Leaning across the interface, Rayne adjusted the dial to add a faint distortion, giving the sound dimension. And Minjae&rsquo;s hums eventually turned into words, sung in his slightly rough mid-register, the sound brushing the notes with a softness that carried just enough grain to make the melody feel lived-in.</p>
+<p>Flipping back a few pages in the notebook, Minjae reached the water-damaged pages he&rsquo;d hidden earlier. His eyes moved across the blurred ink while the pencil in his hand scratched across a few words and replaced them with new ones.</p>
+<p>&ldquo;You said don&rsquo;t disappear,&rdquo; he sang under his breath. &ldquo;But I already had&hellip;&rdquo;</p>
+<p>The room held the sound for a moment, until Kairo stopped the loop and replayed the line through the speakers. Minjae&rsquo;s raw vocals filled the space, settling into the track like a crack in glass. Rayne found himself swaying in time with the rhythm.</p>
+<p>&ldquo;That sounded terrible.&rdquo; Minjae stopped and rubbed a hand across his face.</p>
+<p>&ldquo;No, absolutely not,&rdquo; Kairo said. &ldquo;It sounded honest. And that&rsquo;s what we do, right?&rdquo;</p>
+<p>&ldquo;That&rsquo;s what we do,&rdquo; Soahn echoed.</p>
+<p>&ldquo;Well,&rdquo; Minjae said. &ldquo;I guess I can&rsquo;t argue with that.&rdquo; He glanced down at the notebook again. &ldquo;It&rsquo;s not quite there yet.&rdquo;</p>
+<p>Rayne adjusted the gain and settled back on his heels.</p>
+<p>&ldquo;Yes,&rdquo; he said quietly. &ldquo;But neither are we.&rdquo;</p>
 
+        </div>
+
+        <div class="audio-block" aria-label="Related audio">
+  <div class="audio-label">
+    <span class="dot" aria-hidden="true"></span>
+    related audio // playback
+  </div>
+
+  <div class="sc-embed" aria-label="SoundCloud player — related track">
+<iframe width="100%" height="120" scrolling="no" frameborder="no" allow="autoplay"
+  src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%3Atracks%3A2252398784%3Fsecret_token%3Ds-0A8xetRkWgf&color=%234a3a9e&auto_play=false&show_comments=false&show_user=false&show_reposts=false&show_teaser=false">
+</iframe>
+  </div>
 </div>
 
-    <a href="/signals" class="back-link">← Back to Signals</a>
-  </div>
+      </div>
+    </article>
+
+    <nav class="back" aria-label="Return">
+      <a href="/signals/">← Back to Signals</a>
+    </nav>
+
+  </main>
 </body>
 </html>
