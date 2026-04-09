@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Naming Convention | Pulse | E.V.E.N</title>
+
+  <style>
+    :root{
+      color-scheme: light;
+
+      /* warm grey / paper layer */
+      --bg: #f2f1ee;
+      --bg2:#eceae6;
+
+      --panel: rgba(20,20,24,.06);
+      --panel2: rgba(20,20,24,.04);
+      --stroke: rgba(20,20,24,.12);
+
+      --text: rgba(18,18,20,.88);
+      --muted: rgba(18,18,20,.60);
+
+      /* restrained accents */
+      --accent: rgba(30,180,190,.85);   /* muted cyan */
+      --accent2: rgba(172,120,210,.55); /* lilac whisper */
+
+      --radius: 18px;
+      --radius2: 26px;
+      --shadow: 0 18px 70px rgba(0,0,0,.10);
+      --shadow2: 0 12px 40px rgba(0,0,0,.08);
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --serifish: ui-serif, Georgia, "Times New Roman", Times, serif;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; min-height:100vh; }
+
+    body{
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(900px 420px at 20% 0%, rgba(30,180,190,.10), transparent 60%),
+        radial-gradient(900px 420px at 80% 0%, rgba(172,120,210,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      overflow-x:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+
+    /* subtle grain/noise */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(1px 1px at 18% 24%, rgba(0,0,0,.12), transparent 60%),
+        radial-gradient(1px 1px at 42% 62%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 78% 38%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 60% 80%, rgba(0,0,0,.08), transparent 60%);
+      opacity:.08;
+      filter: blur(.3px);
+      z-index:0;
+    }
+
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 44px 20px 76px;
+      position:relative;
+      z-index:1;
+    }
+
+    /* header */
+    .head{
+      text-align:center;
+      margin-bottom: 18px;
+    }
+
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.18em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.66);
+    }
+
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 0 rgba(30,180,190,.25);
+      animation: pulse 2.6s infinite;
+      flex:none;
+    }
+
+    @keyframes pulse{
+      0%{ box-shadow: 0 0 0 0 rgba(30,180,190,.22); }
+      70%{ box-shadow: 0 0 0 12px rgba(30,180,190,0); }
+      100%{ box-shadow: 0 0 0 0 rgba(30,180,190,0); }
+    }
+
+    h1{
+      margin: 14px 0 8px;
+      font-size: clamp(32px, 4.6vw, 54px);
+      line-height: 1.06;
+      letter-spacing: -0.02em;
+    }
+
+    .meta{
+      margin: 0 auto;
+      max-width: 70ch;
+      color: rgba(18,18,20,.62);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* story card */
+    .card{
+      margin-top: 22px;
+      border-radius: var(--radius2);
+      background: linear-gradient(180deg, rgba(255,255,255,.70), rgba(255,255,255,.52));
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(700px 240px at 25% 0%, rgba(30,180,190,.14), transparent 60%),
+        radial-gradient(700px 240px at 75% 0%, rgba(172,120,210,.12), transparent 60%);
+      opacity:.70;
+      pointer-events:none;
+    }
+
+    .card-inner{
+      position:relative;
+      z-index:1;
+      padding: 28px 28px 24px;
+    }
+
+    /* divider inside card */
+    .divider{
+      height: 1px;
+      background: linear-gradient(90deg, rgba(172,120,210,.40), rgba(30,180,190,.40));
+      opacity:.7;
+      margin: 16px 0 22px;
+    }
+
+    /* story typography */
+    .story{
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.9;
+      color: rgba(18,18,20,.84);
+    }
+
+    .story p{
+      margin: 0 0 16px;
+    }
+
+    .story em{ color: rgba(18,18,20,.86); }
+
+    .center-text {
+  text-align: center;
+}
+
+    /* optional little “file tag” row */
+    .filetag{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.62);
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.40);
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(18,18,20,.66);
+      letter-spacing:.06em;
+      white-space:nowrap;
+    }
+
+    /* --- SoundCloud block (Signals story pages) --- */
+.audio-block{
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px dashed rgba(18,18,20,.18);
+}
+
+.audio-label{
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(18,18,20,.62);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom: 10px;
+}
+
+.audio-label .dot{
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 rgba(30,180,190,.20);
+}
+
+.sc-embed{
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(18,18,20,.14);
+  background: rgba(255,255,255,.48);
+  box-shadow: 0 12px 40px rgba(0,0,0,.08);
+  height: 120px; /* matches your preferred compact player */
+}
+
+.sc-embed iframe{
+  display:block;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0;
+}
+
+    /* back nav */
+    .back{
+      margin-top: 18px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .back a{
+      text-decoration:none;
+      font-family: var(--mono);
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: rgba(18,18,20,.62);
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.55);
+      transition: .16s ease;
+    }
+
+    .back a:hover{
+      color: rgba(18,18,20,.82);
+      border-color: rgba(18,18,20,.22);
+      box-shadow: 0 12px 40px rgba(0,0,0,.10);
+      transform: translateY(-1px);
+    }
+
+    /* reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+
+    <header class="head">
+      <div class="kicker"><span class="dot" aria-hidden="true"></span> signals // pulse // recovered story</div>
+      <h1>Naming Convention</h1>
+      <p class="meta">File integrity: partial. Playback: safe.</p>
+    </header>
+
+    <article class="card" aria-label="Story container">
+      <div class="card-inner">
+
+        <div class="filetag" aria-label="File tags">
+          <span class="pill">pulse</span>
+          <span class="pill">alcohol</span>
+          <span class="pill">ensemble</span>
+        </div>
+
+        <div class="divider" aria-hidden="true"></div>
+
+        <div class="story">
+
+          <!-- Paste story paragraphs exactly as you have them -->
+
+<p>The bunker settled into itself after midnight, the kind of quiet that came not from silence but from everything finding its place; lights lowered until they pooled warm and amber against the walls, circuitry ticking through its cycles, the air softened by the faint sweetness of spilled rice wine and whatever warmth five bodies could hold between them.</p>
+
+<p>Someone had broken into the stash earlier. Minjae, most likely. The evidence lingered in a row of bottles along the console, their glass catching the low light, each one tipped just far enough to suggest poor decisions and better stories.</p>
+
+<p>Kairo sagged deep into his chair, spine curved, limbs loose as though the joints had all quietly agreed to stop holding tension. The same four bars looped through his rig again, wavering at the edges where the code caught and slipped, and every time it stuttered, a chorus of movement followed. Cups lifted, heads tipped back, laughter arriving half a beat late.</p>
+
+<p>Coincidentally, the sound stuttered often.</p>
+
+<p>On the floor, Minjae had given up entirely on verticality, stretched out on his back with one arm flung over his face, the other gripping the neck of a bottle as he fed half-formed lyrics into the fabric of his sleeve, voice muffled, words dissolving before they could quite take shape. Rayne remained nearby, bare feet tucked close, long limbs folded with careful symmetry, his stillness intact but softened at the edges, attention drifting between them with a quiet curiosity that lingered on each reaction as though he were cataloguing something he couldn&rsquo;t quite name.</p>
+
+<p>Soahn&rsquo;s filaments shimmered gold, catching stray light as they shifted with his breathing. His expression tipped toward something bright and distant, the emotional spillover from the room settling into him and staying there. In the far corner, Onyx had claimed distance as a strategy, back to the wall, arms folded with military precision that might have held if not for the interruption every few seconds, a sharp hitch in his breath that broke through in stubborn hiccups he refused to acknowledge.</p>
+
+<p>&ldquo;OK,&rdquo; Kairo said, spinning around in his chair so fast the wires tangled around him. &ldquo;Serious question&hellip;&rdquo;</p>
+
+<p>Minjae groaned. &ldquo;That&rsquo;s never true when you say it.&rdquo;</p>
+
+<p>&ldquo;No, no, listen. If we had to pick English names &mdash; like real ones, for interviews or whatever &mdash; what would we pick?&rdquo;</p>
+
+<p>The room caught on it for a second, the idea unfolding around them. Then laughter rose up in response, bright and immediate and filling the space until even the walls seemed to lean into it.</p>
+
+<p>&ldquo;What makes you think anyone would want to interview us?&rdquo; Soahn said with a residual giggle.</p>
+
+<p>&ldquo;Oh come on, it&rsquo;s only a matter of time,&rdquo; Kairo said, trying to pick apart the cable monster that had him trapped. &ldquo;I mean, what if we were all, like&hellip; accountants or baristas or something. Normal people.&rdquo;</p>
+
+<p>&ldquo;I <em>am</em> normal,&rdquo; Minjae said, and burped.</p>
+
+<p>Onyx shook his head, another hiccup forcing its way through a second later. He pressed his lips together like that might stop the next one.</p>
+
+<p>Soahn, quietly amused, said, &ldquo;You&rsquo;ve really thought about this before, Kairo?&rdquo;</p>
+
+<p>&ldquo;Of course I have,&rdquo; Kairo said. &ldquo;And it&rsquo;s Kian, actually. That&rsquo;s what I&rsquo;d be. Spelled fancy, pronounced cool. Short and efficient.&rdquo;</p>
+<p>&ldquo;Short and efficient?&rdquo; Minjae said, dragging his arm off his face just long enough to squint up at him. &ldquo;So&hellip; a USB stick.&rdquo;</p>
+<p>&ldquo;You&rsquo;ve got the short part right,&rdquo; Onyx muttered, the words slipping out just as another involuntary sound broke through him, halfway between a snort and a laugh that he immediately tried to bury.</p>
+<p>&ldquo;Kian.&rdquo; Minjae rolled onto his side, reaching blindly for another bottle and managing, after a moment of fumbling, to get it open. &ldquo;You sound like an IKEA Nu-Form product line. Comes with two screws missing and an existential crisis.&rdquo;</p>
+<p>Rayne&rsquo;s gaze moved between them, following the rhythm of the exchange, and though his posture held its careful lines, something in the set of his shoulders had eased.</p>
+<p>&ldquo;All right, Kian from IKEA Nu-Form,&rdquo; Minjae said, propping himself up on his elbows. &ldquo;If you&rsquo;ve thought so much about it, go ahead. Hit us with your genius.&rdquo;</p>
+<p>Kairo rubbed his hands together, eyes bright. &ldquo;OK. Starting easy. Minjae&hellip; you&rsquo;d be Mark.&rdquo;</p>
+<p>Minjae blinked. &ldquo;Mark?&rdquo;</p>
+<p>&ldquo;Yeah. Just Mark. Like, dependable, deprec&mdash; deceptively chaotic. Probably late to everything, but somehow still gets promoted.&rdquo;</p>
+<p>&ldquo;That&rsquo;s&hellip; weirdly accurate,&rdquo; Soahn murmured, and Minjae threw a pillow at him without looking, the motion lazy but well-aimed.</p>
+<p>&ldquo;See? I&rsquo;m good at this!&rdquo; Kairo said triumphantly.</p>
+<p>Onyx let out a slow breath that might have been a sigh if it hadn&rsquo;t hitched halfway through. &ldquo;This is what happens when you give him alcohol.&rdquo;</p>
+<p>Kairo pointed at him next, arm cutting through the dim light. &ldquo;And you&rsquo;d be&hellip; Reece. Definitely Reece. The guy who says he&rsquo;s not coming to the party but shows up anyway, wearing black and looking like he <em>is</em> the party. A really scary, dangerous party.&rdquo;</p>
+<p>Minjae raised his cup from the floor. &ldquo;Cheers to that.&rdquo;</p>
+<p>Onyx didn&rsquo;t answer, though the corner of his mouth shifted almost imperceptibly, the smallest concession, gone as quickly as it appeared.</p>
+<p>Kairo spun back around to Rayne, chair creaking under the motion. &ldquo;Now you&rsquo;re tricky.&rdquo;</p>
+<p>&ldquo;I&rsquo;m flattered.&rdquo;</p>
+<p>&ldquo;No, I mean it&rsquo;s impossible. You don&rsquo;t look like anyone. You&rsquo;re too&hellip; Rayne.&rdquo;</p>
+<p>&ldquo;So&hellip; Rayne, then.&rdquo;</p>
+<p>&ldquo;Fine. But if you ever had to fake an ID, you&rsquo;d go by, like&hellip; Gabriel or something angelic. You just would.&rdquo;</p>
+<p>Rayne tilted his head, the name settling somewhere behind his eyes before he let it go. &ldquo;Gabriel,&rdquo; he echoed softly. &ldquo;I&rsquo;ve been called worse.&rdquo;</p>
+<p>Soahn chuckled, the sound threading through the space between them. &ldquo;It suits you.&rdquo;</p>
+<p>Kairo turned to him next, finger raised in mock ceremony. &ldquo;And you. You&rsquo;d be Noah.&rdquo;</p>
+<p>Soahn blinked. &ldquo;Noah?&rdquo;</p>
+<p>&ldquo;Yeah. Feels right, doesn&rsquo;t it? Quiet. Kind. Carries too much on his shoulders but still builds the boat anyway.&rdquo;</p>
+<p>The words lingered after he finished, not heavy, but present, settling into the room with enough weight that the laughter paused around it, giving it space to land where it wanted.</p>
+<p>Minjae let out a low whistle. &ldquo;Damn, that was poetic.&rdquo;</p>
+<p>Kairo grinned, leaning back as far as his tangled wires would allow. &ldquo;I&rsquo;m a lyrical genius.&rdquo;</p>
+<p>&ldquo;You&rsquo;re a sentimental drunk.&rdquo;</p>
+<p>&ldquo;Semantics.&rdquo;</p>
+<p>The laughter that followed came fuller this time, unguarded, rising and folding back in on itself until it filled every corner of the bunker, warming old metal and worn surfaces in a way that lingered even after the sound itself began to fade.</p>
+
+  </div>
+</div>
+    </article>
+
+    <nav class="back" aria-label="Return">
+      <a href="/signals/">← Back to Signals</a>
+    </nav>
+
+  </main>
+</body>
+</html>
