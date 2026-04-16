@@ -290,6 +290,7 @@
       border-color:rgba(10,14,22,.18);
     }
     .btn[disabled]{ opacity:.6; cursor:default; transform:none; }
+
     .quiz-card{
       margin-top:16px;
       border-radius:var(--radius2);
@@ -373,6 +374,7 @@
       box-shadow:0 8px 22px rgba(0,0,0,.06);
     }
     .answer-btn:disabled{ opacity:.6; cursor:default; transform:none; }
+
     .processing-wrap{
       display:grid;
       place-items:center;
@@ -395,6 +397,7 @@
       text-transform:uppercase;
       color:rgba(10,14,22,.68);
     }
+
     .result-title-stage,
     .result-name-stage,
     .result-body-stage,
@@ -426,6 +429,7 @@
       background: rgba(255,255,255,.50);
       color: rgba(10,14,22,.80);
     }
+
     footer{
       margin-top:20px;
       padding:18px 4px 0;
@@ -435,6 +439,9 @@
       letter-spacing:.06em;
       color:rgba(10,14,22,.55);
     }
+
+    .is-hidden{ display:none !important; }
+
     @media (max-width:820px){
       .meta-row{ grid-template-columns:1fr; }
       .topbar-inner{ flex-wrap:wrap; }
@@ -443,10 +450,6 @@
     @media (prefers-reduced-motion: reduce){
       *{ animation:none !important; transition:none !important; }
     }
-
-    .is-hidden {
-  display: none !important;
-}
   </style>
 </head>
 <body>
@@ -497,12 +500,12 @@
       </div>
 
       <div class="actions" id="hero-actions">
-        <button class="btn primary" type="button" id="status-button">Alignment in progress</button>
+        <button class="btn primary" type="button" id="status-button" disabled>Alignment in progress</button>
         <button class="btn" type="button" id="reset-button-top">Reset scan</button>
       </div>
     </section>
 
-<section id="processing-view" class="processing-wrap is-hidden">
+    <section id="processing-view" class="processing-wrap is-hidden">
       <div class="processing-card">
         <p class="processing-text">Compiling signal…</p>
       </div>
@@ -525,7 +528,7 @@
       </div>
     </article>
 
-    <div class="actions" id="result-actions" hidden>
+    <div class="actions is-hidden" id="result-actions">
       <button type="button" class="btn primary" id="rerun-button">Re-run alignment</button>
       <a class="btn" href="/home.html">Return to network</a>
     </div>
@@ -709,7 +712,6 @@
     };
 
     const els = {
-      heroCard: document.getElementById('hero-card'),
       kickerText: document.getElementById('kicker-text'),
       heroTitle: document.getElementById('hero-title'),
       heroSub: document.getElementById('hero-sub'),
@@ -799,10 +801,12 @@
       return button;
     }
 
-function renderQuestionView() {
-  els.processingView.classList.add("is-hidden");
-  els.quizCard.classList.remove("is-hidden");
-      els.resultActions.hidden = true;
+    function renderQuestionView() {
+      const question = QUESTIONS[state.currentQuestion];
+
+      els.processingView.classList.add('is-hidden');
+      els.quizCard.classList.remove('is-hidden');
+      els.resultActions.classList.add('is-hidden');
 
       els.kickerText.innerHTML = 'Welcome to E.V.E.N // <span style="font-family: var(--mono)">SIGNAL ALIGNMENT TEST</span>';
       els.heroTitle.textContent = 'Which Member of E.V.E.N Are You?';
@@ -824,12 +828,16 @@ function renderQuestionView() {
       els.statusButton.textContent = 'Alignment in progress';
       els.statusButton.disabled = true;
 
-      els.promptChip.textContent = 'prompt ' + String(state.currentQuestion + 1).padStart(2, '0');
+      els.promptChip.className = 'chip';
+      els.promptChip.innerHTML = 'prompt ' + String(state.currentQuestion + 1).padStart(2, '0');
       els.stateChip.textContent = 'response required';
+
+      els.questionTitle.className = 'question-title';
       els.questionTitle.textContent = question.text;
+      els.questionSub.className = 'question-sub';
       els.questionSub.textContent = 'Choose the response that feels most instinctive. First thought usually tells the truth faster than the polished version.';
 
-      els.answers.classList.toggle('transitioning', state.isTransitioning);
+      els.answers.className = 'answers' + (state.isTransitioning ? ' transitioning' : '');
       els.answers.innerHTML = '';
       question.answers.forEach((answer) => {
         els.answers.appendChild(createAnswerButton(answer));
@@ -841,11 +849,11 @@ function renderQuestionView() {
       applyTheme('Soahn');
     }
 
-function renderProcessingView() {
-  els.quizCard.classList.add("is-hidden");
-  els.resultActions.classList.add("is-hidden");
-  els.processingView.classList.remove("is-hidden");
-}
+    function renderProcessingView() {
+      els.processingView.classList.remove('is-hidden');
+      els.quizCard.classList.add('is-hidden');
+      els.resultActions.classList.add('is-hidden');
+    }
 
     function renderResultView() {
       const matches = getPrimaryAndSecondary(state.scores);
@@ -854,8 +862,9 @@ function renderProcessingView() {
       const result = RESULTS[primary];
       const secondaryLine = getSecondaryLine(primary, secondary);
 
-els.processingView.classList.add("is-hidden");
-  els.quizCard.classList.remove("is-hidden");
+      els.processingView.classList.add('is-hidden');
+      els.quizCard.classList.remove('is-hidden');
+      els.resultActions.classList.remove('is-hidden');
 
       els.kickerText.innerHTML = 'Signal alignment resolved // <span style="font-family: var(--mono)">PERSONALITY TRACE RECOVERED</span>';
       els.heroTitle.textContent = state.revealStage >= 1 ? 'Signal alignment complete' : 'Resolving alignment…';
@@ -878,8 +887,8 @@ els.processingView.classList.add("is-hidden");
       els.statusButton.textContent = 'Resolved';
       els.statusButton.disabled = true;
 
-      els.promptChip.innerHTML = '<span class="dot good"></span> resolved';
       els.promptChip.className = 'chip';
+      els.promptChip.innerHTML = '<span class="dot good"></span> resolved';
       els.stateChip.textContent = 'signal lock';
 
       const nameClass = state.revealStage >= 3 ? 'visible-stage' : 'hidden-stage';
@@ -887,7 +896,6 @@ els.processingView.classList.add("is-hidden");
 
       els.questionTitle.className = 'question-title result-name-stage ' + nameClass;
       els.questionTitle.textContent = primary;
-
       els.questionSub.className = 'question-sub';
       els.questionSub.innerHTML = '';
 
@@ -901,7 +909,6 @@ els.processingView.classList.add("is-hidden");
         </div>
       `;
 
-      els.resultActions.hidden = false;
       els.rerunButton.style.opacity = state.revealStage >= 4 ? '1' : '0';
       els.rerunButton.style.pointerEvents = state.revealStage >= 4 ? 'auto' : 'none';
 
@@ -971,12 +978,11 @@ els.processingView.classList.add("is-hidden");
       state.finished = false;
       state.isTransitioning = false;
       state.revealStage = 0;
-      els.questionTitle.className = 'question-title';
       render();
     }
 
-    document.getElementById('reset-button-top').addEventListener('click', resetQuiz);
-    document.getElementById('rerun-button').addEventListener('click', resetQuiz);
+    els.resetButtonTop.addEventListener('click', resetQuiz);
+    els.rerunButton.addEventListener('click', resetQuiz);
 
     runSelfChecks();
     render();
