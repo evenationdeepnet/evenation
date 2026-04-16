@@ -443,6 +443,10 @@
     @media (prefers-reduced-motion: reduce){
       *{ animation:none !important; transition:none !important; }
     }
+
+    .is-hidden {
+  display: none !important;
+}
   </style>
 </head>
 <body>
@@ -498,7 +502,7 @@
       </div>
     </section>
 
-    <section id="processing-view" class="processing-wrap" hidden>
+<section id="processing-view" class="processing-wrap is-hidden">
       <div class="processing-card">
         <p class="processing-text">Compiling signal…</p>
       </div>
@@ -795,10 +799,9 @@
       return button;
     }
 
-    function renderQuestionView() {
-      const question = QUESTIONS[state.currentQuestion];
-      els.processingView.hidden = true;
-      els.quizCard.hidden = false;
+function renderQuestionView() {
+  els.processingView.classList.add("is-hidden");
+  els.quizCard.classList.remove("is-hidden");
       els.resultActions.hidden = true;
 
       els.kickerText.innerHTML = 'Welcome to E.V.E.N // <span style="font-family: var(--mono)">SIGNAL ALIGNMENT TEST</span>';
@@ -838,12 +841,11 @@
       applyTheme('Soahn');
     }
 
-    function renderProcessingView() {
-      els.quizCard.hidden = true;
-      els.resultActions.hidden = true;
-      els.processingView.hidden = false;
-      setIntegrity(100);
-    }
+function renderProcessingView() {
+  els.quizCard.classList.add("is-hidden");
+  els.resultActions.classList.add("is-hidden");
+  els.processingView.classList.remove("is-hidden");
+}
 
     function renderResultView() {
       const matches = getPrimaryAndSecondary(state.scores);
@@ -852,8 +854,8 @@
       const result = RESULTS[primary];
       const secondaryLine = getSecondaryLine(primary, secondary);
 
-      els.processingView.hidden = true;
-      els.quizCard.hidden = false;
+els.processingView.classList.add("is-hidden");
+  els.quizCard.classList.remove("is-hidden");
 
       els.kickerText.innerHTML = 'Signal alignment resolved // <span style="font-family: var(--mono)">PERSONALITY TRACE RECOVERED</span>';
       els.heroTitle.textContent = state.revealStage >= 1 ? 'Signal alignment complete' : 'Resolving alignment…';
