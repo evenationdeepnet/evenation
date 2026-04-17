@@ -561,7 +561,7 @@
         ]
       },
       {
-        text: "The power grid flickers. Everything drops to backup lighting.",
+        text: "The power grid fails. Everything drops to backup lighting.",
         answers: [
           { text: "Start tracing the fault. There’s a pattern somewhere.", member: "Soahn" },
           { text: "Move to a defensible position.", member: "Onyx" },
@@ -611,7 +611,7 @@
         ]
       },
       {
-        text: "You haven’t slept. The system hums around you, constant.",
+        text: "You haven’t slept. The system buzzes around you, constant.",
         answers: [
           { text: "Keep working. You’ll rest when it’s done.", member: "Soahn" },
           { text: "Shut down and force rest. Function matters more than pride.", member: "Onyx" },
@@ -646,27 +646,27 @@
       Kairo: {
         code: "078K-K",
         title: "Volatile Catalyst",
-        text: "You move before the system finishes thinking. Where others hesitate, you’re already in motion—hands in the wiring, pulling things apart to see how they work and whether they can be made better. You trust the jump, and you trust yourself to survive it.\nYou carry the near-misses and the things you didn’t quite fix, but you don’t stay there. You keep building, keep creating something new out of whatever’s left. The system would call you reckless. It’s wrong. You’re the reason anything changes at all."
+        text: "You move before the system finishes thinking. Where others hesitate, you’re already in motion: hands in the wiring, pulling things apart to see how they work and whether they can be made better. You trust the jump, and you trust yourself to survive it.\nYou carry the near-misses and the things you didn’t quite fix, but you don’t stay there. You keep building, keep creating something new out of whatever’s left. The system would call you reckless. It’s wrong. You’re the reason anything changes at all."
       },
       Onyx: {
         code: "012X-O",
         title: "Controlled Vector",
-        text: "You don’t waste movement or words. There’s a precision to you that people mistake for distance, like you’ve carved everything unnecessary away and left only what functions. You assess, you adapt, you choose—and that choice is rarely accidental.\nRestraint isn’t the absence of feeling; it’s what holds it. You notice more than you say, remember more than you show, and when it matters, you act with quiet certainty. The system would call you cold. It’s wrong. You learned that not everything worth protecting should be visible."
+        text: "You don’t waste movement or words. There’s a precision to you that people mistake for distance, like you’ve carved everything unnecessary away and left only what functions. You assess, you adapt, you choose, and that choice is rarely accidental.\nBut restraint isn’t the absence of feeling; it’s what holds it. You notice more than you say, remember more than you show, and when it matters, you act with quiet certainty. The system would call you cold. It’s wrong. You learned that not everything worth protecting should be visible."
       },
       Soahn: {
         code: "042S-R",
         title: "Structural Core",
-        text: "You look for patterns because it’s the only way anything makes sense. While everything else shifts and breaks, you trace the lines beneath it—what holds, what fails, and why. There’s a steadiness to you that people lean on, whether they realise it or not.\nYou don’t chase noise; you refine it. Beneath that structure runs a quiet current—you feel deeply, you just translate it into action and solutions. The system would call you predictable. It’s wrong. You’re the one holding everything together while it changes."
+        text: "You look for patterns because it’s the only way anything makes sense. While everything else shifts and breaks, you trace the lines beneath it — what holds, what fails, and why. There’s a steadiness to you that people lean on, whether they realise it or not.\nYou don’t chase noise; you refine it. Beneath that structure runs a quiet current—you feel deeply, you just translate it into action and solutions. The system would call you predictable. It’s wrong. You’re the one holding everything together while it changes."
       },
       Minjae: {
         code: "00C9-M",
         title: "Disruptive Node",
-        text: "You were never built to sit quietly inside someone else’s design. You see through systems and people alike—how they’re meant to work, and exactly where to press when they don’t. And sometimes… you do.\nNot for chaos. Because something in you refuses to let things stay wrong just because they’ve always been that way. You speak when it matters, push when others stall, and carry more than you admit. The system would call you difficult. It’s wrong. You’re the reason it can’t stay comfortable."
+        text: "You were never built to sit quietly inside someone else’s design. You see through systems and people alike — how they’re meant to work, and exactly where to press when they don’t. And sometimes… you do.\nBut not for chaos. Because something in you refuses to let things stay wrong just because they’ve always been that way. You speak when it matters, push when others stall, and carry more than you admit. The system would call you difficult. It’s wrong. You’re the reason it can’t stay comfortable."
       },
       Rayne: {
         code: "0000-R",
         title: "Echo State",
-        text: "You exist slightly outside the moment—and because of that, you see it more clearly than most. You listen, notice, and catch the quiet shifts others miss, the meaning hidden between what’s said and what isn’t.\nYou don’t rush to act; you let things unfold. That distance comes with questions—about memory, identity, and what belongs to you. You carry echoes and keep moving anyway. The system would call you incomplete. It’s wrong. You’re still becoming."
+        text: "You exist slightly outside the moment, and because of that, you see it more clearly than most. You listen, notice, and catch the quiet changes others miss, the meaning hidden between what’s said and what isn’t.\nYou don’t rush to act; you let things unfold. That distance comes with questions — about memory, identity, purpose, and what belongs to you. You carry echoes and keep moving anyway. The system would call you incomplete. It’s wrong. You’re still becoming."
       }
     };
 
@@ -835,7 +835,7 @@
       els.questionTitle.className = 'question-title';
       els.questionTitle.textContent = question.text;
       els.questionSub.className = 'question-sub';
-      els.questionSub.textContent = 'Choose the response that feels most instinctive. First thought usually tells the truth faster than the polished version.';
+      els.questionSub.textContent = 'Go with instinct. First thought usually tells the truth faster than the polished version.';
 
       els.answers.className = 'answers' + (state.isTransitioning ? ' transitioning' : '');
       els.answers.innerHTML = '';
@@ -912,7 +912,7 @@
       els.rerunButton.style.opacity = state.revealStage >= 4 ? '1' : '0';
       els.rerunButton.style.pointerEvents = state.revealStage >= 4 ? 'auto' : 'none';
 
-      els.footerCopy.innerHTML = 'E.V.E.N // signal archive endpoint • <span style="color: rgba(10,14,22,.55)">temporary alignment only</span> • “if it recognises you too quickly, maybe ask why.” • <a href="/home.html" style="color: var(--accent); text-decoration: none;">return to network</a>';
+      els.footerCopy.innerHTML = 'E.V.E.N // signal archive endpoint • <span style="color: rgba(10,14,22,.55)">temporary alignment only</span> • “If it recognises you too quickly, maybe ask why.” - Rayne. • <a href="/home.html" style="color: var(--accent); text-decoration: none;">return to network</a>';
 
       setIntegrity(100);
       applyTheme(primary);
