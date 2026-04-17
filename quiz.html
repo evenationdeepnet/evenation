@@ -318,7 +318,7 @@
 .quiz-inner{
   position:relative;
   z-index:1;
-  padding:14px 14px 30px; /* 👈 added extra bottom padding */
+  padding:14px 14px 30px;
   display:grid;
   gap:12px;
 }
@@ -477,7 +477,7 @@
       <h1 class="hero-title" id="hero-title">Which Member of E.V.E.N Are You?</h1>
 
       <p class="sub" id="hero-sub">
-        Behavioural prompts, archived response patterns, and a mildly intrusive amount of signal interpretation. Complete the alignment protocol to determine which network signature you match most closely.
+        Behavioural prompts, archived response patterns, vibes, and a mildly intrusive amount of signal interpretation. Complete the alignment protocol to determine which network signature you match most closely.
       </p>
 
       <div class="meta-row">
@@ -541,12 +541,12 @@
   <script>
     const QUESTIONS = [
       {
-        text: "The signal cuts out mid-transmission. You’re not alone down here.",
+        text: "You're mid-conversation when everything cuts out. You realise you’re not alone down here.",
         answers: [
           { text: "Rebuild the connection manually. You need answers.", member: "Soahn" },
           { text: "Stay still. Listen first. Something else is moving.", member: "Onyx" },
           { text: "Call out anyway. If it answers, that’s information.", member: "Minjae" },
-          { text: "Move. Fast. If something’s here, it’s already too late to hesitate.", member: "Kairo" },
+          { text: "Move. Fast. If something’s here, it’s already too late to hesitate, so we run toward it.", member: "Kairo" },
           { text: "Record it. Even silence has a pattern.", member: "Rayne" }
         ]
       },
@@ -577,7 +577,7 @@
           { text: "Say nothing. Confirm it first.", member: "Soahn" },
           { text: "Let it sit. They’ll reveal more.", member: "Onyx" },
           { text: "Push until they break.", member: "Kairo" },
-          { text: "Ask why, gently.", member: "Rayne" }
+          { text: "Ask why.", member: "Rayne" }
         ]
       },
       {
@@ -616,7 +616,7 @@
           { text: "Keep working. You’ll rest when it’s done.", member: "Soahn" },
           { text: "Shut down and force rest. Function matters more than pride.", member: "Onyx" },
           { text: "Distract yourself. Music, noise, anything to stay upright.", member: "Minjae" },
-          { text: "Push through. You’ve done worse.", member: "Kairo" },
+          { text: "Eh, push through. You’ve done worse.", member: "Kairo" },
           { text: "Drift. Half-rest, half-awareness. You’re used to it.", member: "Rayne" }
         ]
       },
@@ -656,17 +656,17 @@
       Soahn: {
         code: "042S-R",
         title: "Structural Core",
-        text: "You look for patterns because it’s the only way anything makes sense. While everything else shifts and breaks, you trace the lines beneath it — what holds, what fails, and why. There’s a steadiness to you that people lean on, whether they realise it or not.\nYou don’t chase noise; you refine it. Beneath that structure runs a quiet current—you feel deeply, you just translate it into action and solutions. The system would call you predictable. It’s wrong. You’re the one holding everything together while it changes."
+        text: "You look for patterns because it’s the only way anything makes sense. While everything else shifts and breaks, you trace the lines beneath it to see what holds, what fails, and why. There’s a steadiness to you that people lean on, whether they realise it or not.\nYou don’t chase noise; you refine it. Beneath that structure runs a quiet current that you feel deeply, and you just translate it into action and solutions. The system would call you predictable. It’s wrong. You’re the one holding everything together while it changes."
       },
       Minjae: {
         code: "00C9-M",
         title: "Disruptive Node",
-        text: "You were never built to sit quietly inside someone else’s design. You see through systems and people alike — how they’re meant to work, and exactly where to press when they don’t. And sometimes… you do.\nBut not for chaos. Because something in you refuses to let things stay wrong just because they’ve always been that way. You speak when it matters, push when others stall, and carry more than you admit. The system would call you difficult. It’s wrong. You’re the reason it can’t stay comfortable."
+        text: "You were never built to sit quietly inside someone else’s design. You see through systems and people alike: how they’re meant to work, and exactly where to press when they don’t. And sometimes… you do.\nNot for chaos. But because something in you refuses to let things stay wrong just because they’ve always been that way. You speak when it matters, push when others stall, and carry more than you admit. The system would call you difficult. It’s wrong. You’re the reason it can’t stay comfortable."
       },
       Rayne: {
         code: "0000-R",
         title: "Echo State",
-        text: "You exist slightly outside the moment, and because of that, you see it more clearly than most. You listen, notice, and catch the quiet changes others miss, the meaning hidden between what’s said and what isn’t.\nYou don’t rush to act; you let things unfold. That distance comes with questions — about memory, identity, purpose, and what belongs to you. You carry echoes and keep moving anyway. The system would call you incomplete. It’s wrong. You’re still becoming."
+        text: "You exist slightly outside the moment, and because of that, you see it more clearly than most. You listen, notice, and catch the quiet changes others miss, the meaning hidden between what’s said and what isn’t.\nYou don’t rush to act; you let things unfold. That distance comes with questions: about memory, identity, purpose, and what belongs to you. You carry echoes and keep moving anyway. The system would call you incomplete. It’s wrong. You’re still becoming."
       }
     };
 
