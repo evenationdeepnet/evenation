@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Live from The Ghost Lines | Pulse | E.V.E.N</title>
+
+  <style>
+    :root{
+      color-scheme: light;
+
+      /* warm grey / paper layer */
+      --bg: #f2f1ee;
+      --bg2:#eceae6;
+
+      --panel: rgba(20,20,24,.06);
+      --panel2: rgba(20,20,24,.04);
+      --stroke: rgba(20,20,24,.12);
+
+      --text: rgba(18,18,20,.88);
+      --muted: rgba(18,18,20,.60);
+
+      /* restrained accents */
+      --accent: rgba(30,180,190,.85);   /* muted cyan */
+      --accent2: rgba(172,120,210,.55); /* lilac whisper */
+
+      --radius: 18px;
+      --radius2: 26px;
+      --shadow: 0 18px 70px rgba(0,0,0,.10);
+      --shadow2: 0 12px 40px rgba(0,0,0,.08);
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --serifish: ui-serif, Georgia, "Times New Roman", Times, serif;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; min-height:100vh; }
+
+    body{
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(900px 420px at 20% 0%, rgba(30,180,190,.10), transparent 60%),
+        radial-gradient(900px 420px at 80% 0%, rgba(172,120,210,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      overflow-x:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+
+    /* subtle grain/noise */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(1px 1px at 18% 24%, rgba(0,0,0,.12), transparent 60%),
+        radial-gradient(1px 1px at 42% 62%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 78% 38%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 60% 80%, rgba(0,0,0,.08), transparent 60%);
+      opacity:.08;
+      filter: blur(.3px);
+      z-index:0;
+    }
+
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 44px 20px 76px;
+      position:relative;
+      z-index:1;
+    }
+
+    /* header */
+    .head{
+      text-align:center;
+      margin-bottom: 18px;
+    }
+
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.18em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.66);
+    }
+
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 0 rgba(30,180,190,.25);
+      animation: pulse 2.6s infinite;
+      flex:none;
+    }
+
+    @keyframes pulse{
+      0%{ box-shadow: 0 0 0 0 rgba(30,180,190,.22); }
+      70%{ box-shadow: 0 0 0 12px rgba(30,180,190,0); }
+      100%{ box-shadow: 0 0 0 0 rgba(30,180,190,0); }
+    }
+
+    h1{
+      margin: 14px 0 8px;
+      font-size: clamp(32px, 4.6vw, 54px);
+      line-height: 1.06;
+      letter-spacing: -0.02em;
+    }
+
+    .meta{
+      margin: 0 auto;
+      max-width: 70ch;
+      color: rgba(18,18,20,.62);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* story card */
+    .card{
+      margin-top: 22px;
+      border-radius: var(--radius2);
+      background: linear-gradient(180deg, rgba(255,255,255,.70), rgba(255,255,255,.52));
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(700px 240px at 25% 0%, rgba(30,180,190,.14), transparent 60%),
+        radial-gradient(700px 240px at 75% 0%, rgba(172,120,210,.12), transparent 60%);
+      opacity:.70;
+      pointer-events:none;
+    }
+
+    .card-inner{
+      position:relative;
+      z-index:1;
+      padding: 28px 28px 24px;
+    }
+
+    /* divider inside card */
+    .divider{
+      height: 1px;
+      background: linear-gradient(90deg, rgba(172,120,210,.40), rgba(30,180,190,.40));
+      opacity:.7;
+      margin: 16px 0 22px;
+    }
+
+    /* story typography */
+    .story{
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.9;
+      color: rgba(18,18,20,.84);
+    }
+
+    .story p{
+      margin: 0 0 16px;
+    }
+
+    .story em{ color: rgba(18,18,20,.86); }
+
+    .center-text {
+  text-align: center;
+}
+
+    /* optional little “file tag” row */
+    .filetag{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.62);
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.40);
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(18,18,20,.66);
+      letter-spacing:.06em;
+      white-space:nowrap;
+    }
+
+    /* --- SoundCloud block (Signals story pages) --- */
+.audio-block{
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px dashed rgba(18,18,20,.18);
+}
+
+.audio-label{
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(18,18,20,.62);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom: 10px;
+}
+
+.audio-label .dot{
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 rgba(30,180,190,.20);
+}
+
+.sc-embed{
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(18,18,20,.14);
+  background: rgba(255,255,255,.48);
+  box-shadow: 0 12px 40px rgba(0,0,0,.08);
+  height: 120px; /* matches your preferred compact player */
+}
+
+.sc-embed iframe{
+  display:block;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0;
+}
+
+    /* back nav */
+    .back{
+      margin-top: 18px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .back a{
+      text-decoration:none;
+      font-family: var(--mono);
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: rgba(18,18,20,.62);
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.55);
+      transition: .16s ease;
+    }
+
+    .back a:hover{
+      color: rgba(18,18,20,.82);
+      border-color: rgba(18,18,20,.22);
+      box-shadow: 0 12px 40px rgba(0,0,0,.10);
+      transform: translateY(-1px);
+    }
+
+    /* reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+
+    <header class="head">
+      <div class="kicker"><span class="dot" aria-hidden="true"></span> signals // pulse // recovered story</div>
+      <h1>Live from The Ghost Lines</h1>
+      <p class="meta">File integrity: partial. Playback: safe.</p>
+    </header>
+
+    <article class="card" aria-label="Story container">
+      <div class="card-inner">
+
+        <div class="filetag" aria-label="File tags">
+          <span class="pill">pulse</span>
+          <span class="pill">growth</span>
+          <span class="pill">ensemble</span>
+        </div>
+
+        <div class="divider" aria-hidden="true"></div>
+
+        <div class="story">
+
+          <!-- Paste story paragraphs exactly as you have them -->
+
+<p>&ldquo;Come on,&rdquo; Kairo murmured, brushing his thumb across a connection that should have held but didn&rsquo;t quite. &ldquo;Just&hellip; behave.&rdquo;</p>
+<p>Behind him, Minjae&rsquo;s fingers moved in quick bursts across his keyboard. &ldquo;If you&rsquo;re talking to it again, I&rsquo;m logging it as a formal decline in your mental stability.&rdquo;</p>
+<p>Kairo huffed a quiet laugh and readjusted the wire. &ldquo;It listens better than you do.&rdquo;</p>
+<p>&ldquo;Everything listens better than me. I don&rsquo;t pretend to care.&rdquo;</p>
+<p>The circuit finally settled with a soft click and Kairo&rsquo;s mouth curved. &ldquo;There we go. See? You just have to believe.&rdquo; Hesitating, he tilted his head to one side as something pale caught at the edge of his vision where there should&rsquo;ve been nothing but cracked concrete and the steady bleed of damp. &ldquo;&hellip;Hang on.&rdquo;</p>
+<p>Minjae didn&rsquo;t pause. &ldquo;I&rsquo;m choosing to interpret that as you finally giving up.&rdquo;</p>
+<p>&ldquo;No, no. There&rsquo;s something over there.&rdquo; Kairo pushed himself upright and twisted around on the balls of his feet, gaze fixing on the wall just behind the relay column. &ldquo;&hellip;what <em>is</em> that?&rdquo;</p>
+<p>Minjae sighed, long-suffering, and finally glanced over his shoulder. &ldquo;If it&rsquo;s another &lsquo;I found a thing&rsquo; situation, I don&rsquo;t want any part of it.&rdquo; But he stopped too, lifting an eyebrow.</p>
+<p>From a narrow fracture in the concrete where moisture had gathered in a thin, dark seam, something had pushed its way through.</p>
+<p>Mushrooms.</p>
+<p>Small and pale and clustered tight, their caps just beginning to open, angled toward the soft light of the panel.</p>
+<p>Kairo stared at them, trying to process. &ldquo;They weren&rsquo;t there yesterday.&rdquo;</p>
+<p>Minjae leaned back in his chair, turning it just enough to get a better angle. &ldquo;Congratulations,&rdquo; he said. &ldquo;You&rsquo;ve discovered mould.&rdquo;</p>
+<p>&ldquo;That isn&rsquo;t just mould,&rdquo; Kairo said, already stepping closer, curiosity overtaking whatever he&rsquo;d been doing before. &ldquo;Those are actual mushrooms.&rdquo;</p>
+<p>Minjae&rsquo;s gaze lingered for another beat, then slid back to his screen. &ldquo;Groundbreaking.&rdquo;</p>
+<p>Kairo reached out and nudged one gently with the back of a screwdriver. &ldquo;Do you think they&rsquo;re edible?&rdquo;</p>
+<p>&ldquo;Jesus, no. I figured Onyx would&rsquo;ve already given you the talk about not eating random stuff that grows out of the walls in The Ghost Lines.&rdquo;</p>
+<p>Kairo ignored him and gave one of the caps another gentle nudge. It gave slightly under the touch, elastic rather than fragile. &ldquo;It&rsquo;s so weird.&rdquo;</p>
+<p>&ldquo;They&rsquo;re growing in a damp, underground tunnel,&rdquo; Minjae said. &ldquo;What part of that is confusing you?&rdquo;</p>
+<p>&ldquo;No, but look at them,&rdquo; Kairo insisted, leaning in closer, the beam from his wrist-light angling down across them. &ldquo;&hellip;they&rsquo;re vibing.&rdquo;</p>
+<p>&ldquo;It&rsquo;s a plant,&rdquo; Minjae muttered.</p>
+<p>&ldquo;Fungus,&rdquo; Kairo corrected, already reaching for a spare sensor. &ldquo;And it&rsquo;s doing something.&rdquo; The mushrooms leaned slightly toward the warmth of the relay and the current running through the exposed panel. Kairo turned the sensor in his hand as he studied the setup. &ldquo;I think they&rsquo;re adapting,&rdquo; he added, half to himself.</p>
+<p>&ldquo;To what?&rdquo;</p>
+<p>&ldquo;That&rsquo;s what I&rsquo;m going to find out.&rdquo; Kairo grinned and slotted the sensor into place.</p>
+<p>&ldquo;Please don&rsquo;t tell me you&rsquo;re about to wire mould into the system.&rdquo;</p>
+<p>&ldquo;&lsquo;Wire&rsquo; is such a strong word,&rdquo; Kairo said, leaning in again and hands already moving to bridge the connection. &ldquo;I&rsquo;m more&hellip; introducing them.&rdquo;</p>
+<p>&ldquo;That&rsquo;s worse.&rdquo;</p>
+<p>With a laugh, Kairo got to work, and the small colony leaned again, drawn to the low, steady thrum of the current.</p>
+<p>Growing where they shouldn&rsquo;t.</p>
+<p>And, if he had anything to do with it, about to become something else entirely.</p>
+<p><br></p>
+<p><center>~*~</center></p>
+<p><br></p>
+<p>The relay stayed open longer than necessary. Kairo told himself he was just testing the connection, refining the sensor feed, but his attention kept drifting back to the mushrooms and the uneven readout that refused to settle into anything predictable.</p>
+<p>Behind him, Minjae&rsquo;s chair creaked as he stretched widely, his shoulders popping softly in the quiet. &ldquo;If that kills the relay, you can be the one who has to explain it to Soahn.&rdquo;</p>
+<p>&ldquo;It isn&rsquo;t going to kill the relay,&rdquo; Kairo said.</p>
+<p>&ldquo;Your confidence always astounds me.&rdquo;</p>
+<p>&ldquo;I&rsquo;m testing it, right now.&rdquo;</p>
+<p>&ldquo;On mushrooms.&rdquo;</p>
+<p>&ldquo;On <em>fungi</em>,&rdquo; Kairo corrected, tapping lightly against the interface as the readout spiked, dipped, then settled again into that same slow, drifting irregularity. &ldquo;And they&rsquo;re doing something.&rdquo;</p>
+<p>&ldquo;Sure they &mdash; oh. Hey.&rdquo;</p>
+<p>Following the change in atmosphere, Kairo glanced over his shoulder and jumped slightly in his skin as he saw Rayne standing silently in the doorway. The low light caught along the edge of his jaw and his hands at his sides, casting him in a pale glow. It made him look a little ghostly, which was fitting, really, because he barely made a sound.</p>
+<p>&ldquo;Remember when we talked about you making a bit more noise when you enter a room, Rayney,&rdquo; Kairo said. &ldquo;One of these days, one of us is gonna have a heart attack and that&rsquo;ll be it. The end of E.V.E.N.&rdquo;</p>
+<p>Rayne didn&rsquo;t answer; he was already looking past him at the wall. &ldquo;Those are new,&rdquo; he said.</p>
+<p>Kairo grinned. &ldquo;Yeah, and they&rsquo;re doing something.&rdquo;</p>
+<p>At that, Rayne came over to Kairo&rsquo;s side and crouched beside the cluster. It looked to Kairo like he was processing something, his head tilted, eyes fixed on the mushrooms.</p>
+<p>&ldquo;See that?&rdquo; Kairo murmured.</p>
+<p>Silently, Rayne reached out and touched a fingertip to the nearest cap. &ldquo;They&rsquo;re singing,&rdquo; he said simply.</p>
+<p>&ldquo;What?&rdquo; Minjae&rsquo;s chair scraped as he rose and came over. &ldquo;Did you say <em>singing</em>? Do you need a restart, mate?&rdquo;</p>
+<p>Rayne shrugged. &ldquo;But they are. It&rsquo;s layered, not one signal. Strange, but also beautiful.&rdquo;</p>
+<p>&ldquo;You touched a fungus and it started singing to you,&rdquo; Minjae said, squinting down at the corner.</p>
+<p>&ldquo;No, I think they&rsquo;ve always been singing. We just couldn&rsquo;t hear it.&rdquo;</p>
+<p>&ldquo;Bloody hell,&rdquo; Kairo breathed. &ldquo;That&rsquo;s the coolest thing I&rsquo;ve ever heard.&rdquo; He glanced over to the display, to find that the pattern had changed. Where it had been drifting before, now it held rhythm, subtle and buried but present. &ldquo;Hold on. Don&rsquo;t move.&rdquo;</p>
+<p>&ldquo;I&rsquo;m not moving,&rdquo; Rayne said.</p>
+<p>Pulling the signal into the audio channel, Kairo boosted the sound, filtering and isolating it. The speakers crackled for a second, and then&mdash;</p>
+<p>A tone.</p>
+<p>A strange little <em>pop</em> of a noise, almost lost beneath the system&rsquo;s hum, but unmistakable once it surfaced. Kairo froze, blinked, and felt Minjae lean in closer over his shoulder. A second note followed, sliding alongside the first. Kairo glanced at Minjae, then back at Rayne, who hadn&rsquo;t moved as instructed.</p>
+<p>&ldquo;Well, shit,&rdquo; Minjae said, and laughed.</p>
+<p>Kairo laughed too as the sound continued, soft and strange and filling the space with something that wasn&rsquo;t quite music and wasn&rsquo;t quite anything else he could put into words. &ldquo;It probably goes without saying, but we&rsquo;re absolutely keeping them.&rdquo;</p>
+<p><br></p>
+<p><center>~*~</center></p>
+<p><br></p>
+<p>&ldquo;So guys, we have a backing band now,&rdquo; Kairo said as Soahn and Onyx entered the room a little later. By this time, he&rsquo;d already hooked most of the larger caps up to the console, thin sensor leads running from stem to interface, the signals routed through a patched transmitter that translated their subtle electrical pulses into something the speakers could carry. The sound drifted behind him, an uneven, unresolved series of little pops and clicks and clangs, while his attention stayed fixed on the small, stubborn lives pushing through the wall.</p>
+<p>Onyx&rsquo;s gaze swept the room, the equipment, Kairo practically vibrating with excitement, and then he let out a sigh. &ldquo;I already regret coming in here.&rdquo;</p>
+<p>&ldquo;What&rsquo;s that?&rdquo; Soahn said, coming over to where Kairo was working. He stared at the waveform, then down to the little mushrooms covered in sensors, and a smile spread across his mouth. &ldquo;Oh. You&rsquo;ve integrated them into the system.&rdquo;</p>
+<p>&ldquo;Lightly,&rdquo; Kairo said. &ldquo;They&rsquo;re basically freeloading.&rdquo;</p>
+<p>&ldquo;That isn&rsquo;t how it works,&rdquo; Minjae interjected from his terminal.</p>
+<p>&ldquo;Whatever.&rdquo; Kairo pointed at the tallest stem with the end of a cable. &ldquo;Let me introduce you. Right. This one&rsquo;s the lead, obviously. Look at it leaning all casually and cool like that. Main character energy.&rdquo;</p>
+<p>&ldquo;It&rsquo;s leaning because it&rsquo;s dying,&rdquo; Minjae muttered.</p>
+<p>&ldquo;Shut up. That one to the side is bass. That one&mdash;drums.&rdquo; He pointed to a smaller growth tucked behind the others. &ldquo;That one&rsquo;s emotional support.&rdquo;</p>
+<p>&ldquo;Huh,&rdquo; Soahn said, amused.</p>
+<p>&ldquo;You&rsquo;ve assigned personalities to fungus,&rdquo; Onyx said, frown still firmly in place.</p>
+<p>&ldquo;Roles. It&rsquo;s different.&rdquo;</p>
+<p>&ldquo;They&rsquo;re all the same organism,&rdquo; Soahn said absently, watching the readout.</p>
+<p>&ldquo;Yeah, well,&rdquo; Kairo replied, not looking up, &ldquo;so are we, technically.&rdquo;</p>
+<p>That earned him a moment of contemplative silence.</p>
+<p>Kairo tapped the relay housing lightly, already moving on. &ldquo;We&rsquo;re going to need a better setup for them, though.&rdquo;</p>
+<p>&ldquo;The system isn&rsquo;t your studio,&rdquo; Onyx said.</p>
+<p>&ldquo;It is now.&rdquo;</p>
+<p>Rayne reached over and tweaked the gain, and the data pulled into clearer bands. &ldquo;They seem to be adjusting,&rdquo; he said.</p>
+<p>&ldquo;Of course they are,&rdquo; Kairo replied. &ldquo;Little fun guys.&rdquo;</p>
+<p>&ldquo;In what universe is this normal behaviour?&rdquo; Minjae asked no one in particular.</p>
+<p>&ldquo;Agreed,&rdquo; Onyx said, folding his arms across his chest.</p>
+<p>&ldquo;Ah, you&rsquo;re just not seeing it yet,&rdquo; Kairo told them, and then he grinned. &ldquo;But you&rsquo;ll get there.&rdquo;</p>
+<p>&ldquo;You just hooked some fungus up to a soundboard,&rdquo; Minjae replied. &ldquo;Doesn&rsquo;t make you the world-leading expert on ecology.&rdquo;</p>
+<p>&ldquo;No, true. But,&rdquo; Kairo muttered. &ldquo;I appreciate the hustle. They grow, even where they shouldn&rsquo;t. They learn how to stay.&rdquo;</p>
+<p>The room fell silent again, only this time it was a thicker, deeper kind of quiet. Nobody disputed it.</p>
+<p>And nobody tried to stop him. Kairo leaned toward the console, watching the waveform as it rolled and changed and refused to settle, and started recording.</p>
+<p><br></p>
+<p><center>~*~</center></p>
+<p><br></p>
+<p>Rayne lowered himself into a crouch at the edge of the cluster, careful not to touch. The sound moved through the air in thin, layered strands, delicate and yet determined. It moved in and out of the usual ticks and groans of The Ghost Lines, something that refused to be contained or work within any parameters that could be set.</p>
+<p>Growth. <em>Life</em>.</p>
+<p>Rayne listened. Time passed.</p>
+<p>He tracked the movements of the fungi as it unfolded, and heard the system adjust around it, the current feeding through the relay in ambient frequencies that were strangely relaxing. A lower tone stretched out and held longer than before, then split, and a second frequency branched out from it, not identical or harmonic, but related, echoing in a way that suggested memory.</p>
+<p>The next variation came slower with a slight delay, almost considered, and Rayne waited, listening to it.</p>
+<p><br></p>
+<p><center>~*~</center></p>
+<p><br></p>
+<p>When Soahn returned, the room felt different. Nothing had changed in a measurable way &mdash; the panel remained open, the system steady, their gear scattered where they left it, and the growth small and pale against the wall &mdash; but the space held a quiet density.</p>
+<p>Rayne was already there, crouched and unmoving near the wall, watching the caps.</p>
+<p>&ldquo;Hey,&rdquo; Soahn said, setting down a half-disassembled water filter on the nearest workstation, its internals modified to regulate temperature and mineral balance alongside basic filtration. He ran a hand through his hair, considering the next adjustment, but stopped when he realised Rayne hadn&rsquo;t said anything in reply. &ldquo;Rayne?&rdquo; he added, turning.</p>
+<p>Only then did Rayne blink and lift his gaze, like he was returning from somewhere else. &ldquo;Hello.&rdquo;</p>
+<p>&ldquo;Have you been here long?&rdquo; Soahn asked.</p>
+<p>&ldquo;Yes.&rdquo; A pause. &ldquo;Approximately four hours.&rdquo;</p>
+<p>&ldquo;Four&hellip;&rdquo; Soahn echoed, and then let out an incredulous breath. &ldquo;You&rsquo;ve been listening to mushrooms for four hours?&rdquo;</p>
+<p>Tilting his head, Rayne said, &ldquo;I&rsquo;ve been listening to the band.&rdquo;</p>
+<p>Soahn stared at him for a moment, not for the first time pondering the strange nature that was their resident synthetic. &ldquo;And?&rdquo;</p>
+<p>&ldquo;It&rsquo;s changed,&rdquo; Rayne said, reaching up to the desk to adjust the filter and isolate clearer bands.</p>
+<p>&ldquo;How?&rdquo;</p>
+<p>&ldquo;The intervals have always varied,&rdquo; Rayne continued. &ldquo;But the sequence adjusts.&rdquo;</p>
+<p>Curiosity piqued, Soahn left his workstation and went over to Kairo&rsquo;s where the waveform stretched across the screen, and began pulling up earlier samples, overlaying them with the current output. Rayne was right; they didn&rsquo;t align, but it wasn&rsquo;t because they were noise. They had moved. He frowned and leaned closer, tweaking the gain a little. The tones separated, revealing spacing and subtle delays. One followed another after a measured interval.</p>
+<p>Delayed response.</p>
+<p>Soahn&rsquo;s breath caught. &ldquo;It&rsquo;s learning?&rdquo;</p>
+<p>&ldquo;It&rsquo;s remembering,&rdquo; Rayne said, and Soahn stared at him. The data didn&rsquo;t exactly contradict him.</p>
+<p>Soahn glanced back at the display and the slow, shifting pattern that refused to repeat, at the way each variation carried something forward instead of replacing it. Like it was building.</p>
+<p>He&rsquo;d seen that before. Not here &mdash; not like this &mdash; but in neural maps that learned through repetition and deviation. In signal pathways that strengthened and adapted and changed shape over time until they no longer resembled what they&rsquo;d been designed to do.</p>
+<p>In people.</p>
+<p>Rayne remained crouched, still listening.</p>
+<p>&ldquo;You recognised it,&rdquo; Soahn said quietly.</p>
+<p>&ldquo;Yes,&rdquo; Rayne said, not looking away. &ldquo;I heard it. They hold onto what came before and change because of it.&rdquo;</p>
+<p>&ldquo;Wow, Rayne,&rdquo; Soahn said, lowering himself into a crouch beside him. He thought back to when him and Kairo first found Rayne, folded into himself and tucked next to a dead interface node, his signal fractured and incomplete.</p>
+<p>He had been quieter back then. A different kind of stillness, more distant, like the world had been reaching him in fragments he hadn&rsquo;t yet learned how to hold onto.</p>
+<p>The tones moved around them, pushing forward and changing as they went.</p>
+<p>&ldquo;We should keep this stable,&rdquo; he said, going back to the console.</p>
+<p>&ldquo;Yes,&rdquo; Rayne said.</p>
+<p><br></p>
+<p><center>~*~</center></p>
+<p><br></p>
+<p>Nothing outwardly changed about their setup, but Kairo started to notice small&hellip; things. Like how, whenever he returned to the room, Onyx was always a little more light-footed when he moved past the wall, as if he was subconsciously being careful not to disturb the band. Kairo chose not to point it out, but observed it amusedly from a distance. He also noticed the way Minjae&rsquo;s attention frequently slid sideways to the console, where the waveform on the secondary display continued its quiet evolution.</p>
+<p>Work resumed as usual, but it felt different, like it wasn&rsquo;t just them anymore. Kairo supposed it didn&rsquo;t help that he kept the tones playing almost the whole time. It was just&hellip; really hard to shut them off, like if it stopped he wouldn&rsquo;t be able to tell that the fungi were still alive, still present.</p>
+<p>Time moved in the way it always did underground, unmarked and difficult to separate into minutes or hours. The sound settled into the space until Kairo was certain the absence of it would feel weirder.</p>
+<p>He adjusted the final levels with a light touch, tagging the recordings and locking the buffers into a clean loop, and then settled back in his chair, hooking one foot around the chair leg as he watched it run. &ldquo;I&rsquo;m sampling this,&rdquo; he said, half to the room, half to himself. &ldquo;Not as a gimmick. Listen to it &mdash; it&rsquo;s got space.&rdquo;</p>
+<p>Minjae&rsquo;s attention drifted sideways despite himself. &ldquo;You say that like it&rsquo;s going to cooperate.&rdquo;</p>
+<p>Kairo shrugged. &ldquo;Everything cooperates if you treat it right.&rdquo;</p>
+<p>&ldquo;That has never once been true.&rdquo; Minjae&rsquo;s gaze stayed on the display, tracking the pattern as it drifted, changed, held just long enough to register before moving on again.</p>
+<p>Across the room, Soahn adjusted something on the filter without quite paying attention to it, his focus split, one part still with the data, the other with the quiet presence that had settled into the space around them. Onyx lingered near the doorway, arms folded, watching without comment.</p>
+<p>Rayne remained closest.</p>
+<p>The sound carried on, slipping through the system and the room, through them.&nbsp;</p>
+<p>It wasn&rsquo;t fixed, and it wasn&rsquo;t finished, but it was holding.</p>
+<p>And, for now, that was enough.</p>
+
+  </div>
+</div>
+    </article>
+
+    <nav class="back" aria-label="Return">
+      <a href="/signals/">← Back to Signals</a>
+    </nav>
+
+  </main>
+</body>
+</html>
