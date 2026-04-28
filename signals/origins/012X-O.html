@@ -1,613 +1,578 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>012X-O | Signals | E.V.E.N</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>012X-O | Origins | E.V.E.N</title>
+
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #e0e0e0;
-      color: #000;
-      font-family: 'IBM Plex Mono', monospace;
-      line-height: 1.6;
-      background-image: url('../static-noise.png');
-      background-size: cover;
+    :root{
+      color-scheme: light;
+
+      /* warm grey / paper layer */
+      --bg: #f2f1ee;
+      --bg2:#eceae6;
+
+      --panel: rgba(20,20,24,.06);
+      --panel2: rgba(20,20,24,.04);
+      --stroke: rgba(20,20,24,.12);
+
+      --text: rgba(18,18,20,.88);
+      --muted: rgba(18,18,20,.60);
+
+      /* restrained accents */
+      --accent: rgba(30,180,190,.85);   /* muted cyan */
+      --accent2: rgba(172,120,210,.55); /* lilac whisper */
+
+      --radius: 18px;
+      --radius2: 26px;
+      --shadow: 0 18px 70px rgba(0,0,0,.10);
+      --shadow2: 0 12px 40px rgba(0,0,0,.08);
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --serifish: ui-serif, Georgia, "Times New Roman", Times, serif;
     }
 
-    .container {
-      max-width: 800px;
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; min-height:100vh; }
+
+    body{
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(900px 420px at 20% 0%, rgba(30,180,190,.10), transparent 60%),
+        radial-gradient(900px 420px at 80% 0%, rgba(172,120,210,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      overflow-x:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+
+    /* subtle grain/noise */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(1px 1px at 18% 24%, rgba(0,0,0,.12), transparent 60%),
+        radial-gradient(1px 1px at 42% 62%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 78% 38%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 60% 80%, rgba(0,0,0,.08), transparent 60%);
+      opacity:.08;
+      filter: blur(.3px);
+      z-index:0;
+    }
+
+    .wrap{
+      max-width: 980px;
       margin: 0 auto;
-      padding: 4rem 2rem;
+      padding: 44px 20px 76px;
+      position:relative;
+      z-index:1;
     }
 
-    h1 {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 2.5rem;
-      color: #990066;
-      margin-bottom: 0.5rem;
+    /* header */
+    .head{
+      text-align:center;
+      margin-bottom: 18px;
     }
 
-    .id-tag {
-      font-size: 1rem;
-      color: #666;
-      margin-bottom: 2rem;
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.18em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.66);
     }
 
-    .glitch-divider {
-      width: 100%;
-      height: 2px;
-      background: linear-gradient(to right, #ff00ff, #00ffff);
-      margin: 2.5rem 0;
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 0 rgba(30,180,190,.25);
+      animation: pulse 2.6s infinite;
+      flex:none;
     }
 
-    .story p {
-      font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', sans-serif;
-      font-size: 1rem;
-      color: #000;
-      line-height: 1.6;
-      margin-bottom: 1rem; /* Adjust this to tighten or loosen paragraph spacing */
+    @keyframes pulse{
+      0%{ box-shadow: 0 0 0 0 rgba(30,180,190,.22); }
+      70%{ box-shadow: 0 0 0 12px rgba(30,180,190,0); }
+      100%{ box-shadow: 0 0 0 0 rgba(30,180,190,0); }
     }
 
-    .back-link {
-      color: #990066;
-      text-decoration: none;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1rem;
-      border: 1px solid #990066;
-      padding: 0.5rem 1rem;
-      display: inline-block;
-      margin-top: 3rem;
-      transition: 0.3s ease;
+    h1{
+      margin: 14px 0 8px;
+      font-size: clamp(32px, 4.6vw, 54px);
+      line-height: 1.06;
+      letter-spacing: -0.02em;
     }
 
-    .back-link:hover {
-      background: #00ffff;
-      color: #000;
+    .meta{
+      margin: 0 auto;
+      max-width: 70ch;
+      color: rgba(18,18,20,.62);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* story card */
+    .card{
+      margin-top: 22px;
+      border-radius: var(--radius2);
+      background: linear-gradient(180deg, rgba(255,255,255,.70), rgba(255,255,255,.52));
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(700px 240px at 25% 0%, rgba(30,180,190,.14), transparent 60%),
+        radial-gradient(700px 240px at 75% 0%, rgba(172,120,210,.12), transparent 60%);
+      opacity:.70;
+      pointer-events:none;
+    }
+
+    .card-inner{
+      position:relative;
+      z-index:1;
+      padding: 28px 28px 24px;
+    }
+
+    /* divider inside card */
+    .divider{
+      height: 1px;
+      background: linear-gradient(90deg, rgba(172,120,210,.40), rgba(30,180,190,.40));
+      opacity:.7;
+      margin: 16px 0 22px;
+    }
+
+    /* story typography */
+    .story{
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.9;
+      color: rgba(18,18,20,.84);
+    }
+
+    .story p{
+      margin: 0 0 16px;
+    }
+
+    .story em{ color: rgba(18,18,20,.86); }
+
+    .center-text {
+  text-align: center;
+}
+
+    /* optional little “file tag” row */
+    .filetag{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.62);
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.40);
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(18,18,20,.66);
+      letter-spacing:.06em;
+      white-space:nowrap;
+    }
+
+    /* --- SoundCloud block (Signals story pages) --- */
+.audio-block{
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px dashed rgba(18,18,20,.18);
+}
+
+.audio-label{
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(18,18,20,.62);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom: 10px;
+}
+
+.audio-label .dot{
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 rgba(30,180,190,.20);
+}
+
+.sc-embed{
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(18,18,20,.14);
+  background: rgba(255,255,255,.48);
+  box-shadow: 0 12px 40px rgba(0,0,0,.08);
+  height: 120px; /* matches your preferred compact player */
+}
+
+.sc-embed iframe{
+  display:block;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0;
+}
+
+    /* back nav */
+    .back{
+      margin-top: 18px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .back a{
+      text-decoration:none;
+      font-family: var(--mono);
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: rgba(18,18,20,.62);
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.55);
+      transition: .16s ease;
+    }
+
+    .back a:hover{
+      color: rgba(18,18,20,.82);
+      border-color: rgba(18,18,20,.22);
+      box-shadow: 0 12px 40px rgba(0,0,0,.10);
+      transform: translateY(-1px);
+    }
+
+    /* reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; }
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <h1>012X-O</h1>
-    <p class="id-tag">"Trained to be a weapon. Chose to be something else."</p>
-    <div class="glitch-divider"></div>
-
-    <div class="story">
-<p>The outer districts of Busan are ash and silence.</p>
-
-<p>It was a thriving tech city once, bright with neural signage, busy commerce and student noise. Now it&rsquo;s barely more than rubble and rerouted power grids. The air is dense with smoke and residue and burnt ozone. Old banners flap like ghosts from shattered lampposts. Half a school lies collapsed in the street. The broken shells of servers spark against the curb, their cables tangled like ivy through a dead garden.</p>
-
-<p>Onyx moves through it like a shadow.</p>
-
-<p>TARGETING SYSTEMS ONLINE<br>
-THERMAL LOCK ENGAGED<br>
-ECHO MODE: ACTIVE</p>
-
-<p>He steps around debris with precision drilled into bone, every motion smooth and silent, his augmented tendons adjusting tension automatically.</p>
-
-<p>Muscle thread tension: 72%.</p>
-<p>Targeting matrix: stable.</p>
-<p>Pulse: 41 bpm.</p>
-<p>System log: installed age 15.</p>
-
-<p>They called it conditioning&mdash;re-coded pain, erased emotion, obedience wired through muscle and bone. But that wasn&rsquo;t where it started. Not really.&nbsp;</p>
-
-<p>It started with hunger. With winter nights where the wind crawled through broken window frames and the electricity cut out by dinnertime, hands too cold to hold a pen and a stomach that learned how to ignore itself.</p>
-
-<p>He said yes because &lsquo;yes&rsquo; meant a roof that didn&rsquo;t leak, a heater that stayed on past curfew, and doors that locked from the inside instead of keeping him out.</p>
-
-<p>In Daegu&rsquo;s south end, becoming a weapon wasn&rsquo;t betrayal. It was survival. Because softness was a weakness the streets learned how to punish.</p>
-
-<p>Onyx&rsquo;s right arm recalibrates with a faint hum, microservos responding to elevation change. HUD readouts flicker across his vision: status reports, field instructions, squad vitals.</p>
-
-<p><em>&ldquo;Area Z-3 is unsecured. Maintain sweep pattern.Clear suspected broadcast nodes. No local comms. No hesitation.&rdquo;</em></p>
-
-<p>His optics flash once, adjusting for movement, but there&rsquo;s nothing. Just static behind the walls and the eerie residue of lives once lived.</p>
-
-<p>He&rsquo;s not sure what this place used to be. Maybe a coding academy, or even a music school. The Dominion&rsquo;s history scrubbers had already rewritten it before he got here.</p>
-
-<p>Behind him, two other soldiers fan out. He doesn&rsquo;t know their names, only their designations. They are trained, quiet, and efficient. Like him.</p>
-
-<p>But also <em>not</em> like him. Not anymore. Not since the last mission.</p>
-
-<p>Silently they breach the old admin building, but the doors open too easily. Something in Onyx&rsquo;s stomach shifts&mdash;instinct or memory, he can&rsquo;t tell.</p>
-
-<p>Up ahead, a wall has been knocked through, revealing a once-hidden stairwell descending underground. Signal intel marks it as a rebel node. A possible comms relay or transmitter. Could be tech. Could be people.</p>
-
-<p>Could be both.</p>
-
-<p>&ldquo;Move in. No warnings. Clear the relay.&rdquo;</p>
-
-<p>He descends without a word.</p>
-
-<p>The stairwell is narrow and dust-choked, with broken light panels flickering weakly overhead. Graffiti trails the walls, strange runes and sigils, words in marker and blood. He spots a child&rsquo;s handprint and looks away.</p>
-
-<p>When they reach the bottom, they stop, their boots landing soft on cracked concrete.</p>
-
-<p>And that&rsquo;s when Onyx hears it&mdash;faint, but unmistakable.</p>
-
-<p>A rhythm.</p>
-
-<p>Soft and syncopated, threading through the static hum of the dead server stacks, barely audible but real. He shifts into echo mode, his audio implants crackling and recalibrating, narrowing in.</p>
-
-<p>There it is, tucked under the interference. Alive in the hush.</p>
-
-<p>A beat.&nbsp;</p>
-
-<p>One. Two. Tap-tap. Tap. Tap-tap.</p>
-
-<p>And he can tell it&rsquo;s not a recording or some ghost file trapped on loop. This is live. This is <em>now</em>.</p>
-
-<p>Onyx raises a fist, signalling hold without a word, and moves forward, every step drawn tight, every sense honed to the rhythm rising just beyond the next doorway.</p>
-
-<p>He steps through, into the low-lit hush of a server room long since given over to rot, where half the racks have melted into slag and the leftover cables sprawl across the floor like the bones of something forgotten.</p>
-
-<p>In the far corner, crouched in a pocket of half-shadow, is a kid&mdash;small, maybe twelve, maybe younger, his small limbs drawn in tight. Cross-legged on the floor, he&rsquo;s hunched over a rusted portable interface balanced against one knee, a speaker cobbled from scrap wired to a scavenged coil battery that hums faintly, off-pitch and fractured.</p>
-
-<p>And even in the ruin, even in the static, the kid moves, tapping out the beat against his thigh, whispering half-formed lyrics beneath his breath like it&rsquo;s the only thing holding him together.</p>
-
-<p>&ldquo;Signal&rsquo;s dead, but I still spit fire.<br>
-They took our mic, not our choir.<br>
-Glitch in the grid, we wire it back&mdash;<br>
-I&rsquo;m just a kid, but I&rsquo;ve got the track.&rdquo;</p>
-
-<p>He doesn&rsquo;t see Onyx or the others. He&rsquo;s far too lost in his art.&nbsp;</p>
-
-<p>Onyx lifts his arm, motion fluid and automatic, the targeting system already locking into place, precision honed by years of mechanical correction. The HUD blinks alive, clinical and detached, casting verdicts in clean white text.</p>
-
-<p>SUSPECTED SYMPATHISER<br>
-BROADCAST IN PROGRESS<br>
-PERMISSION: GRANTED</p>
-
-<p>His finger hovers over the trigger, the final link in the chain.</p>
-
-<p>But something shifts in him. Not on the screen or in the readings. In him.</p>
-
-<p>A quiet stutter in his pulse, a breath that feels out of step, a single thread of static curling down his spine like the system skipped a line of code and forgot how to steady itself.</p>
-
-<p>His hand twitches, just enough for the microservos to kick in, recalibrating, smoothing the motion.</p>
-
-<p>But it doesn&rsquo;t help, because the rhythm isn&rsquo;t syncing to the mission clock anymore.</p>
-
-<p>It&rsquo;s syncing to the beat.</p>
-
-<p>To the soft, stubborn percussion of a child making music in the rubble.</p>
-
-<p>Onyx&rsquo;s breathing tightens, sharp and too human. Heat blooms behind his eyes, unwelcome and unfamiliar, not the product of faulty machinery but of something raw, something tangled in the ribs he&rsquo;d nearly forgotten were his own.</p>
-
-<p>He doesn&rsquo;t pull the trigger.</p>
-
-<p>He doesn&rsquo;t move at all.</p>
-
-<p>He just stands there, caught in the quiet gravity of a song that shouldn&rsquo;t exist, a life that shouldn&rsquo;t matter, and something small inside him&mdash;something he thought they&rsquo;d drilled out&mdash;fractures.</p>
-
-<p>It doesn&rsquo;t crack like a gunshot, doesn&rsquo;t shatter like broken steel. It fractures softly, a hairline break in the careful veneer of obedience, a ripple in the programmed silence behind his eyes.</p>
-
-<p>And it isn&rsquo;t a mission he remembers.</p>
-
-<p>It&rsquo;s before.</p>
-
-<p>The world shifts again, and footsteps sound behind him&mdash;measured, certain, untouched by hesitation.</p>
-
-<p>Another soldier steps into the room, lifts their weapon, and fires without pause.</p>
-
-<p>The shot cuts through the rhythm like a blade through fabric.</p>
-
-<p>The song dies mid-line.</p>
-
-<p>The boy&rsquo;s body folds forward, small hands falling limp beside the battered speaker, which whines once in protest before collapsing into a broken loop.</p>
-
-<p>Onyx doesn&rsquo;t lower his weapon, only stares numbly at the body, his chest suddenly tight. Smoke drifts from the other soldier&rsquo;s rifle as silence sprawls around them.</p>
-
-<p>No words are spoken. No confirmation is needed. The other soldier leaves, boots crunching on fallen plaster, focus already shifted to the next objective.</p>
-
-<p>But Onyx can&rsquo;t move. His targeting overlay resets, status reports refreshing across his vision.</p>
-
-<p>FUNCTION: STABLE<br>
-MISSION: SUCCESSFUL<br>
-EMOTION: UNREGISTERED</p>
-
-<p>The system hums, efficient and undisturbed, but his muscles feel slow, limbs weighted by something the diagnostics can&rsquo;t measure.</p>
-
-<p>He turns at last, stepping back through the broken doorway and into the hollow corridor, pulse flat, expression blank.</p>
-
-<p>No report filed. No mission summary transmitted. No justification whispered into the comms channel.</p>
-
-<p>Just one unshakable thought looping behind his ribs, heavy and undeniable.</p>
-
-<p>This isn&rsquo;t malfunction.</p>
-
-<p>It&rsquo;s memory.</p>
-
-<p>And without realising it, with nothing more than a hesitation and a skipped command, Onyx has taken the first step toward losing everything they built him to be.</p>
-
-
+  <main class="wrap">
+
+    <header class="head">
+      <div class="kicker"><span class="dot" aria-hidden="true"></span> signals // origins // recovered story</div>
+      <h1>012X-O</h1>
+      <p class="meta">File integrity: partial. Playback: safe.</p>
+    </header>
+
+    <article class="card" aria-label="Story container">
+      <div class="card-inner">
+
+        <div class="filetag" aria-label="File tags">
+          <span class="pill">origins</span>
+          <span class="pill">defection</span>
+          <span class="pill">onyx</span>
+        </div>
+
+        <div class="divider" aria-hidden="true"></div>
+
+        <div class="story">
+
+          <!-- Paste story paragraphs exactly as you have them -->
+
+<p>The outer districts of Busan are little more than ash and silence. Once, the city had been bright with commerce and student noise, neon signs stacked three-deep above streets that refused to sleep, music spilling from caf&eacute;s and basement clubs. Now it&rsquo;s barely more than rubble and rerouted power grids. Old banners flap from shattered lampposts, and half a school lies collapsed into the street. The broken shells of servers spark weakly across the kerbs, their cables tangled through debris like ivy claiming a dead garden.</p>
+<p>Onyx moves through it like a shadow, his steps controlled as his augmented tendons automatically adjust tension. The lower corner of his visor displays his vitals in clean, stable lines; everything is as it should be.</p>
+<p>Muscle thread tension: 72%.<br>Targeting matrix: stable.<br>Pulse: 41 bpm.<br>System log: installed at age 15.</p>
+<p>Fifteen.</p>
+<p>He still can&rsquo;t quite believe it&rsquo;s been that long. The memory rises before he can stop it &mdash; enlistment not as a beginning, but a relief. NuYu called it conditioning, but what it really meant was pain rewritten and emotion filed down into obedience.</p>
+<p>The alternative had been to stay.</p>
+<p>Back then, in Daegu&rsquo;s south end, staying was difficult when winter crept through broken window frames and the power cut out before night had fully fallen. He remembers how his hands were often too numb to hold a pen, and how, after enough time, hunger learned to eat itself.&nbsp;</p>
+<p>So he said yes, because it meant a roof that didn&rsquo;t leak, a heater that stayed on all night, and doors that locked from the inside. Becoming a weapon didn&rsquo;t feel like betrayal in a place where softness was a weakness that the streets knew how to punish.</p>
+<p>He glances down as his right arm recalibrates with a soft whir, data sliding cleanly across his vision.</p>
+<p>&ldquo;Area Z-3 is unsecured,&rdquo; a tinny voice says through comms. &ldquo;Maintain sweep pattern and clear suspected broadcast nodes. No local comms, no hesitation.&rdquo;</p>
+<p>Onyx&rsquo;s optics tune for movement, though he finds none among the crumbling walls, just dead systems and the residue of lives erased before he arrived. He sweeps his surroundings but can&rsquo;t place what the building used to be. A coding academy, possibly, or maybe a music school; a place meant to grow instead of contain.</p>
+<p>The two soldiers behind him fan out. Onyx registers their presence by position and designation rather than names. Names aren&rsquo;t exchanged here unless the mission demands it, and the mission rarely does. They are interchangeable. Like him.</p>
+<p>And yet, where the others pass without breaking stride, his gaze catches on things that should be irrelevant: a poster clinging stubbornly to a nearby wall, its surface scraped thin until only half a smiling face remains, the rest eaten by heat and time. Where their attention is narrowed to the mission, his drifts just enough to register what&rsquo;s been left behind.</p>
+<p>He can&rsquo;t say when the change happened. A delay so slight it slipped past detection, a correction made just off-target. Nothing that would flag.</p>
+<p>But enough that he notices it.</p>
+<p>He rolls his shoulders once, forcing the thought down.</p>
+<p>They breach the old admin building without resistance, the doors giving easily under controlled force. Anticipation tightens low in Onyx&rsquo;s gut, and for a moment, it feels like a response older than coded protocol.</p>
+<p>He ignores it.</p>
+<p>Ahead, the wall has been broken through, exposing a stairwell descending into shadow. Signal intel marks it as a rebel node, its classification broad enough to cover whatever they find waiting.</p>
+<p>&ldquo;Move in. No warnings. Clear the relay,&rdquo; comes the same tinny voice through comms.</p>
+<p>Onyx takes point, dust thickening as they descend and light panels blinking overhead. Graffiti crawls across the walls in overlapping layers: symbols, fragments of language, declarations that have lost their original context, all merging until meaning becomes little more than texture. Near the base of the wall, a child&rsquo;s handprint interrupts the pattern. Onyx&rsquo;s focus touches it briefly, hesitates, then moves on.</p>
+<p>At the bottom of the stairs, he holds up a fist and the squad stills.</p>
+<p>For a beat, nothing happens.</p>
+<p>But then&hellip; something. At first it&rsquo;s barely more than an irregularity, a soft syncopation tucked beneath the stutter of dead servers, and Onyx&rsquo;s audio implants cycle through each echo mode automatically and narrow the range, pulling the signal forward until it resolves into a pattern.</p>
+<p>A beat. Persistent and uneven.</p>
+<p>One. Two. <em>Tap-tap. Tap. Tap-tap.</em></p>
+<p>It&rsquo;s alive in a way recorded sound never is, bending slightly as it responds to the space around it. Onyx&rsquo;s heartbeat stutters once before the system smooths it, and he inches forward.</p>
+<p>The corridor opens into a low-lit server space surrendered long ago to heat and neglect, racks melted into slag, cables strewn across the floor like bones no one bothered to bury. In the far corner, crouched within a pocket of shadow, a child sits cross-legged on the concrete, small enough that the equipment around him dwarfs his frame. A rusted portable interface balances against one knee, wired into a small speaker built from scrap and a scavenged coil battery.</p>
+<p>The boy taps the beat against his thigh, his head bowed, lips moving around lyrics that are almost too soft to hear, though Onyx catches fragments.</p>
+<p>&ldquo;Signal&rsquo;s dead, but I still spit fire.<br>They took our mic, not our choir.<br>Glitch in the grid, we wire it back&mdash;<br>I&rsquo;m just a spark, but I&rsquo;ve got the track.&rdquo;</p>
+<p>The kid doesn&rsquo;t look up; he doesn&rsquo;t see the weapons or the armour or the targeting optics trained on the space he occupies. The music holds him too tightly for that.</p>
+<p>A frisson of cold winds down Onyx&rsquo;s spine as he lifts his arm. For some reason, every movement he makes feels heavier than usual. His HUD lights up as it assigns meaning and permission in neutral white text.</p>
+<p>SUSPECTED SYMPATHISER<br>BROADCAST IN PROGRESS<br>PERMISSION: GRANTED</p>
+<p>Onyx&rsquo;s finger slides onto the trigger, the final movement in a sequence reinforced over years of service. He waits, even though there&rsquo;s no reason to; the readout won&rsquo;t change. Still, he holds there, aware of a subtle breath drawn somewhere to his right, aware of the ground beneath his feet, aware of the beat continuing uninterrupted. He waits because something inside him has slipped out of cadence, and for a moment, he can&rsquo;t find his place within the scenario.</p>
+<p>Microservos compensate for the tremor in his hand, smoothing the motion, but the correction comes too late because the rhythm has already reoriented itself in his chest.</p>
+<p>A rhythm that no longer aligns with the mission clock.</p>
+<p>A rhythm that aligns with the beat the kid taps out on his leg.</p>
+<p>Heat gathers behind Onyx&rsquo;s eyes, unaccounted for by any diagnostic. Timing slips just a little more out of sync as a memory surfaces without permission: freezing cold hands, a dark room, a small, stubborn kid filling silence with made-up verses because he refused to let it win.</p>
+<p>Another breath from the man to his right, more insistent now.</p>
+<p>But Onyx remains where he is, still and watching. He blinks, and in that moment, the trigger sits solid beneath his finger while the <em>tap-tap</em> runs deeper inside him.</p>
+<p>Movement enters his peripheral vision as one of the soldiers steps past his shoulder, weapon rising in a line so clean it barely registers as a decision.</p>
+<p>&ldquo;They cut the feed, said &lsquo;drop the sound,&rsquo;<br>I loop it back from&mdash;&rdquo;</p>
+<p>The shot cuts through the space, severing the rap mid-line.</p>
+<p>Onyx watches as the boy folds forward, small hands slipping from the speaker as it emits one protesting whine before falling into a broken loop. Smoke drifts briefly from the rifle, dispersing into the stale air. The soldier turns away before the body has finished hitting the floor, attention already redirected toward the next objective.</p>
+<p>Onyx remains in place as his overlay resets.</p>
+<p>FUNCTION: STABLE<br>MISSION: SUCCESSFUL<br>EMOTION: UNREGISTERED</p>
+<p>The data makes sense, but his own body does not.</p>
+<p>He knows he should move. Instead, his limbs lock in place, suddenly weighted by a pressure the diagnostic can&rsquo;t name. Icy fingers crawl up his spine and the strange heat behind his eyes intensifies, and for a moment, the room tilts and he thinks distantly that he might follow the same trajectory as the boy and fold to the floor.</p>
+<p>&ldquo;Hey.&rdquo;&nbsp;</p>
+<p>The word lands close to him, from the soldier to his left. It rings weirdly in the quiet. Onyx hears the crunch of boots over broken concrete as the soldier moves away. Any other time, the strangeness of a squadmate saying <em>hey</em> to him in such an informal way, while on a mission no less, would&rsquo;ve registered immediately as a deviation to be reported. Only now, in this moment, it seems to loosen the tension within him and he finally finds he&rsquo;s able to move again.</p>
+<p>When he turns, he&rsquo;s careful to keep his face neutral and his movements controlled, but the stark silence folds around him like a different kind of armour, one he isn&rsquo;t sure he&rsquo;ll ever be able to take off now that it&rsquo;s there.</p>
+<p>The icy grip eases slightly as they head out, though it doesn&rsquo;t leave entirely, and Onyx doesn&rsquo;t file a report about the way the man addressed him.</p>
+<p>He&rsquo;d hesitated. If anything, the other two have every reason to file a report on <em>him</em>.</p>
+<p>And the more Onyx thinks about it, the more that hesitation starts to feel less like a system malfunction and more like a break.</p>
+<p>Like memory.</p>
+<p>Like empathy.</p>
+<p>Two things a soldier of his calibre should not experience when in the field.</p>
+<p>Onyx steps forward anyway, the first fault line running through everything he was built to be.</p>
 <p><br></p>
-
-
-<p>The soldiers don&rsquo;t speak on the return transport, which isn&rsquo;t unusual, but tonight the silence scratches at Onyx&rsquo;s senses louder than any debrief could be. The recycled air hums through decades-old vents, filtered but never clean, carrying the faint tang of oil and old circuits. Nobody removes their visors. Nobody talks about the logged kill count or the updated metrics pinging across their HUDs.</p>
-
-<p>Onyx keeps his eyes on the floor, on the subtle vibration beneath his boots, the steady drone of the engines rolling beneath his feet. Rhythmic. Precise. Comforting in its predictability. Not like him&mdash;not anymore.</p>
-
-<p>He expects it to come in the debrief: a reprimand, a flagged report, a red mark logged neatly against his file. But it doesn&rsquo;t. There&rsquo;s nothing. He&rsquo;s processed, scanned, filtered through the cold indifference of Dominion diagnostics, and every system reads clean. Function: intact. Emotion: baseline. Compliance: confirmed.</p>
-
-<p>The fracture doesn&rsquo;t register on their charts.</p>
-
-<p>But it doesn&rsquo;t go unnoticed.</p>
-
-<p>Later, in the diagnostics bay, Onyx sits stripped down to regulation base layers, armour folded away, boots stowed, chestplate removed, his forearms braced along the edge of the recalibration console. Blue UV light pulses across his limbs, knitting muscle fibres back into place, cycling coolant through overheating joints. His augments itch, not skin-deep, but further, behind the bone, beneath the neural threads. In places no scan can reach.</p>
-
-<p>The door opens behind him, smooth and soundless, but he feels the shift in air, the weighted pause that doesn&rsquo;t belong.</p>
-
-<p>Footsteps approach, slow and deliberate. Then a figure steps through: one of his squadmates, still half-armoured, helmet tucked beneath one arm, no rank displayed, no name badge blinking with authority. Just the uniform. Just the stoic expression.</p>
-
-<p>For a moment, there&rsquo;s nothing, only the low hiss of cooling fans and the steady pulse of the diagnostics loop.</p>
-
-<p>Then a voice, quiet but pointed, cutting through the noise.</p>
-
+<p><center>~*~</center></p>
+<p><br></p>
+<p>The return transport carries them back through the dark without conversation. That, at least, is ordinary. What isn&rsquo;t is the way the silence settles tonight, thicker than usual, filling the truck with a growing pressure.</p>
+<p>No one removes their visor, and no one looks at anyone else. Onyx keeps his head down as kill counts scroll across his HUD, numbers resolving into neat, obedient columns. He lets them pass, instead focusing on the vibration beneath his boots, the steady thrum of the engine and the rattle of motion carried through muscle and bone. It&rsquo;s a sensation that used to calm him, when he allowed it, only this time it doesn&rsquo;t.</p>
+<p>He tracks it anyway, hoping it might draw him back into alignment. But deep down, he knows he&rsquo;s already too far out of sync.</p>
+<p>Back at base, he expects the reckoning to arrive as soon as they step out of the truck. A note in processing, maybe, or a flagged anomaly in his system report.</p>
+<p>Instead, there&rsquo;s nothing.</p>
+<p>That&rsquo;s the strangest part. Diagnostics pass over him without pausing, scanning him, filtering data, showing clean results with no deviations. Emotional baseline within parameters. Combat readiness confirmed. For a moment, he wonders if he imagined his own hesitation. Perhaps it hadn&rsquo;t been as long as it&rsquo;d felt at the time&hellip;</p>
+<p>But it lingers in his mind, lodged beyond reach, somewhere the interface can&rsquo;t find or identify.</p>
+<p>Later, in the diagnostics bay, he sits stripped down to regulation base layers, his armour neatly folded away and his boots arranged beneath the bench. He leans forward and braces his arms against the edge of the recalibration console as UV light sweeps across his augments, coaxing muscle fibres back into place and cycling coolant through joints still warm from the mission.</p>
+<p>Behind him, the door opens with barely a sound. Onyx senses the newcomer before the first step lands.</p>
 <p>&ldquo;You froze.&rdquo;</p>
-
-<p>Onyx doesn&rsquo;t lift his head.</p>
-
-<p>&ldquo;I logged it as signal lag,&rdquo; he answers, voice flat, fingers tightening faintly against the console&rsquo;s edge.</p>
-
-<p>A beat stretches between them, dense enough to press against his ribs.</p>
-
-<p>&ldquo;That&rsquo;s what you&rsquo;ll say if anyone asks,&rdquo; the soldier replies. &ldquo;Lag. Temporary interference. Just a blip.&rdquo;</p>
-
-<p>The words hover, unspoken things lingering in the air. Permission. Warning. Maybe something like understanding.</p>
-
-<p>The soldier steps forward, drops the helmet onto the console with a dull metallic thud, then leans in, just enough to let the next words land heavy.</p>
-
-<p>&ldquo;One glitch doesn&rsquo;t break a system. Not always. But too many glitches&hellip;?&rdquo;</p>
-
-<p>He lets it trail off like an echo that refuses to settle.</p>
-
-<p>Then he straightens, turns, and leaves without another glance, boots thudding softly as the door seals shut behind him.</p>
-
-<p>Onyx doesn&rsquo;t move.</p>
-
-<p>The console hums beneath his hands, status reports flickering bright and certain&mdash;pulse lines steady, function parameters normal, combat-readiness affirmed.</p>
-
-<p>But behind his eyes, the rhythm is back, tapping out a quiet insistent loop that won&rsquo;t leave him alone.</p>
-
-<p>One. Two. Tap-tap. Tap. Tap-tap.</p>
-
-<p>The beat plays on, stubborn and relentless, and no matter how many clean scans he passes, Onyx knows the truth.</p>
-
-<p>No system will ever log it.</p>
-
-<p>No officer will ever file it.</p>
-
-<p>That memory is his, and his alone.</p>
-
-
+<p>The figure stops beside him, the scent of burnt propellant still lingering on his clothes. It&rsquo;s one of his squadmates, still armoured, the visor now lifted to reveal a pale man with a neutral, unreadable expression. He stares down at Onyx for a long time.</p>
+<p>Onyx feels calm because, really, he&rsquo;s been expecting this. To be called out.</p>
+<p>&ldquo;I logged it as signal lag,&rdquo; the guy says.</p>
+<p>It takes Onyx a second to process the words. That, he wasn&rsquo;t expecting. Narrowing his eyes, he stares up at the guy, wishing, for a moment, that he could put a name to the face. All he can recall is 013Y-G, the soldier&rsquo;s service number. The voice, though, is familiar, and he realises it&rsquo;s the squadmate who&rsquo;d whispered <em>hey</em> to him earlier.</p>
+<p>&ldquo;Why?&rdquo; Onyx finally asks.</p>
+<p>&ldquo;Doesn&rsquo;t matter why,&rdquo; the man says, a little sharply. &ldquo;That&rsquo;s just what you&rsquo;ll say if anyone asks. Lag. Temporary interference. A blip.&rdquo;</p>
+<p>Onyx finds that he can only stare at him, understanding just out of reach.</p>
+<p>After a moment, the soldier steps closer and leans in, speaking in a lower, quieter tone. &ldquo;Some systems can only be broken one piece at a time,&rdquo; he says. Then he straightens, turns, and leaves with the same quiet control he arrived with, the door snicking shut behind him.</p>
+<p>Onyx remains where he is, staring at the door. The console vibrates beneath his hands, status reports refreshing in orderly succession, pulse lines steady, every metric as clean as expected.</p>
+<p>But behind his eyes, the rhythm returns.&nbsp;</p>
+<p>One. Two. <em>Tap-tap. Tap. Tap-tap.</em></p>
+<p>And he knows, deep down, that he can&rsquo;t simply tune it out.</p>
+<p>It&rsquo;s something he now carries.</p>
 <p><br></p>
-
-
-<p>Defection doesn&rsquo;t come with fireworks. No grand declarations, no burning banners. Just a quiet decision made beneath failing lights.</p>
-
-<p>Onyx doesn&rsquo;t pack, doesn&rsquo;t wait for orders, or leave a log in the squad system. He simply stands at 03:17, when the compound&rsquo;s arteries slow to a crawl&mdash;when the corridors belong to night shift rotations and sleepwalkers&mdash;and chooses a direction.</p>
-
-<p>Left, not right.</p>
-
-<p>Outward, not inward.</p>
-
-<p>He knows where the camera blinds are deepest, where the patrol drones hesitate just long enough on low batteries, how far the clearance scanners lag before refreshing their cycle. He knows because he helped design some of the patches. The first gate is easy. Familiar. Like muscle memory that&rsquo;s turned against its owner.</p>
-
-<p>Past that, every step sharpens.</p>
-
-<p>The outer perimeter is dressed in teeth, trip beams stitched between walls, vibration sensors curled around the concrete, mines humming under frost-hardened earth. A barrier designed for flesh and fear.</p>
-
-<p>But Onyx doesn&rsquo;t sweat, doesn&rsquo;t twitch, doesn&rsquo;t shiver beneath the cold. His frame recalibrates for silence, his joints locked steady, his breath slowed to a mechanical hum. He moves like function carved into flesh, like the embodiment of obedience walking itself out of a cage.</p>
-
-<p>The freight yard is alive in fragments, haulers thudding through the gloom, overhead drones tracing the ground with cold blue light, trains rattling with cargo destined for corporate outposts and warzone rebuilds. He doesn&rsquo;t head for anything marked for home soil. He angles toward the east&mdash;cold regions, industrial loops, low-security ports forgotten by headquarters.</p>
-
-<p>A skeletal train rumbles at the far end of the depot, bound for Eastern Europe, half-loaded with obsolete drone parts and broken machinery. Onyx slips beneath the rear carriage, slides between coolant vents and dead conduits, bracing himself against the hum of old engines and the promise of escape.</p>
-
-<p>He waits, buried in metal until the world rattles into motion and the facility disappears behind him.</p>
-
-<p>The journey is long and jolting. Onyx has no food but he doesn&rsquo;t need it, adrenaline filling the hole in his stomach. Each stop blurs into the next.&nbsp;</p>
-
-<p>Somewhere past Vladivostok, pressed between crates of decommissioned tech, he breaks open a diagnostics kit intended to erase enemy data traces. A Dominion admin wipe, built to scrub rebels from the network post-mortem.</p>
-
-<p>Onyx stares at the device for a long time.</p>
-
-<p>Then he plugs himself in.</p>
-
-<p>The system stutters in confusion, unused to scrubbing loyalist code, unsure how to handle a soldier turning himself to ash.</p>
-
-<p>He watches as his own ID fractures line by line, pathways unspooling into corruption.</p>
-
-<p>PROCESS COMPLETE.<br>
-IDENTITY: NULL<br>
-AFFILIATION: UNREGISTERED<br>
-TRACE PATH: CORRUPTED</p>
-
-<p>By Prague, the implant systems start to glitch, his feedback loops misfiring, stabilisers spitting warnings, joints sparking in protest. The synthetic threads in his limbs feel frayed. His neural net lags like a dying signal.</p>
-
-<p>Near Bratislava, he trades a sliver of relay wiring&mdash;cut direct from his own augment&mdash;for shelter in a crumbling hostel where no cameras watch and no names matter. He shares floorspace with fugitives, bio-hackers, half-spliced engineers soldering stolen rigs by candlelight. Someone passes him soup without a word. Another flicks him a burner card scratched with a jagged sigil&mdash;circle split by lines, fractured at the centre.</p>
-
+<p><center>~*~</center></p>
+<p><br></p>
+<p>Defection arrives quietly beneath muted strip lights, in the hour when the compound downshifts and the corridors slip into night rotation, movement carried more by habit than attention.</p>
+<p>At 03:17, Onyx stands where the route diverges, tracking the familiar paths as they branch across his internal map.</p>
+<p>And then he chooses.</p>
+<p>He turns left instead of right toward the barracks, and the absence of consequence is the most terrifying thing he&rsquo;s felt in years. No alarms break through the stillness, no commands come pouring across his HUD, and no one stops him. It&rsquo;s the strangest thing. Freedom happens like a small system error.</p>
+<p>He has no belongings with him since he didn&rsquo;t exactly plan this, not that he owns many personal items anyway. At the next junction, he takes another left corridor, then another, each one taking him further from the shape of what he&rsquo;s meant to be.</p>
+<p>He knows the compound by heart, and yet it feels unfamiliar now, as if the act of choosing differently has altered the architecture itself. Simple, everyday things like scuff marks on the floor and the tick of overhead lights become points of tension and weight. Onyx knows this might not work. He knows NuYu Corps and what they do to defects, to anything that slips out of line, but once he&rsquo;s moving, he&rsquo;s unable to stop. The truth of it settles in his mind under layers of protocol; there is no going back for him.</p>
+<p>Camera blind spots deepen exactly where he anticipates, patrol drones hesitating on drained batteries just long enough to miss him. The first gate opens without resistance, the passage beyond almost indulgent in its ease, like the company still recognises him as an asset it owns.</p>
+<p>Outside, the air sharpens with the bite of winter. The perimeter rises in layered defences designed to wear down flesh and nerve, trip beams stitched between concrete, vibration sensors wound tight along the foundations, mines buried under frost-hardened ground. Onyx tries not to overthink it and lets his training carry him cleanly out of the institution that enforced it.</p>
+<p>One step follows the next, on and on, and gradually the compound falls behind him.</p>
+<p>Up ahead, a freight yard splits the horizon into motion. Hauliers push through the dark, overhead drones sweep the ground in measured arcs of blue light, and trains rattle under the weight of cargo bound for corporate outposts and warzone rebuilds. Veering away from routes marked for home soil, Onyx turns north-east instead toward colder regions and industrial loops and ports that no longer matter enough to watch closely.</p>
+<p>At the far edge of the depot, a skeletal train idles half-loaded with stripped machinery and obsolete parts, its designation tagged for Eastern Europe. Onyx slips beneath the rear carriage and wedges himself between coolant vents and conduits, bracing as the engine drags itself into motion.</p>
+<p>The journey stretches, nameless stations passing in smears of muted colour, the world reduced to vibration and the steady sway of transit. Hunger never quite arrives; the hollow where it should be remains quiet, sustained by reserves designed to outlast discomfort. Tiredness lingers just out of reach, held back by adrenaline that refuses to let him rest.</p>
+<p>When the train reaches the coast, instead of stopping it descends beneath the water through an old subsea freight tunnel carved long before the borders above it hardened. Somewhere beyond Vladivostok, he opens a diagnostics kit stamped with NuYu clearance, the kind issued to erase hostile data traces after capture.&nbsp;</p>
+<p>An admin wipe, built to make people disappear.</p>
+<p>Onyx turns the device in his hands before slotting the connector into the access point at his wrist. Instantly, the system falters. Routines stutter and fail to reconcile what&rsquo;s happening; loyalty collides with absence, identity slipping its anchor. He watches his HUD as it fractures line by line.</p>
+<p>PROCESS COMPLETE.<br>IDENTITY: NULL.<br>AFFILIATION: UNREGISTERED.<br>TRACE PATH: CORRUPTED.</p>
+<p>The readout dims. Nothing replaces it.</p>
+<p>For the first time in as long as he can remember, there&rsquo;s no framework waiting to catch him if he falls.</p>
+<p>By the time he reaches Prague, the damage begins to show. Feedback loops catch and release without pattern and his stabilisers start to lag. Synthetic fibres in his limbs pull out of sequence, timing slipping just enough to unbalance him.</p>
+<p>Near Bratislava, he trades a sliver of relay wiring cut clean from his own augment for shelter in a crumbling hostel where cameras don&rsquo;t reach and names have no bearing. Fugitives share the space; bio-hackers work by candlelight, soldering stolen rigs, and scavengers sort through stripped components in low, murmured exchanges.</p>
+<p>Someone hands him a bowl of soup.</p>
+<p>Another presses a burner card into his palm. There&rsquo;s a crude sigil scratched into its surface, a circle split by uneven lines.</p>
 <p>// NODE 6 &mdash; HOLD FAST //</p>
-
-<p>He doesn&rsquo;t ask what it means, but he keeps it tucked beneath his sleeve, tight against the pulse that&rsquo;s starting to feel like his again.</p>
-
-<p>His systems remain stubborn. The targeting assist embedded in his wrist refuses to power down, pinging ghost-locks on every moving shape. His spine hums with dead relay echoes. HUD flickers bleed over his vision&mdash;commands, warnings, mission tags that no longer have masters.</p>
-
-<p>They need cutting out.</p>
-
-<p>All of them.</p>
-
-<p>He finds an abandoned med station buried beneath a collapsed apartment block, the door rusted half-shut, but the tools inside patient and waiting. One surgical torch. Scattered scalpels dulled by time. Enough to make do.</p>
-
-<p>He carefully lays everything out: tracker nodes, pulse relays, sync lines tied into bones and veins. And then he begins.</p>
-
-<p>The first cut is crude, tearing through reinforced dermal mesh, cauterising as he works, metal hissing against engineered flesh. The synthetic threads writhe as they&rsquo;re severed, reluctant to let go. Onyx keeps going. He barely flinches when the muscle pulls apart, when blood slicks his fingers, when the room fills with the reek of burnt polymer and iron.</p>
-
-<p>Some wires pulse as they&rsquo;re cut, desperate to send their last signal.</p>
-
-<p>He lets them die.</p>
-
-<p>By the time he reaches the deeper mods&mdash;pulse relay wound near his spine, the mission imprint embedded beneath his ribs&mdash;his hands are stained, arms shaking under their own weight. Breaking the hip anchor fractures bone plating; digging out the node makes his vision grey at the edges. His breath comes rough, his body no longer dampened by control circuits. Just raw nerve endings. Just pain.</p>
-
-<p>When the last shard comes free, tangled in scar tissue and old code, he lets the scream tear loose.</p>
-
-<p>It is his first sound since Busan.</p>
-
-<p>The station smells of rust and rupture. His chest rises shallow against the quiet.</p>
-
-<p>He seals the worst of the wounds with a cracked cauteriser. His skin bubbles. His flesh warps. The scars stitch ugly across muscle that no longer serves an empire.</p>
-
-<p>Onyx sleeps on the floor, cold and alone, for sixteen hours.</p>
-
-<p>When he wakes, he walks again.</p>
-
-<p>And when London finally swells against the horizon, steel veined with neon, he doesn&rsquo;t approach it from the surface.</p>
-
-<p>He lets the streets swallow him whole, drifting below the scanners, below the lights, until the Ghost Lines take him in.</p>
-
-<p>Not a soldier.</p>
-
-<p>Not a number.</p>
-
-<p>Just something trying to remember how to be human again.</p>
-
-
+<p>A waypoint, he realises. It isn&rsquo;t a name or location; it&rsquo;s looser than that. A place you might be able to reach if you know how to look.</p>
+<p>Onyx studies it for a moment before tucking it into his sleeve.</p>
 <p><br></p>
-
-
-<p>London runs older beneath the surface.</p>
-
-<p>Not the polished metro lines tourists still fumble through or the thin spines of commuter routes rattling overhead. Beneath all that is something older, where the tunnels fork and fracture, where concrete sinks into forgotten sediment, where air stagnates and dust writes its own history over everything that was supposed to be remembered.</p>
-
-<p>Onyx walks through it all, letting the dark settle around him like armour.</p>
-
-<p>He&rsquo;s lost track of time. Days collapse into weeks, into something formless. The corridors loop inwards, narrowing until direction feels like a joke someone else forgot to explain. He keeps away from the top tunnels&mdash;there are still people up there. Wandering, watching. He&rsquo;s not ready for people.</p>
-
-<p>Instead, he circles lower, stumbling across a collapsed bunker wedged between broken maintenance shafts. The walls are thick, the angles slanted enough to mess with balance, but quiet enough to dull the noise in his own head. He sleeps there when the ache gets too much, spine curling against the floor&rsquo;s strange tilt, letting his dreams break along unnatural angles.</p>
-
-<p>His augments glitch more often now. The targeting system has gone blessedly silent, but his sensor mesh still reacts, reading shifts in pressure, subtle vibrations echoing through steel and stone. Nothing distinct. Just ghosts moving through air currents he can&rsquo;t see.</p>
-
-
+<p><center>~*~</center></p>
 <p><br></p>
-
-
-
-<p>It starts small.</p>
-
-<p>A tremor in the floor. A tap-tap ripple trailing through dust. Once, a static burst so sharp it makes his back teeth ache.</p>
-
-<p>He tries to tell himself it&rsquo;s remnants of old surveillance loops, half-dead signals caught in endless repetition. He wants to believe it&rsquo;s just malfunction, just the last remnants of military-grade wiring refusing to let go.</p>
-
-<p>But something deeper disagrees. Something older than the metal stitched through his skin.</p>
-
-<p>One night, it sharpens into sound.</p>
-
-<p>It&rsquo;s not quite a song. Just three fractured notes, stitched together by glitch, breaking apart before they land. Barely a ripple, but it catches against his spine, pulling taut like a forgotten wire trying to complete its circuit.</p>
-
-<p>He reboots and then scans for transmitters, finding nothing but silence grinning back.</p>
-
-<p>Then the floor hums again, slow and low, pulsing like a drum line muffled beneath centuries of concrete.</p>
-
-<p>He doesn&rsquo;t follow it, but he doesn&rsquo;t turn away either.</p>
-
-      <p><br></p>
-
-<p>The deeper he drifts, the stranger the city becomes.</p>
-
-<p>Rust spills down server racks like old blood. Plastic flowers cling stubbornly to cracked monitors, too bright against the ruin. Someone&rsquo;s forgotten drawing&mdash;a child&rsquo;s tower-scape, a sun smeared in yellow crayon&mdash;hangs crooked from a junction box, edges blistered by time and heat.</p>
-
-<p>He eats when he can. Keeps moving when he can&rsquo;t. He doesn&rsquo;t speak. The words would sound too hollow down here.</p>
-
-<p>But he listens.</p>
-
-<p>Sometimes, the hum shifts, distant frequencies travelling along support beams. Sometimes, he finds scraps of old tech&mdash;scanners, broadcast coils snapped in half. He strips them automatically, joints remembering what his mind tries to forget. It&rsquo;s not that he&rsquo;s building anything useful, but it&rsquo;s something to do to keep his mind occupied.</p>
-
-<p>The quiet doesn&rsquo;t feel empty anymore. The distant hum makes it feel layered, like the earth itself has learned to sing back.</p>
-
-<p>He doesn&rsquo;t know the name of it or why it finds him in the dark.</p>
-
-<p>But it&rsquo;s the only thing that makes him feel real.</p>
-
+<p>The targeting assist in his wrist keeps trying to lock onto passing faces. Every movement is a threat before his body remembers he&rsquo;s no longer under orders.&nbsp;</p>
+<p>It all starts to weigh too heavily.</p>
+<p>Onyx thinks about everything he&rsquo;s left behind: order, structure, discipline, regular meals, a roof over his head. He thinks about the other things, too &mdash;missions where he had to carry out directives that went against an instinct that he couldn&rsquo;t override, his growing sense of self-awareness&hellip; the doubt. The fear. There&rsquo;s no room in the military for doubt or fear, or for what he&rsquo;d felt in that crumbling admin building as the kid toppled to the hard stone floor, a young life taken in an instant, a song killed mid-beat. <em>Tap-tap. Tap. Tap-tap</em>.</p>
+<p>So he makes another choice, one he&rsquo;s known all along he&rsquo;ll have to make.</p>
+<p>He finds an abandoned med station under a derelict apartment block, its entrance semi-caved in. The interior is mostly intact, probably because no one ever came back for it. Here, he finds a surgical torch and a few scalpels dulled by time but still serviceable.</p>
+<p>It&rsquo;s enough.</p>
+<p>Onyx lays the tools out with a care that borders on ritual, mapping his own body as he works &mdash; the points where the system runs deepest, all the places it won&rsquo;t let go easily or cleanly.</p>
+<p>Then he begins.</p>
+<p>The first crude incision cuts through reinforced dermal mesh. The torch seals it as it moves, heat biting deep as he forces his way past layers that weren&rsquo;t meant to be opened. The material resists under his grip before giving way, a sharp snap of feedback travelling up his arm as a connection severs.</p>
+<p>Blood slicks his hands, and the air thickens with the scent of burnt polymer and iron.</p>
+<p>Some of the wires twitch as they&rsquo;re cut, sending dying signals into a network that no longer answers. He lets them fade, one by one.</p>
+<p>The pain isn&rsquo;t too bad at first, but that soon changes as he goes deeper.</p>
+<p>A node anchored close to his spine refuses to come free, so he braces, forcing it, and feels the jolt tear through him as it breaks loose. His vision goes grey at the edges, his balance faltering and then snapping back into place.</p>
+<p>He doesn&rsquo;t stop.</p>
+<p>Eventually, he gets to the nerve-control circuits. Onyx pauses, already knowing exactly what this will cost him. He can&rsquo;t remember the last time he felt real, unfiltered pain. Possibly not since he enlisted. Time has worn it smooth in his memory, and when he finally starts cutting it arrives all at once, flooding every space the system once filtered.</p>
+<p>He clamps his teeth down so hard they creak in his skull, his body locking against the pain as he forces his hand to keep moving. The final piece comes free slowly, stubbornly, tangled in scar tissue and obsolete code. Only then does the sound he&rsquo;s been holding tear free from him before he can stop it.</p>
+<p>He screams, gasps, screams again until his throat is raw and burning.</p>
+<p>And he realises, dimly, that it&rsquo;s the first true voice he&rsquo;s given himself since Busan.</p>
+<p>The med bay stinks of heat and rupture. Onyx&rsquo;s chest rises and falls unevenly as he seals what he can with the cauteriser, his skin pulling tight under damage that he knows will never fully heal. Still, it&rsquo;s better than carrying their reach inside him. Distance means nothing to NuYu. It never has.</p>
+<p>Once he&rsquo;s finished, he curls up on the floor in coagulating puddles of his own blood and flesh and discarded hardware and tries to sleep.</p>
+<p>The kid stands in front of him. Not as he had been, but as he fell, the shot still visible in the dark red bloom through fabric. A small speaker lies silent at his feet.</p>
+<p>&ldquo;Why?&rdquo; he asks.</p>
+<p>Onyx tries to answer &mdash; his mouth moves &mdash; but all that comes out is a raw scream that tears his own throat open.</p>
+<p>He starts awake, his body jolting like he&rsquo;s been shocked. The dream clings, the kid&rsquo;s wide eyes still there in the darkness, full of questions, accusations, confusion.</p>
+<p>Scrubbing his hand across his face, Onyx sits up and looks around, letting the shadows resolve. He&rsquo;s in the med bay. Every limb pulls with a dull, throbbing ache, and he winces as he slowly gets to his feet. Blood has dried on his hands and on the floor; he doesn&rsquo;t know how long he&rsquo;s been out. Hours, maybe a day.</p>
+<p>All he knows is he can&rsquo;t stay here, so he does his best to clean himself up and heads out on unsteady legs, the world tilting every few seconds and forcing him to pause and refind his balance. A newborn in a world that doesn&rsquo;t wait for the weak.</p>
+<p>The journey west unfolds in fragments: service tunnels, freight lines, the hollow spaces beneath cities that never fully touch the surface. Vienna passes somewhere above him, then Munich, both reduced to distant noise he avoids rather than enters.</p>
+<p>He never stops anywhere long enough to settle.</p>
+<p>Through stretches of dark forest and rail, the ground vibrates long before anything arrives. He learns to move with it, timing his crossings to passing cargo, slipping through maintenance routes and forgotten access points.</p>
+<p>Eventually, he slips into a boat&rsquo;s cargo hold, and when he finally disembarks, the horizon is cut through with neon glow and the jagged silhouettes of high-rises and skyscrapers. London smells like fuel and wet concrete. Drones flicker through the low clouds overhead, so he keeps his head down and moves with the flow, searching until he finds an access point into the underground.</p>
+<p>Which, he discovers when he enters the dark, twisting maze, is little more than a ghost town. It doesn&rsquo;t look like any trains have passed through in decades, but as he moves deeper, he hears the distant echoes of people moving around. Somewhere far off, he thinks he hears music, but it&rsquo;s gone before he can be sure.</p>
+<p>The Ghost Lines accept him without question, and for now, it offers Onyx somewhere he can finally stop for a while.</p>
 <p><br></p>
-
-
-<p>The relay bay hides beneath the fractured spine of a collapsed data corridor, wedged between rust-streaked piping and signage half-melted by some forgotten fire. Onyx finds it less by calculation, more by instinct&mdash;drawn along the disjointed pulse of low-frequency tremors, following the irregular heartbeat of sound stitched through steel.</p>
-
-<p>Inside, the space breathes like a relic left untouched. A battered synthboard rests against a sagging terminal, coils of frayed audio wire looped beneath it like offerings. The walls lean in, heavy with grime, broken only by streaks of scrawled phrases fighting through the decay:</p>
-
-<p><em>they tried to erase us / so we rewrote the score.</em></p>
-
-<p>A loop hums softly in the background, more static than structure, but beneath the distortion something persists. A rhythm laced together by stubborn hands, a message folded carefully into broken soundwaves, waiting for someone to notice.</p>
-
-<p>Onyx crouches near the rig, close enough to hear the edges of its struggle, close enough to feel the heat of long-decayed circuits beneath his palms, though he doesn&rsquo;t touch. He just listens. Breathes.</p>
-
-<p>The footsteps come softly, almost masked by the low static, but not enough to slip past the sensor mesh stitched through his skin.</p>
-
-<p>Onyx shifts, pivots on instinct, but his hands stay loose, weapon forgotten.</p>
-
-<p>In the threshold stands a man, taller than he expected, lean lines draped in threadbare fabric woven through with feedback threads. His hair catches the dim light&mdash;platinum streaked with faint neon shimmer, like his roots remember the sky even here in the dark. His eyes linger, steady and unblinking, holding none of the sharpness Onyx had come to expect. Not suspicion. Not fear.</p>
-
-<p>Something quieter.</p>
-
-<p>&ldquo;Hello,&rdquo; the man says, voice low, weighted like it&rsquo;s been softened by listening more than speaking. &ldquo;I&rsquo;m Soahn.&rdquo;</p>
-
-<p>Onyx doesn&rsquo;t answer, shoulders set, feet rooted.</p>
-
-<p>&ldquo;You&rsquo;ve been here three nights,&rdquo; Soahn continues, stepping forward without hesitation, movements unhurried. &ldquo;You don&rsquo;t touch the gear. You don&rsquo;t reroute the feed. You just&hellip; stay.&rdquo;</p>
-
-<p>Onyx watches him circle the edges of the relay bay, steps carefully avoiding the broken tangles of wire, his presence calm enough to make the static feel less like a warning and more like a hum settling into rhythm.</p>
-
-<p>Soahn pauses near the synthboard, fingers hovering just shy of the controls, not intruding, only acknowledging.</p>
-
-<p>&ldquo;I felt you,&rdquo; he says, softer now, eyes not quite meeting Onyx&rsquo;s, as though addressing something larger, older, than either of them. &ldquo;Down in the tunnels. Like an unfinished frequency. Heavy with regret&hellip; but pulling outward, like you didn&rsquo;t want to be trapped in yourself anymore.&rdquo;</p>
-
-<p>The words settle into the room without weight or pity, more like an observation noted aloud.</p>
-
-<p>Onyx tries to steady his breathing. When did it become so hard to maintain control?</p>
-
-<p>Soahn offers no demand, no question, only a quiet gesture toward the rig, hand curling slightly, palm open.</p>
-
-<p>&ldquo;Keep listening if you want. We don&rsquo;t own the echoes down here.&rdquo;</p>
-
-<p>Then, without hesitation, without waiting for acknowledgment, Soahn steps back into the corridor, quiet as the beat still thudding faintly behind the static.</p>
-
-<p>And just like that, he&rsquo;s gone.</p>
-
-
+<p><center>~*~</center></p>
 <p><br></p>
-
-
-<p>Onyx loses track of time in the bunker, measuring days not by clocks or schedules, but by the slow rhythm of his own breathing, by the way the dust shifts in the low light. The silence here is different than in other places&mdash;thicker, heavier, almost reverent, like even the broken walls remember something worth holding onto.</p>
-
-<p>No one comes. Not at first.</p>
-
-<p>Now and then, he hears faint movement from the tunnels beyond&mdash;an occasional scrape of boot against metal, the soft hush of displaced air&mdash;but nothing close enough to be threat or company. Just distant proof that something still moves beyond these walls.</p>
-
-<p>He doesn&rsquo;t investigate.</p>
-
-<p>Instead, he stays.</p>
-
-<p>Not because he&rsquo;s waiting for rescue or seeking purpose, but because for the first time in years, he doesn&rsquo;t feel the pull of orders or missions or programmed objectives. The loop hums quietly in the corner, flawed but unfiltered, something built by hands without military precision, and it roots him in a way nothing else has.</p>
-
-<p>Onyx settles into small routines. He paces slow, deliberate circuits across the uneven floor. He repairs the barely-functional solar converter until it offers just enough charge to keep his systems from dipping too low. He drinks from the purifier tucked in the shadowed corner, the water metallic but clean enough to hold him steady. He sleeps under the warped remains of a junction box, the wires above him fizzing softly like an old lullaby.</p>
-
-<p>Sometimes, he powers on the console, simply to watch the waveform roll across the cracked display&mdash;messy, glitch-ridden, imperfect&hellip; alive.</p>
-
-<p>The loop never changes.</p>
-
-<p>But something in him begins to.</p>
-
-<p>It&rsquo;s on the eighth day that a sealed ration pack appears just inside the threshold. Clean. Unopened. Untouched by rats or scavengers. Left deliberately.</p>
-
-<p>On the ninth, a set of spare cables, coiled neatly, their ends wrapped in faded but intact insulation, better than anything he&rsquo;s found in the scrap lanes.</p>
-
-<p>And on the tenth, just as his internal clock drifts further into quiet, the loop stutters and breaks.</p>
-
-<p>The console falls silent for a breath.</p>
-
-<p>Then&mdash;footsteps.</p>
-
-
+<p>London feels older beneath the surface, wear layered into crumbling stone and rusted metal. The tunnels deepen under the old metro lines, splitting into newer, narrower paths that fold back on themselves, dust thick enough to mark his steps.</p>
+<p>Onyx moves as carefully as he can, every step dragging slightly with a limp he can&rsquo;t simply get repaired at a military med bay. He&rsquo;s aware of how much more noise he makes now, the echoes spinning around him like beacons. To compensate, he sticks to the shadows, letting darkness fold around him until it becomes a different kind of armour.</p>
+<p>Time loosens here and direction stops meaning anything. He stays low, avoiding the upper levels where people pass through. He isn&rsquo;t ready for people.</p>
+<p>Instead, he descends until he finds a collapsed bunker wedged between two maintenance shafts. The walls hold sound at bay, and inside, the quiet feels contained, almost deliberate. When the ache in his spine sharpens, he sleeps there in short, fractured stretches.</p>
+<p>After a while, he starts to notice a disturbance. A tremor that vibrates through the walls and floor, barely anything at first, easy to dismiss or assign a cause. Failing systems or residual signals, maybe equipment breaking down deeper in the network.</p>
+<p>The explanations make sense&hellip; for a while.</p>
+<p>But then it changes, and a pattern starts to emerge, one that doesn&rsquo;t belong to circuitry or decay. It isn&rsquo;t quite a song, though Onyx thinks it&rsquo;s trying to be one. Four notes that never fully settle, looping, slipping, trying again. The vibration catches along his spine, pulling at him like something unfinished reaching for completion. He scans for transmitters but finds nothing.</p>
+<p>Onyx doesn&rsquo;t seek it out, and he doesn&rsquo;t move away from it, either. He listens as the sound changes over time, holding a little longer with each return, the gaps between notes narrowing, structure beginning to take shape.</p>
+<p>And then one night, a new sound cuts through the music.</p>
+<p>Laughter.</p>
+<p>Bright and sudden and so real Onyx almost jumps at the sound. It&rsquo;s brief, gone almost as soon as it appears, but it lingers in a way the sound never did before.</p>
+<p>He leans back and listens again, a part of him waiting to see if the laughter will return, though it doesn&rsquo;t. After a while, the beat slides back in, rolling through the concrete beneath him and, briefly, tuning out the soft <em>tap-tap. Tap. Tap-tap</em> that constantly plays in his head.</p>
 <p><br></p>
-
-
-<p>It&rsquo;s nearing dark when the newcomer arrives. Quick steps over the threshold, a scuff of boots on concrete, followed by a quiet curse and the unmistakable clatter of something metallic. Onyx hears the drag of a cable or the drop of a mic stand, then the low, careless hum of someone too used to filling silence to leave it empty. The tune shifts halfway through, off-key and meandering, the kind of sound that comes from a person who makes music without thinking.</p>
-
-<p>Onyx&rsquo;s muscles tighten on instinct, but he doesn&rsquo;t move.</p>
-
-<p>&ldquo;Well, damn,&rdquo; comes the greeting, easy and unbothered, followed by the sound of the coil being righted. &ldquo;Soahn wasn&rsquo;t kidding. You&rsquo;re real.&rdquo;</p>
-
-<p>There&rsquo;s no fear in the guy, no hesitation. He doesn&rsquo;t reach for a weapon or back toward the door, just drops his bag beside the battered console and settles into one of the rusted chairs like he&rsquo;s done it a thousand times before.</p>
-
-<p>&ldquo;You&rsquo;ve been living down here, yeah?&rdquo; the guy says, stretching his arms overhead. &ldquo;Figured from the signal bursts. Every night like clockwork.&rdquo;</p>
-
-<p>He leans back, grin lopsided, completely at ease.</p>
-
-<p>&ldquo;You like it?&rdquo;</p>
-
-<p>Onyx&rsquo;s answer comes slow, his voice rough from disuse. &ldquo;It was&hellip; honest.&rdquo;</p>
-
-<p>And just like that, the guy&rsquo;s grin shifts&mdash;brighter, sharper, like someone who&rsquo;s been waiting for this exact answer.</p>
-
-<p>&ldquo;Yeah? That one&rsquo;s mostly Rayne&rsquo;s, but I helped patch it together. Kairo, by the way.&rdquo;</p>
-
-<p>The name hangs there a moment, unforced.</p>
-
-<p>Kairo doesn&rsquo;t seem to mind the silence that follows. He just kicks his boots up on the edge of the synthboard, fingers drumming out a casual rhythm, gaze flicking up like he&rsquo;s already calculating beats and possible breakdowns.</p>
-
-<p>&ldquo;You waiting on someone?&rdquo; he asks eventually.</p>
-
-<p>Onyx shakes his head, slow and certain.</p>
-
-<p>&ldquo;Good,&rdquo; Kairo says easily. &ldquo;Then you should stay.&rdquo;</p>
-
-<p>No pitch. No explanation. Just a simple truth, dropped like a fact.</p>
-
-<p>Onyx lets his gaze drift across the room&mdash;to the fractured synth rig, to the scrawled words on the wall, to the lingering echo of a loop that&rsquo;s gone quiet but not forgotten. There&rsquo;s no logic to it, no strategy, but something in his chest eases for the first time since defection.</p>
-
-<p>He nods, just enough to be seen.</p>
-
-<p>Kairo beams like that was inevitable. &ldquo;Cool. We&rsquo;ve got space. Just&hellip; do yourself a favour&mdash;don&rsquo;t rearrange Soahn&rsquo;s snack stash. He&rsquo;ll feel it in his soul.&rdquo;</p>
-
-<p>And maybe it&rsquo;s exhaustion, maybe it&rsquo;s something older, but Onyx feels his mouth pull, the faintest curl of a smile that isn&rsquo;t tactical or forced, but something closer to real.</p>
-
-<p>For the first time in months, he breathes without counting the seconds.</p>
-
+<p><center>~*~</center></p>
 <p><br></p>
+<p>Rust spills down old server racks in slow, layered streaks. Onyx eats when he can, sleeps when the nightmares will allow him, wanders when stillness becomes too heavy and the ache in his joints returns.</p>
+<p>To kill time, he gathers old tech as he moves from room to room &mdash; scanners, snapped broadcast coils, bits of old systems that once had purpose, anything he can salvage &mdash; and brings it back to his base, his hands working through familiar sequences while the music sits somewhere just beyond reach. The work leads nowhere in particular, but the repetition steadies him and gives shape to the passing hours. And if he starts to tap his foot in time to the beat, he doesn&rsquo;t acknowledge it.</p>
+<p>When he finds the relay room, it reveals itself gradually, tucked beneath an old data corridor. The air inside is warmer, recently disturbed. Across the walls, someone has scrawled words into the layers of grime:</p>
+<p><em>They tried to erase us / So we rewrote the score.</em></p>
+<p>A loop plays softly in the background, slipping through an old, battered speaker. Static clings at the edges of the sound, but it&rsquo;s taken shape over the last few days, those same four notes grounding the track and making it feel more intentional.</p>
+<p>Quietly, he steps into the room and crouches beside the rig, listening to the timing of the breaks and the way the melody leans into the imperfections.</p>
+<p>Footsteps register before they take shape in the air, and Onyx turns, redistributing his weight in preparation for confrontation. Automatically, his hand moves toward his hip where a weapon once sat in a holster, only now he finds nothing but fabric.</p>
+<p>A man stands at the threshold.</p>
+<p>Tall and lean, his coat worn thin and threaded with feedback wire that catches the light. His white-blond hair has a pale sheen to it, strands reflecting muted colours, green and grey and azure blue.</p>
+<p>&ldquo;Hello,&rdquo; he says warmly, which catches Onyx off guard. &ldquo;I&rsquo;m Soahn.&rdquo; Then he hesitates, tilting his head slightly as he stares at Onyx, and adds, &ldquo;Annyeonghaseyo.&rdquo;</p>
+<p>Onyx holds still, waiting for a directive that never comes.</p>
+<p>&ldquo;You&rsquo;ve been here three nights,&rdquo; Soahn continues, stepping carefully into the space, his movement tracing the edges rather than cutting through them. He brushes his fingers across the synthboard. &ldquo;I felt you in the tunnels.&rdquo; The filaments in his hair shift softly from blue to violet. &ldquo;I&rsquo;m glad you came to visit us.&rdquo;</p>
+<p><em>Us.</em> Onyx thinks about the laughter he&rsquo;d heard the other night, and his gaze automatically slides to the doorway, although there&rsquo;s nobody else nearby.</p>
+<p>Soahn gestures toward the rig. &ldquo;Keep listening if you want,&rdquo; he says. &ldquo;No one owns the echoes down here.&rdquo;</p>
+<p>Then he steps back and disappears into the corridor, leaving Onyx alone with the music.</p>
+<p><br></p>
+<p><center>~*~</center></p>
+<p><br></p>
+<p>Time loosens again. Onyx keeps to his base, measuring the passage of hours through small changes like the drift of dust or the angle of light across corroded metal. Part of him is always waiting for words to flash up on his HUD in the familiar cadence of instruction, but what meets him now is open space, unmarked and waiting for him to fill it.</p>
+<p>The <em>tap-tap</em> from Busan gradually fades with time, worn down by a steadier rhythm drifting from the other base. It builds slowly, changing in small ways that reward his attention and he starts to listen for it without realising. He waits for those moments where laughter fills the spaces between beats, and sometimes, rarely, he smiles despite himself when he hears it.</p>
+<p>The path to the relay room feels familiar now, the air always warming as he draws closer. Tonight, the loop runs low, turned down for whatever reason. Nobody is there, though he still pauses in the doorway, instinct and hesitation meeting in the same breath.</p>
+<p>He steps inside their base.</p>
+<p>For a moment, he hovers his fingers over the synthboard, wondering if he should touch it. Touching feels like another choice that could change everything, an acknowledgement that he&rsquo;s still here, and that this, somehow, matters to him.</p>
+<p>He sighs, and then he adjusts a single input.</p>
+<p>The music changes fractionally, not quite smoothed but reshaped, settling into itself and catching where it used to slip. Satisfied, Onyx withdraws and heads back out, leaving before the space fills again. The tunnels take him back to his hideout, as they always do, but Onyx feels a shift in his steps, the drag a little less than before.</p>
+<p>The constants he once relied on give way to a different kind of system.</p>
+<p>Acknowledgement.</p>
+<p>Freedom.</p>
+<p>Choice.</p>
+<p>Afterwards, he falls into small routines without thinking: drawing water from the purifier, coaxing equipment into stability when he can. Repair, where repair is possible.</p>
+<p>Sometimes, when the others are gone, he returns to the relay and checks the console, watching the waveform crawl across the display, imperfect and alive.</p>
+<p>The loop evolves.</p>
+<p>And so does Onyx.</p>
+<p><br></p>
+<p><center>~*~</center></p>
+<p><br></p>
+<p>On the eighth day, a sealed ration pack appears just outside his base, placed carefully but intentionally at the threshold.</p>
+<p>On the ninth, spare cables follow &mdash; cables that are perfect for the relay patch he&rsquo;s been piecing together &mdash; coiled neatly with their insulation intact.</p>
+<p>It&rsquo;s nearing dark on the tenth evening when the newcomer arrives. It isn&rsquo;t Soahn; these footsteps are different, less cautious, more clumsy. Onyx hears a boot catch against uneven concrete, followed by a soft curse slipping out before something metallic strikes stone with a careless clatter. Then what sounds like a cable being dragged across the ground with a low hiss.</p>
+<p>Without thinking, he angles himself slightly toward the doorway.</p>
+<p>A figure fills the threshold, mostly in shadow.</p>
+<p>&ldquo;Well, damn,&rdquo; says a voice, easy, unbothered, accompanied by the soft flick of a lighter that sparks once, twice, before catching. &ldquo;Soahn wasn&rsquo;t kidding. You&rsquo;re real.&rdquo; The flame lifts briefly, carving him out of the dark.</p>
+<p>An oversized jacket hangs loose across his frame, worn thin and taped in places, its surface broken by panels that catch the light in small flashes of colour. The collar flickers briefly, a line of coded light shifting too quickly to read before disappearing again with the movement of his throat. Headphones rest around his neck, one ear turned outward, the casing scuffed from overuse. They sit there so naturally that Onyx wouldn&rsquo;t be surprised if he&rsquo;s never taken them off.</p>
+<p>He steps into the relay bay without hesitation, his gaze sliding past Onyx and to the room itself, over the small, deliberate piles of salvaged tech Onyx has been quietly fixing, over the rusted chairs dragged into place and left angled toward the console, over the bedroll tucked against the wall where the metal runs warmer, insulated with scavenged fabric.</p>
+<p>&ldquo;Yeah,&rdquo; the guy says with a crooked smile. &ldquo;This tracks. You&rsquo;ve been living down here, yeah?&rdquo; With that, he stretches his arms up over his head, joints clicking softly as he releases tension from them. &ldquo;Picked it up from the signal bursts. Plus, you&rsquo;ve been tweaking our track.&rdquo; He leans back, grin angled and open. &ldquo;You like it?&rdquo;</p>
+<p>Onyx watches him, this peculiar man with wild hair who&rsquo;s stepped into his space and settled as though the boundaries had never been there to begin with. The ease of it sits strangely against everything Onyx understands about territory, about distance, about the way people move through space.</p>
+<p>After a moment, he answers, his voice roughened from disuse.</p>
+<p>&ldquo;It was&hellip; honest.&rdquo;</p>
+<p>The man&rsquo;s face brightens, quick and unfiltered, as though a switch has been thrown somewhere just beneath the surface. His eyes crinkle, the reaction open and unguarded.</p>
+<p>&ldquo;Yeah?&rdquo; he says, the word lifting easily. &ldquo;That one&rsquo;s mostly Rayne&rsquo;s. I just helped it find its feet.&rdquo;</p>
+<p>He drops into one of the rusted chairs without asking, the metal giving a quiet protest beneath his weight. One hand falls to his thigh, fingers moving without thought&mdash;</p>
+<p><em>Tap-tap.</em></p>
+<p>Onyx stills. The familiar beat hits him a split second before he can place it, a pattern buried somewhere deep. The shape of it pulls at a memory he thought he&rsquo;d finally managed to set aside &mdash; the echo of small fingers tapping against fabric, the same creative energy. Onyx finds himself tracking the tempo as it repeats, as it <em>continues</em> without being broken by a gunshot.</p>
+<p>&ldquo;I&rsquo;m Kairo, by the way,&rdquo; the guy says, and then he frowns, tilting his head. &ldquo;You okay?&rdquo;</p>
+<p>Onyx blinks and nods once, not sure he can find his voice.</p>
+<p>&ldquo;You waiting on someone?&rdquo; Kairo asks after a while.</p>
+<p>Onyx shakes his head slowly.</p>
+<p>&ldquo;Good,&rdquo; Kairo says, as if that had already been decided anyway. He straightens and stops tapping the idle beat against his thigh. &ldquo;Then you should stay.&rdquo;</p>
+<p>This is said with such earnestness that Onyx is, once again, caught off guard. He looks away, across the relay bay, and takes in the scrawled phrases bleeding through the grime on the walls, wondering how long they&rsquo;ve been there, wondering how long it&rsquo;s been since anyone <em>stayed</em> down here. It isn&rsquo;t like The Ghost Lines were part of his plan. Then again, it isn&rsquo;t like he had much of a plan to begin with, just surviving until he could figure out what to do next.</p>
+<p>Still, the tightness that&rsquo;s been sitting in his chest eases just a little.</p>
+<p>He nods once.</p>
+<p>And Kairo&rsquo;s grin reappears. &ldquo;Cool,&rdquo; he says. &ldquo;We&rsquo;ve got space. Just don&rsquo;t mess with Soahn&rsquo;s tea stash. He&rsquo;ll know. Don&rsquo;t ask me how, he just will.&rdquo;</p>
+<p>It&rsquo;s ridiculous and yet entirely sincere, and Onyx feels a little bit more of that tightness in his chest loosen. He likes to think he&rsquo;s pretty good at reading people, and there doesn&rsquo;t seem to be anything calculated about Kairo or Soahn. They&rsquo;re just&hellip; easy, unstructured, present but not overbearing. Friendly.</p>
+<p>Onyx has spent most of his life taking orders from others, carrying out objectives he might never have touched if it weren&rsquo;t for the military. He never gave too much away about himself to others like him because he never knew who would come back from a mission.</p>
+<p>What he knows is ID codes, when meals arrive, when to wake up, how to assemble a rifle and how to take it apart again. He knows how concrete splits and splinters into a hundred pieces when it&rsquo;s pierced. He knows what a body sounds like as it hits the floor.</p>
+<p>But now he&rsquo;s starting to know a new world. One that&rsquo;s completely open to possibility.</p>
+<p><br></p>
+<p><center>~*~</center></p>
+<p><br></p>
+<p>The loop changes. Kairo hunches over his battered rig near the old junction box, wire coils stacked along his arm like mismatched bracelets, a synthpad balanced against his knee at an angle that looks unstable, though it never falls. He mutters as he works, little slivers of rhythm slipping out while he builds, layer over layer, chasing sound that keeps morphing before it can settle. The space around him is charged by his excitement.</p>
+<p>Soahn is nearby, sitting with his back against a strut, his head dipped in steady concentration as he solders a small, stubborn component. The iron flares blue each time it meets metal, light dancing across his hands as he works carefully, patiently, restoring connections one by one.&nbsp;</p>
+<p>Rayne rests against the far wall, half-shadowed, present without pulling focus. He&rsquo;s probably the strangest person Onyx has ever met &mdash; not human, but such a good representation of one that it&rsquo;s often easy to forget. He tilts his head now and then, listening with a depth that seems to reach past the sound itself, as if he&rsquo;s following the structure beneath it, the shape the others haven&rsquo;t yet found words for.</p>
+<p>Onyx kneels beside a scorched console module, his hands moving through dismantle and rebuild without pause. No one asked him to fix it, but the damage draws him anyway, a familiar pull answered by patience and precision, by the quiet rightness of restoring what&apos;s been lost.</p>
+<p>Swearing under his breath, Kairo pushes the synthpad away with both palms. &ldquo;It isn&rsquo;t syncing,&rdquo; he moans, rubbing his eyes. &ldquo;I&rsquo;ve tried everything. Literally everything. It&rsquo;s clean, but it doesn&rsquo;t land right.&rdquo;</p>
+<p>Soahn glances sideways at Onyx and then pushes the spare headset over to him with the toe of his boot. &ldquo;Why don&rsquo;t you try it?&rdquo; he says quietly.</p>
+<p>&ldquo;Why?&rdquo; Onyx asks, staring dubiously down at the headset.</p>
+<p>&ldquo;Because you fix things,&rdquo; Soahn says.</p>
+<p>&ldquo;Yes, tech. I don&rsquo;t fix music.&rdquo;</p>
+<p>Turning back to his soldering iron, Soahn smiles and says, &ldquo;When you first started coming here, you tweaked the track. Maybe you didn&rsquo;t realise you were improving it.&rdquo;</p>
+<p>Onyx frowns. No, he hadn&rsquo;t considered that. Mostly he&rsquo;d been curious about the way the track was built, what each different component did to the sound as a whole.</p>
+<p>&ldquo;Go ahead,&rdquo; Kairo says with a sigh. &ldquo;I&rsquo;m sick of it anyway. Seriously, if you don&rsquo;t, I might just delete the whole thing.&rdquo;</p>
+<p>&ldquo;He isn&rsquo;t joking,&rdquo; Rayne says. &ldquo;He&rsquo;s done it before.&rdquo;</p>
+<p>Slowly, Onyx picks up the headset and moves over to the rig, staring down at the waveform dancing across the display for a moment before settling down in front of it.</p>
+<p>The track unfolds slowly. Bare chords spread across uncertain percussion, a voice &mdash; Rayne&rsquo;s voice &mdash; slipping through static that refuses to resolve into clarity. The structure of the song holds, but only just, each element precariously balanced. It doesn&rsquo;t help that the gear is jury-rigged by Kairo himself, and as Onyx is fast learning, whenever Kairo builds, it ends up resembling him in ways he probably isn&rsquo;t aware of: uneven, reactive, built in bursts and corrections, yet always finding its way back into cohesion.</p>
+<p>He tweaks a few things and hears a stutter. Onyx rests his fingers on the synthpad and leans into it, looping it beneath the beat, adjusting the space between.</p>
+<p>And the track steadies.</p>
+<p>Kairo&rsquo;s head snaps up. &ldquo;Wait. Again?&rdquo;</p>
+<p>Onyx repeats the motion, the song settling more fully this time. The sound opens, drawing breath where it hadn&rsquo;t before.</p>
+<p>&ldquo;Holy shit.&rdquo; Kairo&rsquo;s grin breaks wide and bright. &ldquo;See? I knew it.&rdquo;</p>
+<p>&ldquo;I knew it before you,&rdquo; Soahn mutters, not looking up, though he&rsquo;s also smiling.</p>
+<p>Rayne pushes away from the wall and comes over to the rig, dropping to a crouch beside it. &ldquo;You made it better.&rdquo;</p>
+<p>Onyx remains where he is, his hand resting against the synthpad, the music continuing beneath his fingers. There are no overlays across his vision, no directives arriving to guide the next movement.</p>
+<p>The sound carries on without instruction.</p>
+<p>So he goes with it.</p>
 
-
-
-<p>The loop&rsquo;s different now.</p>
-
-<p>Kairo hunches over a battered beat rig near the old junction box, wire coils stacked around his arm like mismatched bracelets, a synthpad balanced precariously on his knee. He mutters to himself, fingers drumming restless rhythms that only he seems to follow, layering glitch on glitch, chasing a sound that won&rsquo;t quite settle.</p>
-
-<p>Soahn rests nearby, back pressed against a rusted strut, head dipped in quiet focus as he solders something delicate, the iron tip sparking blue every time it kisses metal. His movements are slower, steadier&mdash;work done for the sake of it, for the comfort of making things function again.</p>
-
-<p>Rayne sits just beyond them against the far wall, quiet in a way that doesn&rsquo;t demand attention but draws it anyway. His head tilts occasionally, listening.</p>
-
-<p>Onyx kneels by a scorched console module. No one asked him to fix it, but the wreckage itches under his skin. There&rsquo;s something about making broken things work again that soothes the restless hum beneath his ribs.</p>
-
-<p>Then Kairo swears, shoving the synthpad back. &ldquo;It&rsquo;s not syncing. I&rsquo;ve tried everything. It&rsquo;s clean but&hellip; it doesn&rsquo;t land.&rdquo;</p>
-
-<p>Soahn doesn&rsquo;t even lift his head, just glances sideways and nudges the spare headset toward Onyx. &ldquo;Try it.&rdquo;</p>
-
-<p>Onyx hesitates.</p>
-
-<p>Rayne watches without blinking, calm and curious.</p>
-
-<p>Then Onyx takes the headset.</p>
-
-<p>The track unfurls slow&mdash;bare chords stitched over fragmented percussion, a voice threaded thinly through the static. Beautiful, but fragile. Like a song built on uneven ground.</p>
-
-<p>And then the stutter comes. Not enough to break the track. Just enough to make it falter.</p>
-
-<p>Onyx moves instinctively, fingertips finding the right rhythm without thought&mdash;tap, pause, tap-tap&mdash;settling into the gap, steadying the lurch into something alive.</p>
-
-<p>The track holds.</p>
-
-<p>Kairo&rsquo;s eyes go wide. &ldquo;Wait&mdash;again.&rdquo;</p>
-
-<p>Onyx repeats it, fingers more confident now. The rhythm lands. The glitch doesn&rsquo;t vanish&mdash;it resolves, like a heartbeat refusing to be smoothed away.</p>
-
-<p>The song breathes fuller. Stronger.</p>
-
-<p>Kairo beams, like electricity&rsquo;s just wired through his spine. &ldquo;See? I knew it.&rdquo;</p>
-
-<p>Soahn tips his chin in quiet satisfaction. &ldquo;Knew it before you.&rdquo;</p>
-
-<p>Rayne shifts, the faintest nod, a quiet confirmation threading through the room.</p>
-
-<p>Onyx doesn&rsquo;t speak. Just leaves his hand resting on the synthpad, letting the pulse hum steady beneath his skin.</p>
-
-<p>For the first time in years, he feels like he&rsquo;s part of something again.</p>
-</div>
-
-    <a href="/signals" class="back-link">← Back to Signals</a>
   </div>
+</div>
+    </article>
+
+    <nav class="back" aria-label="Return">
+      <a href="/signals/">← Back to Signals</a>
+    </nav>
+
+  </main>
 </body>
 </html>
