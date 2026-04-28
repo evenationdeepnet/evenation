@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>E.V.E.N // Origin Node</title>
+  <meta name="description" content="Origin node detected." />
+
+  <style>
+    :root{
+      color-scheme: dark;
+
+      --bg: #07080b;
+      --bg2:#06070a;
+
+      --text: rgba(240,240,242,.86);
+      --muted: rgba(240,240,242,.58);
+      --soft: rgba(240,240,242,.10);
+
+      --cyan: rgba(120,255,255,.85);
+      --cyanSoft: rgba(120,255,255,.18);
+      --mag: rgba(255,90,225,.72);
+      --magSoft: rgba(255,90,225,.16);
+
+      --radius2: 26px;
+      --shadow: 0 22px 80px rgba(0,0,0,.55);
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+
+    body{
+      margin:0;
+      background:
+        radial-gradient(900px 520px at 20% 8%, var(--cyanSoft), transparent 55%),
+        radial-gradient(900px 520px at 80% 10%, var(--magSoft), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      color: var(--text);
+      font-family: var(--sans);
+      overflow:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+
+    .stars{
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      opacity:.55;
+      background:
+        radial-gradient(1px 1px at 10% 18%, rgba(120,255,255,.55), transparent 60%),
+        radial-gradient(1px 1px at 28% 42%, rgba(240,240,242,.35), transparent 60%),
+        radial-gradient(1px 1px at 62% 30%, rgba(255,90,225,.30), transparent 60%),
+        radial-gradient(1px 1px at 88% 22%, rgba(120,255,255,.28), transparent 60%),
+        radial-gradient(1px 1px at 18% 70%, rgba(255,90,225,.20), transparent 60%);
+      filter: blur(.2px);
+    }
+
+    .grain{
+      position:fixed;
+      inset:-20px;
+      z-index:1;
+      pointer-events:none;
+      opacity:.10;
+      background:
+        radial-gradient(1px 1px at 18% 24%, rgba(255,255,255,.10), transparent 60%),
+        radial-gradient(1px 1px at 42% 62%, rgba(255,255,255,.08), transparent 60%),
+        radial-gradient(1px 1px at 78% 38%, rgba(255,255,255,.08), transparent 60%);
+      filter: blur(.35px);
+    }
+
+    .wrap{
+      position:relative;
+      z-index:2;
+      height:100%;
+      display:grid;
+      place-items:center;
+      padding: 28px 18px;
+    }
+
+    .card{
+      width:min(860px, 100%);
+      text-align:center;
+      padding: 64px 24px 52px;
+      border-radius: var(--radius2);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(10,11,14,.40);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(780px 260px at 30% 0%, rgba(120,255,255,.16), transparent 60%),
+        radial-gradient(780px 260px at 70% 0%, rgba(255,90,225,.12), transparent 60%);
+      opacity:.65;
+      pointer-events:none;
+    }
+
+    .kicker{
+      position:relative;
+      z-index:1;
+      margin:0 0 24px;
+      font-family: var(--mono);
+      font-size: clamp(22px, 3vw, 36px);
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color: rgba(255,90,225,.82);
+      text-shadow: 0 0 22px rgba(255,90,225,.16);
+    }
+
+    .glitch{
+      position:relative;
+      z-index:1;
+      display:inline-block;
+      margin:0;
+      font-family: var(--mono);
+      font-size: clamp(44px, 7vw, 88px);
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color: rgba(120,255,255,.88);
+      text-shadow:
+        0 0 18px rgba(120,255,255,.16),
+        0 12px 60px rgba(0,0,0,.65);
+      animation: jitter 6s infinite;
+    }
+
+    .glitch::before,
+    .glitch::after{
+      content: attr(data-text);
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      opacity:.42;
+      font-family:inherit;
+      letter-spacing:inherit;
+      text-transform:inherit;
+    }
+
+    .glitch::before{
+      color: rgba(255,90,225,.72);
+      transform: translate(2px, 0);
+      clip-path: inset(0 0 55% 0);
+      animation: glitchTop 2.8s infinite linear alternate-reverse;
+    }
+
+    .glitch::after{
+      color: rgba(120,255,255,.75);
+      transform: translate(-2px, 0);
+      clip-path: inset(48% 0 0 0);
+      animation: glitchBot 3.1s infinite linear alternate-reverse;
+    }
+
+    @keyframes glitchTop{
+      0%{ clip-path: inset(0 0 86% 0); transform: translate(1px,0); }
+      18%{ clip-path: inset(0 0 58% 0); transform: translate(4px,-1px); }
+      36%{ clip-path: inset(0 0 74% 0); transform: translate(-2px,1px); }
+      52%{ clip-path: inset(0 0 42% 0); transform: translate(3px,0); }
+      70%{ clip-path: inset(0 0 88% 0); transform: translate(-1px,-1px); }
+      100%{ clip-path: inset(0 0 64% 0); transform: translate(2px,1px); }
+    }
+
+    @keyframes glitchBot{
+      0%{ clip-path: inset(82% 0 0 0); transform: translate(-1px,0); }
+      22%{ clip-path: inset(64% 0 0 0); transform: translate(-4px,1px); }
+      44%{ clip-path: inset(78% 0 0 0); transform: translate(2px,-1px); }
+      62%{ clip-path: inset(52% 0 0 0); transform: translate(-3px,0); }
+      84%{ clip-path: inset(90% 0 0 0); transform: translate(1px,1px); }
+      100%{ clip-path: inset(70% 0 0 0); transform: translate(-2px,-1px); }
+    }
+
+    @keyframes jitter{
+      0%, 91%, 100%{ transform: translate(0,0); }
+      92%{ transform: translate(1px,-1px); }
+      93%{ transform: translate(-1px,1px); }
+      94%{ transform: translate(0,0); }
+    }
+
+    .divider{
+      position:relative;
+      z-index:1;
+      width:min(360px, 70%);
+      height:1px;
+      margin: 34px auto 26px;
+      background: linear-gradient(90deg, transparent, rgba(255,90,225,.48), rgba(120,255,255,.45), transparent);
+    }
+
+    .meta{
+      position:relative;
+      z-index:1;
+      margin:0 auto 28px;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height:1.8;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color: var(--muted);
+    }
+
+    .meta strong{
+      color: rgba(120,255,255,.85);
+      font-weight:400;
+    }
+
+    .meta .pink{
+      color: rgba(255,90,225,.82);
+    }
+
+    .message{
+      position:relative;
+      z-index:1;
+      margin: 0 auto;
+      max-width: 44ch;
+      font-family: var(--mono);
+      font-size: clamp(14px, 1.8vw, 17px);
+      line-height:1.85;
+      letter-spacing:.08em;
+      color: rgba(240,240,242,.82);
+    }
+
+    .message .cyan{ color: rgba(120,255,255,.86); }
+    .message .pink{ color: rgba(255,90,225,.82); }
+
+    .footer{
+      position:relative;
+      z-index:1;
+      margin-top:30px;
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing:.14em;
+      color: rgba(255,90,225,.74);
+      text-transform:uppercase;
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .glitch,
+      .glitch::before,
+      .glitch::after{
+        animation:none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="stars" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <main class="wrap" aria-label="Origin node trace">
+    <section class="card" aria-label="Origin node detected">
+      <p class="kicker">Origin Node Detected</p>
+
+      <h1 class="glitch" data-text="J. Oliver">J. Oliver</h1>
+
+      <div class="divider" aria-hidden="true"></div>
+
+      <div class="meta" aria-hidden="true">
+        <div>Signal trace: <strong>complete</strong></div>
+        <div>Node status: <strong>verified</strong></div>
+        <div>Access level: <span class="pink">origin</span></div>
+      </div>
+
+      <div class="message">
+        Signal does not begin on its own.<br>
+        It is built.<br><br>
+        <span class="cyan">From noise.</span><br>
+        <span class="pink">From memory.</span><br>
+        <span class="cyan">From intent.</span>
+      </div>
+
+      <div class="footer">
+        // Origin Node //
+      </div>
+    </section>
+  </main>
+</body>
+</html>
+```
