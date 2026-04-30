@@ -1,559 +1,623 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>00C9-M | Signals | E.V.E.N</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>00C9-M | Origins | E.V.E.N</title>
+
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #e0e0e0;
-      color: #000;
-      font-family: 'IBM Plex Mono', monospace;
-      line-height: 1.6;
-      background-image: url('../static-noise.png');
-      background-size: cover;
+    :root{
+      color-scheme: light;
+
+      /* warm grey / paper layer */
+      --bg: #f2f1ee;
+      --bg2:#eceae6;
+
+      --panel: rgba(20,20,24,.06);
+      --panel2: rgba(20,20,24,.04);
+      --stroke: rgba(20,20,24,.12);
+
+      --text: rgba(18,18,20,.88);
+      --muted: rgba(18,18,20,.60);
+
+      /* restrained accents */
+      --accent: rgba(30,180,190,.85);   /* muted cyan */
+      --accent2: rgba(172,120,210,.55); /* lilac whisper */
+
+      --radius: 18px;
+      --radius2: 26px;
+      --shadow: 0 18px 70px rgba(0,0,0,.10);
+      --shadow2: 0 12px 40px rgba(0,0,0,.08);
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --serifish: ui-serif, Georgia, "Times New Roman", Times, serif;
     }
 
-    .container {
-      max-width: 800px;
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; min-height:100vh; }
+
+    body{
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(900px 420px at 20% 0%, rgba(30,180,190,.10), transparent 60%),
+        radial-gradient(900px 420px at 80% 0%, rgba(172,120,210,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      overflow-x:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+
+    /* subtle grain/noise */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(1px 1px at 18% 24%, rgba(0,0,0,.12), transparent 60%),
+        radial-gradient(1px 1px at 42% 62%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 78% 38%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 60% 80%, rgba(0,0,0,.08), transparent 60%);
+      opacity:.08;
+      filter: blur(.3px);
+      z-index:0;
+    }
+
+    .wrap{
+      max-width: 980px;
       margin: 0 auto;
-      padding: 4rem 2rem;
+      padding: 44px 20px 76px;
+      position:relative;
+      z-index:1;
     }
 
-    h1 {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 2.5rem;
-      color: #990066;
-      margin-bottom: 0.5rem;
+    /* header */
+    .head{
+      text-align:center;
+      margin-bottom: 18px;
     }
 
-    .id-tag {
-      font-size: 1rem;
-      color: #666;
-      margin-bottom: 2rem;
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.18em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.66);
     }
 
-    .glitch-divider {
-      width: 100%;
-      height: 2px;
-      background: linear-gradient(to right, #ff00ff, #00ffff);
-      margin: 2.5rem 0;
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 0 rgba(30,180,190,.25);
+      animation: pulse 2.6s infinite;
+      flex:none;
     }
 
-    .story p {
-      font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', sans-serif;
-      font-size: 1rem;
-      color: #000;
-      line-height: 1.6;
-      margin-bottom: 1rem; /* Adjust this to tighten or loosen paragraph spacing */
+    @keyframes pulse{
+      0%{ box-shadow: 0 0 0 0 rgba(30,180,190,.22); }
+      70%{ box-shadow: 0 0 0 12px rgba(30,180,190,0); }
+      100%{ box-shadow: 0 0 0 0 rgba(30,180,190,0); }
     }
 
-    .back-link {
-      color: #990066;
-      text-decoration: none;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1rem;
-      border: 1px solid #990066;
-      padding: 0.5rem 1rem;
-      display: inline-block;
-      margin-top: 3rem;
-      transition: 0.3s ease;
+    h1{
+      margin: 14px 0 8px;
+      font-size: clamp(32px, 4.6vw, 54px);
+      line-height: 1.06;
+      letter-spacing: -0.02em;
     }
 
-    .back-link:hover {
-      background: #00ffff;
-      color: #000;
+    .meta{
+      margin: 0 auto;
+      max-width: 70ch;
+      color: rgba(18,18,20,.62);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* story card */
+    .card{
+      margin-top: 22px;
+      border-radius: var(--radius2);
+      background: linear-gradient(180deg, rgba(255,255,255,.70), rgba(255,255,255,.52));
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(700px 240px at 25% 0%, rgba(30,180,190,.14), transparent 60%),
+        radial-gradient(700px 240px at 75% 0%, rgba(172,120,210,.12), transparent 60%);
+      opacity:.70;
+      pointer-events:none;
+    }
+
+    .card-inner{
+      position:relative;
+      z-index:1;
+      padding: 28px 28px 24px;
+    }
+
+    /* divider inside card */
+    .divider{
+      height: 1px;
+      background: linear-gradient(90deg, rgba(172,120,210,.40), rgba(30,180,190,.40));
+      opacity:.7;
+      margin: 16px 0 22px;
+    }
+
+    /* story typography */
+    .story{
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.9;
+      color: rgba(18,18,20,.84);
+    }
+
+    .story p{
+      margin: 0 0 16px;
+    }
+
+    .story em{ color: rgba(18,18,20,.86); }
+
+    .center-text {
+  text-align: center;
+}
+
+    /* optional little “file tag” row */
+    .filetag{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.62);
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.40);
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(18,18,20,.66);
+      letter-spacing:.06em;
+      white-space:nowrap;
+    }
+
+    /* --- SoundCloud block (Signals story pages) --- */
+.audio-block{
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px dashed rgba(18,18,20,.18);
+}
+
+.audio-label{
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(18,18,20,.62);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom: 10px;
+}
+
+.audio-label .dot{
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 rgba(30,180,190,.20);
+}
+
+.sc-embed{
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(18,18,20,.14);
+  background: rgba(255,255,255,.48);
+  box-shadow: 0 12px 40px rgba(0,0,0,.08);
+  height: 120px; /* matches your preferred compact player */
+}
+
+.sc-embed iframe{
+  display:block;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0;
+}
+
+    /* back nav */
+    .back{
+      margin-top: 18px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .back a{
+      text-decoration:none;
+      font-family: var(--mono);
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: rgba(18,18,20,.62);
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.55);
+      transition: .16s ease;
+    }
+
+    .back a:hover{
+      color: rgba(18,18,20,.82);
+      border-color: rgba(18,18,20,.22);
+      box-shadow: 0 12px 40px rgba(0,0,0,.10);
+      transform: translateY(-1px);
+    }
+
+    /* reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; }
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <h1>00C9-M</h1>
-    <p class="id-tag">"He burned their systems from the inside. Then built his own."</p>
-    <div class="glitch-divider"></div>
+  <main class="wrap">
 
-    <div class="story">
-<p>The towers hummed at night, but it wasn’t gentle—not the lull of traffic or the murmur of lives lived above and below. It was the broken buzz of faulty antennae, unpatched servers, and the constant reverb of a system too stretched to sleep.</p>
+    <header class="head">
+      <div class="kicker"><span class="dot" aria-hidden="true"></span> signals // origins // recovered story</div>
+      <h1>00C9-M</h1>
+      <p class="meta">File integrity: partial. Playback: safe.</p>
+    </header>
 
-<p>Minjae lived in the static.</p>
+    <article class="card" aria-label="Story container">
+      <div class="card-inner">
 
-<p>Fifteen floors up in Block R9, he’d built a nest out of fibre cable, a hacked maintenance tablet, and a loopback port hidden behind a fuse panel that didn’t technically exist. That was where the real work happened.</p>
+        <div class="filetag" aria-label="File tags">
+          <span class="pill">origins</span>
+          <span class="pill">sabotage</span>
+          <span class="pill">minjae</span>
+        </div>
 
-<p>“What’s your name?” the buyer asked.</p>
+        <div class="divider" aria-hidden="true"></div>
 
-<p>“Echo.”</p>
+        <div class="story">
 
-<p>“What's your real name?”</p>
+          <!-- Paste story paragraphs exactly as you have them -->
 
-<p>Minjae didn’t answer. He lifted the burner tag from the solder plate, handed it over, and watched the buyer’s face flicker in the blue glow. The name changed. Age, too. Background scrubbed and replaced.</p>
-
-<p>“I’ll be able to pass clearance with this?” the buyer said.</p>
-
-<p>“If the scanner’s blind and the clerk’s bored? Yeah. Don’t get fancy.”</p>
-
-<p>The buyer left with shaky hands. Minjae pocketed the credits and slid the old chip into a collection of rejects. He’d scrape the good code later, rewrite the rest.</p>
-
-<p>The walls creaked around him, the tower’s skin breathing in heat it couldn’t distribute properly. Somewhere above, someone argued. Someone below slammed a metal hatch. The building was alive in the worst way: loud, unpredictable, easy to forget if you weren’t paying attention.</p>
-
-<p>Minjae always paid attention.</p>
-
-<p>He’d learned early that silence was a luxury. Glitches were a language. And every system, no matter how polished, had cracks you could crawl through if you knew where to apply pressure.</p>
-
-<p>His mum used to call him a ghostkey. She said he could unlock anything but still act like he wasn’t there.</p>
-
-<p>Back then, he’d thought it was a compliment.</p>
-
-<p>These days, he wasn’t so sure.</p>
-
-<p>The burner tablet pinged.</p>
-
-<p>INCOMING REQUEST</p>
-<p>PATCH: ID-TAG CORRUPTION</p>
-<p>SEVERITY: HIGH</p>
-<p>RESPONSE NEEDED: URGENT</p>
-
-<p>He swiped it open. Half the code was spaghetti. The rest was an insult to proper formatting. He muttered under his breath and began untangling.</p>
-
-<p>“I swear, if one more idiot tries to spoof an ID using a meme generator, I will personally encrypt their spleen.”</p>
-
-<p>The lights shuddered. Power load redistribution. Minjae didn’t flinch. He was already on backup—a rig he’d cobbled from three different consoles and a broken visualiser.</p>
-
-<p>Below his collar, his phosphor tattoo synced with his heartbeat.</p>
-
-<p>A sharp knock sounded on the vent panel to his right. He spun, sliding the small blade from the table into his sleeve.</p>
-
-<p>But it was just a kid, barely thirteen. Nervous. Holding a badly scratched datapad like it was contraband.</p>
-
-<p>Minjae sighed. “You bricked it, didn’t you.”</p>
-
-<p>The kid nodded.</p>
-
-<p>“Got caught installing illegal song files?”</p>
-
-<p>Another nod.</p>
-
-<p>Minjae held out his hand. “You’re lucky I’m bored.”</p>
-
-<p>From the next room, his mum coughed. Not the casual kind, but the dry, raw kind that dragged its way up from the lungs and made you wonder how long she’d been hiding it.</p>
-
-<p>His younger sister was probably asleep, curled in the little nest of cables he’d built for her — a softer echo of his own setup, woven from spare wires she treated like treasure, plastic-coated strands she said looked “like dancing light.” Minjae had rewired her lamp last week to match the pattern of the rain.</p>
-
-<p>He’d moved them in two months ago, after his mum got sick and couldn’t keep up with rent or meds. His tower flat wasn’t much, but it kept the heat in and the debt collectors out. They never asked what he did. They just trusted he’d bring in enough creds to cover power and medication.</p>
-
-<p>He didn’t talk about them in the feeds or let their names into his systems, but every fake ID he sold, every firewall he wormed through — it was with their faces ghosting just behind the code.</p>
-
-<p>He didn’t charge the kid.</p>
-
-<p>Not this time.</p>
-
+<p>&ldquo;Is that actually going to work?&rdquo;</p>
+<p>&ldquo;Depends,&rdquo; Minjae said as he scanned the line of code scrawled across the cracked tablet while the solder plate warmed steadily beneath his fingers. He dragged two commands into place and let the processor chew through them. &ldquo;Do you plan to use it intelligently?&rdquo;</p>
+<p>The guy in the doorway fidgeted, causing rain to drip from his coat onto the concrete. Minjae knew his type. Clueless and reckless but willing to pay, and really, that was all that mattered. &ldquo;I just need it to pass clearance.&rdquo;</p>
+<p>&ldquo;Mm.&rdquo; Lifting the burner tag from the solder plate with a pair of tweezers, Minjae let the chip cool briefly before sliding it into the reader port. Blue light flared across the cramped workspace while the rewrite executed, the name replaced, birth records stitched together, residency rebuilt from three municipal databases that disagreed on the details but ultimately confirmed the person existed.</p>
+<p>&ldquo;What&rsquo;s your name, mate?&rdquo; the guy asked suddenly.</p>
+<p>Minjae leaned back against a coil of fibre cable. &ldquo;Minjae.&rdquo;</p>
+<p>The man stared at him. &ldquo;Is that your real name?&rdquo;</p>
+<p>Instead of answering, Minjae watched the tag as the clearance layers finished compiling.&nbsp;</p>
+<p>&ldquo;So&hellip; where are you from?&rdquo;</p>
+<p>Jesus, what was with this guy? Minjae raised an eyebrow. &ldquo;<em>Here.</em>&rdquo;</p>
+<p>The man blinked. &ldquo;I meant&mdash;&rdquo;</p>
+<p>&ldquo;I know what you meant.&rdquo; Minjae had heard the question enough times to recognise the choreography. First curiosity, then confusion, then the subtle recalculation when the answer refused to cooperate with the expectation. He let the silence stretch just long enough to make the guy feel it.</p>
+<p>Then he flicked the finished chip toward him.</p>
+<p>The guy fidgeted again. &ldquo;And I&rsquo;ll be able to pass with this?&rdquo;</p>
+<p>&ldquo;If the scanner&rsquo;s blind and the clerk&rsquo;s bored,&rdquo; Minjae said, &ldquo;you&rsquo;ll walk straight through. Just don&rsquo;t get ambitious. Systems hate ambition.&rdquo;</p>
+<p>The guy nodded quickly, already transferring the credits across the short-range link.</p>
+<p>The towers never settled after dark, and Block R9, where Minjae lived, remained active all through the night. He glanced out the window at distant antennae stuttering against the sky. Far below him, relay boxes chattered to themselves in forgotten protocols while a server rack vented heat it couldn&rsquo;t shed. The vibration travelled through the concrete until every flat in the building carried the same metallic buzz beneath the floor. It was a noise Minjae had grown up inside; by now, he heard structure in it.</p>
+<p>Fifteen floors up, his workspace was hidden between two maintenance shafts in a strip of utility space most tenants believed contained nothing more than fuse boxes and forgotten pipes. The illusion held because Minjae carefully maintained it. He always made sure the panels remained crooked and dust settled where it should.</p>
+<p>Behind the false wall, fibre cable spilled across the floor like a nest. Three salvaged consoles were stacked together, wired into each other through a port hidden behind a fuse board that the building&rsquo;s map had forgotten twenty years ago.</p>
+<p>This was where the real work happened.</p>
+<p>Accepting the payment, Minjae flicked the old chip into a small plastic tray already crowded with false identities. Nothing in the system truly died; it just waited to be rewritten, and that was where he came in.</p>
+<p>Above him, voices rose in the thin-walled fury of a domestic argument, and two floors down, a hatch slammed hard enough to rattle the ventilation duct beside his shoulder. Block R9 lived the way old machines lived: loudly, unpredictably, and with a tendency to fail without warning.</p>
+<p>He&rsquo;d learned early that silence belonged to wealthier neighbourhoods. But down here, noise often carried information. A glitch in the power grid always meant someone was siphoning current; a lag in the public network meant a security sweep was pushing through the district. Even glitches developed patterns once you stopped treating them like anomalies. His mother used to laugh about it when he was younger, leaning in the kitchen doorway with a mug warming her hands while he dismantled whatever appliance he&rsquo;d dragged home that week.</p>
+<p>&ldquo;You&rsquo;re a ghostkey, Min,&rdquo; she&rsquo;d told him once, watching him coax a dead terminal back to life with nothing more than two lengths of wire and a screwdriver. &ldquo;You slip into locks that don&rsquo;t know you exist.&rdquo;</p>
+<p>At the time, Minjae took it as praise, but later the word sat differently in his chest.</p>
+<p>The burner tablet chirped before he could wander too far down that thought.</p>
+<p><em>INCOMING REQUEST:</em></p>
+<p><em>Patch: ID-tag Corruption</em></p>
+<p><em>Severity: High</em></p>
+<p><em>Response Needed: Urgent</em></p>
+<p>Opening the file with a quick flick of his thumb, Minjae immediately grimaced. The code sprawled across the screen like spilled noodles, functions nested inside each other without logic, variable names pulled from some low-effort meme generator that someone clearly thought was clever.</p>
+<p>&ldquo;If one more idiot tries to spoof an ID using joke code,&rdquo; he muttered while rearranging the architecture line by line, &ldquo;I&rsquo;m going to encrypt their spleen.&rdquo;</p>
+<p>The lights overhead blinked as the tower shifted through another power cycle, the consoles around him dipping before his backup rig caught the load and steadied everything again. Minjae barely noticed. He&rsquo;d built the system to survive worse.</p>
+<p>The phosphor tattoo above his collarbone and along his neck pulsed pale blue in sync with the rhythm of his heartbeat. He watched the reflected light move across the wall while he waited for the processors to warm up.</p>
+<p>A sharp knock rattled the vent panel to his right.</p>
+<p>Minjae&rsquo;s fingers automatically slid toward the small blade lying beside the solder plate. He tucked the weapon up his sleeve before the second knock arrived.</p>
+<p>He opened the panel to find a familiar boy standing there, barely more than fifteen, his shoulders hunched and hands clutching a mostly melted tablet the way someone might hold a broken bone.</p>
+<p>Minjae narrowed his eyes at the kid. &ldquo;You bricked it, didn&rsquo;t you?&rdquo;</p>
+<p>The boy nodded miserably.</p>
+<p>&ldquo;Let me guess,&rdquo; Minjae continued, extending a hand. &ldquo;You got caught installing illegal song files again?&rdquo;</p>
+<p>Another, smaller nod.</p>
+<p>Taking the tablet, Minjae turned it over and examined the warped casing while he powered it on through the external port.</p>
+<p>&ldquo;You&rsquo;re lucky I&rsquo;m bored,&rdquo; he said.</p>
+<p>From the next room, a rough cough cut through the tower noise, deep and dragging its way up through laboured lungs before dissolving into a long, ragged sigh. Minjae paused, his eyes drifting to the cracked plaster wall where light from the other room cast a trembling shadow. After a second, his mother moved slowly past the doorway, one hand braced against the frame. She never asked what he did with the equipment stacked in the maintenance alcove, never asked where the credits came from when the power bill got paid and the pharmacy downstairs suddenly decided to refill the prescriptions without complaint.</p>
+<p>Trust worked both ways.</p>
+<p>Two rooms over, his sister was still asleep, probably tangled in salvaged wire she collected like jewellery. When they were younger, she&rsquo;d insisted his set-up looked like &ldquo;dancing lights,&rdquo; so Minjae had built her a smaller nest of cables of her own. The difference was that hers was for the light show only, whereas his was built for long nights being an illegal legend. Just a week ago, Minjae had rewired her little bedside lamp so that the glow rose and fell with the rhythm of her breathing. Whatever it took to make her happy and distract her from mum&rsquo;s issues.</p>
+<p>He always kept their names out of every system he touched. But while he rewrote the kid&rsquo;s tablet, their faces hovered behind the code, quiet reminders of why he kept doing this.</p>
+<p>When the tablet finally booted clean, Minjae handed it back.</p>
+<p>&ldquo;Try not to melt it again,&rdquo; he said.</p>
+<p>The boy thanked him three times before disappearing down the corridor.</p>
+<p>Minjae turned back to his consoles and let the repair request continue compiling. He never added the service to the boy&rsquo;s bill.</p>
 <p><br></p>
-
-<p>They called it a &ldquo;fast-track opportunity.&rdquo;</p>
-
-<p>What they meant was: NuYu had flagged him as viable and decided to take ownership.</p>
-
-<p>He hadn&rsquo;t applied. Some backend crawler must&rsquo;ve scraped his debug strings off a forgotten forum and dropped his name into a database marked <em>independent contractor onboarding</em>. One morning, a courier drone blinked at his door and spat out a glossy chipcard&mdash;white, metallic trim, NuYu&apos;s logo shimmering faintly like it knew it owned the room.</p>
-
-<p>Directive 17.3B: Temporary Systems Integration Specialist.</p>
-
-<p>Elegant phrasing for indentured tech labour.</p>
-
-      <p>Still, money was money.</p>
-
-<p>Minjae arrived wearing his best hoodie and a grimace. NuYu took both.</p>
-
-<p>The building gleamed, but it wasn&rsquo;t clean. Too many wires, too few ethics. Everything smelled faintly burnt. The lobby piped ambient music that never resolved into a full tune, just endless, soulless loops engineered to suggest productivity.</p>
-
-<p>The others in the intake line were quieter than he expected. Freelancers, ex-interns, a few students with nervous eyes and neural fields still raw from installation. One man blinked like a buffering feed. Another smiled too wide and too slow. Glitchy. Someone had already installed behavioural dampeners.</p>
-
-<p>They told him he&rsquo;d be placed in Backend Diagnostics, Tier C. He told them they were wasting his potential. They smiled, the kind of smile that came preloaded on a corporate face.</p>
-
-<p>&ldquo;Your metrics indicate strong pattern recognition,&rdquo; one said. &ldquo;You&rsquo;ll assist in system optimisations.&rdquo;</p>
-
-<p>Translation: he&rsquo;d be elbow-deep in decaying code.</p>
-
-<p>They scanned him. The relay imprint came first—a low-frequency sync embedded behind his ear, the cool sting of neural gel tracing his skull. The cipher node followed two weeks later, fused beneath the skin just below his collarbone. It thrummed faintly now, BPM-synced, a constant reminder that even his heartbeat was tuned to someone else’s frequency.</p>
-
-<p>Minjae started work in silence and observation. He learned more by not speaking. His sector handled data sweeps: routine maintenance, endless diagnostics, broken lines of failed memory exports. Mostly dull.</p>
-
-<p>But every so often, something surfaced.</p>
-
-<p>Old employee IDs that shouldn&rsquo;t exist. Files that blinked out halfway through review. Audio logs tagged &ldquo;sim tests&rdquo; that sounded far too human.</p>
-
-<p>He flagged one of them out of pure curiosity. The next morning, his clearance dropped by three tiers.</p>
-
-<p>For a few days he behaved, at least outwardly. But curiosity is its own defect. He began staying late under the pretence of recalibrating data cores, slipping his own scripts into background processes to see what the system hid when it thought no one was looking. He caught fragments: half-deleted personnel notes, voice patterns that didn’t match any registered staff, entire memories stripped down to code and stored in off-grid vaults.</p>
-
-<p>Two days later, his datapad rebooted mid-use. All logs wiped, cleaned as if he’d never touched them.</p>
-
-<p>Except&mdash;they missed one file.</p>
-
-<p><em>His</em> file.</p>
-
-<p><em>Looped Vocal Test: Subject Minjae Choi.</em></p>
-  
-<p>It was meant to be a baseline capture—his voice reciting calibration phrases during intake. But this version was altered. The vowels stretched, smoothed, replicated. It stuttered where the system tried to correct a laugh, then looped the sound back on itself until it became something synthetic and wrong.</p>
-
-<p>Listening to it, Minjae understood what NuYu really did with the people it couldn’t use.</p>
-
-<p>They weren&rsquo;t killed. They were <em>overwritten</em>. Repurposed into data, fed back into the system as models and prototypes, stripped of identity but not of voice.</p>
-
-<p>He sat in the breakroom that night, fingers still stained with wire-solder and dust, watching the others. People with blink rates optimised for compliance. He wondered how many had been like him once—angry, too sharp, unwilling to stay quiet. He wondered what NuYu had taken from them to make them like this.</p>
-
-<p>Minjae wasn&rsquo;t ready to let that happen to him.</p>
-
+<p><center>~*~</center></p>
+<p><br></p>
+<p>They called it a fast-track opportunity, but what they really meant, once you peeled away the corporate brochure language, was that NuYu had found him. Minjae never applied. It wasn&rsquo;t the sort of thing he<em>&nbsp;would</em> apply for. But somewhere in the endless scrawl of the public network, a backend scraper must have tripped over one of his old debugging threads. Probably some sarcastic teardown of a municipal firewall posted to a forgotten forum at three in the morning.</p>
+<p>Two weeks later, a courier drone hovered outside the door of Block R9. It waited there patiently with its small rotor stirring the corridor dust while its optics tracked the apartment number. Minjae watched it through the security feed for a moment, then went to the door. The machine blinked once and extended a glossy chipcard from its chassis.</p>
+<p>White with a metallic trim, NuYu&rsquo;s logo glinting in the corner. Minjae stared down at it.</p>
+<p><em>Directive 17C: Independent Talent Programme Fast-track Opportunity.</em></p>
+<p>The phrasing tried very hard to sound generous. Minjae turned the card over in his fingers and read the fine print twice before letting out a low laugh that startled the drone enough to make its rotors wobble.</p>
+<p>&ldquo;Fast-track,&rdquo; he murmured. &ldquo;Right. Elegant language for indentured tech labour.&rdquo;</p>
+<p>He arrived at NuYu headquarters two days later wearing his best hoodie and the sort of expression that warned anyone paying attention that he already hated the place. The hoodie disappeared at security within five minutes, sealed away in a transparent bag and replaced with a sterile grey jacket whose fabric smelled of industrial detergent.</p>
+<p>The lobby was full of some awful ambient music engineered to feel efficient without ever becoming memorable, the melody drifting through endless half-phrases that suggested rhythm but never committed to one. Minjae paused beneath a column of polished composite and watched the other recruits gather.</p>
+<p>Many of them were younger than he expected. Quieter, too. A guy near the reception desk who couldn&rsquo;t be much more than twenty blinked slowly like a video stream struggling to buffer. Across from him, a woman smiled with polite enthusiasm that lingered just a little too long before fading again, her neural relay port still red-rimmed where the surgical interface had been installed recently.</p>
+<p>So, NuYu had already started adjusting them.</p>
+<p>Minjae leaned back against the column and folded his arms.</p>
+<p>&ldquo;Good morning,&rdquo; said the recruiter when his name finally appeared on her tablet. Her smile arrived instantly, perfectly calibrated and slightly too symmetrical to belong to anyone who slept well at night. &ldquo;You&rsquo;ll be placed in Backend Diagnostics, Tier C.&rdquo;</p>
+<p>Minjae raised an eyebrow. &ldquo;You&rsquo;re wasting my potential, you know,&rdquo; he said.</p>
+<p>The recruiter only smiled harder. &ldquo;Your metrics indicate strong pattern recognition,&rdquo; she replied. &ldquo;You&rsquo;ll assist in system optimisations.&rdquo;</p>
+<p>Wonderful. So he was going to be elbow-deep in decaying code. He tried to keep the image of his mum and sister in his mind as he nodded once at her, then let his gaze slide away from that horrendous fake smile.</p>
+<p>Augmentation began almost immediately.</p>
+<p>First came the relay implant, a neat surgical insertion just behind his ear. The technician who installed it wore a smile similar to the recruiter&rsquo;s, a touch too wide, a lot too empty. Minjae held still as the neural interface was inserted, cool gel tracing a slow path across his scalp. The sensation wasn&rsquo;t pain, exactly, more like the sudden awareness of a door opening at the back of his mind.</p>
+<p>Two weeks later they added a cipher port beneath his collarbone. Now it vibrated softly under the skin, synchronising itself with his heartbeat but still impossible to ignore. Every minute carried the gentle reminder that his body had been connected to a network he never really wanted to join.</p>
+<p>Minjae started work the same way he approached any unfamiliar system. Silence first, observation second. Backend Diagnostics turned out to be exactly as tedious as he&rsquo;d predicted. The department processed endless streams of log files and corrupted data dumps, cleaning the debris left behind by systems too large and too poorly maintained to function cleanly. Most of his day involved sorting through diagnostic reports and stitching together broken memory exports that corporate departments insisted didn&rsquo;t exist.</p>
+<p>Boring work.</p>
+<p>Until it wasn&rsquo;t.</p>
+<p>Every so often, something surfaced that didn&rsquo;t fit the pattern.</p>
+<p>An employee ID tied to a person who officially left the company five years earlier. A cluster of archived files that vanished halfway through review, the directories collapsing into empty space the moment he tried to open them. Logs that didn&rsquo;t quite align, timestamps slipping out of sequence and entries appearing before the events they were meant to record.</p>
+<p>Minjae flagged one of them out of pure curiosity, and by the next morning, his clearance had dropped three tiers. He didn&rsquo;t complain because complaints moved through corporate channels like bright flares announcing where to aim the next adjustment.</p>
+<p>Instead, he kept his head down and worked, for what little good it did. About a week later, his datapad rebooted in the middle of a routine diagnostics sweep, the screen flashing white before returning to the standard interface. He knew what it meant, though, and when he checked, he found his entire log history had been erased so cleanly it might as well have never existed.</p>
+<p>Minjae sat still for a moment, cold trickling down his spine. A choice rose in his mind immediately, one that he didn&rsquo;t think he&rsquo;d have to make so soon after starting. He could simply go back to doing what he was meant to do, brain-numbing work that&rsquo;d pay all the bills that were constantly mounting up at home. Or, he could dig, because whoever had just scrubbed the system had done a thorough job, and thoroughness often bred arrogance. And they&rsquo;d assumed someone at Tier C Diagnostics wouldn&rsquo;t notice the microscopic gaps where deleted sectors used to sit.</p>
+<p>They also assumed he couldn&rsquo;t rebuild the missing data.</p>
+<p>Which, honestly, was insulting.</p>
+<p>The wipe itself had been neat, he&rsquo;d give them that. But the assumption behind it bugged him. That no one below their clearance threshold would even think to look twice. That the absence wouldn&rsquo;t register.</p>
+<p>Minjae took that personally.</p>
+<p>Unable to help himself, he dug deeper. One particular file buried in the cache caught his attention almost immediately.</p>
+<p>His file.</p>
+<p>The label read &lsquo;Employee Vocal Test.&rsquo; Straightforward enough. On entering the company, they&rsquo;d all had to record various scripted lines for vocal access purposes, but the fact that his test had been buried snagged him. Sliding on his headphones, he loaded the audio and watched the waveform stutter across his screen.</p>
+<p>The cold trickle returned when he heard it. It was his voice, and yet not. This version of it cracked halfway through the phrase and read out something he absolutely <em>hadn&rsquo;t</em> said.</p>
+<p>Which meant he was now on file, saying things he hadn&rsquo;t, for a purpose he couldn&rsquo;t figure out. This kind of thing was supposed to be mentioned in the contract, tucked away in consent clauses, signed off by all involved.</p>
+<p>The realisation settled slowly over him.</p>
+<p>NuYu didn&rsquo;t dispose of the people it couldn&rsquo;t control, because disposal left evidence and questions that couldn&rsquo;t be answered cleanly.</p>
+<p>Instead, it rewrote and repurposed them.</p>
+<p>That night, Minjae sat alone in the breakroom long after the others had headed back to their apartments. Solder dust still marked the lines of his fingers where he&rsquo;d repaired a faulty console earlier in the shift, and the glow of his cipher port rose and fell beneath the fabric of his uniform jacket.</p>
+<p>Across the room, a couple of lingering recruits drifted through the space with a kind of vapid slowness, their blink rates oddly measured, their conversations brief and polite like scripts they&rsquo;d memorised but didn&rsquo;t really feel.</p>
+<p>Minjae watched them and wondered how many had once looked like him. How many had arrived with sharp questions and louder opinions? How many had pushed against the walls of the system until someone rewrote the parts that resisted?</p>
+<p>The thought sat in his chest like a low electrical current.</p>
+<p>No. He wasn&rsquo;t ready to let that happen to him.</p>
 <p>So he started backing himself up.</p>
-
 <p><br></p>
-
-
-<p>The server room was always too cold. NuYu said it preserved machine efficiency. Minjae said it was so no one could feel anything.</p>
-
-<p>He waited until the midnight shift swap, just long enough for the patrol AI to stutter like it always did when the building tried to update itself and run security scripts at the same time. Budget cuts. Bad code. Minjae had warned them about it in a report three months ago.</p>
-
-<p>They&rsquo;d flagged it low-priority.</p>
-
-<p>He walked in like he belonged there because he did. That was the beauty of it&mdash;NuYu had trained him to breach itself.</p>
-
-<p>He bypassed the node locks with his own ID, pausing only once, hand hovering over the authentication pad, wondering if this made him a traitor or just ahead of schedule.</p>
-
-<p>The door opened with a hiss that felt like breath held too long.</p>
-
-<p>Inside, the mainframe pulsed like a buried heart. Blue-white light across rows of servers, each one buzzing with the memory of someone else&rsquo;s silence. Files tagged. People redacted. Voices replaced. Code stacked on code stacked on absence.</p>
-
-<p>Minjae pulled the drive he&rsquo;d pre-loaded&mdash;his own scripts. They weren&rsquo;t elegant, but they were effective. A virus dressed like an audit, something the system wouldn&rsquo;t notice until it was already bleeding.</p>
-
-<p>He slotted it into the main terminal and it immediately asked for confirmation.</p>
-
-<p>Minjae didn’t hesitate. He hit EXECUTE.</p>
-
-<p>But the system fought back. As soon as the data spike began to burn through the core registry, the override kicked in, locking down access, superheating the ports.</p>
-
-<p>Then the drive exploded in a flare of white sparks.</p>
-
-<p>Minjae threw himself back, but not fast enough. His right hand caught the worst of it&mdash;scorched along the knuckles and palm, skin splitting open with the smell of melted poly-fibre and flesh. He bit down a scream and stumbled, half-blind, but still smiling.</p>
-
-<p>Because the lights were dying, one by one.</p>
-
-<p>The servers were going offline.</p>
-
-<p>It was <em>working</em>.</p>
-
-<p>He grabbed the edge of the console with his left hand, dragging himself upright. Blood smeared across the glass. No alarms&mdash;he&rsquo;d silenced those too. Just the tremor of systems shutting down, data collapsing in on itself like a star that refused to shine for anyone but the truth.</p>
-
-<p>He staggered to the exit, hand cradled close, teeth grit through pain and adrenaline.</p>
-
-      <p>Behind him, Node B6 went dark. Permanently.</p>
-
-<p>They&rsquo;d say it was sabotage.</p>
-
-<p>He preferred the term: extraction.</p>
-  
-  <p>The lights flickered overhead, emergency systems trying to boot and failing. Smoke crawled along the ceiling in thin grey ribbons. Somewhere deeper in the complex, containment doors slammed shut one by one, hunting ghosts that weren’t there.</p>
-
-      <p>Minjae ran anyway.</p>
-
-      <p>Down corridors that smelled of ozone and burning code. Past the holo-posters still flickering NuYu’s slogans in half-light. He didn’t know how far the blackout would spread, only that he had to keep moving before the override protocols rebooted.</p>
-
-      <p>By the time he reached the service tunnels, his vision blurred at the edges. The air grew colder, thicker, full of dust and the thrum of buried power lines.</p>
-
-      <p>He descended without thinking—one rung, one breath at a time—until the noise of the city above became nothing but echo.</p>
-
-
+<p><center>~*~</center></p>
 <p><br></p>
-
-<p>Minjae didn&rsquo;t remember how he got down into The Ghost Lines, only that he hurt. Everything hurt.</p>
-
-<p>He'd wrapped his hand tightly in a stolen thermal cloth, but blood soaked through. The pain had started sharp, but now he just felt numb. That was probably bad.</p>
-
-<p>London above was still chasing phantoms, while deep below, Minjae became one.</p>
-
-<p>The Ghost Lines lived somewhere between myth and malfunction, a place the system denied existed. You didn’t get invited. You got desperate.</p>
-
-<p>Eventually he found a ladder. He remembered blood on the rungs&mdash;his blood. He remembered cold steel against his ribs, and then a tunnel that didn&rsquo;t end so much as forget to close.</p>
-
-<p>He woke once in a nest of broken monitors. Once in a hydro duct. Sometimes, when the pain quieted enough to think, he wondered if his mum and sister had seen the outage reports. If they’d guessed it was him. If they were safe.</p>
-
-<p>He hoped the blackout had looked like nothing more than a glitch from where they were. Just another bad power surge, another night of silence in the tower. He hoped NuYu hadn’t come for them the way it came for everything else.</p>
-
-<p>Before he went dark, he’d coded a series of auto-transfers—slow, untraceable trickles of credits from dead accounts into their rent fund. A ghost system feeding another ghost. They’d never know where it came from, and that was the point.</p>
-
-<p>As for him, he had no name. No ID. No registry.</p>
-
-<p>NuYu had scrubbed all of it.</p>
-
-<p>They tried to reduce him to a redacted footnote, a simple line of code commented out, but they&rsquo;d missed something.</p>
-
-<p>He&rsquo;d already seeded fragments of himself across the net&mdash;backups hidden in abandoned media servers, lyrics embedded in glitchwave files, fragments of identity nested in old digital graffiti. Anyone trying to rewrite him would find themselves looped back to truth.</p>
-
+<p>The server room was several floors below the rest of the diagnostics wing, sealed behind composite doors and environmental regulators that kept the air several degrees colder than the rest of the building. NuYu insisted that the low temperature preserved machine efficiency, but Minjae had his own theory.</p>
+<p>Cold rooms tended to discourage people from lingering long enough to ask questions.</p>
+<p>He stood in the corridor outside the security gate and watched the time on his watch tick toward midnight while the building cycled through its nightly routines. Overhead, the tower initiated its scheduled updates, thousands of maintenance scripts rippling through the building at once, and right on cue the patrol AI began to stutter the way it always did when the system tried to juggle too many tasks at once.</p>
+<p>Minjae smirked. He&rsquo;d warned them about that flaw three months ago.</p>
+<p>He pushed off the wall and walked casually toward the door, aware of the cameras tracking him. His ID broadcast across the corridor&rsquo;s internal network, the access badge clipped to his collar transmitting a perfectly legitimate string of permissions that NuYu itself had granted him.</p>
+<p>He passed through the gate without breaking stride.</p>
+<p>That was the elegant part of the whole arrangement. NuYu had trained him to understand its architecture, handed him the keys to half its infrastructure, and then assumed loyalty would follow naturally from proximity to power. Clearly, they didn&rsquo;t understand his type at all.</p>
+<p>He reached the authentication pad outside Node N6 and rested his hand against the glass.</p>
+<p>For a moment, he simply stood there, feeling the vibration of the servers beyond the door. The relay implant behind his ear whispered streams of system chatter directly into his ear &mdash; status checks and idle diagnostics, the soft digital breathing of a network that believed itself secure.</p>
+<p>The thought arrived quietly. Was this betrayal, or simply good timing?</p>
+<p>He let his hand linger on the pad a second longer, then dropped it. If his voice was being used elsewhere in the system, repurposed into commands he&rsquo;d never given, then they had taught the network to recognise him. They just hadn&rsquo;t thought to revoke him.</p>
+<p>&ldquo;You&rsquo;re going to regret harvesting my vocals,&rdquo; he murmured.</p>
+<p>He thought back to his audio file and the phrases he hadn&rsquo;t said. Minjae let them settle on his tongue, and then he spoke.</p>
+<p>The second attempt took, and the lock disengaged with a soft mechanical sigh, a blast of chill air brushing his cheeks. He smiled.</p>
+<p>The server hall stretched out beyond the threshold in long illuminated rows. Blue-white light spilled across stacked columns of hardware, each server tower humming with the layered memory of the people whose lives had passed through NuYu&rsquo;s systems.</p>
+<p>Minjae stepped inside and let the door close behind him, adrenaline buzzing in his limbs, flooding his blood vessels like a drug high.</p>
+<p>From the centre of the room, the mainframe tower throbbed steadily, its cooling systems breathing in slow cycles that made the entire structure feel strangely alive. Signal flowed through the cables across the ceiling like blood through circulatory lines, carrying slivers of identity and other archived voices. Voices like his own.</p>
+<p>Minjae approached the main terminal and slid a slim drive from the inner pocket of his jacket. He had assembled the scripts over weeks of quiet experimentation, small fragments stitched together into something far more dangerous than the individual parts suggested. Outwardly, the code looked like the harmless structure of routine audits, the kind corporate networks performed automatically.</p>
+<p>Connecting the drive to the terminal, he watched as the screen lit up and requested confirmation. Minjae didn&rsquo;t hesitate and executed the programme.</p>
+<p>For a few seconds, nothing changed.</p>
+<p>And then the network noticed.</p>
+<p>Data surged through the system in sudden, violent spikes as his scripts tore into it, unravelling whatever they touched. Defensive protocols reacted instantly, locking things down and cutting off access while the system tried to trace the breach.</p>
+<p>Leaning closer to the screen, Minjae watched the progress bars climb. &ldquo;Come on, sweetheart,&rdquo; he muttered, and only now did he feel a small tremor of nervousness run through his body. The terminal shuddered as the override slammed into place; emergency locks cascaded through, forcing the hardware to burn itself out before the infection could spread deeper.</p>
+<p>Before Minjae knew what was happening, the drive flared within the terminal, and blue-white sparks burst across the console in a violent spray of heat and shattered circuitry.</p>
+<p>&ldquo;Fuck!&rdquo; he barked, jerking backwards and shoving himself away, instinct sending him stumbling from the explosion, but not before the arc caught his hands. Heat tore across his knuckles and palms and up his wrists, the sudden smell of melting polymer and scorched flesh filling the cold air as the current burned through his skin. Pain shot up his arms in bright, electric waves and he bit down on the scream that tried to tear out of his throat, staggering sideways, half-blinded by the burst of light.</p>
+<p>One by one, the server columns began to dim, status lights flashing red before fading entirely. Minjae laughed, ragged and breathless, watching with a sickening delight as entire racks went silent, cooling fans dropping away as the machines shut themselves down in cascading failure. And the best part &mdash; no alarms sounded because he&rsquo;d taken care of those hours earlier. The only sound left in the room was the slow dying chorus of systems collapsing and his own gasping, pained breaths.</p>
+<p>Bracing himself against the edge of the console with his forearms, he dragged himself upright and watched the progress counter tick past the final threshold. Behind him, Node N6 blinked once and then went completely dark.</p>
+<p>Permanent shutdown.</p>
+<p>A thrill of fresh adrenaline spiked through him as he cradled his burning hands against his chest; he forced his legs to move, heading toward the exit while the server room continued its slow spiral behind him.</p>
+<p>By the time the door sealed shut again, the tower&rsquo;s central registry had already begun rewriting its own damage reports.</p>
+<p>Corporate security would call it sabotage, no doubt, but Minjae preferred a different word.</p>
+<p>Extraction.</p>
 <p><br></p>
-
-<p>In the quiet days&mdash;if you could call them that&mdash;he started to compose again. You couldn&rsquo;t call it music, not yet. It was just phrases. Raw, spliced thoughts. Code that almost rhymed.</p>
-
-<p><em>&ldquo;Every silence they left me,</em><br>
-  <em>I filled with feedback.&rdquo;</em></p>
-
-<p>He stitched a new ID out of memory: 00C9-M. It was his grandfather’s once—<em>hal-bae</em> was a journalist who’d brought a system to its knees with nothing but conviction and a typewriter. They’d erased him for it, too. Blacklisted. Silenced. Officially forgotten.</p>
-
-      <p>Minjae figured some things ran in the blood.</p>
-
-<p>He wrote his ID in phosphor across a data vault wall. Just once. Just to see it.</p>
-
+<p><center>~*~</center></p>
+<p><br></p>
+<p>Minjae didn&rsquo;t remember the journey down. Somewhere between the burning server room and the tower&rsquo;s lower levels, his memories became hazy and everything degraded into flashes of movement and pain. All he knew was that he had to keep moving no matter what.</p>
+<p>He found a maintenance locker and stole a few strips of thermal cloth, which he hastily wrapped around his hands. It helped a little, the pain dulling and his nerves easing into a dangerous kind of numbness. By the time he reached the lower transit tunnels beneath the tower, the fabric had completely soaked through with blood. He tried not to look at it.</p>
+<p>Later, he found a leaking pipe running cold along one of the walls near the exit, and he held his hands beneath it as long as he could, breath catching as the temperature bit into the numbness.</p>
+<p>NuYu&rsquo;s corporate security teams were still chasing the breach he&rsquo;d left behind, no doubt combing surveillance feeds for a suspect who technically no longer existed. Minjae had seen to that, too &mdash; in the internal network his employee file had already been sent through a clean administrative deletion.</p>
+<p>For a reckless moment, he considered going back home, just to explain, really, though he knew any explanation he gave his mum would only lead to more questions and, eventually, tears. He didn&rsquo;t want to think about how his sister would react.</p>
+<p>But no, home was too risky. Once they realised he was gone, Block R9 would be the first place NuYu would look, and at least if he stayed away his family could legitimately claim no knowledge of him or his whereabouts.</p>
+<p>The decision not to go sat heavily in him as he made his way below the city, and a memory of his mother rose in his mind: her dabbing ointment on scraped knees and skinned knuckles when he was a kid, scolding him for going too hard, too fast, never learning when to stop. He pushed those thoughts aside quickly, before they could get a firm grip on him. Now wasn&rsquo;t the time to start panicking.</p>
+<p>The Ghost Lines as they were didn&rsquo;t exist on any official map, more rumour than geography, an overlapping maze of abandoned transit corridors, relay ducts, flood tunnels and forgotten service lines that wove through the city&rsquo;s underbelly like the skeleton of an old machine. People spoke about them in the way sailors spoke about safe harbours: vaguely, cautiously, always with the understanding that needing them meant something had already gone wrong. It wasn&rsquo;t the first time Minjae had ventured down here, but it was the first time he realised he&rsquo;d probably be staying for more than a few hours.</p>
+<p>He remembered reaching the bottom of a ladder bolted onto the side of a maintenance shaft, his feet slipping on damp stone, hands flaring violently as he stuck them out to steady himself out of habit.</p>
+<p>After that, the journey blurred into a slow, exhausted dream.</p>
+<p>Once, he woke curled inside the hollow shell of an abandoned monitoring station. Another time, he came to consciousness wedged inside a hydro duct where warm condensation dripped onto him from old pipes overhead. He tore the soaked wraps away with more force than he meant to, and replaced them with cleaner strips scavenged from a mostly empty first-aid kit bolted to the wall. He didn&rsquo;t look too closely at what lay underneath.</p>
+<p>Every time he resurfaced from the feverish pain, he moved a little further, and each time the city far above felt a little less real.</p>
+<p>By the time his strength returned enough for coherent thought, he figured the network would&rsquo;ve already done its work and purged his credentials, wiping the digital trail that once linked him to the world above.</p>
+<p>What NuYu didn&rsquo;t realise yet was that Minjae had already planned for this. Long before the server room burned, he&rsquo;d begun scattering pieces of himself across the public network. Backup archives nested inside forgotten media servers. Snatches of personal code buried in glitchwave audio files. Identity scraps hidden in layers of digital graffiti across abandoned forums and outdated message boards.</p>
+<p>They could try to overwrite him, but those bastards wouldn&rsquo;t erase him entirely, and he knew that&rsquo;d piss them off more than anything.</p>
+<p>During quiet stretches between scavenging for power sources and repairing whatever equipment he could find, Minjae began writing again. Just in his head at first, his hands still bound and unable to hold a pen. It started with short phrases pulled from stray thoughts.</p>
+<p>&ldquo;They erased my employee ID,&rdquo; he murmured one night into one of the old relay microphones while the processors hummed beside him. &ldquo;So I gave myself a better one.&rdquo;</p>
+<p>A thought caught in his mind, and a memory rose up.</p>
 <p>00C9-M.</p>
-
-<p>The paint flickered, BPM-synced to the rumble of something alive deeper in the tunnels.</p>
-
-      <p>After that, people started talking. No one claimed to know him, but everyone swore they’d seen the tag—blinking on relay screens, scrawled in code across broken servers, burning brief and bright before vanishing again.</p>
-
-<p>And slowly, verse by verse, the rumour began.</p>
-
-<p>Encrypted tracks started leaking onto public channels: untraceable, voice-tagged, laced with fury and ghost-code. Snatches of truth inside distortion. They couldn&rsquo;t find him, but they could <em>hear</em> him.</p>
-
-<p>The Hollow noticed.</p>
-
-<p>They didn&rsquo;t ask who he was, just if he could please keep going.</p>
-
-
+<p>The identifier had belonged to his grandfather once, decades earlier, back when resistance travelled through paper letters and typewritten manifestos instead of encrypted signals. Family stories always said the old man had once helped bring a system to its knees, armed with nothing more than stubborn conviction and a battered typewriter that constantly jammed.</p>
+<p>Minjae liked the symmetry. The apple hadn&rsquo;t fallen far.</p>
+<p>He found a discarded can of phosphor paint in one of the lower tunnels and shook it, then wrote the number across the wall, the glowing characters reflecting against the old server casings.</p>
+<p>00C9-M.</p>
+<p>Minjae stepped back and eyed it, dropping the spray can with a clatter. Then he shrugged and headed back to his base. He wasn&rsquo;t sure why he bothered writing it; maybe he just wanted it to exist somewhere solid and permanent.</p>
+<p>He started leaking encrypted audio fragments onto public channels, short bursts of lyrics that appeared without a source and vanished again before anyone could trace them back to him. Most of it was junk &mdash; angry, unmoored nonsense, but occasionally he was tempted to write some of it down.</p>
+<p>And, eventually, someone listening close enough recognised the pattern.</p>
+<p>The Hollow noticed first. They never asked him where he was, but one night they sent a message back through the network requesting one thing:</p>
+<p><em>Please keep going.</em></p>
 <p><br></p>
-
-<p>At first, it wasn&rsquo;t meant to be a track.</p>
-
-<p>He&rsquo;d cracked the terminal out of habit, patching wires with chewing gum foil, screen stuttering like it knew the end was coming. No surveillance. No net uplink. Just a forgotten slice of nowhere, perfect for vanishing.</p>
-
-<p>He was only running diagnostics. Clearing space. Looping old files. That&rsquo;s all.</p>
-
-<p>But then the beatpad came alive with a low, wobbly tempo. Nothing finished.</p>
-
-<p>And he thought: fine. One more file. One last purge.</p>
-
-<p>So he started talking.</p>
-
-<p>Not rapping or decoding. Just&hellip; spilling, line after line like a pressure valve giving out. Glitches tangled in breath, syllables stuttering raw.</p>
-
-<p><em>&ldquo;You ever look in a mirror and wonder if your name&rsquo;s still yours?</em></br>
-      <em>You ever glitch so hard you think maybe they left something in you?&rdquo;</em></p>
-
-<p>He didn&rsquo;t structure or loop it, just let the words fall inelegant and human, rage threaded through regret, pride edged with silver-sharp pain. The chorus was scratched in rough with half-dead synth keys. The audio clipped on the high end. One of the verses broke halfway through because his hand still shook when he pushed too hard.</p>
-
-<p>He kept it all. No edits. No encryption.</p>
-
-<p>He didn&rsquo;t expect anyone to find it.</p>
-
-<p>And if they did?</p>
-
-<p>Well.</p>
-
-<p>It was just a note. That&rsquo;s what he told himself.</p>
-
-<p>But something in the near-constant tremor of his fingers said otherwise.</p>
-
+<p><center>~*~</center></p>
 <p><br></p>
-
-
-<p>It was too quiet, even for him.</p>
-
-<p>Minjae had rerouted the security grid hours ago. No cams. No scans. No passive motion pings. The only thing live down here was the soft flicker of emergency strips, bleeding pale light through a wall panel.</p>
-
-<p>That&mdash;and the notebook.</p>
-
-<p>It wasn&rsquo;t even his. Just a leftover grid-paper ledger from some old Hollow stockpile, the kind rebels used to log equipment or ration shifts. Someone had scrawled &ldquo;USELESS&rdquo; on the front in marker. That made him keep it.</p>
-
-<p>He&rsquo;d burned through the first few pages fast. Angry lines. Scrambled half-rhymes. Code fragments mixed with lyrics. Stuff too raw to spit out loud.</p>
-
-<p>He flipped through now. His hands were steady, but the skin pulled tight where the fire had taken him—shiny in places, ridged in others, mapped with the kind of memory he tried not to read. He told himself they didn’t hurt anymore. Most days, he believed it.</p>
-
-<p>Some pages held verses. Some held names he swore he&rsquo;d never forget. Most were crossed out, as if that would stop the memories bleeding through.</p>
-
-<p>He stared at one line:</p>
-
-<p><em>&ldquo;They said I wasn&rsquo;t essential. So I rewrote the system.&rdquo;</em></p>
-
-<p>Minjae shut the book and crossed the room, climbing onto the support rail, his fingers slipping into the exposed vent just above the main coolant pipe. A perfect dead zone. Too small for drones. Too hidden for scans.</p>
-
-<p>He shoved the notebook deep into the ductwork and taped it with blackout foil, then sealed the vent with a loose grate.</p>
-
-<p>Out of sight.</p>
-
-<p>If they ever found him&mdash;if they ever caught him&mdash;it wouldn&rsquo;t matter.</p>
-
-<p>The words would still be here.</p>
-
-<p>Waiting.</p>
-
+<p>At first, it wasn&rsquo;t meant to be a track. Minjae had cracked the terminal open out of boredom more than anything, fingers moving a little slower than they used to, fresh wraps pulling tight across his knuckles when he flexed them. A strip of chewing gum foil had been wedged between two cracked circuits, just enough to force a connection.</p>
+<p>For someone trying to disappear, it was perfect.</p>
+<p>Minjae knelt beside the terminal and slid the panel open. The system booted reluctantly beneath his touch, the processor whining as it loaded a skeletal interface that looked as though it had survived three different operating systems and at least one small electrical fire.</p>
+<p>He told himself he was only running diagnostics, clearing space, looping through the old files to see what might still be worth salvaging. That was the plan, anyway.&nbsp;</p>
+<p>The first beat came entirely by accident.</p>
+<p>When Minjae brushed the interface, the processor produced a low thump that rolled through the tiny room like a heartbeat amplified through broken speakers. The tempo wobbled as the system struggled to stabilise, stuttering in uneven intervals that would&rsquo;ve made any trained engineer shut the programme down immediately.</p>
+<p>But Minjae leaned closer, listening to the sound that held a strange kind of life to it.</p>
+<p>&ldquo;Holy shit, it still works,&rdquo; he murmured, adjusting the gain until the thump settled into a steadier rhythm.</p>
+<p>He should&rsquo;ve shut it off there; that would&rsquo;ve been the sensible choice. Instead, he sat back against the relay casing and listened while the beat looped through the dusty air. It was&hellip; kind of catchy, and even as he thought about wiping the terminal clean, lyrics started to form in his head.</p>
+<p>Impulse made him lean back and activate the recording channel, and then he leaned toward the small mic built into the battered console.</p>
+<p>&ldquo;When I look in the mirror,</p>
+<p>I wonder if my name still belongs to me,</p>
+<p>Or if it&rsquo;s yours now, too.&rdquo;</p>
+<p>The beat stumbled once before correcting itself, and Minjae stopped, laughing softly under his breath.</p>
+<p>&ldquo;Yeah,&rdquo; he continued, turning now and leaning closer to the microphone. &ldquo;You ever glitch so hard you start to think maybe they left something behind in there on purpose?&rdquo;</p>
+<p>Lines followed lines, random and raw and still angry in places, but it helped, somehow, giving him the illusion that he wasn&rsquo;t alone down here anymore.</p>
+<p>By the time the recording ended, the room had gone quiet except for the soft mechanical tick of the processor cooling down. Minjae leaned against the relay again and listened to the playback. The sound that returned through the speakers felt strangely unfamiliar, like overhearing someone else thinking out loud. But hey, at least they were his words in his real voice this time.</p>
+<p>For whatever reason he couldn&rsquo;t name, he didn&rsquo;t encrypt the file or bury it inside the usual layers of ghost-code he used when releasing fragments onto the public channels. The terminal simply saved it to the local archive and waited for the next instruction.</p>
+<p>Staring at the file name blinking on the screen, Minjae told himself it was nothing. Just a note. A scrap of sound left behind in a dead system no one would ever bother to search.</p>
+<p>But when he finally shut the terminal down, his fingers trembled slightly against the casing, and the tension that followed him out of the relay room felt suspiciously like anticipation.</p>
 <p><br></p>
-
-
-<p>He saw them before they saw him.</p>
-
-<p>Two figures walking in the opposite direction, maybe fifteen paces away. One tall, broad-shouldered, with a soldier&rsquo;s gait&mdash;ex-military, judging by the augments. His face was unreadable, carved into focus, eyes mapping to every drip from the overhead pipes like he half-expected bullets to fall instead. The other was leaner, all limbs and mismatched stride, hoodie glowing faint from some kind of embedded fibre. Talking with his hands. Laughing at his own joke.</p>
-
-<p>Minjae kept to the shadows, but his eyes tracked every move.</p>
-
-<p>They didn&rsquo;t stop or speak to him, but the one in the hoodie glanced sideways as they passed and offered him a huge, disarming smile. It was so out of the blue that Minjae could only stare back.</p>
-
+<p><center>~*~</center></p>
 <p><br></p>
-
-
-<p>A few hours later, on his way back through the same tunnel, the lean guy was there again. Same hoodie. Same grin. As if he’d been waiting.</p>
-
-<p>Minjae slowed, the weight of the knife in his pocket suddenly more noticeable.</p>
-
-<p>The guy tilted his head like he was tuned to a frequency no one else could hear. “You’re the one who’s been splicing solo feeds,” he said. Not an accusation. Not even a question.</p>
-
-<p>Minjae raised an eyebrow. &ldquo;And you&rsquo;re the one who keeps overloading the channel limit.&rdquo;</p>
-
-<p>The guy grinned wider. “Only when it sounds better that way.”</p>
-
-<p>They stood there for a beat too long.</p>
-
-<p>&ldquo;I&rsquo;m Kairo,&rdquo; he said finally.</p>
-
-<p>Minjae ran through the pros and cons of giving up his name to this small, animated gremlin, but Kairo’s face was so damn earnest.</p>
-
-<p>&ldquo;Minjae,&rdquo; he said.</p>
-
-<p>Kairo seemed delighted by that. “Cool. Cool.”</p>
-
-<p>Minjae found his openness uncomfortable, so he shrugged, turned, and kept walking.&nbsp;</p>
-
-<p>Kairo didn&rsquo;t follow him, but his voice echoed after him down the tunnel. &ldquo;I liked that last payload. The one that looped at 140 BPM. You layered something real in there.&rdquo;</p>
-
-<p>Minjae didn&rsquo;t respond, but his mouth twitched, just slightly.</p>
-
-<p>Not a smile.</p>
-
-<p>Not yet.</p>
-
+<p>Minjae sat on an overturned crate and flipped open the notebook resting on his knee. The thing wasn&rsquo;t even his. Someone from the Hollow had abandoned it months earlier &mdash; a cheap grid-paper ledger used to track equipment inventories or ration shifts. The word USELESS had been scrawled across the front cover at some point.</p>
+<p>Minjae decided that made it worth keeping.</p>
+<p>The first few pages had vanished quickly. Anger tended to move fast when it finally found somewhere to land. His writing scrawled across the paper in scratchy rhythms, semi-finished rhymes colliding with little bits of code and sentences that didn&rsquo;t quite know whether they belonged in a lyric or a confession.</p>
+<p>Most of it never made it into any of the recordings. Too raw, too loud in ways he hadn&rsquo;t figured out how to shape yet.</p>
+<p>He turned another page, the paper whispering beneath his fingers. The burn scars along his hands pulled tight whenever he flexed the joints, the skin still uneven where the server room explosion had rewritten it. His knuckles carried a map of pale ridges and darker seams that caught the light whenever he moved.</p>
+<p>Minjae paused on one line halfway down a page, the words written hard enough to dent the paper beneath.</p>
+<p><em>They said I wasn&rsquo;t essential / So I rewrote the system.</em></p>
+<p>He stared at it for a long moment before snapping the notebook closed. The tunnel air carried a chill that slipped easily beneath his jacket as he stood and crossed to the wall where he&rsquo;d found a small grate. He wedged his pen into the narrow gap at the edge and prised it open, then slipped the notebook inside.</p>
+<p>If NuYu ever traced him this far &mdash; if someone eventually found a way to collapse the small network of hiding places he&rsquo;d built beneath the city &mdash; it wouldn&rsquo;t matter. His words, <em>his</em> voice, would still be here.</p>
+<p>He&rsquo;d just finished shoving the grate back into place when he heard the footsteps.</p>
+<p>Two figures appeared at the far end of the corridor, their silhouettes cutting slowly through the thin glow of the emergency lights as they approached from the opposite direction. Minjae sank slightly into the shadows beside a coolant pipe, eyes tracking them automatically.</p>
+<p>Fifteen paces away now.</p>
+<p>The taller of the two was definitely ex-military, judging by the way he held himself and constantly tracked their surroundings. He was built, tall and broad-shouldered and controlled &mdash; the kind of guy you wouldn&rsquo;t want to meet in a dark alley if he was pissed off.</p>
+<p>The shorter one was harder to get a grasp on. He was lean and long-limbed, but walked with the uneven stride of someone whose brain processed momentum slightly faster than his feet did. His hoodie sat huge on him, seams woven with fibre thread that caught the emergency lights and threw them back out in a rainbow of colours. He talked constantly while they walked, hands moving through the air in wide gestures as he laughed at something he&rsquo;d apparently just said himself.</p>
+<p>The taller one didn&rsquo;t smile, but Minjae could see the familiarity between them, and part of him, a deep part he thought he&rsquo;d buried, remembered what it was like to have people around.</p>
+<p>He watched them pass without moving, and as they did the tall one glanced in his direction briefly before turning away. Minjae frowned, trying not to feel like he&rsquo;d just been threat-assessed and found wanting.&nbsp;</p>
+<p>The shorter one, however, stared openly at him. Mid-sentence, the guy broke into a huge, unguarded grin that arrived so suddenly it felt like someone had flipped on an extra light in the corridor.</p>
+<p>Minjae blinked at him.</p>
+<p>They continued down the tunnel without slowing, their conversation fading into the distant echoes of The Ghost Lines, and Minjae pushed away from the wall, putting the small, tight ball of tension sitting in his gut down to lack of sleep and hunger.</p>
+<p>But just a few hours later, Minjae was walking the same corridor again, returning after checking a series of relay nodes further north, and to his surprise, the hoodie guy reappeared. Now he was leaning casually against the tunnel wall near Minjae&rsquo;s base, head tilted slightly to one side like he was listening to a frequency no one else could hear.</p>
+<p>Minjae slowed as he approached and the hoodie guy straightened.</p>
+<p>&ldquo;You&rsquo;re the one who&rsquo;s been splicing those solo feeds, yeah?&rdquo; he said, tone curious more than accusatory.</p>
+<p>Minjae raised an eyebrow. &ldquo;And you&rsquo;re the one who keeps blowing past the channel limits,&rdquo; he replied.</p>
+<p>The guy grinned immediately. &ldquo;Only because it sounds better that way.&rdquo;</p>
+<p>Minjae could only huff at that.</p>
+<p>They stood there a second longer than strangers usually did, and then finally the hoodie guy said, &ldquo;I&rsquo;m Kairo.&rdquo;</p>
+<p>Minjae studied him for a moment, mentally running through a quick series of advantages and potential disasters that might follow from sharing a name with someone who clearly possessed far more enthusiasm than caution.</p>
+<p>Kairo&rsquo;s face remained disarmingly earnest the entire time.</p>
+<p>&ldquo;Minjae,&rdquo; he said eventually.</p>
+<p>Kairo lit up as though the answer had solved some personal mystery. &ldquo;Cool,&rdquo; he said, nodding rapidly. &ldquo;Cool.&rdquo;</p>
+<p>The open friendliness made Minjae feel vaguely uncomfortable, and he realised just how long he&rsquo;d been down here on his own. Too long, probably. He shrugged, nodded, and then turned away toward his base.</p>
+<p>Kairo didn&rsquo;t try to follow him, but his voice bounced lightly down the corridor as Minjae walked away.</p>
+<p>&ldquo;I liked the last payload,&rdquo; he called. &ldquo;The one looping around 140 BPM. You hid something real inside the mix.&rdquo;</p>
+<p>Minjae kept moving because, for some reason, he couldn&rsquo;t seem to find his voice.</p>
+<p>Still, as the tunnel swallowed the distance between them, the corner of his mouth twitched.</p>
+<p>Not quite a smile. Not yet.</p>
 <p><br></p>
-
-<p>Minjae didn’t go into the room. He could have if he wanted to—no one guarded the door, and it wasn’t like he didn’t know the access ports by now. But he was still wary, so instead, he set up shop in the tunnel just beyond.</p>
-
-<p>Old cable spools for a seat. Wires arching overhead. A dusty terminal with a cracked screen he’d patched together just enough to parse code on. That was his perch—close enough to hear when someone played a loop out loud. Close enough to feel the faint vibration of beat sync through the concrete.</p>
-
-<p>He told himself it was just a better location, one with more network access and less signal interference.</p>
-
-<p>He didn’t tell himself that he was waiting.</p>
-
-<p>Kairo passed once, holding three energy cells in his hands and a snack bar in his teeth. He nodded like they’d always known each other.</p>
-
-<p>The silver-haired guy—Soahn, that’s what Minjae had heard Kairo call him—didn’t say anything. He just rerouted one of the external leads to power the terminal near Minjae’s corner.</p>
-
-<p>The one Minjae was pretty sure wasn’t human—Rayne—drifted through like a ghost, unreadable face, a slow glance in Minjae's direction, then away again.</p>
-
-<p>The big guy, Onyx, never spoke, but there was always a glance, like he was checking Minjae’s position, making sure of something.</p>
-
-<p>Minjae listened to them build a track. He heard them argue over compression settings and vocal mix and lyrical tone.</p>
-
-<p>He didn’t offer feedback.</p>
-
-<p>But he did fix a bug in their code overnight, leaving a short patch note in the logs signed with nothing but 00C9-M.</p>
-
-
+<p><center>~*~</center></p>
 <p><br></p>
-
-<p>Minjae stepped over the threshold.</p>
-
-<p>He didn’t announce himself—he never had, and he didn’t plan to start now—but he didn’t turn away either. He stood just inside the door, shoulder against the frame, eyes adjusting to the dim, flickering glow of rig lights and beatpads.</p>
-
-<p>He took it all in.</p>
-
-<p>Soahn sat near the far wall, working on some kind of neural relay. The delicate kind. He moved with quiet precision, all long fingers and unspoken calculations. He didn’t look up, but Minjae could feel the awareness—a radar tuned to presence before sound.</p>
-
-<p>Rayne was still. Freakishly still. Cross-legged by a speaker stack, head tilted as if listening to something no one else could hear. There was something fractured about him, like he was here but also somewhere else. Synthetic, yes, but not hollow. Minjae watched the rhythm of his breathing. It didn’t match the track playing; it matched something else. An internal tempo, although it didn't look like Rayne was running a program. It looked more like he was <em>remembering</em> one.</p>
-
-<p>Onyx leaned against a console, arms crossed, expression unreadable. The kind of presence that didn’t flinch unless it had to. Minjae knew this type—the watcher. The one who’d already clocked his arrival, filed it, and was now running probability audits. Fine. Let him.</p>
-
-<p>And then there was Kairo.</p>
-
-<p>Kairo, currently in the middle of rewiring a beatpad with nothing but his teeth and a multitool held together by duct tape. Wires spilled from his jacket like part of his nervous system. Neon caught in his eyes—the kind of chaos that hovered between brilliance and self-destruction.</p>
-
-<p>Kairo noticed him instantly.</p>
-
-<p>“You lost?” he asked, flipping a loose wire behind his ear. “Or are you finally here to tell us how we’re doing it all wrong?”</p>
-
-<p>Minjae raised a brow. “Depends. You planning to sync that vocal track with the tempo, or just keep torturing it?”</p>
-
-<p>Kairo lit up. “See? I <em>knew</em> you were a fan.”</p>
-
-<p>He tossed a datapad across the room—reckless, casual. Minjae caught it easily with his good hand.</p>
-
-<p>It was a track skeleton. Beat markers. Placeholder rhymes that weren’t half bad. The kind of layout someone made while half-asleep on synthesised sugar and spite.</p>
-
-<p>“If you’re gonna loiter in our tunnels,” Kairo said, “might as well do something useful.”</p>
-
-<p>Minjae eyed the datapad. “This is a mess.”</p>
-
-<p>“So fix it,” Kairo grinned. “Unless you’re scared.”</p>
-
-<p>That grin was irritating. And persuasive.</p>
-
-<p>Minjae crossed the room and dropped into the nearest rickety swivel chair like he owned it. He didn’t look at any of them again—just pulled up the audio layers and started working. Fast. Efficient. A few rewrites. One total deletion. The beat steadied. Lyrics began to form in his head.</p>
-
-<p>“Don’t breathe on me while I’m thinking,” he muttered.</p>
-
-<p>“No promises,” Kairo said.</p>
-
-<p>Off in the corner, Soahn smiled. Just barely. Like this was inevitable.</p>
-
-<p>Rayne shifted, slight but deliberate—watching, listening.</p>
-
-<p>Onyx didn’t move.</p>
-
-<p>And Minjae… stayed.</p>
-
+<p>He <em>could</em> go into the room if he wanted to. It wasn&rsquo;t like anyone guarded the door, and by now Minjae understood the access ports well enough to slip inside without triggering anything important. The systems underground were sloppy in the way most shared networks eventually became, patched too many times by too many different hands.</p>
+<p>But he stayed cautious, setting himself up in the tunnel just beyond the entrance. He dragged a dusty terminal from a nearby storage alcove and coaxed it back to life with a quick patch job, nothing elegant, but enough stability for him to code and keep a console window open without the screen falling into static.</p>
+<p>It was a good spot.</p>
+<p>Close enough to hear whenever someone inside the room ran a loop out loud, and close enough that the low vibration of synced beats travelled through the concrete floor under his feet. He told himself the location simply had better network access and less signal noise.</p>
+<p>He didn&rsquo;t tell himself he&rsquo;d started waiting.</p>
+<p>One afternoon, Kairo passed through the corridor carrying three energy cells tucked awkwardly under one arm while a snack bar bobbed between his teeth every time he took a step. He slowed just long enough to nod at Minjae like they&rsquo;d been exchanging hallway greetings for years.</p>
+<p>Minjae lifted a hand in vague acknowledgement before turning back to the terminal.</p>
+<p>The silver-haired guy, Soahn, came through a little later with a bundle of external leads draped over his shoulder. He paused beside Minjae&rsquo;s improvised workstation for a moment, studying the patched terminal with silent interest before crouching to reroute one of the power lines. The cable clicked into place with a soft, metallic snap, and the screen steadied immediately. Soahn didn&rsquo;t comment on it; he simply gave a small nod and continued on into the room.</p>
+<p>The synth&hellip; now he was weird. Rayne often moved through the corridor close to midnight, barely making a sound. Minjae noticed him mostly because of his white coat, the relay lights catching the edge of his features as he passed. The glow reflected briefly in his dark eyes, and Minjae wondered at his existence, though he had a horrible feeling he already knew. NuYu were, if nothing else, entirely unethical, and tech like this could only come from a corporation that had the funds and manpower to create it. The scary thing was, Rayne passed for human. Totally. Minjae would never say it out loud, but seeing him drift along like some ghost of a long-dead idol always made him jump a little in his skin.</p>
+<p>And then there was the stoic mystery that was Onyx. What a guy. He never spoke when they passed in the tunnels, but each time Minjae felt the brief weight of his attention settle over him. It wasn&rsquo;t hostile, but it held a quiet assessment just like the first time they saw each other. Only now, he was starting to get used to the feeling of being catalogued and put into a &ldquo;non-threat&rdquo; column.</p>
+<p>From his seat outside the door, he listened while they worked, making music. The sound of the track travelled easily through the open wiring in the walls as loops replayed, were cut, layered again, while the four of them argued in low voices about compression ratios and vocal placement, and whether the chorus needed more space to breathe.</p>
+<p>Minjae kept his mouth shut. But sometime after the lights dimmed into their night cycle, he leaned over the terminal and corrected a flaw buried deep inside the project&rsquo;s code structure.</p>
+<p>When he finished, he left a short note buried in the log file.</p>
+<p><em>Patch applied. Loop stability improved.</em></p>
+<p>He didn&rsquo;t sign it with his name, only a short signature:</p>
+<p><em>00C9-M.</em></p>
 <p><br></p>
+<p><center>~*~</center></p>
+<p><br></p>
+<p>Minjae didn&rsquo;t announce himself. Announcements implied permission, and he&rsquo;d never been particularly interested in asking for that. Instead, he leaned one shoulder against the doorframe and let his eyes adjust to the dim scatter of light inside the room, beatpads glowing across the far tables in thin neon strips, old rigs kept alive on borrowed power. He took it in quietly.</p>
+<p>Soahn was near the far wall with a neural relay unit opened across his lap, tools arranged beside him in neat rows. He worked slowly through the internal wiring, pausing occasionally as if he were listening to something only he could hear.</p>
+<p>Nearby, Rayne sat cross-legged beside a speaker stack. Still wasn&rsquo;t the right word, more a kind of suspended animation that made the air around him feel slightly different, like a paused recording waiting for someone to press play again.</p>
+<p>Onyx was leaning against a console near the central rig, arms folded across his chest. The military training showed in the small details, like the balanced stance and the focused awareness that turned toward Minjae the second he crossed the doorway. Their eyes met briefly and Onyx gave the smallest possible nod.</p>
+<p>Acknowledgement.</p>
+<p>Assessment complete.&nbsp;</p>
+<p>Continue.</p>
+<p>Minjae kind of liked the guy despite himself.</p>
+<p>And then there was Kairo, who stood in the middle of the room hunched over a beatpad he&rsquo;d apparently decided to tweak using nothing but his teeth and a multitool that consisted mostly of duct tape wrapped around a bit of metal. Wires were tangled at his feet like he&rsquo;d personally adopted the rig&rsquo;s nervous system.</p>
+<p>He glanced up. &ldquo;Did you finally come to explain how we&rsquo;re ruining the music?&rdquo; he asked, flipping a loose wire behind his ear.</p>
+<p>Minjae lifted an eyebrow. &ldquo;Depends,&rdquo; he said evenly. &ldquo;You planning to sync that vocal with the tempo or just keep torturing it until it confesses?&rdquo;</p>
+<p>Kairo&rsquo;s grin arrived like sunrise. &ldquo;See, I knew you were a fan.&rdquo;</p>
+<p>Before Minjae could object, a tablet sailed across the room in a careless arc. He caught it awkwardly against his chest.</p>
+<p>The screen blinked awake beneath his thumb, revealing the skeleton of the track, little more than rough beat markers and placeholder lyrics, with tempo shifts that looked like they had been mapped during a caffeine-fuelled argument with gravity.</p>
+<p>It wasn&rsquo;t terrible, exactly, just&hellip; chaotic.</p>
+<p>&ldquo;If you&rsquo;re going to loiter,&rdquo; Kairo said, gesturing broadly at the room, &ldquo;you might as well contribute.&rdquo;</p>
+<p>Minjae ignored him, scanning the arrangement. &ldquo;This is a mess.&rdquo;</p>
+<p>&ldquo;So fix it,&rdquo; Kairo replied immediately. &ldquo;Unless you&rsquo;re scared.&rdquo;</p>
+<p>Minjae glanced up slowly. &ldquo;That grin,&rdquo; he said. &ldquo;You practise it in a mirror or does it just happen naturally when you&rsquo;re being annoying?&rdquo;</p>
+<p>Kairo brightened. &ldquo;Bit of both, honestly.&rdquo;</p>
+<p>Minjae crossed the room and dropped into the nearest swivel chair like it had been waiting for him all day. He connected the tablet to the console with a soft click and then opened the audio layers and started pulling the structure apart.</p>
+<p>&ldquo;Don&rsquo;t breathe on me while I&rsquo;m thinking,&rdquo; he muttered.</p>
+<p>&ldquo;No promises,&rdquo; Kairo said cheerfully, leaning over his shoulder anyway.</p>
+<p>After a few seconds of scanning the audio, Minjae deleted an entire channel.</p>
+<p>&ldquo;Hey!&rdquo; Kairo protested.</p>
+<p>&ldquo;It was terrible.&rdquo;</p>
+<p>&ldquo;No, it was experimental,&rdquo; Kairo said, as if that justified it somehow.</p>
+<p>&ldquo;Experimental, and totally off-beat,&rdquo; Minjae said with a sigh.</p>
+<p>Squinting down at the screen, Kairo said, &ldquo;&hellip; Okay. I guess that&rsquo;s fair.&rdquo;</p>
+<p>Rewriting the rhythm grid in quick strokes, Minjae smoothed the tempo drift and layered the beat so that it landed harder on the downstroke. The change rolled through the room immediately when the track replayed, the bass settling into a more deliberate throb.</p>
+<p>Rayne shifted beside the speakers, and Soahn glanced up from his work for the first time, watching with calm interest as Minjae&rsquo;s hands moved across the interface.</p>
+<p>A lyric line formed half-spoken under his breath while he adjusted the gain on the chorus. &ldquo;Don&rsquo;t crowd the vocal there,&rdquo; he said without looking up. &ldquo;Give it air or it sounds like you&rsquo;re strangling it.&rdquo;</p>
+<p>Kairo leaned against the console beside him. &ldquo;You say the nicest things.&rdquo;</p>
+<p>&ldquo;Someone has to.&rdquo;</p>
+<p>Gradually, the track stabilised beneath Minjae&rsquo;s edits, sounding much more like a song now than the broken-down parts of one it&rsquo;d been before. He wasn&rsquo;t sure how long he stayed there hunched over the tablet, the others moving around him while they worked on their own things. Eventually, he looked up, wincing at the knot that&rsquo;d formed between his shoulder blades, and set the tablet down.</p>
+<p>The room emptied slowly after that. Kairo disappeared first, chasing some new idea down the tunnels with a handful of tools and a grin that promised several explosions of creativity before morning. Rayne drifted out not long after him, possibly for supervision purposes. Onyx lingered a while, pausing just long enough to give Minjae a proper nod before heading out.</p>
+<p>Minjae shrugged and leaned back in the chair, the glow from the console washing across his hands. He flexed his fingers gently where they&rsquo;d started to go stiff. Then he closed his eyes and just breathed for a while, letting it sink in that here he was, somehow a part of them even though he&rsquo;d never asked and they&rsquo;d never invited.</p>
+<p>He heard a rustle nearby and realised Soahn was still there. Minjae didn&rsquo;t open his eyes. &ldquo;If you&rsquo;re about to ask for a bridge section,&rdquo; he murmured, &ldquo;you&rsquo;ll need some decent bribery.&rdquo;</p>
+<p>&ldquo;I&rsquo;m not.&rdquo;</p>
+<p>He sensed Soahn move closer, dropping into a chair nearby, not directly beside him but close enough that the space between them felt intentional.</p>
+<p>They listened to the loop together for a while. It wasn&rsquo;t uncomfortable.</p>
+<p>&ldquo;You write like someone who forgot to disappear.&rdquo;</p>
+<p>Minjae opened his eyes and stared down at the screen. &ldquo;Oh?&rdquo;</p>
+<p>&ldquo;I mean, you leave space for grief in what you build,&rdquo; Soahn continued. &ldquo;Then you fill it with fire.&rdquo;</p>
+<p>Swallowing, Minjae looked at the burn scars criss-crossing his hands, caught like maps in the glow of the screen.</p>
+<p>&ldquo;They almost got you,&rdquo; Soahn added after a moment.</p>
+<p>Frowning, Minjae folded his hands into his sleeves. &ldquo;Yeah. Almost.&rdquo;</p>
+<p>Soahn nodded once. &ldquo;Then we have something in common.&rdquo;</p>
+<p>Minjae stared at him properly for the first time. He couldn&rsquo;t detect any pity in Soahn&rsquo;s expression, no curiosity either. Just a kind of calm recognition, like someone had placed two matching pieces of a puzzle beside each other and quietly waited for the edges to align.</p>
+<p>&ldquo;You don&rsquo;t pry like most people,&rdquo; Minjae said. &ldquo;None of you do.&rdquo;</p>
+<p>Soahn gave a small shrug. &ldquo;Don&rsquo;t need to, since you don&rsquo;t exactly hide.&rdquo; Another moment passed, and the Soahn stood and glanced at the console. &ldquo;That track you started the other day in your room,&rdquo; he said. &ldquo;Keep building it.&rdquo;</p>
+<p>&ldquo;Bit bossy,&rdquo; Minjae said with a hint of a smirk.</p>
+<p>Soahn smiled. &ldquo;I think it really could be something.&rdquo;</p>
+<p>With that, he turned and left without another word. Minjae watched the doorway for a long moment after he was gone, and then turned back to the console, listening to the rhythm he&rsquo;d helped shape.</p>
+<p>For the first time since the fire in the server room, a new thought arrived in his mind.</p>
+<p>Maybe he didn&rsquo;t need to burn everything down to leave a mark.</p>
 
-
-<p>Later, once the others had drifted out—off to recharge, recalibrate, or vanish into whatever corners this glitch-gathered band of misfits called home—Minjae stayed behind.</p>
-
-<p>Just him and the beatpad, and the faint glow of the console still echoing with the track he’d half-built.</p>
-
-      <p>He let his head droop, a little tired from all the social energy, content to listen to the hum of the equipment around him. Then—barefoot steps, soft as feedback hiss, padding closer.</p>
-
-<p>Minjae didn’t look up. “If you’re here to ask for a bridge section, you’ll have to bribe me.”</p>
-
-<p>“I’m not.”</p>
-
-<p>Soahn sat—not quite beside him, but close. The kind of distance that said <em>I’ll wait until you’re ready, but I’m not going anywhere.</em></p>
-
-<p>They sat like that for a while, the silence steady, gentle. Not empty.</p>
-
-<p>Then Soahn spoke. “You write like someone who was supposed to be erased.”</p>
-
-<p>Minjae went still, the words catching somewhere deep.</p>
-
-<p>“You leave space for grief,” Soahn continued softly. “And then you fill it with fire.”</p>
-
-<p>Minjae pressed a hand to the console. The burn scars along his right fingers caught the glow—still healing, but visible. Always visible.</p>
-
-<p>Soahn didn’t ask about them. He just said, “They almost got you, didn’t they?”</p>
-
-<p>Minjae closed his eyes. &ldquo;&hellip;Almost.&rdquo;</p>
-
-<p>Soahn nodded once. “Then we’re the same.”</p>
-
-<p>Minjae looked at him properly for the first time. There was something unreadable in Soahn’s gaze—not pity, not curiosity. Something quieter. Mutual recognition, like a mirror angled to catch both their ghosts.</p>
-
-<p>“You don’t pry,” Minjae said.</p>
-
-<p>“You don’t hide,” Soahn replied.</p>
-
-<p>Another pause—soft, shared.</p>
-
-<p>Then Soahn stood, and in that calm, deliberate way of his, said, “That track you started? Keep building it. I think it remembers you.”</p>
-
-<p>He walked away.</p>
-
-<p>Minjae watched him go.</p>
-
-<p>And for the first time since the fire, he realised that maybe he didn’t have to burn everything down to leave a mark.</p>
-</div>
-
-    <a href="/signals" class="back-link">← Back to Signals</a>
   </div>
+</div>
+    </article>
+
+    <nav class="back" aria-label="Return">
+      <a href="/signals/">← Back to Signals</a>
+    </nav>
+
+  </main>
 </body>
 </html>
