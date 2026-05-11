@@ -1,161 +1,381 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Faultline | Pulse | E.V.E.N</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Fault Line | Pulse | E.V.E.N</title>
+
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #e0e0e0;
-      color: #000;
-      font-family: 'IBM Plex Mono', monospace;
-      line-height: 1.6;
-      background-image: url('../static-noise.png');
-      background-size: cover;
+    :root{
+      color-scheme: light;
+
+      /* warm grey / paper layer */
+      --bg: #f2f1ee;
+      --bg2:#eceae6;
+
+      --panel: rgba(20,20,24,.06);
+      --panel2: rgba(20,20,24,.04);
+      --stroke: rgba(20,20,24,.12);
+
+      --text: rgba(18,18,20,.88);
+      --muted: rgba(18,18,20,.60);
+
+      /* restrained accents */
+      --accent: rgba(30,180,190,.85);   /* muted cyan */
+      --accent2: rgba(172,120,210,.55); /* lilac whisper */
+
+      --radius: 18px;
+      --radius2: 26px;
+      --shadow: 0 18px 70px rgba(0,0,0,.10);
+      --shadow2: 0 12px 40px rgba(0,0,0,.08);
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --serifish: ui-serif, Georgia, "Times New Roman", Times, serif;
     }
 
-    .container {
-      max-width: 800px;
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; min-height:100vh; }
+
+    body{
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(900px 420px at 20% 0%, rgba(30,180,190,.10), transparent 60%),
+        radial-gradient(900px 420px at 80% 0%, rgba(172,120,210,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      overflow-x:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+
+    /* subtle grain/noise */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(1px 1px at 18% 24%, rgba(0,0,0,.12), transparent 60%),
+        radial-gradient(1px 1px at 42% 62%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 78% 38%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 60% 80%, rgba(0,0,0,.08), transparent 60%);
+      opacity:.08;
+      filter: blur(.3px);
+      z-index:0;
+    }
+
+    .wrap{
+      max-width: 980px;
       margin: 0 auto;
-      padding: 4rem 2rem;
+      padding: 44px 20px 76px;
+      position:relative;
+      z-index:1;
     }
 
-    h1 {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 2.5rem;
-      color: #990066;
-      margin-bottom: 0.5rem;
+    /* header */
+    .head{
+      text-align:center;
+      margin-bottom: 18px;
     }
 
-    .id-tag {
-      font-size: 1rem;
-      color: #666;
-      margin-bottom: 2rem;
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.18em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.66);
     }
 
-    .glitch-divider {
-      width: 100%;
-      height: 2px;
-      background: linear-gradient(to right, #ff00ff, #00ffff);
-      margin: 2.5rem 0;
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 0 rgba(30,180,190,.25);
+      animation: pulse 2.6s infinite;
+      flex:none;
     }
 
-    .story p {
-      font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', sans-serif;
-      font-size: 1rem;
-      color: #000;
-      line-height: 1.6;
-      margin-bottom: 1rem; /* Adjust this to tighten or loosen paragraph spacing */
+    @keyframes pulse{
+      0%{ box-shadow: 0 0 0 0 rgba(30,180,190,.22); }
+      70%{ box-shadow: 0 0 0 12px rgba(30,180,190,0); }
+      100%{ box-shadow: 0 0 0 0 rgba(30,180,190,0); }
     }
 
-    .back-link {
-      color: #990066;
-      text-decoration: none;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1rem;
-      border: 1px solid #990066;
-      padding: 0.5rem 1rem;
-      display: inline-block;
-      margin-top: 3rem;
-      transition: 0.3s ease;
+    h1{
+      margin: 14px 0 8px;
+      font-size: clamp(32px, 4.6vw, 54px);
+      line-height: 1.06;
+      letter-spacing: -0.02em;
     }
 
-    .back-link:hover {
-      background: #00ffff;
-      color: #000;
+    .meta{
+      margin: 0 auto;
+      max-width: 70ch;
+      color: rgba(18,18,20,.62);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* story card */
+    .card{
+      margin-top: 22px;
+      border-radius: var(--radius2);
+      background: linear-gradient(180deg, rgba(255,255,255,.70), rgba(255,255,255,.52));
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(700px 240px at 25% 0%, rgba(30,180,190,.14), transparent 60%),
+        radial-gradient(700px 240px at 75% 0%, rgba(172,120,210,.12), transparent 60%);
+      opacity:.70;
+      pointer-events:none;
+    }
+
+    .card-inner{
+      position:relative;
+      z-index:1;
+      padding: 28px 28px 24px;
+    }
+
+    /* divider inside card */
+    .divider{
+      height: 1px;
+      background: linear-gradient(90deg, rgba(172,120,210,.40), rgba(30,180,190,.40));
+      opacity:.7;
+      margin: 16px 0 22px;
+    }
+
+    /* story typography */
+    .story{
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.9;
+      color: rgba(18,18,20,.84);
+    }
+
+    .story p{
+      margin: 0 0 16px;
+    }
+
+    .story em{ color: rgba(18,18,20,.86); }
+
+    .center-text {
+  text-align: center;
+}
+
+    /* optional little “file tag” row */
+    .filetag{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.62);
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.40);
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(18,18,20,.66);
+      letter-spacing:.06em;
+      white-space:nowrap;
+    }
+
+    /* --- SoundCloud block (Signals story pages) --- */
+.audio-block{
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px dashed rgba(18,18,20,.18);
+}
+
+.audio-label{
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(18,18,20,.62);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom: 10px;
+}
+
+.audio-label .dot{
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 rgba(30,180,190,.20);
+}
+
+.sc-embed{
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(18,18,20,.14);
+  background: rgba(255,255,255,.48);
+  box-shadow: 0 12px 40px rgba(0,0,0,.08);
+  height: 120px; /* matches your preferred compact player */
+}
+
+.sc-embed iframe{
+  display:block;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0;
+}
+
+    /* back nav */
+    .back{
+      margin-top: 18px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .back a{
+      text-decoration:none;
+      font-family: var(--mono);
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: rgba(18,18,20,.62);
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.55);
+      transition: .16s ease;
+    }
+
+    .back a:hover{
+      color: rgba(18,18,20,.82);
+      border-color: rgba(18,18,20,.22);
+      box-shadow: 0 12px 40px rgba(0,0,0,.10);
+      transform: translateY(-1px);
+    }
+
+    /* reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; }
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <h1>Faultline</h1>
-    <div class="glitch-divider"></div>
+  <main class="wrap">
 
-    <div class="story">
+    <header class="head">
+      <div class="kicker"><span class="dot" aria-hidden="true"></span> signals // pulse // recovered story</div>
+      <h1>Fault Line</h1>
+      <p class="meta">File integrity: partial. Playback: safe.</p>
+    </header>
 
-<p>The tremor hit before the system alarms could catch it. A sharp crack split the corridor, metal shearing somewhere deep in the tunnels, and then everything came down at once.</p>
+    <article class="card" aria-label="Story container">
+      <div class="card-inner">
 
-<p>Onyx didn&rsquo;t remember moving. Only pressure, a rush of shattered air, the crush of earth where ceiling used to be. Light fractured; heat slammed through him. The world broke apart and swallowed him whole.</p>
+        <div class="filetag" aria-label="File tags">
+          <span class="pill">pulse</span>
+          <span class="pill">onyx</span>
+          <span class="pill">minjae</span>
+        </div>
 
-<p>When he came back to himself, the air tasted of iron and dust. A single emergency strip flickered weakly overhead, throwing sickly light across the rubble. The relay junction they&rsquo;d come to inspect was buried under half a wall. His sensors scrambled through debris readings, one arm refusing to respond beyond the elbow.</p>
+        <div class="divider" aria-hidden="true"></div>
 
-<p>He ran a quick systems scan, saw the left forearm flashing red across his HUD. Servo lock. Great.</p>
+        <div class="story">
+
+          <!-- Paste story paragraphs exactly as you have them -->
+
+<p>The tremor hit before the system alarms could catch it, and a sharp crack split the corridor, metal shearing somewhere deep in the tunnels. And then everything came down at once.</p>
+
+<p>Instinct kicked in: Onyx didn&rsquo;t remember moving, only pressure, a rush of shattered air, the crush of earth where the ceiling used to be. The light fractured and heat slammed through him as the world broke apart and swallowed him whole.</p>
+
+<p>When he came back to himself, the air tasted of iron and dust; it clung to the back of his throat and he coughed. A single emergency strip blinked weakly overhead, throwing sickly light across the rubble. Onyx rubbed dust out of his eyes and looked around. The relay junction they&rsquo;d come to inspect was now buried under half a wall. His sensors scrambled through debris readings, one arm refusing to respond below the elbow. A quick systems scan threw the warning across his HUD. Partial servo lock. Great.</p>
 
 <p>Movement stirred a few feet away.</p>
 
-<p>&ldquo;Okay,&rdquo; Minjae&rsquo;s voice rasped through the dust. &ldquo;That was not in the briefing.&rdquo;</p>
+<p>&ldquo;Okay,&rdquo; Minjae&rsquo;s voice rasped through the haze. &ldquo;That was not in the briefing.&rdquo;</p>
 
-<p>Relief punched through Onyx before he could stop it. He twisted, forcing the rubble off his legs. &ldquo;Status?&rdquo;</p>
+<p>Relief punched through Onyx and he twisted, forcing the rubble off his legs. &ldquo;Status?&rdquo;</p>
 
 <p>&ldquo;Cranky. Breathing. Possibly covered in my own sarcasm.&rdquo; Minjae coughed, sitting up. &ldquo;You?&rdquo;</p>
 
 <p>Onyx flexed his shoulder, the damaged limb twitching like an irritated animal. &ldquo;Functional enough.&rdquo;</p>
 
-<p>The tunnel groaned again, a slow metallic protest that made both of them freeze. Onyx&rsquo;s internal compass flickered and failed. He didn&rsquo;t like that. Losing orientation made him feel&hellip; vulnerable.</p>
+<p>Around them, the tunnel groaned again, a slow metallic protest that made both of them freeze. Onyx&rsquo;s internal compass flashed once and then failed. He didn&rsquo;t like that. Losing orientation made him feel&hellip; vulnerable.</p>
 
-<p>Minjae squinted through the dim light, brushing dirt from his hair. &ldquo;Comms are down, yeah?&rdquo;</p>
+<p>Minjae squinted through the dimness, now brushing dirt from his hair. &ldquo;Comms are down, yeah?&rdquo;</p>
 
-<p>Onyx tested the earpiece, but it was dead. &ldquo;For now.&rdquo;</p>
+<p>Onyx tested his earpiece, but it was dead. &ldquo;For now.&rdquo;</p>
 
-<p>&ldquo;So we&rsquo;re doing this the old-fashioned way.&rdquo; Minjae kicked a loose panel aside and whistled low. &ldquo;Gotta say, not your best field trip idea.&rdquo;</p>
+<p>&ldquo;So we&rsquo;re doing this the old-fashioned way.&rdquo; Kicking a loose panel aside, Minjae whistled. &ldquo;Got to say, not your best field trip idea.&rdquo;</p>
 
 <p>&ldquo;Wasn&rsquo;t supposed to be a field trip.&rdquo; Onyx glanced around. &ldquo;We&rsquo;ll need to mark a safe zone before the secondary collapse.&rdquo;</p>
 
-<p>Minjae rolled his eyes but started moving, clearing smaller debris with quick, sure hands. For all his jokes, he knew exactly what he was doing&mdash;ex-corporate efficiency underlaid by an engineer&rsquo;s brain.</p>
+<p>&ldquo;Secondary? Oh, lovely.&rdquo; Minjae rolled his eyes but started moving, clearing smaller debris. For all his jokes, he seemed to know exactly what he was doing. Ex-corporate efficiency underlaid by an engineer&rsquo;s brain.</p>
 
-<p>Onyx joined him, one hand digging through a tangle of cables. The prosthetic in his other arm stuttered again. The smell of overheated circuitry hit the air.</p>
+<p>Onyx joined him, one hand digging through a tangle of cables. The augment in his left arm stuttered again and the smell of overheated circuitry hit the air.</p>
 
-<p>Minjae frowned. &ldquo;That doesn&rsquo;t sound healthy.&rdquo;</p>
+<p>Minjae frowned and glanced over at him. &ldquo;That doesn&rsquo;t sound healthy.&rdquo;</p>
 
 <p>&ldquo;It&rsquo;s fine.&rdquo;</p>
 
 <p>&ldquo;Sure,&rdquo; Minjae said. &ldquo;If fine smells like burning metal.&rdquo;</p>
 
-<p>Onyx ignored him, but the tremor in his grip betrayed him.</p>
+<p>Onyx ignored him, but the tremor in his grip betrayed him. Minutes passed like that, the two of them working in the near-dark, trading barbs between the clatter of falling dust. It wasn&rsquo;t until Onyx tried to move a section of pipe that the limb finally seized; his servo screamed and locked, sparks snapping across his sleeve.</p>
 
-<p>Minutes passed like that &mdash; the two of them working in the near-dark, trading barbs between the clatter of falling dust. It wasn&rsquo;t until Onyx tried to move a section of pipe that the limb finally seized. The servo screamed and locked, sparks snapping across his sleeve.</p>
+<p>He bit off a curse and knelt hard against the nearest wall.</p>
 
-<p>He bit off a curse and knelt hard against the wall.</p>
-
-<p>Minjae was beside him in seconds. &ldquo;Hey. Don&rsquo;t you dare fry yourself; Soahn will kill me for letting you melt. You&rsquo;re one of his favourite hybrids.&rdquo;</p>
+<p>Minjae was beside him in seconds. &ldquo;Hey. Don&rsquo;t you dare fry yourself. Soahn will kill me if I let you melt. You&rsquo;re one of his favourite hybrids.&rdquo;</p>
 
 <p>Onyx&rsquo;s jaw tightened. &ldquo;It&rsquo;s a malfunction. I can handle it.&rdquo;</p>
 
-<p>&ldquo;Yeah, I can see that,&rdquo; Minjae said dryly, watching another spark jump. &ldquo;Move your hand before you cook the joint.&rdquo;</p>
-
-<p>He reached toward the arm; Onyx flinched away automatically.</p>
+<p>&ldquo;Yeah, I can see that,&rdquo; Minjae said dryly, watching another spark jump. &ldquo;Move your hand before you cook the joint.&rdquo; He reached toward Onyx&rsquo;s arm and Onyx flinched away automatically.</p>
 
 <p>&ldquo;Don&rsquo;t.&rdquo;</p>
 
-<p>Minjae&rsquo;s eyebrows lifted. &ldquo;You planning to wrestle it into compliance, or are we gonna fix it like rational people?&rdquo;</p>
+<p>One of Minjae&rsquo;s eyebrows lifted at that. &ldquo;You planning to wrestle it into compliance, or are we going to fix it like rational people?&rdquo;</p>
 
-<p>Onyx glared at him, breathing sharp. The limb was locked in a half-clenched fist, metal hot against his skin. He hated this &mdash; the helplessness, the reminder that his own strength could betray him.</p>
+<p>Onyx glared at him, breathing hard. The limb was locked in a half-clenched fist, metal hot against his skin where his augment knit to his body. He hated this &mdash; the helplessness, the reminder that his own strength could occasionally betray him.</p>
 
-<p>Minjae knelt anyway, voice gentler. &ldquo;You&rsquo;ve patched me up more than once, you know. Let me return the favour.&rdquo;</p>
+<p>Minjae knelt at his side. &ldquo;Listen, you&rsquo;ve patched me up more than once. Let me return the favour. No fuss.&rdquo;</p>
 
-<p>The words cut through the wall&nbsp;of Onyx&rsquo;s pride. He hesitated, then slowly extended the arm. The heat shimmered between them, faint ozone curling through the air.</p>
+<p>Onyx hesitated, but no matter how he looked at the situation, he couldn&rsquo;t see any other option. Slowly, he extended the arm; heat shimmered between them, a subtle tang of ozone filling the space.</p>
 
-<p>Minjae worked quickly, scanning the servo housing. His touch was careful, almost reverent &mdash; not out of fear, but respect for what it was. &ldquo;You should&rsquo;ve told me it was running this hot,&rdquo; he muttered. &ldquo;You&rsquo;re basically holding a furnace.&rdquo;</p>
+<p>Minjae worked quickly, scanning the servo housing, popping the panel loose with a quick twist, and isolating the heat spike along the inner wiring, his touch careful but not gentle. &ldquo;You should&rsquo;ve told me it was running this hot,&rdquo; he muttered. &ldquo;You&rsquo;re basically holding a furnace.&rdquo;</p>
 
 <p>&ldquo;Didn&rsquo;t seem relevant.&rdquo;</p>
 
-<p>&ldquo;Everything that might explode is relevant.&rdquo;</p>
+<p>&ldquo;Everything that might explode is relevant.&rdquo;&nbsp;</p>
 
-<p>That earned a tiny, reluctant huff of laughter. Minjae glanced up and caught it, lips quirking. &ldquo;See? You do have a sense of humour.&rdquo;</p>
+<p>Onyx rolled his eyes but said nothing. Minjae was right, though, and he knew it. It was just difficult telling others when there was a problem. Onyx had spent so many years self-sufficient in the military, and whenever he needed maintenance it was always handled by automated systems, not real people who actually gave a damn about how he was holding together.</p>
 
-<p>&ldquo;Limited use,&rdquo; Onyx said.</p>
+<p>Onyx tipped his head back and watched dust drift down, fine as ash, as Minjae adjusted one of the power cables with a small tool pulled from his jacket.</p>
 
-<p>The light above them flickered. Dust drifted down again, fine as ash.</p>
+<p>&ldquo;If I can vent the charge, it should stabilise&mdash;&rdquo;</p>
 
-<p>Minjae adjusted one of the power cables with a tool pulled from his jacket. &ldquo;If I can vent the charge, it should stabilise&mdash;&rdquo;</p>
+<p>He was cut off by a low rumble echoing through the tunnels, and both of them froze. Carefully, Minjae twisted one of the exposed connectors, his movements slower and steadier now. A brief hiss cut through the silence as trapped heat vented from the joint.</p>
 
-<p>He was cut off by a low rumble echoing through the tunnel. Both of them froze.</p>
-
-<p>&ldquo;&mdash;Or not.&rdquo; Minjae winced. &ldquo;Guess we stay put for a bit.&rdquo;</p>
+<p>&ldquo;There. Not fixed,&rdquo; he muttered, sitting back, &ldquo;but you aren&rsquo;t about to take my eyebrows off, so that&rsquo;s a good start.&rdquo;</p>
 
 <p>Onyx nodded once, scanning for any viable exits. None. Just the sound of their own breathing and the faint whine of failing power.</p>
 
@@ -167,66 +387,69 @@
 
 <p>&ldquo;Right.&rdquo; A pause. &ldquo;So&hellip; we talk, then. Otherwise, I&rsquo;m going to start narrating the slow demise of my sanity.&rdquo;</p>
 
-<p>Onyx didn&rsquo;t answer. But his head tilted fractionally, a silent concession.</p>
+<p>Onyx didn&rsquo;t answer, but he tilted his head fractionally, a silent concession.</p>
 
-<p>Minjae smiled faintly into the dark. &ldquo;Knew I&rsquo;d win that one.&rdquo;</p>
+<p>He could hear Minjae&rsquo;s smile in the words. &ldquo;Knew I&rsquo;d win that one.&rdquo;</p>
 
 <p><br></p>
+<p align="center">~*~</p>
 
-
-<p>The quiet came in waves, the kind that didn&rsquo;t really feel like silence but sound folded into itself. The only things alive were the emergency light&rsquo;s pulse and the faint ticking from Onyx&rsquo;s damaged servo.</p>
+<p><br></p>
+<p>Every sound was muted and flattened by the earth above them, the space absorbing it before it could travel. The only things still working were the emergency light and the soft ticking from Onyx&rsquo;s damaged servo.</p>
 
 <p>Minjae crouched across from him, sleeves rolled up, a small toolkit splayed out on the ground. &ldquo;I still can&rsquo;t get over the fact you carry a wrench set but no snacks,&rdquo; he muttered, blowing dust from a connector. &ldquo;Who does that?&rdquo;</p>
 
-<p>&ldquo;Snacks compromise alertness.&rdquo;</p>
+<p>&ldquo;I rarely need snacks.&rdquo;</p>
 
-<p>&ldquo;Sure, soldier. Keep telling yourself that.&rdquo;</p>
+<p>&ldquo;Everybody needs snacks. I don&rsquo;t care what you say.&rdquo;</p>
 
-<p>Onyx watched him work. Minjae's fingers were deft and unhurried. For someone who lived on jokes, he turned into pure focus when he had something broken in front of him. It was almost comforting &mdash; the soft click of tools, the controlled rhythm.</p>
+<p>Onyx watched him work, his fingers deft and unhurried. For someone who lived on jokes and deflection, Minjae turned into pure focus when he had something broken in front of him. It was almost comforting, the soft click of tools and controlled rhythm of his movements. The light caught on the old burn scars tracing Minjae&rsquo;s hands. Onyx had seen them before plenty of times, but he&rsquo;d never really <em>looked</em> at them. They mapped over Minjae&rsquo;s knuckles like pale circuitry, lines uneven, intersecting, pinching the skin. Onyx knew some of the story &mdash; the sabotage, the fire, the escape, the NuYu servers gone up in smoke &mdash; but Minjae had never gone into detail about why, or the aftermath.</p>
 
-<p>The faint light caught on the old burn scars tracing Minjae&rsquo;s hands. Onyx had seen the lines before plenty of times, but he&rsquo;d never really <em>looked</em> at them. They mapped over Minjae&rsquo;s knuckles like pale circuitry, the skin pinched and uneven. Onyx knew some of the story &mdash; the escape, the fire, the servers gone up in smoke &mdash; but Minjae had never spoken of it in detail.</p>
+<p>For a moment, Onyx found himself wondering what it had cost. What else had those hands done to buy freedom?&nbsp;</p>
 
-<p>For a moment, he found himself wondering what it had cost. What those hands had done to buy freedom.</p>
+<p>That was fine; Onyx had never gone into detail about why he&rsquo;d left the military. And he knew what his own damage looked like &mdash; scar tissue meeting metal plating, the frequent maintenance he often had to conduct to keep his augments balanced, the constant feeling that he wasn&rsquo;t quite complete, and the small failures like his servo right now. In many ways he didn&rsquo;t need to ask what it&rsquo;d cost Minjae or what he still carried silently. He already understood enough.</p>
 
-<p>Minjae didn&rsquo;t notice the scrutiny; he was lost in the rhythm of repair, focused and calm. Onyx turned his gaze away, the thought settling somewhere deep and uncomfortable &mdash; admiration tangled with something quieter and harder to name. He shifted his damaged arm closer, the metal&rsquo;s heat easing slightly under Minjae&rsquo;s touch. Sparks had scorched the plating along the forearm, blackened in places.</p>
+<p>If Minjae noticed the scrutiny, he didn&rsquo;t react to it. He was lost in the rhythm of repair; it changed his entire face, his usual sharp observation softened into calm focus.</p>
+
+<p>Onyx turned his attention away, the thought settling somewhere deep and uncomfortable &mdash; admiration tangled with a quieter feeling, harder to name. He brought his damaged arm closer, the metal&rsquo;s heat easing slightly under Minjae&rsquo;s touch. Sparks had scorched the plating along the forearm, blackened in places.&nbsp;</p>
 
 <p>Minjae let out a low whistle. &ldquo;You&rsquo;ve been running this joint past safe threshold for a while.&rdquo;</p>
 
-<p>Onyx lifted a shoulder. &ldquo;It performs.&rdquo;</p>
+<p>Onyx lifted a shoulder. &ldquo;It still functions.&rdquo;</p>
 
-<p>&ldquo;Yeah, until it doesn&rsquo;t.&rdquo; Minjae pried the panel loose with a small groan of metal. &ldquo;You know, I always thought you&rsquo;d have some fancy self-repair protocol, or a secret Dominion drone that follows you around with a spanner.&rdquo;</p>
+<p>&ldquo;Yeah, until it doesn&rsquo;t.&rdquo; Minjae pried the panel loose with a small groan of metal. &ldquo;You know, I always thought you&rsquo;d have some fancy self-repair protocol, or a secret military drone that follows you around with a spanner.&rdquo;</p>
 
 <p>&ldquo;I prefer control.&rdquo;</p>
 
 <p>&ldquo;Control&rsquo;s good,&rdquo; Minjae said. &ldquo;Until it eats you alive.&rdquo;</p>
 
-<p>Onyx silently assessed that statement. It wasn't wrong. He frowned.</p>
+<p>Onyx frowned. Control had served him well over the years, kept him operational in conditions that would&rsquo;ve broken others. But it hadn&rsquo;t stopped this &mdash; the locked joint, the unchecked heat, the moment his own body refused to obey, or how unmoored it made him feel.</p>
 
-<p>Minjae smirked. &ldquo;Hey, don&rsquo;t give me that. I get it. You and I both play god with our own disasters. Yours just involve more metal.&rdquo;</p>
+<p>Minjae smirked. &ldquo;Hey, don&rsquo;t give me that look. I get it. You and I both play god with our own disasters. Yours just involves more metal.&rdquo;</p>
 
-<p>Onyx stayed quiet. A bead of coolant rolled from the joint and sizzled out.</p>
+<p>A bead of coolant rolled from the joint and sizzled out. Onyx watched it silently.</p>
 
-<p>Minjae kept working as if nothing had happened. &ldquo;You ever think about it? What you&rsquo;d be like without all the upgrades?&rdquo;</p>
+<p>Minjae kept working. &ldquo;You ever think about it? What you&rsquo;d be like without all the upgrades?&rdquo;</p>
 
-<p>&ldquo;No.&rdquo; The answer came fast. Then, after a beat: &ldquo;I don&rsquo;t remember a version of me before this.&rdquo; This was a lie, but it was easier.</p>
+<p>&ldquo;No,&rdquo; Onyx said automatically. But then he hesitated when Minjae cast him a sideways look. &ldquo;I don&rsquo;t remember a version of me before this,&rdquo; he added, although this was also untrue. A memory pushed through, then: broken windows and bitter air, a door that didn&rsquo;t lock, the hollow ache of hunger that never went away, frozen fingers trying to hold a pencil and make up raps in the flickering candlelight.&nbsp;</p>
 
-<p>Something in the way he said it made Minjae still. He didn&rsquo;t push. He just nodded, adjusting a filament with the tip of a screwdriver. &ldquo;Guess I know that feeling.&rdquo;</p>
+<p>He shut it down before it could drag him further into the past.</p>
 
-<p>Onyx looked at him properly then. &ldquo;You?&rdquo;</p>
+<p>Minjae continued to watch him, his head tilted slightly. To his credit, he didn&rsquo;t push. Instead he nodded and adjusted a filament with the tip of the screwdriver. &ldquo;Guess I know that feeling.&rdquo;</p>
 
-<p>Minjae gave a half laugh. &ldquo;What, you think I was born with the personality of a security breach? NuYu rewrote more code in me than I care to remember. I left before they could finish the job.&rdquo;</p>
+<p>Onyx stared at him. &ldquo;You?&rdquo;</p>
 
-<p>He snapped a connection back into place; the servo twitched.</p>
+<p>Minjae gave a half laugh. &ldquo;What, you think I was born with the personality of a security breach? NuYu wrote more code in me than I care to remember, and then they tried to erase me. I left before they could finish the job.&rdquo; He snapped a connection back into place, and the servo twitched.</p>
 
 <p>Onyx&rsquo;s voice dropped a little. &ldquo;And you joined us.&rdquo;</p>
 
 <p>Minjae shrugged. &ldquo;Better ghosts than gods.&rdquo;</p>
 
-<p>They both sat with that for a moment, the tunnel around them humming faintly, like even the walls were listening.</p>
+<p>They both sat with that for a moment, the tunnel around them creaking gently like even what was left of the walls was listening. The repairs were nearly done now. Minjae&rsquo;s hands hovered over the exposed servos, steady despite the fine dust still drifting down onto them.</p>
 
-<p>The repair was nearly done now. Minjae&rsquo;s hands hovered over the exposed servos, steady despite the fine dust still drifting from the ceiling. &ldquo;All right, big guy. Last connection. You&rsquo;re gonna feel it.&rdquo;</p>
+<p>&ldquo;All right, big guy. Last connection. You&rsquo;re going to feel it.&rdquo;</p>
 
-<p>The surge kicked through the limb like a lightning bolt. Onyx&rsquo;s fingers spasmed once before settling. He exhaled through his teeth, low and controlled.</p>
+<p>The surge kicked through the limb like a lightning bolt, and Onyx&rsquo;s fingers spasmed once before settling. He blew out a breath through his teeth.</p>
 
 <p>Minjae grinned. &ldquo;See? Look at that. Didn&rsquo;t explode. Ten out of ten.&rdquo;</p>
 
@@ -234,174 +457,162 @@
 
 <p>&ldquo;God, you really are impossible.&rdquo;</p>
 
-<p>They both laughed &mdash; quietly, tiredly. The sound echoed oddly in the confined space, too human against all that metal.</p>
+<p>They both laughed, quietly, tiredly, the sound echoing strangely in the confined space.&nbsp;</p>
 
-<p>The light dimmed again. A minute passed before Minjae spoke. &ldquo;You could&rsquo;ve escaped sooner, you know. Back when you first started doubting your superiors. No one would&rsquo;ve blamed you for running.&rdquo;</p>
+<p>Minjae sat back on his heels and looked around. A minute passed before he spoke again. &ldquo;You could&rsquo;ve escaped sooner, you know. Back when you first started doubting your superiors. No one would&rsquo;ve blamed you for running.&rdquo;</p>
 
-<p>Onyx&rsquo;s jaw flexed. &ldquo;Leaving wouldn&rsquo;t have stopped the program.&rdquo;</p>
+<p>Onyx looked down at his hand, flexing his fingers again. &ldquo;Leaving wouldn&rsquo;t have stopped the program.&rdquo;</p>
 
-<p>&ldquo;That&rsquo;s not what I meant.&rdquo;</p>
+<p>&ldquo;That isn&rsquo;t what I meant.&rdquo;</p>
 
-<p>Onyx didn&rsquo;t answer at first. The faint blue gleam from the servo cast long shadows across his face, picking out the human skin from the metal seams. &ldquo;If I&rsquo;d gone,&rdquo; he said finally, &ldquo;they would&rsquo;ve taken someone else. Someone younger. Easier to rebuild.&rdquo;</p>
+<p>Onyx didn&rsquo;t answer at first. The blue gleam from the servo cast long shadows across his arm and shoulder, picking out the human skin from the metal seams. &ldquo;If I&rsquo;d gone,&rdquo; he said finally, &ldquo;they would have taken someone else. Someone younger. Easier to rebuild.&rdquo;</p>
 
-<p>Minjae sat back, breath catching. &ldquo;So you stayed to make sure no one else got turned into a weapon.&rdquo;</p>
+<p>&ldquo;So you stayed to make sure no one else got turned into a weapon,&rdquo; Minjae said.</p>
 
-<p>Onyx&rsquo;s eyes stayed on the tunnel wall, unfocused. &ldquo;I didn&rsquo;t stay long enough. Perhaps I could&rsquo;ve&hellip; made more of a difference.&rdquo;</p>
+<p>Nodding, Onyx let his hand drop and tipped his head back against the stone. &ldquo;There were things we were asked to do&hellip;&rdquo;</p>
 
-<p>It was Minjae&rsquo;s turn to fall silent. The weight of it pressed against his ribs &mdash; the realisation that behind all that discipline was a man running on guilt and duty like they were oxygen.</p>
+<p>&ldquo;Asked?&rdquo;</p>
 
-<p>He reached for the arm again, tightening one last bolt. &ldquo;You know,&rdquo; he said lightly, &ldquo;most people just take up knitting when they want redemption.&rdquo;</p>
+<p>Onyx felt a muscle jump in his jaw. &ldquo;Told. Programmed.&rdquo; He swallowed. &ldquo;I didn&rsquo;t stay long enough. Perhaps I could have&hellip; made more of a difference.&rdquo;</p>
 
-<p>That drew a sound. Not quite a laugh, more like the ghost of one. &ldquo;Knitting requires softness.&rdquo;</p>
+<p>&ldquo;Maybe,&rdquo; Minjae said. &ldquo;But more likely is that they would&rsquo;ve dismantled you like they do everything else they can&rsquo;t control.&rdquo;</p>
+
+<p>&ldquo;Hm.&rdquo;</p>
+
+<p>He felt Minjae reach for his arm again, tightening one last bolt. &ldquo;You know,&rdquo; he said lightly, &ldquo;most people just take up knitting when they want redemption.&rdquo;</p>
+
+<p>It was so absurd that Onyx found himself laughing softly at that. &ldquo;Knitting requires softness. I&rsquo;m not good at handling soft things.&rdquo;</p>
 
 <p>&ldquo;Ha! There&rsquo;s the Onyx I know.&rdquo;</p>
 
-<p>The light flickered again. Far away, a faint echo of comms crackled through the dust.</p>
+<p>Far away, an echo of comms crackled through the dust. Onyx tilted his head, listening. &ldquo;Signal.&rdquo;</p>
 
-<p>Onyx tilted his head, listening. &ldquo;Signal.&rdquo;</p>
-
-<p>Minjae tapped the side of his earpiece. &ldquo;It&rsquo;s weak, but yeah &mdash; Soahn&rsquo;s probably panicking.&rdquo;</p>
+<p>Minjae tapped the side of his earpiece. &ldquo;It&rsquo;s weak, but yeah. Soahn&rsquo;s probably panicking.&rdquo;</p>
 
 <p>&ldquo;Then we wait.&rdquo;</p>
 
-<p>Minjae stretched out his legs, leaning back against the wall. &ldquo;Could be hours. You realise you&rsquo;re stuck with me.&rdquo;</p>
+<p>Stretching his legs out and leaning back against the wall, Minjae shrugged. &ldquo;Could be hours. You realise you&rsquo;re stuck with me.&rdquo;</p>
 
-<p>Onyx glanced down at him, the corner of his mouth twitching. &ldquo;I&rsquo;ve endured worse.&rdquo;</p>
+<p>The corner of Onyx&rsquo;s mouth twitched. &ldquo;I&rsquo;ve endured worse.&rdquo;</p>
 
-<p>&ldquo;Flattery will get you everywhere,&rdquo; Minjae murmured, smiling into the dark.</p>
+<p>&ldquo;Wow, high praise coming from you.&rdquo; He could hear Minjae&rsquo;s smile in the dark. &ldquo;Thanks, mate.&rdquo;</p>
 
-<p>For the first time since the collapse, Onyx let himself relax. The tension in his shoulders eased, his breathing slowed, and the hum of the repaired servo matched the low rhythm of Minjae&rsquo;s breathing, two frequencies settling into the same range.</p>
-
-<p>They didn&rsquo;t speak again for a long time. The tunnel held them in its dim, steady pulse, and for once, neither of them tried to fill the silence.</p>
+<p>For the first time since the tunnel collapsed, Onyx let himself relax, the tension in his shoulders easing. The steady hum from his repaired servo matched the rhythm of Minjae&rsquo;s breathing, two frequencies settling into the same range.</p>
 
 <p><br></p>
+<p align="center">~*~</p>
+<p><br></p>
 
+<p>By the time the next comms signal crackled distantly through, the air within the tunnel had turned thick and stale. Dust shimmered in the beam of Minjae&rsquo;s portable light, suspended like fading stars in a sealed world that didn&rsquo;t want to let them go.</p>
 
-<p>By the time the faint comms signal returned, the air in the tunnel had turned thick and stale. Dust shimmered in the beam of Minjae&rsquo;s portable light, suspended like fading stars. Every sound&mdash;the shift of debris, the low hum of Onyx&rsquo;s repaired servo&mdash;seemed amplified, trapped inside a sealed world that didn&rsquo;t want to let them go.</p>
+<p>Minjae knelt by the buried relay junction, stripped down to his t-shirt, arms streaked with grime and arcs of blue light from the phosphor circuitry inked along his neck. &ldquo;If I can get the core coupler back online, we might have power for a ping,&rdquo; he said, voice low but oddly calm. He glanced over at Onyx. &ldquo;You sure this thing won&rsquo;t blow us sky high?&rdquo;</p>
 
-<p>Minjae knelt by the buried relay junction, stripped down to his undershirt, skin streaked with grime and faint arcs of blue light from the circuits in his neck. &ldquo;If I can get the core coupler back online, we might have power for a ping,&rdquo; he said, voice low but oddly calm. He glanced up at Onyx. &ldquo;You sure this thing won&rsquo;t blow us sky high?&rdquo;</p>
-
-<p>&ldquo;Seventy percent sure.&rdquo;</p>
+<p>&ldquo;Seventy per cent sure,&rdquo; Onyx said.</p>
 
 <p>&ldquo;Wow. Comforting.&rdquo;</p>
 
-<p>Onyx crouched beside him, prying at a metal panel with his newly steady hand. &ldquo;Cables first.&rdquo;</p>
+<p>Pushing away from the wall, Onyx went over and crouched beside him, prying the metal panel with his newly steady hand. &ldquo;Cables first.&rdquo;</p>
 
-<p>Minjae passed him a frayed bundle. &ldquo;You&rsquo;re lucky you fixed that arm, because I am not strong enough for this nonsense.&rdquo;</p>
+<p>Minjae passed him a frayed bundle. &ldquo;You&rsquo;re lucky that arm&rsquo;s working again, because I am not strong enough for this nonsense.&rdquo;</p>
 
-<p>Onyx adjusted the wiring, his movements methodical. &ldquo;You are resourceful enough.&rdquo;</p>
+<p>Onyx adjusted the wiring with slow, methodical movements. &ldquo;You&rsquo;re resourceful enough.&rdquo;</p>
 
-<p>&ldquo;Don&rsquo;t butter me up while we&rsquo;re still buried alive.&rdquo;</p>
+<p>&ldquo;Don&rsquo;t try to butter me up while we&rsquo;re buried alive.&rdquo;</p>
 
-<p>He caught the ghost of a smirk on Onyx&rsquo;s face&mdash;so faint it could&rsquo;ve been a trick of the light&mdash;and something about it steadied him. They&rsquo;d both spent too long pretending they didn&rsquo;t need people, yet here they were, breathing the same recycled air, keeping each other alive.</p>
+<p>When the coupler finally clicked into place, the relay shuddered, throwing sparks, and a thin blue arc of energy raced along the floor conduit before disappearing into the dark. Around them, the tunnel filled with a soft, low thrum; the sound of power returning.</p>
 
-<p>When the coupler finally clicked into place, the relay shuddered, throwing sparks. A thin blue arc of energy raced along the floor conduit and disappeared into the dark.</p>
+<p>Minjae sat back. &ldquo;There we go, little heartbeat.&rdquo; He leaned against the wall again, staring up at the strip of light that blinked back to life overhead. &ldquo;God, I missed that sound.&rdquo; In the glow, Onyx could see how tired Minjae was underneath the irreverence.</p>
 
-<p>The sudden hum filled the tunnel, soft and low, the sound of power returning.</p>
+<p>&ldquo;Why did you stay?&rdquo; he asked quietly.</p>
 
-<p>Minjae sat back, exhaling hard. &ldquo;There we go. Little heartbeat.&rdquo; He leaned against the wall, looking up at the strip of light that flickered back to life overhead. &ldquo;God, I missed that sound.&rdquo;</p>
-
-<p>Onyx watched the glow pulse against Minjae&rsquo;s cheekbones, the contrast between his bright irreverence and the exhaustion beneath it. &ldquo;Why did you stay?&rdquo; he asked quietly.</p>
-
-<p>Minjae blinked. &ldquo;What?&rdquo;</p>
+<p>Minjae blinked. &ldquo;Huh?&rdquo;</p>
 
 <p>&ldquo;With us,&rdquo; Onyx said. &ldquo;After you left NuYu. You could have disappeared. Started over.&rdquo;</p>
 
-<p>Minjae stared at the floor for a long moment. &ldquo;Started over as what? A ghost with good Wi-Fi?&rdquo; His smile was thin. &ldquo;I spent years helping build the system that broke us. The least I can do is help the ones who still believe it can be rewritten.&rdquo;</p>
+<p>Minjae stared at the floor for a long moment. &ldquo;Started over as what? A ghost with good Wi-Fi?&rdquo; His smile was thin. &ldquo;I spent months helping build the system that breaks everything. The least I can do is help the ones who still believe it can be rewritten.&rdquo;</p>
 
 <p>&ldquo;Redemption.&rdquo;</p>
 
-<p>&ldquo;Survival,&rdquo; Minjae corrected. Then, softer: &ldquo;But redemption sounds prettier.&rdquo;</p>
+<p>&ldquo;Survival,&rdquo; Minjae corrected. Then, softer: &ldquo;But okay, redemption sounds prettier.&rdquo;</p>
 
-<p>The relay hummed louder, a rising pitch that filled the silence between them. Onyx&rsquo;s voice cut through it, low and even. &ldquo;You don&rsquo;t owe us anything.&rdquo;</p>
+<p>The relay buzzed louder, a rising pitch that filled the space between them. Onyx had to raise his voice slightly. &ldquo;You don&rsquo;t owe us anything.&rdquo;</p>
 
-<p>&ldquo;That&rsquo;s where you&rsquo;re wrong,&rdquo; Minjae said, glancing at him. &ldquo;I owe you all everything. You gave me a place to stop running.&rdquo;</p>
+<p>&ldquo;Ah, but that&rsquo;s where you&rsquo;re wrong,&rdquo; Minjae said, glancing at him. &ldquo;I owe you all everything. You gave me a place to stop running.&rdquo; He paused, wiped a streak of dust from his cheek, and then added, &ldquo;Staying won&rsquo;t erase what was done to me, but it makes it matter less.&rdquo;</p>
 
-<p>Onyx&rsquo;s expression didn&rsquo;t change, but something in his eyes did&mdash;a flicker, faint but undeniable. &ldquo;And you think staying will erase what was done to you?&rdquo;</p>
+<p>Onyx nodded once.</p>
 
-<p>&ldquo;No.&rdquo; Minjae wiped a streak of dust from his face. &ldquo;But it makes it matter less.&rdquo;</p>
+<p>They fell quiet again for a while, the sounds of the relay wrapping around them. Then Minjae nudged his boot lightly against Onyx&rsquo;s. &ldquo;Your turn. Why&rsquo;d you stay?&rdquo;</p>
 
-<p>They fell quiet again, the hum of the relay wrapping around them. For a moment, Onyx listened&mdash;not to the machine, but to the evenness of Minjae&rsquo;s breathing beside him. A rare stillness.</p>
-
-<p>Minjae nudged his boot lightly against Onyx&rsquo;s. &ldquo;Your turn. Why&rsquo;d you stay?&rdquo;</p>
-
-<p>Onyx didn&rsquo;t answer right away. He stared at the lit conduit running along the wall, at the faint reflection of his metal fingers in it. &ldquo;Because fighting for E.V.E.N is different,&rdquo; he said at last. &ldquo;It&rsquo;s the first time I&rsquo;ve chosen what my strength is for.&rdquo;</p>
+<p>Onyx considered this, though he already knew. He stared at the conduit running along the wall. &ldquo;Because fighting for E.V.E.N is different,&rdquo; he eventually said. &ldquo;It&rsquo;s the first time I&rsquo;ve chosen what my strength is for.&rdquo;</p>
 
 <p>Minjae let out a slow breath. &ldquo;That&rsquo;s the most Onyx answer imaginable.&rdquo;</p>
 
 <p>&ldquo;It&rsquo;s the truth.&rdquo;</p>
 
-<p>&ldquo;Yeah,&rdquo; Minjae said softly. &ldquo;That&rsquo;s what makes it hurt.&rdquo;</p>
+<p>&ldquo;Yeah,&rdquo; Minjae said softly. &ldquo;And that&rsquo;s what makes it hurt.&rdquo;</p>
 
-<p>The relay blinked again, stabilising to a steady pulse. In the thin blue light, the two of them sat shoulder to shoulder&mdash;one built of discipline, the other of defiance&mdash;held together by shared exhaustion and the fragile rhythm of survival.</p>
+<p>In the thin blue light, the two of them sat side by side, shoulder to shoulder &mdash; one built from discipline, the other from defiance &mdash; held together by shared exhaustion and the fragile rhythm of survival.</p>
 
-<p>Minjae tilted his head back against the wall. &ldquo;When we get out of here, I&rsquo;m filing for hazard pay.&rdquo;</p>
+<p>&ldquo;When we get out of here,&rdquo; Minjae said. &ldquo;I&rsquo;m filing for hazard pay.&rdquo;</p>
 
-<p>Onyx almost smiled. &ldquo;Denied.&rdquo;</p>
+<p>&ldquo;Denied,&rdquo; Onyx said, almost smiling.</p>
 
-<p>&ldquo;Figures.&rdquo; Minjae closed his eyes. &ldquo;Then at least you&rsquo;re buying the first round.&rdquo;</p>
+<p>&ldquo;Figures.&rdquo; Minjae snorted and closed his eyes. &ldquo;Then at least you&rsquo;re buying the first round.&rdquo;</p>
 
-<p>Onyx&rsquo;s voice came quieter, almost like a promise. &ldquo;Deal.&rdquo;</p>
+<p>&ldquo;Deal.&rdquo;</p>
 
-<p>They waited like that, side by side in the flickering light, until the comms crackled properly this time, and Soahn&rsquo;s panicked voice burst through the static.</p>
+<p>Just then, comms crackled again, louder this time. &ldquo;Hello? Guys?&rdquo; Soahn&rsquo;s voice bled through. &ldquo;Hold tight. We&rsquo;ve got Hollow ops here to help get you out.&rdquo;</p>
 
-<p>&ldquo;Hello? Guys? Hold tight&mdash;we&rsquo;ve got Hollow ops here to help get you out.&rdquo;</p>
+<p>Minjae&rsquo;s grin lit up in the dark. &ldquo;There we go.&rdquo;</p>
 
-<p>Minjae&rsquo;s grin lit up the dark. &ldquo;Told you they&rsquo;d find us.&rdquo;</p>
-
-<p>Onyx gave a small nod, already scanning for the direction of the rescue signal. &ldquo;Time to go home.&rdquo;</p>
-
+<p>Onyx gave him a small nod, already scanning for the direction of the rescue signal. &ldquo;Time to go home.&rdquo;</p>
 
 <p><br></p>
+<p align="center">~*~</p>
+<p><br></p>
 
-<p>The Hollow&rsquo;s rescue team cut through the last barrier at dawn. Cold air poured into the tunnel, sharp and alive after hours of stale breath and dust. The smell of rain filtered down from above &mdash; petrichor and metal, the scent of the world returning.</p>
+<p>The Hollow&rsquo;s rescue team cut through the last barrier at dawn, breaching the collapsed tunnel near one of the Light Wells where pale morning seeped down from the city above. Cold air poured into the tunnel, sharp and alive after hours of stale heat and dust. Onyx climbed out first, bracing one hand at the edge of the breach, servos whining softly, and pulled himself through. The light hit him like an impact, too bright and clean and too sudden. Behind him, Minjae swore under his breath and squinted, shielding his eyes with a grimy arm.</p>
 
-<p>Onyx climbed out first. He braced one hand on the edge of the breach, servos whining softly, and pulled himself through. The light hit him like impact: too bright, too clean. Behind him, Minjae swore under his breath and squinted, shielding his eyes with a grimy sleeve.</p>
+<p>Soahn and Rayne were there when they surfaced, both of them kneeling in the rubble.&nbsp;</p>
 
-<p>Soahn was there the second they surfaced, kneeling in the mud, relief breaking through his usual quiet. &ldquo;We lost your signal for twelve hours.&rdquo;</p>
+<p>&ldquo;We lost your signal for six hours,&rdquo; Rayne said.</p>
 
 <p>&ldquo;Yeah,&rdquo; Minjae rasped, brushing dust off his arms. &ldquo;Next time, we&rsquo;re installing a skylight.&rdquo;</p>
 
-<p>Onyx&rsquo;s expression didn&rsquo;t change, but Soahn caught the quick once-over he gave Minjae &mdash; checking for injuries, not trusting his own relief until he saw the other man still standing.</p>
+<p>Soahn stared at Onyx&rsquo;s arm, where the augment plating was scratched and dented. &ldquo;Are you okay?&rdquo;</p>
 
-<p>&ldquo;Arm&rsquo;s stable,&rdquo; Minjae said lightly, noticing. &ldquo;No spontaneous combustion.&rdquo;</p>
+<p>Onyx shrugged. &ldquo;Arm&rsquo;s stable.&rdquo;</p>
 
-<p>Onyx grunted, which in Onyx-speak probably meant thank you.</p>
+<p>&ldquo;No spontaneous combustion,&rdquo; Minjae added. &ldquo;You know, I think I&rsquo;m going to start charging for near-death experiences. Premium subscription service.&rdquo;</p>
 
-<p>Minjae stretched, grimacing at the stiffness in his back. &ldquo;You know, I think I&rsquo;m gonna start charging for near-death experiences. Premium subscription service.&rdquo;</p>
+<p>&ldquo;You would make a fortune,&rdquo; Rayne said in his usual dry way. It was always hard to tell whether he was making jokes intentionally; Onyx supposed it didn&rsquo;t really matter. For a moment, they all stared at Rayne, and then Minjae and Soahn laughed. Onyx found himself leaning into the warm, familiar sound of it.</p>
 
-<p>&ldquo;Refund denied,&rdquo; Onyx said.</p>
+<p>Rayne helped haul up the last of the equipment. Onyx took a step back to give the team room, but he noticed the way Minjae lingered beside him, and he felt no real need to create distance. He wasn&rsquo;t sure what, exactly, had changed within the rubble, only that things were different now. Onyx had always kept a certain distance from Minjae. Not because he disliked him. Dislike would have been clean, functional, simple to manage. Minjae was none of those things. He noticed too much, laughed at the wrong moments, turned vulnerability over in his hands like faulty wiring and found the live current beneath it every time.</p>
 
-<p>That earned him a laugh &mdash; genuine this time, a sound that carried further than it should have.</p>
+<p>Minjae stood beside him now, filthy, exhausted, one sleeve torn at the shoulder, his burned hands flexing as though checking they still belonged to him. Pale light from the well above touched the side of his face and caught in the phosphor lines at his throat.</p>
 
-<p>Rayne helped haul the last of the equipment up. Onyx took a step back, giving the team room, but Minjae lingered beside him. They stood together on the broken lip of the tunnel, watching dawn bleed over the city&rsquo;s skeleton skyline. The Ghost Lines hummed faintly beneath their feet, alive again.</p>
+<p>Soahn was speaking with the Hollow team, Rayne gathering what could be salvaged from the relay, but for one brief moment the noise around them thinned. Onyx flexed his repaired hand once, and the servo answered smoothly.</p>
+<p>Minjae noticed. &ldquo;Still holding?&rdquo;</p>
+<p>Onyx glanced down at the arm, then back at him. &ldquo;Yes.&rdquo;</p>
+<p>&ldquo;Good.&rdquo;</p>
+<p>Above them, the Light Well caught more of the morning, hazy and distant but real. No one stayed beneath them long; too exposed, too visible, too easy to find. But Onyx understood, suddenly, why people paused there anyway.</p>
+<p>Sometimes you needed proof there was still a world above you.</p>
+<p>Sometimes you needed proof you had made it back.</p>
+<p>Minjae nudged his shoulder lightly against Onyx&rsquo;s. &ldquo;Come on, then. Before Kairo hears about this and writes a tragic survival anthem.&rdquo;</p>
+<p>&ldquo;He already will.&rdquo;</p>
+<p>&ldquo;Yeah. Terrible point. Let&rsquo;s go home before he adds mushrooms.&rdquo;</p>
+<p>Onyx huffed softly, almost a laugh, and moved with him toward the others.</p>
+<p>His arm ached, his systems were battered, and dust clung to every seam in his body, but Minjae walked beside him, close enough that Onyx didn&rsquo;t have to guard the space between them.</p>
+<p>For once, he let it stay open.</p>
 
-<p>Minjae glanced sideways. &ldquo;You ever notice how it&rsquo;s always sunrise when we crawl out of a hole?&rdquo;</p>
-
-<p>Onyx didn&rsquo;t answer. The wind caught his hair, scattering dust across the gleam of his metal arm.</p>
-
-<p>&ldquo;Feels like a metaphor,&rdquo; Minjae added.</p>
-
-<p>&ldquo;Too obvious,&rdquo; Onyx said.</p>
-
-<p>&ldquo;Ha! And they say you don&rsquo;t have a sense of humour.&rdquo;</p>
-
-<p>A rare, almost-smile tugged at the corner of Onyx&rsquo;s mouth. The air between them carried a new quiet &mdash; not the wary kind they&rsquo;d had before, but something settled. A shared rhythm found in the dark and carried into light.</p>
-
-<p>When Soahn called them back toward the transport, Minjae gave a lazy salute. &ldquo;Come on, soldier. Time to go home before I start writing poetry about you.&rdquo;</p>
-
-<p>Onyx started to walk, then paused, looking back once at the collapsed tunnel. &ldquo;You&rsquo;d make it rhyme,&rdquo; he said.</p>
-
-<p>Minjae grinned, falling into step beside him. &ldquo;Always.&rdquo;</p>
-
-<p>They didn&rsquo;t speak again as they rejoined the others, the morning light glinting off steel and dust. Outwardly, nothing seemed different &mdash; same banter, same exhaustion, same ghosts in their eyes.</p>
-
-<p>But as they moved toward the waiting transport, the distance between them was gone. Whatever had cracked open beneath the earth hadn&rsquo;t closed again. It just hummed there quietly, a new signal, impossible to hear unless you were listening carefully enough.</p>
-      
-
-</div>
-
-    <a href="/signals" class="back-link">← Back to Signals</a>
   </div>
+</div>
+    </article>
+
+    <nav class="back" aria-label="Return">
+      <a href="/signals/">← Back to Signals</a>
+    </nav>
+
+  </main>
 </body>
 </html>
