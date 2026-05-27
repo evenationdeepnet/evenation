@@ -1,1 +1,656 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kairo Bootleg Downloads</title>
+  <style>
+    :root {
+      --bg: #050506;
+      --panel: rgba(6, 7, 10, 0.86);
+      --panel-soft: rgba(14, 16, 22, 0.72);
+      --text: #e8e5ef;
+      --muted: #9d96aa;
+      --violet: #9a7cff;
+      --violet-dim: #5e4aa7;
+      --green: #72f59d;
+      --green-dim: #3a9c61;
+      --line: rgba(154, 124, 255, 0.42);
+      --line-active: rgba(190, 170, 255, 0.92);
+      --shadow: rgba(0, 0, 0, 0.65);
+      --note: #c7a7ff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #000;
+      color: var(--text);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      overflow: hidden;
+    }
+
+    .desktop {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background:
+        radial-gradient(circle at 48% 42%, rgba(31, 84, 116, 0.34), transparent 35%),
+        radial-gradient(circle at 74% 22%, rgba(86, 43, 142, 0.22), transparent 36%),
+        linear-gradient(135deg, #05020a 0%, #03101b 42%, #120018 100%);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .desktop::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+      background-size: 100% 4px, 4px 100%;
+      mix-blend-mode: screen;
+      opacity: 0.28;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .desktop::after {
+      content: "";
+      position: absolute;
+      inset: -6%;
+      background:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='0.33'/%3E%3C/svg%3E");
+      opacity: 0.16;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .top-bar,
+    .bottom-bar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 38px;
+      border: 1px solid var(--line);
+      background: rgba(4, 4, 8, 0.68);
+      display: grid;
+      align-items: center;
+      z-index: 20;
+      letter-spacing: 0.04em;
+      color: var(--violet);
+      text-transform: uppercase;
+      font-size: 14px;
+      text-shadow: 0 0 8px rgba(154, 124, 255, 0.5);
+    }
+
+    .top-bar {
+      top: 0;
+      grid-template-columns: 1fr 1.15fr 1fr;
+    }
+
+    .top-bar div,
+    .bottom-bar div {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      padding: 0 22px;
+      border-right: 1px solid var(--line);
+    }
+
+    .top-bar div:last-child,
+    .bottom-bar div:last-child {
+      border-right: 0;
+    }
+
+    .bottom-bar {
+      bottom: 0;
+      grid-template-columns: 280px 1fr 170px 76px;
+    }
+
+    .online-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      margin-left: 10px;
+      box-shadow: 0 0 8px var(--green);
+    }
+
+    .battery {
+      width: 30px;
+      height: 14px;
+      border: 1px solid var(--violet);
+      margin-left: 8px;
+      position: relative;
+    }
+
+    .battery::before {
+      content: "";
+      position: absolute;
+      right: -4px;
+      top: 4px;
+      width: 3px;
+      height: 5px;
+      background: var(--violet);
+    }
+
+    .battery::after {
+      content: "";
+      position: absolute;
+      left: 2px;
+      top: 2px;
+      width: 54%;
+      height: 8px;
+      background: var(--green-dim);
+    }
+
+    .desktop-grid {
+      position: absolute;
+      inset: 58px 28px 64px 28px;
+      z-index: 10;
+      display: grid;
+      grid-template-columns: 315px 1fr 250px;
+      gap: 26px;
+    }
+
+    .file-list {
+      padding-top: 4px;
+      border-right: 1px dashed rgba(154, 124, 255, 0.35);
+    }
+
+    .file-item {
+      width: 250px;
+      min-height: 78px;
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      align-items: center;
+      gap: 14px;
+      padding: 8px 12px;
+      margin: 0 0 12px 0;
+      border: 1px solid transparent;
+      color: var(--text);
+      cursor: pointer;
+      transition: border-color 160ms ease, background 160ms ease, color 160ms ease, transform 160ms ease, text-shadow 160ms ease;
+    }
+
+    .file-item:hover,
+    .file-item:focus-visible {
+      border-color: var(--line-active);
+      background: rgba(154, 124, 255, 0.08);
+      color: #fff;
+      text-shadow: 0 0 8px rgba(154, 124, 255, 0.7);
+      outline: none;
+    }
+
+    .file-item.active {
+      border-color: var(--violet);
+      background: rgba(154, 124, 255, 0.12);
+    }
+
+    .file-name {
+      font-size: 16px;
+      line-height: 1.25;
+    }
+
+    .file-meta {
+      color: var(--muted);
+      margin-top: 5px;
+      font-size: 14px;
+    }
+
+    .loose-files {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(130px, 1fr));
+      align-content: start;
+      gap: 38px 34px;
+      padding-top: 24px;
+    }
+
+    .loose-file {
+      min-height: 122px;
+      text-align: center;
+      cursor: pointer;
+      color: var(--text);
+      transition: transform 150ms ease, filter 150ms ease, text-shadow 150ms ease;
+    }
+
+    .loose-file:hover,
+    .loose-file:focus-visible {
+      transform: translateY(-2px);
+      filter: brightness(1.25);
+      text-shadow: 0 0 8px rgba(154, 124, 255, 0.62);
+      outline: none;
+    }
+
+    .loose-file .label {
+      margin-top: 9px;
+      font-size: 15px;
+      line-height: 1.25;
+      word-break: break-word;
+    }
+
+    .terminal-panel {
+      color: var(--text);
+      padding: 18px 2px;
+      font-size: 15px;
+      line-height: 1.55;
+      min-height: 210px;
+    }
+
+    .terminal-panel .prompt {
+      color: var(--violet);
+      margin-bottom: 4px;
+    }
+
+    .terminal-panel .cmd {
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+
+    .terminal-panel .key {
+      color: #88bad7;
+    }
+
+    .terminal-panel .value {
+      color: var(--text);
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 9px;
+      height: 17px;
+      background: var(--text);
+      vertical-align: -3px;
+      animation: blink 1s steps(2, start) infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    .notes-zone {
+      position: relative;
+      padding-top: 30px;
+    }
+
+    .sticky {
+      position: absolute;
+      width: 230px;
+      min-height: 180px;
+      background: linear-gradient(145deg, rgba(179, 151, 255, 0.92), rgba(103, 70, 188, 0.92));
+      color: #090510;
+      padding: 34px 30px;
+      box-shadow: 14px 18px 28px rgba(0,0,0,0.45);
+      transform: rotate(1.5deg);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 15px;
+      line-height: 1.55;
+      z-index: 12;
+    }
+
+    .sticky.small {
+      width: 205px;
+      min-height: 150px;
+      right: 20px;
+      top: 20px;
+      transform: rotate(-1deg);
+    }
+
+    .sticky.big {
+      right: 88px;
+      top: 190px;
+      transform: rotate(2deg);
+      font-weight: bold;
+      font-size: 18px;
+      letter-spacing: 0.01em;
+    }
+
+    .error-box {
+      position: absolute;
+      right: 12px;
+      top: 22px;
+      width: 248px;
+      border: 1px solid var(--line-active);
+      background: rgba(4, 4, 8, 0.96);
+      box-shadow: 10px 12px 0 rgba(0,0,0,0.45);
+      z-index: 18;
+      color: var(--text);
+    }
+
+    .error-title {
+      height: 32px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 12px;
+      color: var(--violet);
+      text-transform: uppercase;
+    }
+
+    .error-body {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      align-items: center;
+      color: #cfc9dd;
+      line-height: 1.35;
+    }
+
+    .error-icon {
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--line-active);
+      display: grid;
+      place-items: center;
+      color: var(--green);
+      font-size: 22px;
+    }
+
+    .error-button {
+      grid-column: 2;
+      justify-self: start;
+      background: transparent;
+      border: 1px solid var(--violet);
+      color: var(--violet);
+      padding: 6px 28px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 150ms ease, color 150ms ease, box-shadow 150ms ease;
+    }
+
+    .error-button:hover {
+      background: rgba(154, 124, 255, 0.12);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(154, 124, 255, 0.28);
+    }
+
+    .ghost-feed {
+      position: absolute;
+      right: 12px;
+      top: 330px;
+      width: 220px;
+      color: var(--muted);
+      border-top: 1px dashed rgba(154, 124, 255, 0.42);
+      border-bottom: 1px dashed rgba(154, 124, 255, 0.42);
+      padding: 18px 0;
+      font-size: 14px;
+      line-height: 1.55;
+      z-index: 11;
+    }
+
+    .ghost-feed h3 {
+      margin: 0 0 18px;
+      color: var(--violet);
+      font-size: 15px;
+      font-weight: normal;
+      text-transform: uppercase;
+    }
+
+    .ghost-feed time {
+      color: var(--violet);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .ghost-feed .feed-item {
+      margin-bottom: 18px;
+    }
+
+    .kairo-scratch {
+      position: absolute;
+      left: 31%;
+      top: 28%;
+      color: rgba(154, 124, 255, 0.12);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: clamp(48px, 8vw, 130px);
+      transform: rotate(-13deg);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      z-index: 4;
+      user-select: none;
+      text-shadow: 0 0 14px rgba(154, 124, 255, 0.18);
+    }
+
+    .folder-icon,
+    .doc-icon,
+    .media-icon,
+    .glitch-icon {
+      width: 58px;
+      height: 48px;
+      margin: 0 auto;
+      position: relative;
+      border: 1.5px solid var(--violet);
+      border-radius: 5px;
+      background: rgba(154, 124, 255, 0.08);
+      box-shadow: inset 0 0 18px rgba(154, 124, 255, 0.08), 0 0 8px rgba(154, 124, 255, 0.08);
+    }
+
+    .folder-icon::before {
+      content: "";
+      position: absolute;
+      left: -1.5px;
+      top: -13px;
+      width: 31px;
+      height: 14px;
+      border: 1.5px solid var(--violet);
+      border-bottom: 0;
+      border-radius: 5px 5px 0 0;
+      background: rgba(154, 124, 255, 0.12);
+    }
+
+    .doc-icon,
+    .media-icon {
+      width: 46px;
+      height: 58px;
+      border-radius: 2px;
+    }
+
+    .doc-icon::before {
+      content: "";
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      top: 16px;
+      height: 2px;
+      background: var(--violet);
+      box-shadow: 0 9px 0 var(--violet), 0 18px 0 var(--violet);
+    }
+
+    .media-icon::before {
+      content: "▶";
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: var(--violet);
+      font-size: 22px;
+    }
+
+    .glitch-icon {
+      background:
+        linear-gradient(90deg, rgba(117, 245, 157, 0.45), transparent 20%, rgba(154,124,255,.55) 38%, transparent 52%, rgba(255,255,255,.4) 68%, transparent),
+        linear-gradient(180deg, rgba(255,255,255,.18), transparent 12%, rgba(255, 80, 80, .35) 20%, transparent 31%, rgba(154,124,255,.45) 52%, transparent 64%);
+      overflow: hidden;
+      border-color: rgba(117, 245, 157, 0.55);
+    }
+
+    .glitch-icon::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(0deg, transparent 0 4px, rgba(0,0,0,.6) 4px 6px);
+    }
+
+    .desktop-icon {
+      width: 58px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      color: var(--violet);
+      font-size: 28px;
+      border: 1px solid var(--violet);
+      border-radius: 4px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 900px) {
+      body { overflow: auto; }
+      .desktop { min-height: 100vh; height: auto; overflow: hidden; }
+      .top-bar { grid-template-columns: 1fr; height: auto; }
+      .top-bar div { min-height: 36px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .bottom-bar { display: none; }
+      .desktop-grid {
+        position: relative;
+        inset: auto;
+        padding: 150px 18px 40px;
+        grid-template-columns: 1fr;
+      }
+      .file-list { border-right: 0; border-bottom: 1px dashed rgba(154, 124, 255, 0.35); padding-bottom: 18px; }
+      .file-item { width: 100%; }
+      .loose-files { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
+      .notes-zone { min-height: 460px; }
+      .sticky.small { left: 0; right: auto; }
+      .sticky.big { right: 0; top: 210px; }
+      .error-box { right: 0; top: 20px; }
+      .ghost-feed { position: relative; right: auto; top: auto; width: 100%; margin-top: 390px; }
+      .kairo-scratch { left: 20%; top: 35%; }
+    }
+  </style>
+</head>
+<body>
+  <main class="desktop" aria-label="Kairo Bootleg Downloads desktop prototype">
+    <div class="top-bar" aria-hidden="true">
+      <div>KAIRO://BOOTLEG_DOWNLOADS/DESKTOP</div>
+      <div>GHOST_LINES_OS v0.7.2</div>
+      <div>USER: KAIRO &nbsp;&nbsp; SIGNAL: ▰▰▰▱▱ &nbsp;&nbsp; BATTERY: 63%</div>
+    </div>
+
+    <div class="kairo-scratch">KAIRO<br />WAS<br />HERE</div>
+
+    <section class="desktop-grid">
+      <nav class="file-list" aria-label="Desktop folders">
+        <div class="file-item" tabindex="0" data-name="music">
+          <div class="folder-icon" aria-hidden="true"></div>
+          <div><div class="file-name">&gt; music</div><div class="file-meta">13 items</div></div>
+        </div>
+        <div class="file-item" tabindex="0" data-name="screenshots">
+          <div class="folder-icon" aria-hidden="true"></div>
+          <div><div class="file-name">&gt; screenshots</div><div class="file-meta">27 items</div></div>
+        </div>
+        <div class="file-item" tabindex="0" data-name="relay_maps">
+          <div class="folder-icon" aria-hidden="true"></div>
+          <div><div class="file-name">&gt; relay_maps</div><div class="file-meta">8 items</div></div>
+        </div>
+        <div class="file-item active" tabindex="0" data-name="onyx_do_not_open">
+          <div class="folder-icon" aria-hidden="true"></div>
+          <div><div class="file-name">&gt; onyx_do_not_open</div><div class="file-meta">22 items</div></div>
+        </div>
+        <div class="file-item" tabindex="0" data-name="memes">
+          <div class="folder-icon" aria-hidden="true"></div>
+          <div><div class="file-name">&gt; memes</div><div class="file-meta">31 items</div></div>
+        </div>
+        <div class="file-item" tabindex="0" data-name="downloads">
+          <div class="folder-icon" aria-hidden="true"></div>
+          <div><div class="file-name">&gt; downloads</div><div class="file-meta">4 items</div></div>
+        </div>
+        <div class="file-item" tabindex="0" data-name="weird_stuff">
+          <div class="folder-icon" aria-hidden="true"></div>
+          <div><div class="file-name">&gt; weird_stuff</div><div class="file-meta">51 items</div></div>
+        </div>
+      </nav>
+
+      <section class="workspace" aria-label="Desktop workspace">
+        <div class="terminal-panel" aria-label="System status">
+          <div class="prompt">kairo@bootleg ~</div>
+          <div class="cmd">&gt; sys_check --all</div>
+          <div><span class="key">signal</span>............ <span class="value">unstable</span></div>
+          <div><span class="key">relay</span>............. <span class="value">online</span></div>
+          <div><span class="key">ghost_mode</span>........ <span class="value">active</span></div>
+          <div><span class="key">onyx_status</span>....... <span class="value">unknown</span></div>
+          <div><span class="key">sleep_deprivation</span>.. <span class="value">severe</span></div>
+          <br />
+          <div class="prompt">kairo@bootleg ~</div>
+          <div class="cmd">&gt; <span class="cursor" aria-hidden="true"></span></div>
+        </div>
+
+        <div class="loose-files" aria-label="Loose desktop files">
+          <div class="loose-file" tabindex="0">
+            <div class="glitch-icon" aria-hidden="true"></div>
+            <div class="label">um.png</div>
+          </div>
+          <div class="loose-file" tabindex="0">
+            <div class="doc-icon" aria-hidden="true"></div>
+            <div class="label">notes.txt</div>
+          </div>
+          <div class="loose-file" tabindex="0">
+            <div class="media-icon" aria-hidden="true"></div>
+            <div class="label">do_not_open.mp4</div>
+          </div>
+          <div class="loose-file" tabindex="0">
+            <div class="media-icon" aria-hidden="true"></div>
+            <div class="label">ghostmode_oldmix.wav</div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="notes-zone" aria-label="Sticky notes and ghost feed">
+        <div class="sticky small">buy noodles<br />find missing cable<br /><br />ask minjae about<br />the relay firmware??</div>
+        <div class="sticky big">DON'T LET MINJAE<br />TOUCH THE AMP</div>
+
+        <div class="error-box" id="errorBox">
+          <div class="error-title"><span>Error</span><button class="error-button" style="padding:0 4px;border:0;" onclick="closeError()">×</button></div>
+          <div class="error-body">
+            <div class="error-icon">!</div>
+            <div>System error.<br />Try again?</div>
+            <button class="error-button" onclick="closeError()">OK</button>
+          </div>
+        </div>
+
+        <div class="ghost-feed">
+          <h3>Ghost Feed //</h3>
+          <div class="feed-item"><time>[23:17]</time>minjae.jpg<br />added to screenshots</div>
+          <div class="feed-item"><time>[22:49]</time>relay_maps/<br />sector_7.png updated</div>
+          <div class="feed-item"><time>[21:02]</time>ghostmode_oldmix.wav<br />played</div>
+        </div>
+      </aside>
+    </section>
+
+    <div class="bottom-bar" aria-hidden="true">
+      <div>BOOTLEG_DOWNLOADS ONLINE <span class="online-dot"></span></div>
+      <div>ONYX_DO_NOT_OPEN &gt; REASONS_WHY_ONYX_IS_AWESOME.TXT</div>
+      <div>23:47</div>
+      <div>☰</div>
+    </div>
+  </main>
+
+  <script>
+    function closeError() {
+      const errorBox = document.getElementById('errorBox');
+      if (errorBox) errorBox.style.display = 'none';
+    }
+
+    document.querySelectorAll('.file-item').forEach((item) => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.file-item').forEach((el) => el.classList.remove('active'));
+        item.classList.add('active');
+      });
+
+      item.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          item.click();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
