@@ -599,6 +599,37 @@
       color: var(--green);
     }
 
+    .audio-player {
+      border: 1px solid rgba(154, 124, 255, 0.32);
+      background: rgba(0, 0, 0, 0.36);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-width: 340px;
+    }
+
+    .audio-track-title {
+      color: var(--violet);
+      font-size: 14px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(154, 124, 255, 0.32);
+    }
+
+    .audio-meta {
+      color: var(--muted);
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .audio-player audio {
+      width: 100%;
+      filter: hue-rotate(245deg) saturate(1.2) brightness(0.9);
+    }
+
     .folder-contents {
       display: grid;
       grid-template-columns: repeat(4, minmax(110px, 1fr));
@@ -833,6 +864,49 @@
     </section>
 
     <section class="windows-layer" aria-label="Open windows">
+      <article class="boot-window" id="musicWindow" aria-label="music folder window" tabindex="-1" style="left: 280px; top: 72px; width: min(760px, calc(100vw - 340px)); min-height: 420px; z-index: 41;">
+        <div class="window-titlebar">
+          <div class="window-title">KAIRO://BOOTLEG_DOWNLOADS/MUSIC</div>
+          <button class="window-close" type="button" aria-label="Close music folder" onclick="closeWindow('musicWindow')">×</button>
+        </div>
+        <div class="folder-window-body">
+          <div class="folder-path">PATH: <span>/bootleg/music</span> &nbsp; // STATUS: unstable frequencies detected</div>
+          <div class="folder-contents" aria-label="music files">
+            <div class="folder-file" tabindex="0" data-open="signal17Window">
+              <div class="media-icon" aria-hidden="true"></div>
+              <div class="label">09 - Signal 17.mp3</div>
+            </div>
+          </div>
+        </div>
+        <div class="window-statusbar">
+          <span>1 track recovered</span>
+          <span>playback quality: degraded</span>
+        </div>
+      </article>
+
+      <article class="boot-window" id="signal17Window" aria-label="signal 17 audio player" tabindex="-1" style="left: 500px; top: 146px; width: min(420px, calc(100vw - 560px)); min-height: 260px; z-index: 42;">
+        <div class="window-titlebar">
+          <div class="window-title">09 - SIGNAL 17.MP3</div>
+          <button class="window-close" type="button" aria-label="Close Signal 17 player" onclick="closeWindow('signal17Window')">×</button>
+        </div>
+        <div class="folder-window-body">
+          <div class="audio-player">
+            <div class="audio-track-title">SIGNAL 17</div>
+            <div class="audio-meta">
+              <span>source: relay archive</span>
+              <span>status: playable</span>
+            </div>
+            <audio controls>
+              <source src="music/09%20-%20Signal%2017.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+        </div>
+        <div class="window-statusbar">
+          <span>format: MP3</span>
+          <span>signal integrity: unstable</span>
+        </div>
+      </article>
       <article class="boot-window" id="onyxWindow" aria-label="onyx_do_not_open folder window" tabindex="-1">
         <div class="window-titlebar">
           <div class="window-title">KAIRO://BOOTLEG_DOWNLOADS/ONYX_DO_NOT_OPEN</div>
@@ -1043,6 +1117,9 @@
         item.classList.add('active');
         if (item.dataset.name === 'onyx_do_not_open') {
           openWindow('onyxWindow');
+        }
+        if (item.dataset.name === 'music') {
+          openWindow('musicWindow');
         }
       });
 
