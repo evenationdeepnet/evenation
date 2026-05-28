@@ -670,6 +670,51 @@
       border: 1px solid rgba(154, 124, 255, 0.26);
     }
 
+    .system-message {
+      border: 1px solid rgba(154, 124, 255, 0.32);
+      background: rgba(0, 0, 0, 0.38);
+      padding: 20px;
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 160px;
+    }
+
+    .system-message strong {
+      color: var(--green);
+      font-weight: normal;
+    }
+
+    .warning-message strong {
+      color: #ffb86b;
+    }
+
+    .fake-progress {
+      width: 100%;
+      height: 16px;
+      border: 1px solid rgba(154, 124, 255, 0.42);
+      background: rgba(0, 0, 0, 0.45);
+      margin: 18px 0 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .fake-progress::before {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      width: 68%;
+      background: linear-gradient(90deg, rgba(117, 245, 157, 0.45), rgba(154, 124, 255, 0.55));
+      box-shadow: 0 0 12px rgba(154, 124, 255, 0.35);
+    }
+
+    .manual-window-body {
+      padding: 22px 22px 48px;
+      font-size: 14px;
+      line-height: 1.65;
+      overflow: auto;
+      max-height: 510px;
+    }
+
     .folder-contents {
       display: grid;
       grid-template-columns: repeat(4, minmax(110px, 1fr));
@@ -1157,6 +1202,124 @@
         <div class="window-statusbar"><span>format: PNG</span><span>replace with: images/memes/ghost_lines_groupchat.png</span></div>
       </article>
 
+      <article class="boot-window" id="downloadsWindow" aria-label="downloads folder window" tabindex="-1" style="left: 360px; top: 118px; width: min(760px, calc(100vw - 420px)); min-height: 430px; z-index: 61;">
+        <div class="window-titlebar">
+          <div class="window-title">KAIRO://BOOTLEG_DOWNLOADS/DOWNLOADS</div>
+          <button class="window-close" type="button" aria-label="Close downloads folder" onclick="closeWindow('downloadsWindow')">×</button>
+        </div>
+        <div class="folder-window-body">
+          <div class="folder-path">PATH: <span>/bootleg/downloads</span> &nbsp; // STATUS: unsorted disaster</div>
+          <div class="folder-contents" aria-label="download files">
+            <div class="folder-file" tabindex="0" data-open="frogMissingWindow">
+              <div class="glitch-icon" aria-hidden="true"></div>
+              <div class="label">frog_in_teapot.png</div>
+            </div>
+            <div class="folder-file" tabindex="0" data-open="synthPackWindow">
+              <div class="doc-icon" aria-hidden="true"></div>
+              <div class="label">free_synth_pack_REAL.zip</div>
+            </div>
+            <div class="folder-file" tabindex="0" data-open="hotplateManualWindow">
+              <div class="doc-icon" aria-hidden="true"></div>
+              <div class="label">hotplate_manual.pdf</div>
+            </div>
+            <div class="folder-file" tabindex="0" data-open="pluginBlockedWindow">
+              <div class="media-icon" aria-hidden="true"></div>
+              <div class="label">totally_safe_plugin.exe</div>
+            </div>
+            <div class="folder-file" tabindex="0" data-open="noodleReceiptWindow">
+              <div class="doc-icon" aria-hidden="true"></div>
+              <div class="label">receipt_noodles_14.txt</div>
+            </div>
+          </div>
+        </div>
+        <div class="window-statusbar">
+          <span>5 items</span>
+          <span>organisation level: Kairo</span>
+        </div>
+      </article>
+
+      <article class="boot-window" id="frogMissingWindow" aria-label="frog in teapot missing file" tabindex="-1" style="left: 500px; top: 154px; width: min(430px, calc(100vw - 560px)); min-height: 250px; z-index: 62;">
+        <div class="window-titlebar">
+          <div class="window-title">FROG_IN_TEAPOT.PNG</div>
+          <button class="window-close" type="button" aria-label="Close missing file popup" onclick="closeWindow('frogMissingWindow')">×</button>
+        </div>
+        <div class="folder-window-body">
+          <div class="system-message warning-message">
+            <strong>[ FILE MISSING ]</strong><br><br>
+            file moved or eaten??
+          </div>
+        </div>
+        <div class="window-statusbar"><span>format: PNG</span><span>last seen: unknown</span></div>
+      </article>
+
+      <article class="boot-window" id="synthPackWindow" aria-label="free synth pack unzip error" tabindex="-1" style="left: 520px; top: 176px; width: min(520px, calc(100vw - 580px)); min-height: 300px; z-index: 63;">
+        <div class="window-titlebar">
+          <div class="window-title">FREE_SYNTH_PACK_REAL.ZIP</div>
+          <button class="window-close" type="button" aria-label="Close synth pack popup" onclick="closeWindow('synthPackWindow')">×</button>
+        </div>
+        <div class="folder-window-body">
+          <div class="system-message warning-message">
+            <strong>UNZIPPING ARCHIVE...</strong>
+            <div class="fake-progress" aria-hidden="true"></div>
+            68% complete<br><br>
+            ERROR: archive contains 4,281 duplicate kick drums and one file named <em>definitely_not_a_virus.exe</em>.<br>
+            Extraction cancelled by Minjae.
+          </div>
+        </div>
+        <div class="window-statusbar"><span>format: ZIP</span><span>trust level: absolutely not</span></div>
+      </article>
+
+      <article class="txt-window" id="hotplateManualWindow" aria-label="hotplate manual pdf text window" tabindex="-1" style="left: 540px; top: 156px; z-index: 64;">
+        <div class="window-titlebar">
+          <div class="window-title">HOTPLATE_MANUAL.PDF</div>
+          <button class="window-close" type="button" aria-label="Close hotplate manual" onclick="closeWindow('hotplateManualWindow')">×</button>
+        </div>
+        <div class="manual-window-body">
+          <div class="txt-line"><span class="txt-number">01</span><span class="txt-content">UNDERGROUND HOTPLATE QUICK START GUIDE</span></div>
+          <div class="txt-line"><span class="txt-number">02</span><span class="txt-content">1. do not plug into same relay as the synth rig.</span></div>
+          <div class="txt-line"><span class="txt-number">03</span><span class="txt-content">2. if lights flicker, pretend this is normal.</span></div>
+          <div class="txt-line"><span class="txt-number">04</span><span class="txt-content">3. noodles require water. learned this one personally.</span></div>
+          <div class="txt-line"><span class="txt-number">05</span><span class="txt-content">4. if Onyx enters the room and says “no”, unplug immediately.</span></div>
+          <div class="txt-line"><span class="txt-number">06</span><span class="txt-content">5. do not cook directly on the metal casing. apparently.</span></div>
+          <div class="txt-line"><span class="txt-number">07</span><span class="txt-content">6. warranty void if used during pursuit, flood, blackout, argument, or band meeting.</span></div>
+          <div class="txt-line txt-cursor-line"><span class="txt-number">08</span><span class="txt-content"><span class="cursor" aria-hidden="true"></span></span></div>
+        </div>
+        <div class="window-statusbar"><span>8 lines</span><span>pdf recovered as text</span></div>
+      </article>
+
+      <article class="boot-window" id="pluginBlockedWindow" aria-label="plugin blocked warning" tabindex="-1" style="left: 560px; top: 198px; width: min(520px, calc(100vw - 620px)); min-height: 280px; z-index: 65;">
+        <div class="window-titlebar">
+          <div class="window-title">TOTALLY_SAFE_PLUGIN.EXE</div>
+          <button class="window-close" type="button" aria-label="Close blocked plugin warning" onclick="closeWindow('pluginBlockedWindow')">×</button>
+        </div>
+        <div class="folder-window-body">
+          <div class="system-message warning-message">
+            <strong>SECURITY WARNING</strong><br><br>
+            Minjae has blocked this for your safety.<br><br>
+            Reason: “Kairo. No.”
+          </div>
+        </div>
+        <div class="window-statusbar"><span>format: EXE</span><span>execution denied</span></div>
+      </article>
+
+      <article class="txt-window" id="noodleReceiptWindow" aria-label="noodle receipt text file" tabindex="-1" style="left: 580px; top: 176px; z-index: 66;">
+        <div class="window-titlebar">
+          <div class="window-title">RECEIPT_NOODLES_14.TXT</div>
+          <button class="window-close" type="button" aria-label="Close noodle receipt" onclick="closeWindow('noodleReceiptWindow')">×</button>
+        </div>
+        <div class="txt-window-body">
+          <div class="txt-line"><span class="txt-number">01</span><span class="txt-content">NOODLE VENDOR // PLATFORM C</span></div>
+          <div class="txt-line"><span class="txt-number">02</span><span class="txt-content">spicy packet x 3</span></div>
+          <div class="txt-line"><span class="txt-number">03</span><span class="txt-content">plain packet x 1 (for Soahn)</span></div>
+          <div class="txt-line"><span class="txt-number">04</span><span class="txt-content">mystery packet x 1 (bad decision)</span></div>
+          <div class="txt-line"><span class="txt-number">05</span><span class="txt-content">discount applied: “you look tired”</span></div>
+          <div class="txt-line"><span class="txt-number">06</span><span class="txt-content">total: 12 credits + one cable i probably needed</span></div>
+          <div class="txt-line"><span class="txt-number">07</span><span class="txt-content">note to self: do not let Rayne choose flavours based on colour again</span></div>
+          <div class="txt-line txt-cursor-line"><span class="txt-number">08</span><span class="txt-content"><span class="cursor" aria-hidden="true"></span></span></div>
+        </div>
+        <div class="window-statusbar"><span>8 lines</span><span>financial planning: worrying</span></div>
+      </article>
+
       <article class="boot-window" id="musicWindow" aria-label="music folder window" tabindex="-1" style="left: 280px; top: 72px; width: min(760px, calc(100vw - 340px)); min-height: 420px; z-index: 41;">
         <div class="window-titlebar">
           <div class="window-title">KAIRO://BOOTLEG_DOWNLOADS/MUSIC</div>
@@ -1473,6 +1636,9 @@ function closeWindow(windowId) {
         }
         if (item.dataset.name === 'memes') {
           openWindow('memesWindow');
+        }
+        if (item.dataset.name === 'downloads') {
+          openWindow('downloadsWindow');
         }
       });
 
