@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -502,6 +501,206 @@
       margin: 0 auto;
     }
 
+    .windows-layer {
+      position: absolute;
+      inset: 58px 28px 64px 28px;
+      z-index: 30;
+      pointer-events: none;
+    }
+
+    .boot-window {
+      position: absolute;
+      left: 330px;
+      top: 58px;
+      width: min(720px, calc(100vw - 390px));
+      min-height: 480px;
+      border: 1px solid var(--line-active);
+      background: rgba(5, 6, 10, 0.92);
+      box-shadow: 0 0 24px rgba(154, 124, 255, 0.12), 18px 22px 36px rgba(0,0,0,0.62);
+      color: var(--text);
+      pointer-events: auto;
+      opacity: 0;
+      transform: translateY(10px) scale(0.985);
+      visibility: hidden;
+      transition: opacity 180ms ease, transform 180ms ease, visibility 180ms ease, border-color 160ms ease;
+    }
+
+    .boot-window.is-open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      visibility: visible;
+    }
+
+    .boot-window.is-active {
+      border-color: var(--line-active);
+    }
+
+    .window-titlebar {
+      height: 40px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(154, 124, 255, 0.08);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      padding: 0 12px 0 16px;
+      color: var(--violet);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      text-shadow: 0 0 8px rgba(154, 124, 255, 0.42);
+    }
+
+    .window-title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .window-close {
+      width: 28px;
+      height: 26px;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--violet);
+      font: inherit;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: background 150ms ease, color 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+    }
+
+    .window-close:hover,
+    .window-close:focus-visible {
+      background: rgba(154, 124, 255, 0.14);
+      border-color: var(--line-active);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(154, 124, 255, 0.22);
+      outline: none;
+    }
+
+    .folder-window-body {
+      padding: 18px;
+    }
+
+    .folder-path {
+      border: 1px solid rgba(154, 124, 255, 0.26);
+      background: rgba(0, 0, 0, 0.24);
+      padding: 10px 12px;
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .folder-path span {
+      color: var(--green);
+    }
+
+    .folder-contents {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(110px, 1fr));
+      gap: 24px 18px;
+      align-items: start;
+    }
+
+    .folder-file {
+      min-height: 118px;
+      text-align: center;
+      cursor: pointer;
+      padding: 10px 8px;
+      border: 1px solid transparent;
+      transition: border-color 150ms ease, background 150ms ease, filter 150ms ease, transform 150ms ease, text-shadow 150ms ease;
+    }
+
+    .folder-file:hover,
+    .folder-file:focus-visible {
+      border-color: var(--line-active);
+      background: rgba(154, 124, 255, 0.08);
+      filter: brightness(1.2);
+      transform: translateY(-2px);
+      text-shadow: 0 0 8px rgba(154, 124, 255, 0.62);
+      outline: none;
+    }
+
+    .folder-file .label {
+      margin-top: 10px;
+      font-size: 13px;
+      line-height: 1.3;
+      word-break: break-word;
+    }
+
+    .txt-window {
+      position: absolute;
+      left: 470px;
+      top: 112px;
+      width: min(540px, calc(100vw - 520px));
+      min-height: 560px;
+      border: 1px solid rgba(190, 170, 255, 0.62);
+      background: rgba(3, 4, 7, 0.96);
+      box-shadow: 0 0 18px rgba(154, 124, 255, 0.08), 18px 22px 34px rgba(0,0,0,0.72);
+      color: var(--text);
+      pointer-events: auto;
+      opacity: 0;
+      transform: translateY(10px) scale(0.985);
+      visibility: hidden;
+      transition: opacity 180ms ease, transform 180ms ease, visibility 180ms ease, border-color 160ms ease;
+      z-index: 36;
+    }
+
+    .txt-window.is-open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      visibility: visible;
+    }
+
+    .txt-window.is-active {
+      border-color: var(--line-active);
+    }
+
+    .txt-window-body {
+      padding: 22px 22px 48px;
+      font-size: 14px;
+      line-height: 1.75;
+      overflow: auto;
+      max-height: 510px;
+    }
+
+    .txt-line {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 18px;
+      align-items: start;
+      white-space: pre-wrap;
+    }
+
+    .txt-number {
+      color: rgba(154, 124, 255, 0.46);
+      text-align: right;
+      user-select: none;
+    }
+
+    .txt-content {
+      color: var(--text);
+    }
+
+    .txt-cursor-line {
+      margin-top: 8px;
+    }
+
+    .window-statusbar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 30px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      color: var(--muted);
+      font-size: 12px;
+      background: rgba(4, 4, 8, 0.72);
+    }
+
     @media (max-width: 900px) {
       body { overflow: auto; }
       .desktop { min-height: 100vh; height: auto; overflow: hidden; }
@@ -523,6 +722,10 @@
       .error-box { right: 0; top: 20px; }
       .ghost-feed { position: relative; right: auto; top: auto; width: 100%; margin-top: 390px; }
       .kairo-scratch { left: 20%; top: 35%; }
+      .windows-layer { position: fixed; inset: 0; z-index: 40; padding: 86px 14px 24px; overflow: auto; }
+      .boot-window { position: relative; left: auto; top: auto; width: 100%; min-height: 520px; }
+      .txt-window { position: relative; left: auto; top: auto; width: 100%; min-height: 520px; margin-top: 16px; }
+      .folder-contents { grid-template-columns: repeat(2, minmax(110px, 1fr)); }
     }
   </style>
 </head>
@@ -624,6 +827,88 @@
       </aside>
     </section>
 
+    <section class="windows-layer" aria-label="Open windows">
+      <article class="boot-window" id="onyxWindow" aria-label="onyx_do_not_open folder window" tabindex="-1">
+        <div class="window-titlebar">
+          <div class="window-title">KAIRO://BOOTLEG_DOWNLOADS/ONYX_DO_NOT_OPEN</div>
+          <button class="window-close" type="button" aria-label="Close onyx_do_not_open" onclick="closeWindow('onyxWindow')">×</button>
+        </div>
+        <div class="folder-window-body">
+          <div class="folder-path">PATH: <span>/bootleg/folders/onyx_do_not_open</span> &nbsp; // ACCESS: questionable</div>
+          <div class="folder-contents" aria-label="onyx_do_not_open files">
+            <div class="folder-file" tabindex="0" data-open="reasonsWindow">
+              <div class="doc-icon" aria-hidden="true"></div>
+              <div class="label">reasons_why_onyx_is_awesome.txt</div>
+            </div>
+            <div class="folder-file" tabindex="0">
+              <div class="doc-icon" aria-hidden="true"></div>
+              <div class="label">how_onyx_saved_my_life.txt</div>
+            </div>
+            <div class="folder-file" tabindex="0">
+              <div class="folder-icon" aria-hidden="true"></div>
+              <div class="label">rare_onyx_sightings</div>
+            </div>
+            <div class="folder-file" tabindex="0">
+              <div class="glitch-icon" aria-hidden="true"></div>
+              <div class="label">local_cryptid_spotted.png</div>
+            </div>
+            <div class="folder-file" tabindex="0">
+              <div class="folder-icon" aria-hidden="true"></div>
+              <div class="label">proof_he_is_58</div>
+            </div>
+            <div class="folder-file" tabindex="0">
+              <div class="folder-icon" aria-hidden="true"></div>
+              <div class="label">evidence</div>
+            </div>
+            <div class="folder-file" tabindex="0">
+              <div class="glitch-icon" aria-hidden="true"></div>
+              <div class="label">synthdog_sunglasses.png</div>
+            </div>
+            <div class="folder-file" tabindex="0">
+              <div class="media-icon" aria-hidden="true"></div>
+              <div class="label">onyx_maybe_laughing.wav</div>
+            </div>
+          </div>
+        </div>
+        <div class="window-statusbar">
+          <span>8 items</span>
+          <span>last modified: 03:17</span>
+        </div>
+      </article>
+          <article class="txt-window" id="reasonsWindow" aria-label="reasons why onyx is awesome text file" tabindex="-1">
+        <div class="window-titlebar">
+          <div class="window-title">REASONS_WHY_ONYX_IS_AWESOME.TXT</div>
+          <button class="window-close" type="button" aria-label="Close text file" onclick="closeWindow('reasonsWindow')">×</button>
+        </div>
+        <div class="txt-window-body">
+          <div class="txt-line"><span class="txt-number">01</span><span class="txt-content">can absolutely throw a person across a room btw</span></div>
+          <div class="txt-line"><span class="txt-number">02</span><span class="txt-content">remembers to charge synthdog</span></div>
+          <div class="txt-line"><span class="txt-number">03</span><span class="txt-content">terrifying in a reassuring way</span></div>
+          <div class="txt-line"><span class="txt-number">04</span><span class="txt-content">makes coffee strong enough to restart a dead relay</span></div>
+          <div class="txt-line"><span class="txt-number">05</span><span class="txt-content">stood beside me when he didn’t have to</span></div>
+          <div class="txt-line"><span class="txt-number">06</span><span class="txt-content">once stared at a NuYu officer until he left</span></div>
+          <div class="txt-line"><span class="txt-number">07</span><span class="txt-content">built like a concrete wall but somehow warmer</span></div>
+          <div class="txt-line"><span class="txt-number">08</span><span class="txt-content">patches everyone up without making it weird</span></div>
+          <div class="txt-line"><span class="txt-number">09</span><span class="txt-content">walks quieter than should be physically possible</span></div>
+          <div class="txt-line"><span class="txt-number">10</span><span class="txt-content">looks scary enough that people leave us alone</span></div>
+          <div class="txt-line"><span class="txt-number">11</span><span class="txt-content">absolutely knows where every weapon is hidden</span></div>
+          <div class="txt-line"><span class="txt-number">12</span><span class="txt-content">keeps spare batteries in every pocket</span></div>
+          <div class="txt-line"><span class="txt-number">13</span><span class="txt-content">would survive the apocalypse twice</span></div>
+          <div class="txt-line"><span class="txt-number">14</span><span class="txt-content">doesn’t ask questions until you’re ready</span></div>
+          <div class="txt-line"><span class="txt-number">15</span><span class="txt-content">unlikely cryptid behaviour observed: making tea</span></div>
+          <div class="txt-line"><span class="txt-number">16</span><span class="txt-content">the reason we haven’t all died honestly</span></div>
+          <div class="txt-line"><span class="txt-number">17</span><span class="txt-content">stood outside my door for three hours after the panic attack and didn’t mention it afterwards</span></div>
+          <div class="txt-line"><span class="txt-number">18</span><span class="txt-content">still checks the locks before everyone sleeps</span></div>
+          <div class="txt-line"><span class="txt-number">19</span><span class="txt-content">human equivalent of reinforced steel beams</span></div>
+          <div class="txt-line txt-cursor-line"><span class="txt-number">20</span><span class="txt-content"><span class="cursor" aria-hidden="true"></span></span></div>
+        </div>
+        <div class="window-statusbar">
+          <span>20 lines</span>
+          <span>encoding: UTF-8</span>
+        </div>
+      </article>
+    </section>
+
     <div class="bottom-bar" aria-hidden="true">
       <div>BOOTLEG_DOWNLOADS ONLINE <span class="online-dot"></span></div>
       <div>ONYX_DO_NOT_OPEN &gt; REASONS_WHY_ONYX_IS_AWESOME.TXT</div>
@@ -638,10 +923,53 @@
       if (errorBox) errorBox.style.display = 'none';
     }
 
+    let highestZ = 30;
+
+    function openWindow(windowId) {
+      const win = document.getElementById(windowId);
+      if (!win) return;
+      highestZ += 1;
+      win.style.zIndex = highestZ;
+      win.classList.add('is-open', 'is-active');
+      win.focus({ preventScroll: true });
+    }
+
+    function closeWindow(windowId) {
+      const win = document.getElementById(windowId);
+      if (!win) return;
+      win.classList.remove('is-open', 'is-active');
+    }
+
+    document.querySelectorAll('.folder-file').forEach((file) => {
+      file.addEventListener('click', () => {
+        const target = file.dataset.open;
+        if (target) {
+          openWindow(target);
+        }
+      });
+
+      file.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          file.click();
+        }
+      });
+    });
+
+    document.querySelectorAll('.boot-window, .txt-window').forEach((win) => {
+      win.addEventListener('mousedown', () => {
+        highestZ += 1;
+        win.style.zIndex = highestZ;
+      });
+    });
+
     document.querySelectorAll('.file-item').forEach((item) => {
       item.addEventListener('click', () => {
         document.querySelectorAll('.file-item').forEach((el) => el.classList.remove('active'));
         item.classList.add('active');
+        if (item.dataset.name === 'onyx_do_not_open') {
+          openWindow('onyxWindow');
+        }
       });
 
       item.addEventListener('keydown', (event) => {
