@@ -848,6 +848,29 @@
       .txt-window { position: relative; left: auto; top: auto; width: 100%; min-height: 520px; margin-top: 16px; }
       .folder-contents { grid-template-columns: repeat(2, minmax(110px, 1fr)); }
     }
+    .folder-window-body,
+.txt-window-body,
+.manual-window-body {
+  max-height: calc(100vh - 180px);
+  overflow: auto;
+}
+
+.image-preview-frame img {
+  width: 100%;
+  max-height: calc(100vh - 220px);
+  object-fit: contain;
+}
+
+audio,
+video {
+  width: 100%;
+}
+
+.boot-window,
+.txt-window {
+  max-height: calc(100vh - 120px);
+  overflow: auto;
+}
   </style>
 </head>
 <body>
