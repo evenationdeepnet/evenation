@@ -1543,10 +1543,14 @@
               <div class="media-icon" aria-hidden="true"></div>
               <div class="label">crack_the_pattern_demo.mp3</div>
             </div>
+                        <div class="folder-file" tabindex="0" data-open="heartbreakWindow">
+              <div class="media-icon" aria-hidden="true"></div>
+              <div class="label">digital_heartbreak.mp3</div>
+            </div>
           </div>
         </div>
         <div class="window-statusbar">
-          <span>1 track recovered</span>
+          <span>3 tracks recovered</span>
           <span>playback quality: degraded</span>
         </div>
       </article>
@@ -1597,6 +1601,31 @@
           <span>fragment integrity: corrupted</span>
         </div>
       </article>
+
+            <article class="boot-window" id="heartbreakWindow" aria-label="Digital Heartbreak audio player" tabindex="-1" style="left: 540px; top: 190px; width: min(420px, calc(100vw - 560px)); min-height: 260px; z-index: 43;">
+        <div class="window-titlebar">
+          <div class="window-title">digital_heartbreak.mp3</div>
+          <button class="window-close" type="button" aria-label="Close Digital Heartbreak player" onclick="closeWindow('heartbreakWindow')">×</button>
+        </div>
+        <div class="folder-window-body">
+          <div class="audio-player">
+            <div class="audio-track-title">DIGITAL HEARTBREAK</div>
+            <div class="audio-meta">
+              <span>source: unfinished relay fragment</span>
+              <span>status: unstable</span>
+            </div>
+            <audio controls>
+              <source src="music/DigitalHeartbreak.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+        </div>
+        <div class="window-statusbar">
+          <span>format: MP3</span>
+          <span>fragment integrity: corrupted</span>
+        </div>
+      </article>
+      
       <article class="boot-window" id="onyxWindow" aria-label="onyx_do_not_open folder window" tabindex="-1">
         <div class="window-titlebar">
           <div class="window-title">KAIRO://BOOTLEG_DOWNLOADS/ONYX_DO_NOT_OPEN</div>
