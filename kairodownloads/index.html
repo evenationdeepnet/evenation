@@ -630,6 +630,46 @@
       filter: hue-rotate(245deg) saturate(1.2) brightness(0.9);
     }
 
+    .image-preview-frame,
+    .video-preview-frame {
+      border: 1px solid rgba(154, 124, 255, 0.32);
+      background: rgba(0, 0, 0, 0.42);
+      padding: 12px;
+      min-height: 280px;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .image-preview-frame img {
+      display: block;
+      max-width: 100%;
+      max-height: 420px;
+      object-fit: contain;
+    }
+
+    .image-placeholder {
+      width: 100%;
+      min-height: 260px;
+      border: 1px dashed rgba(154, 124, 255, 0.42);
+      display: grid;
+      place-items: center;
+      background:
+        linear-gradient(135deg, rgba(154, 124, 255, 0.08), transparent 42%),
+        linear-gradient(45deg, rgba(117, 245, 157, 0.08), transparent 52%);
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .video-preview-frame video {
+      width: 100%;
+      max-height: 420px;
+      background: #000;
+      border: 1px solid rgba(154, 124, 255, 0.26);
+    }
+
     .folder-contents {
       display: grid;
       grid-template-columns: repeat(4, minmax(110px, 1fr));
@@ -822,19 +862,19 @@
         </div>
 
         <div class="loose-files" aria-label="Loose desktop files">
-          <div class="loose-file" tabindex="0">
+          <div class="loose-file" tabindex="0" data-open="umImageWindow">
             <div class="glitch-icon" aria-hidden="true"></div>
             <div class="label">um.png</div>
           </div>
-          <div class="loose-file" tabindex="0">
+          <div class="loose-file" tabindex="0" data-open="notesWindow">
             <div class="doc-icon" aria-hidden="true"></div>
             <div class="label">notes.txt</div>
           </div>
-          <div class="loose-file" tabindex="0">
+          <div class="loose-file" tabindex="0" data-open="doNotOpenVideoWindow">
             <div class="media-icon" aria-hidden="true"></div>
             <div class="label">do_not_open.mp4</div>
           </div>
-          <div class="loose-file" tabindex="0">
+          <div class="loose-file" tabindex="0" data-open="ghostmodeOldmixWindow">
             <div class="media-icon" aria-hidden="true"></div>
             <div class="label">ghostmode_oldmix.wav</div>
           </div>
@@ -864,6 +904,81 @@
     </section>
 
     <section class="windows-layer" aria-label="Open windows">
+      <article class="boot-window" id="umImageWindow" aria-label="um png image preview" tabindex="-1" style="left: 420px; top: 90px; width: min(620px, calc(100vw - 480px)); min-height: 430px; z-index: 44;">
+        <div class="window-titlebar">
+          <div class="window-title">UM.PNG</div>
+          <button class="window-close" type="button" aria-label="Close um png preview" onclick="closeWindow('umImageWindow')">×</button>
+        </div>
+        <div class="folder-window-body">
+          <div class="folder-path">PATH: <span>/bootleg/images/placeholder.png</span> &nbsp; // STATUS: suspicious</div>
+          <div class="image-preview-frame">
+            <div class="image-placeholder">placeholder image</div>
+          </div>
+        </div>
+        <div class="window-statusbar">
+          <span>format: PNG</span>
+          <span>visual integrity: unknown</span>
+        </div>
+      </article>
+
+      <article class="txt-window" id="notesWindow" aria-label="notes text file" tabindex="-1" style="left: 460px; top: 132px; z-index: 45;">
+        <div class="window-titlebar">
+          <div class="window-title">NOTES.TXT</div>
+          <button class="window-close" type="button" aria-label="Close notes text file" onclick="closeWindow('notesWindow')">×</button>
+        </div>
+        <div class="txt-window-body">
+          <div class="txt-line"><span class="txt-number">01</span><span class="txt-content">placeholder placeholder placeholder</span></div>
+          <div class="txt-line txt-cursor-line"><span class="txt-number">02</span><span class="txt-content"><span class="cursor" aria-hidden="true"></span></span></div>
+        </div>
+        <div class="window-statusbar">
+          <span>2 lines</span>
+          <span>encoding: UTF-8</span>
+        </div>
+      </article>
+
+      <article class="boot-window" id="doNotOpenVideoWindow" aria-label="do not open video player" tabindex="-1" style="left: 390px; top: 116px; width: min(720px, calc(100vw - 450px)); min-height: 470px; z-index: 46;">
+        <div class="window-titlebar">
+          <div class="window-title">DO_NOT_OPEN.MP4</div>
+          <button class="window-close" type="button" aria-label="Close do not open video" onclick="closeWindow('doNotOpenVideoWindow')">×</button>
+        </div>
+        <div class="folder-window-body">
+          <div class="video-preview-frame">
+            <video controls>
+              <source src="video/placeholder.mp4" type="video/mp4">
+              Your browser does not support the video element.
+            </video>
+          </div>
+        </div>
+        <div class="window-statusbar">
+          <span>format: MP4</span>
+          <span>replace source: video/placeholder.mp4</span>
+        </div>
+      </article>
+
+      <article class="boot-window" id="ghostmodeOldmixWindow" aria-label="ghostmode oldmix audio player" tabindex="-1" style="left: 520px; top: 174px; width: min(420px, calc(100vw - 560px)); min-height: 260px; z-index: 47;">
+        <div class="window-titlebar">
+          <div class="window-title">ghostmode_oldmix.wav</div>
+          <button class="window-close" type="button" aria-label="Close ghostmode oldmix player" onclick="closeWindow('ghostmodeOldmixWindow')">×</button>
+        </div>
+        <div class="folder-window-body">
+          <div class="audio-player">
+            <div class="audio-track-title">GHOSTMODE OLDMIX</div>
+            <div class="audio-meta">
+              <span>source: unsorted desktop file</span>
+              <span>status: misplaced</span>
+            </div>
+            <audio controls>
+              <source src="music/ghostmode_oldmix.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+        </div>
+        <div class="window-statusbar">
+          <span>display: WAV / source: MP3</span>
+          <span>move to /music eventually?</span>
+        </div>
+      </article>
+
       <article class="boot-window" id="musicWindow" aria-label="music folder window" tabindex="-1" style="left: 280px; top: 72px; width: min(760px, calc(100vw - 340px)); min-height: 420px; z-index: 41;">
         <div class="window-titlebar">
           <div class="window-title">KAIRO://BOOTLEG_DOWNLOADS/MUSIC</div>
@@ -1122,6 +1237,22 @@ function closeWindow(windowId) {
 
   win.classList.remove('is-open', 'is-active');
 }
+
+    document.querySelectorAll('.loose-file').forEach((file) => {
+      file.addEventListener('click', () => {
+        const target = file.dataset.open;
+        if (target) {
+          openWindow(target);
+        }
+      });
+
+      file.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          file.click();
+        }
+      });
+    });
 
     document.querySelectorAll('.folder-file').forEach((file) => {
       file.addEventListener('click', () => {
