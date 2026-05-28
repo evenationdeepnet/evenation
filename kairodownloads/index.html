@@ -823,53 +823,148 @@
     }
 
     @media (max-width: 900px) {
-      body { overflow: auto; }
-      .desktop { min-height: 100vh; height: auto; overflow: hidden; }
-      .top-bar { grid-template-columns: 1fr; height: auto; }
-      .top-bar div { min-height: 36px; border-right: 0; border-bottom: 1px solid var(--line); }
-      .bottom-bar { display: none; }
-      .desktop-grid {
-        position: relative;
-        inset: auto;
-        padding: 150px 18px 40px;
-        grid-template-columns: 1fr;
-      }
-      .file-list { border-right: 0; border-bottom: 1px dashed rgba(154, 124, 255, 0.35); padding-bottom: 18px; }
-      .file-item { width: 100%; }
-      .loose-files { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
-      .notes-zone { min-height: 460px; }
-      .sticky.small { left: 0; right: auto; }
-      .sticky.big { right: 0; top: 210px; }
-      .error-box { right: 0; top: 20px; }
-      .ghost-feed { position: relative; right: auto; top: auto; width: 100%; margin-top: 390px; }
-      .kairo-scratch { left: 20%; top: 35%; }
-      .windows-layer { position: fixed; inset: 0; z-index: 40; padding: 86px 14px 24px; overflow: auto; }
-      .boot-window { position: relative; left: auto; top: auto; width: 100%; min-height: 520px; }
-      .txt-window { position: relative; left: auto; top: auto; width: 100%; min-height: 520px; margin-top: 16px; }
-      .folder-contents { grid-template-columns: repeat(2, minmax(110px, 1fr)); }
-    }
-    .folder-window-body,
-.txt-window-body,
-.manual-window-body {
-  max-height: calc(100vh - 180px);
-  overflow: auto;
-}
 
-.image-preview-frame img {
-  width: 100%;
-  max-height: calc(100vh - 220px);
-  object-fit: contain;
-}
+  body {
+    overflow: auto;
+  }
 
-audio,
-video {
-  width: 100%;
-}
+  .desktop {
+    min-height: 100vh;
+    height: auto;
+    overflow: hidden;
+  }
 
-.boot-window,
-.txt-window {
-  max-height: calc(100vh - 120px);
-  overflow: auto;
+  .top-bar {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .top-bar div {
+    min-height: 36px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .bottom-bar {
+    display: none;
+  }
+
+  .desktop-grid {
+    position: relative;
+    inset: auto;
+    padding: 150px 18px 40px;
+    grid-template-columns: 1fr;
+  }
+
+  .file-list {
+    border-right: 0;
+    border-bottom: 1px dashed rgba(154, 124, 255, 0.35);
+    padding-bottom: 18px;
+  }
+
+  .file-item {
+    width: 100%;
+  }
+
+  .loose-files {
+    grid-template-columns: repeat(2, minmax(120px, 1fr));
+  }
+
+  .notes-zone {
+    min-height: 460px;
+  }
+
+  .sticky.small {
+    left: 0;
+    right: auto;
+  }
+
+  .sticky.big {
+    right: 0;
+    top: 210px;
+  }
+
+  .error-box {
+    right: 0;
+    top: 20px;
+  }
+
+  .ghost-feed {
+    position: relative;
+    right: auto;
+    top: auto;
+    width: 100%;
+    margin-top: 390px;
+  }
+
+  .kairo-scratch {
+    left: 20%;
+    top: 35%;
+  }
+
+  .windows-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    pointer-events: none;
+    overflow: visible;
+  }
+
+  .boot-window,
+  .txt-window {
+    display: none;
+    position: fixed !important;
+    left: 14px !important;
+    right: 14px !important;
+    top: 86px !important;
+    width: auto !important;
+    max-width: none !important;
+    max-height: calc(100vh - 110px);
+    min-height: auto;
+    overflow: auto;
+    z-index: 999 !important;
+    pointer-events: auto;
+  }
+
+  .boot-window.is-open,
+  .txt-window.is-open {
+    display: block;
+  }
+
+  .folder-window-body,
+  .txt-window-body,
+  .manual-window-body {
+    max-height: calc(100vh - 180px);
+    overflow: auto;
+  }
+
+  .folder-contents {
+    grid-template-columns: repeat(2, minmax(110px, 1fr));
+  }
+
+  .image-preview-frame img {
+    width: 100%;
+    max-height: calc(100vh - 220px);
+    object-fit: contain;
+  }
+
+  .video-preview-frame video {
+    width: 100%;
+    max-height: calc(100vh - 240px);
+  }
+
+  audio,
+  video {
+    width: 100%;
+  }
+
+  .window-statusbar {
+    flex-wrap: wrap;
+    gap: 6px;
+    height: auto;
+    min-height: 30px;
+    padding: 6px 10px;
+  }
 }
   </style>
 </head>
