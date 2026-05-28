@@ -876,6 +876,10 @@
               <div class="media-icon" aria-hidden="true"></div>
               <div class="label">signal17_oldmix.mp3</div>
             </div>
+            <div class="folder-file" tabindex="0" data-open="crackPatternWindow">
+              <div class="media-icon" aria-hidden="true"></div>
+              <div class="label">crack_the_pattern_demo.mp3</div>
+            </div>
           </div>
         </div>
         <div class="window-statusbar">
@@ -905,6 +909,29 @@
         <div class="window-statusbar">
           <span>format: MP3</span>
           <span>signal integrity: unstable</span>
+        </div>
+      </article>
+      <article class="boot-window" id="crackPatternWindow" aria-label="Crack the Pattern audio player" tabindex="-1" style="left: 540px; top: 190px; width: min(420px, calc(100vw - 560px)); min-height: 260px; z-index: 43;">
+        <div class="window-titlebar">
+          <div class="window-title">crack_the_pattern_demo.mp3</div>
+          <button class="window-close" type="button" aria-label="Close Crack the Pattern player" onclick="closeWindow('crackPatternWindow')">×</button>
+        </div>
+        <div class="folder-window-body">
+          <div class="audio-player">
+            <div class="audio-track-title">CRACK THE PATTERN</div>
+            <div class="audio-meta">
+              <span>source: unfinished relay fragment</span>
+              <span>status: unstable</span>
+            </div>
+            <audio controls>
+              <source src="music/CrackthePattern.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+        </div>
+        <div class="window-statusbar">
+          <span>format: MP3</span>
+          <span>fragment integrity: corrupted</span>
         </div>
       </article>
       <article class="boot-window" id="onyxWindow" aria-label="onyx_do_not_open folder window" tabindex="-1">
