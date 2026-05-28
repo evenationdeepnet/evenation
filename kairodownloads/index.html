@@ -1490,19 +1490,23 @@
         </div>
       </article>
 
-      <article class="boot-window" id="frogMissingWindow" aria-label="frog in teapot missing file" tabindex="-1" style="left: 500px; top: 154px; width: min(430px, calc(100vw - 560px)); min-height: 250px; z-index: 62;">
-        <div class="window-titlebar">
-          <div class="window-title">FROG_IN_TEAPOT.PNG</div>
-          <button class="window-close" type="button" aria-label="Close missing file popup" onclick="closeWindow('frogMissingWindow')">×</button>
-        </div>
-        <div class="folder-window-body">
-          <div class="system-message warning-message">
-            <strong>[ FILE MISSING ]</strong><br><br>
-            file moved or eaten??
-          </div>
-        </div>
-        <div class="window-statusbar"><span>format: PNG</span><span>last seen: unknown</span></div>
-      </article>
+<article class="boot-window" id="frogMissingWindow" aria-label="frog in teapot image preview" tabindex="-1" style="left: 500px; top: 154px; width: min(620px, calc(100vw - 560px)); min-height: 430px; z-index: 62;">
+  <div class="window-titlebar">
+    <div class="window-title">FROG_IN_TEAPOT.PNG</div>
+    <button class="window-close" type="button" aria-label="Close frog preview" onclick="closeWindow('frogMissingWindow')">×</button>
+  </div>
+
+  <div class="folder-window-body">
+    <div class="image-preview-frame">
+      <img src="images/downloads/frogteapot.png" alt="Frog in a teapot" class="preview-image">
+    </div>
+  </div>
+
+  <div class="window-statusbar">
+    <span>format: PNG</span>
+    <span>tiny friend located</span>
+  </div>
+</article>
 
       <article class="boot-window" id="synthPackWindow" aria-label="free synth pack unzip error" tabindex="-1" style="left: 520px; top: 176px; width: min(520px, calc(100vw - 580px)); min-height: 300px; z-index: 63;">
         <div class="window-titlebar">
