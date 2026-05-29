@@ -89,24 +89,53 @@ body {
 
 @media (max-width: 768px) {
 
+  body {
+    background-size: 520px 520px;
+  }
+
+  .graffiti-wall {
+    min-height: 3000px;
+  }
+
   .foundations-poster {
-    top: 30px;
+    top: 45px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-1.5deg);
   }
 
   .foundations-poster img {
-    width: 80vw;
-    max-width: 420px;
+    width: min(78vw, 420px);
   }
 
   .submit-sticker {
-    left: 20px;
-    top: 50px;
+    top: 72px;
+    left: 8vw;
+    transform: rotate(4deg);
+  }
+
+  .submit-sticker:hover {
+    transform: rotate(4deg) scale(1.02);
   }
 
   .submit-sticker img {
-    width: 140px;
+    width: min(34vw, 145px);
+  }
+}
+
+  @media (max-width: 420px) {
+
+  .foundations-poster img {
+    width: 82vw;
   }
 
+  .submit-sticker {
+    top: 65px;
+    left: 5vw;
+  }
+
+  .submit-sticker img {
+    width: 125px;
+  }
 }
 
 </style>
