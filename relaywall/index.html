@@ -1,140 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Relay Wall</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Relay Wall</title>
 
-  <style>
-    html,
-    body {
-      margin: 0;
-      padding: 0;
-      min-height: 100%;
-      background: #0b0b0d;
-    }
+<style>
 
-    body {
-      overflow-x: hidden;
-      background-image: url("/relaywall/ghost-lines-wall-tile.png");
-      background-repeat: repeat;
-      background-size: 700px 700px;
-      background-position: top center;
-    }
-
-    .graffiti-wall {
-      position: relative;
-      width: 100%;
-      min-height: 4000px;
-      overflow: hidden;
-    }
-
-    .graffiti-wall::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 1;
-      background:
-        radial-gradient(circle at 50% 20%, rgba(255,255,255,0.06), transparent 28%),
-        radial-gradient(circle at 10% 40%, rgba(0,0,0,0.35), transparent 35%),
-        radial-gradient(circle at 90% 75%, rgba(0,0,0,0.45), transparent 38%),
-        linear-gradient(to bottom, rgba(0,0,0,0.15), rgba(0,0,0,0.45));
-      mix-blend-mode: multiply;
-    }
-
-    .wall-item {
-  position: absolute;
-  z-index: 2;
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background: #0b0b0d;
 }
+
+body {
+  overflow-x: hidden;
+  background-image: url("/relaywall/ghost-lines-wall-tile.png");
+  background-repeat: repeat;
+  background-size: 700px 700px;
+  background-position: top center;
+}
+
+.graffiti-wall {
+  position: relative;
+  width: 100%;
+  min-height: 4000px;
+  overflow: hidden;
+}
+
+/* Atmospheric overlay */
+
+.graffiti-wall::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(255,255,255,0.06), transparent 28%),
+    radial-gradient(circle at 10% 40%, rgba(0,0,0,0.35), transparent 35%),
+    radial-gradient(circle at 90% 75%, rgba(0,0,0,0.45), transparent 38%),
+    linear-gradient(to bottom, rgba(0,0,0,0.15), rgba(0,0,0,0.45));
+  mix-blend-mode: multiply;
+}
+
+/* FOUNDATIONS POSTER */
+
+.foundations-poster {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-1.5deg);
+  z-index: 10;
+}
+
+.foundations-poster img {
+  display: block;
+  width: 420px;
+  height: auto;
+  filter: drop-shadow(0 12px 24px rgba(0,0,0,0.55));
+}
+
+/* SUBMISSIONS STICKER */
 
 .submit-sticker {
-  top: 120px;
-  left: 12%;
+  position: absolute;
+  top: 70px;
+  left: calc(50% - 280px);
+  transform: rotate(4deg);
+  z-index: 20;
+  transition: transform 0.2s ease;
+}
+
+.submit-sticker:hover {
+  transform: rotate(4deg) scale(1.03);
+}
+
+.submit-sticker img {
   display: block;
-  padding: 14px 18px;
-  background: #f2e8c9;
-  color: #111;
-  font-family: monospace;
-  font-size: 15px;
-  letter-spacing: 1px;
-  text-align: center;
-  text-decoration: none;
-  transform: rotate(-7deg);
-  box-shadow: 0 8px 18px rgba(0,0,0,0.45);
+  width: 180px;
+  height: auto;
+  filter: drop-shadow(0 8px 18px rgba(0,0,0,0.45));
 }
 
-.nuyu-poster {
-  top: 420px;
-  right: 10%;
-  width: 210px;
-  padding: 20px;
-  background: rgba(230, 230, 220, 0.82);
-  color: #161616;
-  font-family: monospace;
-  font-size: 13px;
-  line-height: 1.4;
-  transform: rotate(3deg);
-  box-shadow: 0 10px 24px rgba(0,0,0,0.5);
+/* MOBILE */
+
+@media (max-width: 768px) {
+
+  .foundations-poster {
+    top: 30px;
+  }
+
+  .foundations-poster img {
+    width: 80vw;
+    max-width: 420px;
+  }
+
+  .submit-sticker {
+    left: 20px;
+    top: 50px;
+  }
+
+  .submit-sticker img {
+    width: 140px;
+  }
+
 }
 
-.nuyu-poster span {
-  display: block;
-  margin-bottom: 14px;
-  font-weight: bold;
-  letter-spacing: 1px;
-}
-
-.graffiti-tag {
-  top: 760px;
-  left: 20%;
-  color: rgba(220, 220, 220, 0.75);
-  font-family: Impact, sans-serif;
-  font-size: 48px;
-  letter-spacing: 2px;
-  transform: rotate(-4deg);
-  text-shadow: 0 2px 8px rgba(0,0,0,0.8);
-}
-
-.taped-note {
-  top: 1120px;
-  left: 58%;
-  padding: 22px;
-  background: rgba(240, 226, 190, 0.88);
-  color: #191919;
-  font-family: monospace;
-  font-size: 14px;
-  line-height: 1.5;
-  transform: rotate(5deg);
-  box-shadow: 0 8px 22px rgba(0,0,0,0.5);
-}
-  </style>
+</style>
 </head>
 
 <body>
-  <main class="graffiti-wall"></main>
 
-  <main class="graffiti-wall">
+<main class="graffiti-wall">
 
-  <a href="#" class="wall-item submit-sticker">
-    SUBMISSIONS<br>OPEN
+  <a href="#"
+     class="submit-sticker">
+    <img src="/relaywall/submissions-open.png"
+         alt="Submissions Open">
   </a>
 
-  <div class="wall-item nuyu-poster">
-    <span>NUYU NOTICE</span>
-    UNAUTHORISED SIGNAL ACTIVITY<br>
-    WILL BE TRACED
-  </div>
-
-  <div class="wall-item graffiti-tag">
-    RAYNE LIVES
-  </div>
-
-  <div class="wall-item taped-note">
-    leave your mark<br>
-    before the signal drops
+  <div class="foundations-poster">
+    <img src="/relaywall/evenfoundationsposter.png"
+         alt="E.V.E.N Foundations Poster">
   </div>
 
 </main>
+
 </body>
 </html>
