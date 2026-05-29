@@ -824,6 +824,7 @@ h1{
 @media (max-width:520px){
   .wrap{
     padding:22px 14px 64px;
+    max-width:100%;
   }
 
   .hero-left,
@@ -851,12 +852,81 @@ h1{
     line-height:1.5;
   }
 
+  .card,
+  .section,
+  .mini,
+  .player-shell,
+  .radio-bars,
+  .queue-item,
+  .feed,
+  .frequency-btn{
+    max-width:100%;
+    min-width:0;
+  }
+
+  .section-inner,
+  .section-grid,
+  .track-row,
+  .queue-top{
+    min-width:0;
+  }
+
+  .track-row{
+    align-items:flex-start;
+  }
+
+  .track-row > div{
+    min-width:0;
+  }
+
+  .track-title,
+  .track-artist,
+  .queue-top span,
+  .queue-artist,
+  .lede,
+  .small-copy,
+  .sub,
+  .mini p,
+  .footer-signal{
+    overflow-wrap:anywhere;
+    word-break:break-word;
+  }
+
+  .radio-bars{
+    gap:2px;
+    padding:8px;
+  }
+
+  .radio-bars span{
+    width:3px;
+    flex:0 0 3px;
+  }
+
   .control-row{
     gap:8px;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    padding-bottom:4px;
+    max-width:100%;
+    -webkit-overflow-scrolling:touch;
   }
 
   .tiny-btn{
     font-size:11px;
+    flex:0 0 auto;
+    white-space:nowrap;
+  }
+}
+
+@media (max-width:380px){
+  .radio-bars span{
+    width:2px;
+    flex-basis:2px;
+  }
+
+  .play-button{
+    width:42px;
+    height:42px;
   }
 }
 
