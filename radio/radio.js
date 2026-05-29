@@ -51,7 +51,7 @@ const stations = {
   ghostlines: {
     name: "Ghostlines Broadcast",
     shortName: "Ghostlines",
-    subtitle: "E.V.E.N // Nyelle // rebel pop // tunnel favourites",
+    subtitle: "rebel pop // tunnel favourites",
     description: "The main pirate channel. Accessible enough for the surface to hum along, dangerous enough for NuYu to notice.",
     status: "public-facing signal",
     tracks: [
@@ -443,7 +443,7 @@ function renderApp() {
         <div class="footer-divider"></div>
 
         <p class="footer-signal">
-          E.V.E.N // ghost threads endpoint • integrity pending • “post responsibly (or don’t).” — Minjae
+          E.V.E.N // radio endpoint • integrity pending • “Thank you for listening.” — Soahn
         </p>
       </footer>
     </div>
