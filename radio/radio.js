@@ -63,7 +63,7 @@ const stations = {
         source: "Relay 7B",
         duration: "4:47",
         mood: "cinematic",
-        src: "../music/ghostlinesbroadcast/Teethmarks.mp3",
+        src: "../radio/ghostlinesbroadcast/Teethmarks.mp3",
       },
       {
         title: "Upper Sector Heartbreak",
@@ -73,7 +73,7 @@ const stations = {
         source: "private relay",
         duration: "3:24",
         mood: "polished pop / hidden teeth",
-        src: "../music/ghostlinesbroadcast/XXX.mp3",
+        src: "../radio/ghostlinesbroadcast/XXX.mp3",
       },
       {
         title: "Remember Me Wrong",
