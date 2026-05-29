@@ -16,13 +16,13 @@ const stations = {
     status: "high-energy relay",
     tracks: [
       {
-        title: "Neon Velocity",
-        artist: "CIRCUITFLOWER",
-        album: "Fast Lane Static",
-        tag: "melodic techno",
+        title: "Teethmarks",
+        artist: "E.V.E.N",
+        album: "Foundations",
+        tag: "alt-rock, alternative pop",
         source: "Relay 7B",
-        duration: "3:42",
-        mood: "bright synth / motion blur",
+        duration: "4:47",
+        mood: "cinematic",
         src: "../music/glitchwavefm/XXX.mp3",
       },
       {
@@ -56,14 +56,14 @@ const stations = {
     status: "public-facing signal",
     tracks: [
       {
-        title: "Afterimage",
+        title: "Teethmarks",
         artist: "E.V.E.N",
-        album: "The Ghost Lines",
-        tag: "official transmission",
-        source: "London Ghost Lines",
-        duration: "2:51",
-        mood: "blue static / tunnel bloom",
-        src: "../music/ghostlinesbroadcast/XXX.mp3",
+        album: "Foundations",
+        tag: "alt-rock, alternative pop",
+        source: "Relay 7B",
+        duration: "4:47",
+        mood: "cinematic",
+        src: "../music/ghostlinesbroadcast/Teethmarks.mp3",
       },
       {
         title: "Upper Sector Heartbreak",
