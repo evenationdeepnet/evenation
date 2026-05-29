@@ -741,12 +741,16 @@
       outline: none;
     }
 
-    .folder-file .label {
-      margin-top: 10px;
-      font-size: 13px;
-      line-height: 1.3;
-      word-break: break-word;
-    }
+.folder-file .label {
+  max-width: 90px;
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.3;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  text-align: center;
+}
 
     .txt-window {
       position: absolute;
@@ -1038,7 +1042,7 @@
           </div>
           <div class="loose-file" tabindex="0" data-open="ghostmodeOldmixWindow">
             <div class="media-icon" aria-hidden="true"></div>
-            <div class="label">ghostmode_oldmix.wav</div>
+            <div class="label">ghostmode_oldmix_v7.wav</div>
           </div>
         </div>
       </section>
@@ -1060,7 +1064,7 @@
           <h3>Ghost Feed //</h3>
           <div class="feed-item"><time>[23:17]</time>currentmix.png<br />added to screenshots</div>
           <div class="feed-item"><time>[22:49]</time>relay_maps/<br />floodline_east.png updated</div>
-          <div class="feed-item"><time>[21:02]</time>ghostmode_oldmix.wav<br />played</div>
+          <div class="feed-item"><time>[21:02]</time>ghostmode_oldmix_v7.wav<br />played</div>
         </div>
       </aside>
     </section>
@@ -1148,12 +1152,12 @@
 
       <article class="boot-window" id="ghostmodeOldmixWindow" aria-label="ghostmode oldmix audio player" tabindex="-1" style="left: 520px; top: 174px; width: min(420px, calc(100vw - 560px)); min-height: 260px; z-index: 47;">
         <div class="window-titlebar">
-          <div class="window-title">ghostmode_oldmix.wav</div>
+          <div class="window-title">ghostmode_oldmix_v7.wav</div>
           <button class="window-close" type="button" aria-label="Close ghostmode oldmix player" onclick="closeWindow('ghostmodeOldmixWindow')">×</button>
         </div>
         <div class="folder-window-body">
           <div class="audio-player">
-            <div class="audio-track-title">GHOSTMODE OLDMIX</div>
+            <div class="audio-track-title">GHOSTMODE OLDMIX V7</div>
             <div class="audio-meta">
               <span>source: unsorted desktop file</span>
               <span>status: misplaced</span>
