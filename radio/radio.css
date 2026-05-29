@@ -822,15 +822,48 @@ h1{
 }
 
 @media (max-width:520px){
-  .wrap{
-    padding:22px 14px 64px;
+  html,
+  body,
+  #radio-app{
+    width:100%;
     max-width:100%;
+    overflow-x:hidden;
+  }
+
+  .wrap{
+    width:100%;
+    max-width:100%;
+    padding:22px 14px 64px;
+    overflow-x:hidden;
   }
 
   .hero-left,
   .hero-right,
   .section{
     padding:18px;
+  }
+
+  .card,
+  .section,
+  .mini,
+  .player-shell,
+  .radio-bars,
+  .queue-item,
+  .feed,
+  .frequency-btn{
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    overflow:hidden;
+  }
+
+  .section-inner,
+  .section-grid,
+  .track-row,
+  .queue-top,
+  .track-row > div{
+    min-width:0;
+    max-width:100%;
   }
 
   .brand{
@@ -850,33 +883,6 @@ h1{
   .kicker{
     align-items:flex-start;
     line-height:1.5;
-  }
-
-  .card,
-  .section,
-  .mini,
-  .player-shell,
-  .radio-bars,
-  .queue-item,
-  .feed,
-  .frequency-btn{
-    max-width:100%;
-    min-width:0;
-  }
-
-  .section-inner,
-  .section-grid,
-  .track-row,
-  .queue-top{
-    min-width:0;
-  }
-
-  .track-row{
-    align-items:flex-start;
-  }
-
-  .track-row > div{
-    min-width:0;
   }
 
   .track-title,
@@ -903,18 +909,23 @@ h1{
   }
 
   .control-row{
+    display:flex;
+    flex-wrap:wrap;
     gap:8px;
-    flex-wrap:nowrap;
-    overflow-x:auto;
-    padding-bottom:4px;
     max-width:100%;
-    -webkit-overflow-scrolling:touch;
+    overflow:hidden;
   }
 
   .tiny-btn{
     font-size:11px;
-    flex:0 0 auto;
-    white-space:nowrap;
+    max-width:100%;
+    min-width:0;
+    white-space:normal;
+  }
+
+  .tiny-btn.static{
+    width:100%;
+    justify-content:flex-start;
   }
 }
 
