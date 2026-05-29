@@ -723,6 +723,9 @@
     }
 
     .folder-file {
+        display: flex;
+  flex-direction: column;
+  align-items: center;
       min-height: 118px;
       text-align: center;
       cursor: pointer;
@@ -742,14 +745,14 @@
     }
 
 .folder-file .label {
-  max-width: 90px;
+  width: 90px;
   margin-top: 10px;
   font-size: 13px;
   line-height: 1.3;
-  word-break: break-word;
-  overflow-wrap: anywhere;
-  white-space: normal;
   text-align: center;
+  word-break: normal;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
     .txt-window {
