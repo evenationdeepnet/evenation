@@ -119,6 +119,28 @@ body {
   filter: drop-shadow(0 6px 12px rgba(0,0,0,0.35));
 }
 
+ /* EXIT TUNNEL BACK BUTTON */
+  
+  .exit-tunnel {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-3deg);
+  z-index: 20;
+  transition: transform 0.2s ease;
+}
+
+.exit-tunnel:hover {
+  transform: translateX(-50%) rotate(-3deg) scale(1.03);
+}
+
+.exit-tunnel img {
+  display: block;
+  width: 240px;
+  height: auto;
+  filter: drop-shadow(0 8px 18px rgba(0,0,0,0.45));
+}
+
 /* MOBILE */
 
 @media (max-width: 768px) {
@@ -154,6 +176,10 @@ body {
   .submit-sticker img {
     width: min(34vw, 145px);
   }
+
+  .exit-tunnel img {
+  width: 180px;
+}
 }
 
   @media (max-width: 420px) {
@@ -171,6 +197,7 @@ body {
     width: 125px;
   }
 }
+  
 
 </style>
 </head>
@@ -199,6 +226,11 @@ body {
   <img src="/relaywall/wheresrayne.png"
        alt="Where's Rayne">
 </div>
+
+  <a href="/radio" class="exit-tunnel">
+    <img src="/relaywall/exittunnel.png"
+         alt="Exit Tunnel">
+</a>
 
 </main>
 
