@@ -949,3 +949,90 @@ h1{
     transition:none !important;
   }
 }
+
+/* --- iPhone overflow hard fix --- */
+
+html,
+body{
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden;
+}
+
+#radio-app,
+.wrap,
+.hero,
+.section-grid,
+.section-inner,
+.card,
+.section,
+.player-shell{
+  max-width:100%;
+  min-width:0;
+}
+
+.hero > *,
+.section-grid > *,
+.track-row > *,
+.queue-top > *{
+  min-width:0;
+}
+
+@media (max-width:520px){
+  .wrap{
+    padding-left:14px;
+    padding-right:14px;
+  }
+
+  .section{
+    width:100%;
+    overflow:hidden;
+  }
+
+  .player-shell{
+    width:100%;
+    overflow:hidden;
+  }
+
+  .track-row{
+    width:100%;
+    min-width:0;
+  }
+
+  .radio-bars{
+    width:100%;
+    max-width:100%;
+    overflow:hidden;
+  }
+
+  .control-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    width:100%;
+    max-width:100%;
+  }
+
+  .tiny-btn{
+    width:100%;
+    min-width:0;
+    justify-content:center;
+    white-space:normal;
+  }
+
+  .tiny-btn.static{
+    grid-column:1 / -1;
+  }
+
+  .track-title,
+  .track-artist,
+  .queue-top span,
+  .queue-artist,
+  .lede,
+  .sub,
+  .small-copy{
+    max-width:100%;
+    overflow-wrap:anywhere;
+    word-break:break-word;
+  }
+}
