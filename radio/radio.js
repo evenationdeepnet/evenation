@@ -243,7 +243,7 @@ const stations = {
         source: "Relay 18",
         duration: "3:32",
         mood: "atmospheric, ethereal",
-        src: "../radio/subculture/Ghost_Don't_Sleep.mp3",
+        src: "../radio/subculture/Ghosts_Dont_Sleep.mp3",
       },
        {
         title: "Cathedral Cinema",
