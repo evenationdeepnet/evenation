@@ -185,6 +185,16 @@ const stations = {
         mood: "raw",
         src: "../radio/ghostlinesbroadcast/Nefarious_Maze.mp3",
       },
+                    {
+        title: "Light Wells",
+        artist: "Silent Cartographers",
+        album: "The Last Warm Thing",
+        tag: "post-rock",
+        source: "Relay 22",
+        duration: "4:48",
+        mood: "atmospheric, cinematic",
+        src: "../radio/ghostlinesbroadcast/LightWells.mp3",
+      },
     ],
   },
 
