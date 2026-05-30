@@ -255,6 +255,17 @@ const stations = {
         mood: "atmospheric, hypnotic",
         src: "../radio/subculture/Cathedral_Cinema.mp3",
       },
+      {
+        title: "Silver Tongue",
+        artist: "Mothbyte",
+        album: "Low Light Saints",
+        tag: "darkwave, post-punk",
+        source: "Signal Chapel 5",
+        duration: "3:57",
+        mood: "hypnotic, dangerous",
+        src: "../radio/subculture/SilverTongue.mp3",
+      },
+       
     ],
   },
 };
