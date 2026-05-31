@@ -1,10 +1,5 @@
 /* E.V.E.N Radio
    Standalone JavaScript for /radio/radio.html
-
-   To add your real tracks:
-   1. Put MP3 files in the matching /music/ folder.
-   2. Replace each src value with the correct path.
-      Example: "../music/subculture/your-track-name.mp3"
 */
 
 const stations = {
@@ -422,7 +417,7 @@ function renderApp() {
   app.innerHTML = `
     <div class="topbar">
       <div class="topbar-inner">
-        <a class="brand" href="../index.html">
+        <a class="brand" href="../home.html">
           <span class="mark">E.V.E.N</span>
           <span class="tag">Encrypted Virtual Echo Network</span>
         </a>
