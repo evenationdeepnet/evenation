@@ -829,6 +829,10 @@
       background: rgba(4, 4, 8, 0.72);
     }
 
+    .mobile-footer {
+  display: none;
+}
+
     @media (max-width: 900px) {
 
   body {
@@ -972,18 +976,27 @@
     padding: 6px 10px;
   }
 
-      .mobile-footer {
-  display: none;
-}
+  /* MOBILE FOOTER */
 
-@media (max-width: 900px) {
   .mobile-footer {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 32px 20px 60px;
-    border-top: 1px solid rgba(154,124,255,0.25);
+
+    padding: 40px 20px 80px;
     margin-top: 40px;
+
+    background: transparent;
+    text-align: center;
+  }
+
+  .mobile-footer::before {
+    content: "";
+    display: block;
+    width: 100%;
+    border-top: 1px dashed rgba(154,124,255,0.3);
+    margin-bottom: 24px;
   }
 
   .mobile-footer a {
@@ -991,12 +1004,20 @@
     text-decoration: none;
     font-size: 14px;
     letter-spacing: 0.08em;
+    transition: color 0.2s ease;
   }
 
   .mobile-footer a:hover {
-    color: var(--purple);
+    color: var(--violet);
   }
-}
+
+  .footer-note {
+    color: rgba(255,255,255,0.45);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
 }
   </style>
 </head>
@@ -2186,7 +2207,8 @@ function closeWindow(windowId) {
     });
   </script>
 
-  <footer class="mobile-footer">
+<footer class="mobile-footer">
+  <div class="footer-note">END OF ARCHIVE</div>
   <a href="/home.html">← return_home.exe</a>
 </footer>
 </body>
