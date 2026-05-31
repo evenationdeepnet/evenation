@@ -70,6 +70,17 @@ const stations = {
         mood: "dreamy",
         src: "../radio/glitchwavefm/Satellite_Rain.mp3",
       },
+
+           {
+        title: "Afterglow Signal",
+        artist: "VOLT//SAINT",
+        album: "Runners",
+        tag: "melodic techno",
+        source: "Relay 18A",
+        duration: "2:33",
+        mood: "dreamy",
+        src: "../radio/glitchwavefm/AfterglowSignal.mp3",
+      },
     ],
   },
 
