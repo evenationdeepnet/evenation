@@ -469,6 +469,7 @@ function renderApp() {
         <nav class="nav" aria-label="Main navigation">
           <a href="../signals/">/signals</a>
           <a href="../ghost-threads.html">/ghost-threads</a>
+         <a href="../radio/radio.html">/radio</a>
           <a
             href="https://www.youtube.com/@EncryptedVirtualEchoNetwork"
             target="_blank"
