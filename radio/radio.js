@@ -584,7 +584,7 @@ function renderApp() {
       </section>
 
       <footer class="radio-footer">
-        <a href="../index.html" class="return-network-btn">Return to Network</a>
+        <a href="../home.html" class="return-network-btn">Return to Network</a>
 
         <div class="footer-divider"></div>
 
