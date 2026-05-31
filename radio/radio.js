@@ -180,7 +180,7 @@ const stations = {
         mood: "raw",
         src: "../radio/ghostlinesbroadcast/Nefarious_Maze.mp3",
       },
-                    {
+            {
         title: "Light Wells",
         artist: "Silent Cartographers",
         album: "The Last Warm Thing",
@@ -191,7 +191,7 @@ const stations = {
         src: "../radio/ghostlinesbroadcast/LightWells.mp3",
       },
 
-                           {
+            {
         title: "Zoo",
         artist: "Wrong Ideas Club",
         album: "Predictable Weather",
