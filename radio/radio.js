@@ -81,6 +81,17 @@ const stations = {
         mood: "dreamy",
         src: "../radio/glitchwavefm/AfterglowSignal.mp3",
       },
+
+            {
+        title: "Aurora",
+        artist: "Aetherline",
+        album: "Blue Hour Atlas",
+        tag: "trance",
+        source: "Scrap Garden 17",
+        duration: "5:12",
+        mood: "dreamy, emotional",
+        src: "../radio/glitchwavefm/Aurora.mp3",
+      },
     ],
   },
 
