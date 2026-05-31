@@ -971,6 +971,32 @@
     min-height: 30px;
     padding: 6px 10px;
   }
+
+      .mobile-footer {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .mobile-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 32px 20px 60px;
+    border-top: 1px solid rgba(154,124,255,0.25);
+    margin-top: 40px;
+  }
+
+  .mobile-footer a {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+  }
+
+  .mobile-footer a:hover {
+    color: var(--purple);
+  }
+}
 }
   </style>
 </head>
@@ -2159,5 +2185,9 @@ function closeWindow(windowId) {
       });
     });
   </script>
+
+  <footer class="mobile-footer">
+  <a href="/home.html">← return_home.exe</a>
+</footer>
 </body>
 </html>
