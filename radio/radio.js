@@ -190,6 +190,17 @@ const stations = {
         mood: "atmospheric, cinematic",
         src: "../radio/ghostlinesbroadcast/LightWells.mp3",
       },
+
+                           {
+        title: "Zoo",
+        artist: "Wrong Ideas Club",
+        album: "Predictable Weather",
+        tag: "pop-punk",
+        source: "Relay 13",
+        duration: "3:48",
+        mood: "upbeat, off the wall",
+        src: "../radio/ghostlinesbroadcast/Zoo.mp3",
+      },
     ],
   },
 
