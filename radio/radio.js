@@ -331,6 +331,7 @@ const state = {
   currentTrackIndex: 0,
   isPlaying: false,
   shuffle: true,
+  shuffleQueue: [],
 };
 
 let audioEl = null;
@@ -681,12 +682,13 @@ function bindEvents() {
     });
   });
 
-  document.querySelectorAll("[data-track-index]").forEach((button) => {
-    button.addEventListener("click", () => {
-      state.currentTrackIndex = Number(button.dataset.trackIndex);
-      renderApp();
-    });
+document.querySelectorAll("[data-track-index]").forEach((button) => {
+  button.addEventListener("click", () => {
+    state.currentTrackIndex = Number(button.dataset.trackIndex);
+    state.shuffleQueue = [];
+    renderApp();
   });
+});
 }
 
 function toggleBroadcast() {
@@ -716,6 +718,7 @@ function changeStation(stationKey) {
   state.activeStationKey = stationKey;
   state.currentTrackIndex = 0;
   state.isPlaying = false;
+  state.shuffleQueue = [];
 
   renderApp();
 }
@@ -727,14 +730,19 @@ function nextTrack() {
 
   if (tracks.length === 1) {
     state.currentTrackIndex = 0;
-  } else if (state.shuffle) {
-    let next = Math.floor(Math.random() * tracks.length);
+    renderApp();
+    return;
+  }
 
-    if (next === state.currentTrackIndex) {
-      next = (next + 1) % tracks.length;
+  if (state.shuffle) {
+    if (!state.shuffleQueue.length) {
+      state.shuffleQueue = tracks
+        .map((_, index) => index)
+        .filter((index) => index !== state.currentTrackIndex)
+        .sort(() => Math.random() - 0.5);
     }
 
-    state.currentTrackIndex = next;
+    state.currentTrackIndex = state.shuffleQueue.shift();
   } else {
     state.currentTrackIndex = (state.currentTrackIndex + 1) % tracks.length;
   }
