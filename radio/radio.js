@@ -671,8 +671,9 @@ function bindEvents() {
 
   document.querySelectorAll("[data-action='toggle-shuffle']").forEach((button) => {
     button.addEventListener("click", () => {
-      state.shuffle = !state.shuffle;
-      renderApp();
+state.shuffle = !state.shuffle;
+state.shuffleQueue = [];
+renderApp();
     });
   });
 
