@@ -123,6 +123,72 @@
   button{border:1px solid rgba(214,183,255,.32);border-radius:999px;background:linear-gradient(135deg, rgba(101,215,223,.12), rgba(230,138,216,.12));color:#fff;padding:0 17px;font:inherit;letter-spacing:.11em;text-transform:uppercase;cursor:pointer}
   .foot{display:flex;justify-content:space-between;color:#777d86;font-size:.75rem;padding:0 10px;letter-spacing:.12em;text-transform:uppercase}
   @media(max-width:820px){.inner{grid-template-columns:1fr}.identity{min-height:auto} .card{padding:18px}.topbar,.foot{flex-direction:column;align-items:flex-start;gap:8px}}
+  @media(max-width:820px){
+  body{
+    padding:24px 10px;
+    overflow-x:hidden;
+  }
+
+  .shell,
+  .card,
+  .inner,
+  .identity,
+  .chat{
+    width:100%;
+    max-width:100%;
+    min-width:0;
+  }
+
+  .chat-head{
+    flex-wrap:wrap;
+  }
+
+  .badge{
+    max-width:100%;
+    white-space:normal;
+  }
+
+  .composer{
+    min-width:0;
+  }
+
+  input{
+    min-width:0;
+  }
+
+  .foot{
+    width:100%;
+    max-width:100%;
+    overflow-wrap:anywhere;
+  }
+}
+  .bubble,
+.intro,
+.chip,
+.chat-sub,
+.foot span,
+.topbar div {
+  overflow-wrap: anywhere;
+}
+
+@media(max-width:820px){
+  .topbar{
+    width:100%;
+    max-width:100%;
+  }
+
+  h1{
+    font-size:clamp(2.4rem,18vw,4.8rem);
+  }
+
+  .composer{
+    flex-wrap:nowrap;
+  }
+
+  button{
+    flex-shrink:0;
+  }
+}
 </style>
 </head>
 <body>
