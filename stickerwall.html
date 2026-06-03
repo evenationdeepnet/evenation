@@ -9,316 +9,400 @@
       color-scheme: dark;
       --bg:#05060a;
       --bg2:#0a0c12;
-      --panel: rgba(255,255,255,.06);
+      --panel: rgba(255,255,255,.065);
       --panel2: rgba(255,255,255,.04);
-      --stroke: rgba(255,255,255,.12);
-      --text: rgba(255,255,255,.86);
-      --muted: rgba(255,255,255,.60);
-      --cyan: rgba(120,255,255,.70);
-      --cyan2: rgba(120,255,255,.35);
-      --pink: rgba(255,90,225,.62);
+      --stroke: rgba(255,255,255,.13);
+      --text: rgba(255,255,255,.88);
+      --muted: rgba(255,255,255,.61);
+      --faint: rgba(255,255,255,.42);
+      --cyan: rgba(120,255,255,.86);
+      --cyan2: rgba(120,255,255,.28);
+      --pink: rgba(255,90,225,.78);
       --pink2: rgba(255,90,225,.22);
-      --good: rgba(120,255,170,.75);
-      --warn: rgba(255,220,120,.72);
-      --danger: rgba(255,90,90,.72);
+      --green: rgba(120,255,170,.78);
+      --yellow: rgba(255,220,120,.78);
+      --violet:#988df9;
       --radius: 18px;
-      --radius2: 26px;
-      --shadow: 0 20px 80px rgba(0,0,0,.60);
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
     }
 
     *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
     html,body{ margin:0; min-height:100vh; }
     body{
       background:
-        radial-gradient(1200px 600px at 20% 0%, rgba(120,255,255,.10), transparent 55%),
-        radial-gradient(1200px 600px at 80% 0%, rgba(255,90,225,.09), transparent 55%),
+        radial-gradient(1000px 580px at 16% 0%, rgba(120,255,255,.13), transparent 57%),
+        radial-gradient(900px 520px at 84% 6%, rgba(255,90,225,.12), transparent 58%),
+        radial-gradient(700px 520px at 50% 100%, rgba(152,141,249,.10), transparent 65%),
         linear-gradient(180deg, var(--bg), var(--bg2));
-      color: var(--text);
-      font-family: var(--sans);
+      color:var(--text);
+      font-family:var(--sans);
       overflow-x:hidden;
       position:relative;
       isolation:isolate;
     }
 
-    /* subtle particles */
-    #particles{
+    body::before{
+      content:"";
       position:fixed;
       inset:0;
       z-index:0;
-      background:
-        radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,.28), transparent 60%),
-        radial-gradient(1px 1px at 32% 70%, rgba(255,255,255,.18), transparent 60%),
-        radial-gradient(1px 1px at 75% 40%, rgba(255,255,255,.24), transparent 60%),
-        radial-gradient(1px 1px at 60% 80%, rgba(255,255,255,.15), transparent 60%),
-        radial-gradient(1px 1px at 88% 16%, rgba(255,255,255,.20), transparent 60%);
-      opacity:.55;
-      filter: blur(.2px);
       pointer-events:none;
+      background:
+        repeating-linear-gradient(0deg, rgba(255,255,255,.022) 0 1px, transparent 1px 4px),
+        radial-gradient(1px 1px at 14% 22%, rgba(255,255,255,.34), transparent 60%),
+        radial-gradient(1px 1px at 34% 72%, rgba(255,255,255,.20), transparent 60%),
+        radial-gradient(1px 1px at 78% 42%, rgba(255,255,255,.27), transparent 60%),
+        radial-gradient(1px 1px at 62% 86%, rgba(255,255,255,.18), transparent 60%),
+        radial-gradient(1px 1px at 90% 18%, rgba(255,255,255,.25), transparent 60%);
+      opacity:.52;
+      mix-blend-mode:screen;
     }
 
-    /* Topbar — keep consistent with the new site */
+    a{ color:inherit; }
+
     .topbar{
       position:sticky;
       top:0;
       z-index:20;
       backdrop-filter: blur(14px);
-      background: linear-gradient(to bottom, rgba(5,6,10,.80), rgba(5,6,10,.40));
-      border-bottom: 1px solid rgba(255,255,255,.08);
+      background:linear-gradient(to bottom, rgba(5,6,10,.86), rgba(5,6,10,.50));
+      border-bottom:1px solid rgba(255,255,255,.08);
     }
-    .topbar-inner{ max-width:1200px; margin:0 auto; padding: 14px 20px; display:flex; align-items:center; gap:14px; }
-
+    .topbar-inner{
+      max-width:1220px;
+      margin:0 auto;
+      padding:14px 20px;
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
     .brand{ display:flex; align-items:baseline; gap:10px; text-decoration:none; color:var(--text); }
-    .brand .mark{ font-family: var(--mono); letter-spacing: .18em; font-weight:700; font-size: 14px; text-transform: uppercase; opacity:.95; }
-    .brand .tag{ font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing:.08em; }
-
+    .brand .mark{ font-family:var(--mono); letter-spacing:.18em; font-weight:700; font-size:14px; text-transform:uppercase; }
+    .brand .tag{ font-family:var(--mono); font-size:12px; color:var(--muted); letter-spacing:.08em; }
     .nav{ margin-left:auto; display:flex; gap:10px; flex-wrap:wrap; }
-    .nav a{
-      font-family: var(--mono);
-      font-size: 12px;
-      color: var(--muted);
-      text-decoration:none;
-      padding: 9px 10px;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      transition: .18s ease;
-    }
-    .nav a:hover{ color: var(--text); border-color: rgba(255,255,255,.12); background: rgba(255,255,255,.04); }
-
+    .nav a,
     .cta{
-      margin-left: 6px;
-      font-family: var(--mono);
-      font-size: 12px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: linear-gradient(90deg, rgba(120,255,255,.10), rgba(255,90,225,.10));
-      color: var(--text);
+      font-family:var(--mono);
+      font-size:12px;
+      color:var(--muted);
       text-decoration:none;
-      box-shadow: 0 10px 35px rgba(0,0,0,.35);
-      transition: transform .14s ease, border-color .14s ease;
+      padding:9px 10px;
+      border-radius:999px;
+      border:1px solid transparent;
+      transition:.18s ease;
       white-space:nowrap;
     }
-    .cta:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.22); }
+    .nav a:hover{ color:var(--text); border-color:rgba(255,255,255,.14); background:rgba(255,255,255,.045); }
+    .cta{
+      margin-left:6px;
+      color:var(--text);
+      border-color:rgba(255,255,255,.15);
+      background:linear-gradient(90deg, rgba(120,255,255,.11), rgba(255,90,225,.11));
+      box-shadow:0 10px 35px rgba(0,0,0,.35);
+    }
+    .cta:hover{ transform:translateY(-1px); border-color:rgba(255,255,255,.24); }
 
-    .wrap{ max-width: 1200px; margin:0 auto; padding: 26px 20px 80px; position:relative; z-index:1; }
+    .wrap{ max-width:1220px; margin:0 auto; padding:32px 20px 84px; position:relative; z-index:1; }
 
-    /* Header */
-    .head{
+    .hero{
+      max-width:980px;
+      margin:0 auto 22px;
+      padding:34px 22px 22px;
       text-align:center;
-      padding: 28px 16px 14px;
+      position:relative;
     }
-    .head h1{
+    .eyebrow{
+      margin:0 0 10px;
+      font-family:var(--mono);
+      font-size:12px;
+      letter-spacing:.20em;
+      text-transform:uppercase;
+      color:var(--pink);
+    }
+    h1{
       margin:0;
-      font-family: var(--mono);
-      font-size: clamp(38px, 6vw, 72px);
-      letter-spacing: .06em;
-      color: rgba(120,255,255,.95);
-      text-shadow: 0 0 24px rgba(120,255,255,.15);
+      font-family:var(--mono);
+      font-size:clamp(40px, 6vw, 78px);
+      letter-spacing:.045em;
+      color:rgba(120,255,255,.96);
+      text-shadow:0 0 26px rgba(120,255,255,.16);
     }
-
-    .note{
-      max-width: 900px;
-      margin: 12px auto 0;
+    .intro{
+      max-width:760px;
+      margin:14px auto 0;
+      color:rgba(255,255,255,.68);
+      font-family:var(--mono);
+      font-size:13px;
+      line-height:1.75;
+      letter-spacing:.055em;
       text-align:left;
-      font-family: var(--mono);
-      color: rgba(255,255,255,.60);
-      letter-spacing:.06em;
-      line-height: 1.7;
-      font-size: 13px;
     }
-    .note .slash{ color: rgba(255,255,255,.36); }
+    .intro .slash{ color:rgba(255,255,255,.36); }
 
-    /* Controls (optional, but helps when you’re testing) */
-    .controls{
-      max-width: 900px;
-      margin: 14px auto 0;
+    .status-deck{
+      max-width:980px;
+      margin:18px auto 24px;
+      display:grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap:14px;
+    }
+    .status-card,
+    .investigation{
+      border:1px solid rgba(255,255,255,.12);
+      background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.035));
+      border-radius:var(--radius);
+      padding:16px;
+      box-shadow:0 18px 55px rgba(0,0,0,.35);
+      overflow:hidden;
+      position:relative;
+    }
+    .status-card::after,
+    .investigation::after{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      pointer-events:none;
+      background:radial-gradient(520px 220px at 12% 0%, rgba(120,255,255,.09), transparent 60%);
+      opacity:.85;
+    }
+    .panel-title{
+      position:relative;
+      z-index:1;
+      margin:0 0 12px;
+      font-family:var(--mono);
+      color:var(--cyan);
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      font-size:12px;
+    }
+    .status-grid{
+      position:relative;
+      z-index:1;
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:10px;
+    }
+    .stat{
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.18);
+      border-radius:14px;
+      padding:12px;
+      font-family:var(--mono);
+      min-height:72px;
+    }
+    .stat span{ display:block; color:var(--faint); font-size:11px; letter-spacing:.10em; text-transform:uppercase; }
+    .stat strong{ display:block; margin-top:8px; color:var(--text); font-size:13px; line-height:1.35; font-weight:500; }
+    .investigation p{
+      position:relative;
+      z-index:1;
+      margin:0;
+      color:rgba(255,255,255,.77);
+      font-family:var(--mono);
+      letter-spacing:.055em;
+      line-height:1.6;
+      font-size:13px;
+    }
+    .investigation b{ color:var(--pink); font-weight:500; }
+
+    .wall{
+      max-width:1020px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:repeat(12, 1fr);
+      gap:16px;
+      align-items:start;
+    }
+
+    .section{
+      grid-column:span 6;
+      border:1px solid rgba(255,255,255,.105);
+      border-radius:24px;
+      padding:16px;
+      background:rgba(0,0,0,.18);
+      box-shadow:0 18px 58px rgba(0,0,0,.34);
+      position:relative;
+      overflow:hidden;
+    }
+    .section.wide{ grid-column:span 12; }
+    .section::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(600px 260px at 10% 0%, rgba(120,255,255,.08), transparent 62%),
+        radial-gradient(520px 240px at 90% 0%, rgba(255,90,225,.065), transparent 62%);
+      opacity:.9;
+    }
+    .section-head{
+      position:relative;
+      z-index:1;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap: 10px;
-      flex-wrap:wrap;
-      font-family: var(--mono);
-      font-size: 12px;
-      color: rgba(255,255,255,.62);
+      gap:12px;
+      margin-bottom:12px;
+      border-bottom:1px solid rgba(255,255,255,.09);
+      padding-bottom:10px;
     }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.04);
+    .section-head h2{
+      margin:0;
+      color:var(--cyan);
+      font-family:var(--mono);
+      font-size:13px;
+      letter-spacing:.17em;
+      text-transform:uppercase;
+      font-weight:700;
+    }
+    .section-head span{
+      color:var(--faint);
+      font-family:var(--mono);
+      font-size:11px;
+      letter-spacing:.10em;
+      text-transform:uppercase;
       white-space:nowrap;
-      user-select:none;
-    }
-    .dot{ width:8px; height:8px; border-radius:50%; background: rgba(255,255,255,.35); box-shadow: 0 0 14px rgba(255,255,255,.12); }
-    .dot.good{ background: var(--good); box-shadow: 0 0 14px rgba(120,255,170,.22); }
-    .dot.warn{ background: var(--warn); box-shadow: 0 0 14px rgba(255,220,120,.16); }
-
-    .toggle{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.04);
-    }
-    .toggle input{ accent-color: rgb(120,255,255); }
-
-    /* Wall */
-    .wall{
-      max-width: 900px;
-      margin: 18px auto 0;
-      display:grid;
-      gap: 16px;
     }
 
+    .stack{ position:relative; z-index:1; display:grid; gap:10px; }
     .sticker{
       position:relative;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.22);
-      box-shadow: 0 14px 45px rgba(0,0,0,.38);
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.115);
+      background:linear-gradient(180deg, rgba(255,255,255,.056), rgba(255,255,255,.028));
+      box-shadow:0 14px 36px rgba(0,0,0,.28);
       overflow:hidden;
-      padding: 18px 18px 18px 22px;
-      transform: translateZ(0);
+      padding:15px 15px 15px 18px;
+      transform:translateZ(0);
     }
     .sticker::before{
       content:"";
       position:absolute;
-      left:0;
-      top:0;
-      bottom:0;
+      inset:0 auto 0 0;
       width:4px;
-      background: rgba(120,255,255,.85);
-      box-shadow: 0 0 18px rgba(120,255,255,.18);
+      background:var(--cyan);
+      box-shadow:0 0 18px rgba(120,255,255,.20);
     }
-    .sticker::after{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background:
-        radial-gradient(520px 220px at 30% 0%, rgba(120,255,255,.10), transparent 60%),
-        radial-gradient(520px 220px at 70% 0%, rgba(255,90,225,.08), transparent 60%);
-      opacity:.50;
-      pointer-events:none;
-    }
+    .sticker.pink::before{ background:var(--pink); box-shadow:0 0 18px rgba(255,90,225,.20); }
+    .sticker.green::before{ background:var(--green); box-shadow:0 0 18px rgba(120,255,170,.18); }
+    .sticker.yellow::before{ background:var(--yellow); box-shadow:0 0 18px rgba(255,220,120,.16); }
+    .sticker:hover{ border-color:rgba(120,255,255,.22); background:rgba(255,255,255,.045); }
 
     .line{
       position:relative;
       z-index:1;
-      font-family: var(--mono);
-      font-size: 14px;
-      letter-spacing:.06em;
-      line-height: 1.55;
-      color: rgba(235, 241, 241, 0.92);
-      text-shadow: 0 0 18px rgba(120,255,255,.10);
+      margin:0;
+      font-family:var(--mono);
+      font-size:13px;
+      letter-spacing:.055em;
+      line-height:1.58;
+      color:rgba(238,245,245,.94);
+      text-shadow:0 0 18px rgba(120,255,255,.08);
+      overflow-wrap:anywhere;
     }
-
-    .handle{
-      color: rgba(167, 239, 239, 0.98);
+    .handle{ color:rgba(167,239,239,.98); }
+    .flag{ color:var(--yellow); }
+    .link-fragment,
+    .line a{
+      color:var(--violet);
+      text-decoration:none;
+      border-bottom:1px solid rgba(152,141,249,.48);
     }
+    .line a:hover{ color:rgba(206,202,255,.98); border-bottom-color:rgba(206,202,255,.75); }
 
-    /* Kairo asides — interrupt the wall */
     .aside{
-      font-family: var(--mono);
-      font-size: 14px;
-      letter-spacing:.08em;
-      color: rgba(249, 128, 227, 0.8);
-      text-shadow: 0 0 18px rgba(255,90,225,.10);
-      margin: -6px 0 2px 14px; /* slight indentation like it’s been scribbled under */
+      margin:-2px 0 4px 14px;
+      font-family:var(--mono);
+      font-size:13px;
+      letter-spacing:.07em;
+      line-height:1.55;
+      color:rgba(255,132,231,.86);
+      text-shadow:0 0 18px rgba(255,90,225,.12);
     }
-    .aside em{ color: rgba(249, 128, 227, 0.8); font-style: italic; }
+    .aside em{ font-style:italic; color:rgba(255,132,231,.86); }
+    .slash{ color:rgba(255,255,255,.38); }
 
-    /* Chaotic but readable: gentle hover clarity */
-    .sticker:hover{
-      border-color: rgba(120,255,255,.22);
-      background: rgba(255,255,255,.03);
+    .note-sticker{
+      background:
+        linear-gradient(135deg, rgba(255,220,120,.13), rgba(255,90,225,.055)),
+        rgba(0,0,0,.18);
     }
+    .ghost{ opacity:.62; filter:saturate(.92); }
+    .terminated .handle{ color:rgba(255,140,140,.88); }
 
-    /* Glitch effect (rougher than the homepage) */
     .glitchy{ position:relative; }
     .glitchy::before,
     .glitchy::after{
-      content: attr(data-text);
+      content:attr(data-text);
       position:absolute;
       left:0;
       top:0;
       width:100%;
-      opacity:.55;
+      opacity:.45;
       pointer-events:none;
       overflow:hidden;
     }
     .glitchy::before{
-      transform: translate(1px,0);
-      color: rgba(120,255,255,.60);
-      clip-path: inset(0 0 80% 0);
-      animation: gTop 2.6s infinite;
+      transform:translate(1px,0);
+      color:rgba(120,255,255,.62);
+      clip-path:inset(0 0 82% 0);
+      animation:gTop 2.6s infinite;
     }
     .glitchy::after{
-      transform: translate(-1px,0);
-      color: rgba(255,90,225,.52);
-      clip-path: inset(82% 0 0 0);
-      animation: gBot 2.3s infinite;
+      transform:translate(-1px,0);
+      color:rgba(255,90,225,.55);
+      clip-path:inset(82% 0 0 0);
+      animation:gBot 2.25s infinite;
     }
     @keyframes gTop{
-      0%,100%{ clip-path: inset(0 0 85% 0); }
-      20%{ clip-path: inset(0 0 65% 0); }
-      40%{ clip-path: inset(0 0 90% 0); }
-      60%{ clip-path: inset(0 0 72% 0); }
-      80%{ clip-path: inset(0 0 88% 0); }
+      0%,100%{ clip-path:inset(0 0 86% 0); }
+      22%{ clip-path:inset(0 0 66% 0); }
+      44%{ clip-path:inset(0 0 91% 0); }
+      66%{ clip-path:inset(0 0 74% 0); }
     }
     @keyframes gBot{
-      0%,100%{ clip-path: inset(84% 0 0 0); }
-      25%{ clip-path: inset(72% 0 0 0); }
-      50%{ clip-path: inset(92% 0 0 0); }
-      75%{ clip-path: inset(80% 0 0 0); }
+      0%,100%{ clip-path:inset(84% 0 0 0); }
+      28%{ clip-path:inset(73% 0 0 0); }
+      56%{ clip-path:inset(92% 0 0 0); }
+      78%{ clip-path:inset(80% 0 0 0); }
     }
 
-    /* Vanish / return states */
-    .ghost{ opacity:.18; filter: blur(.4px) saturate(.9); }
-    .vanish{ opacity:0; transform: translateY(-6px); height:0; margin:0; padding-top:0; padding-bottom:0; border-width:0; overflow:hidden; }
+    .vanish{ opacity:0; transform:translateY(-6px); height:0; margin:0; padding-top:0; padding-bottom:0; border-width:0; overflow:hidden; }
     .vanish::before{ opacity:0; }
 
-    /* Tiny scanline sheen */
-    .scan::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      background: repeating-linear-gradient(0deg, rgba(255,255,255,.020) 0 1px, transparent 1px 4px);
-      opacity:.06;
-      z-index:2;
-      mix-blend-mode: overlay;
-    }
-
     footer{
-      max-width: 900px;
-      margin: 26px auto 0;
-      padding: 18px 8px 0;
-      font-family: var(--mono);
-      color: rgba(255,255,255,.52);
-      font-size: 12px;
+      max-width:1020px;
+      margin:28px auto 0;
+      padding:18px 8px 0;
+      font-family:var(--mono);
+      color:rgba(255,255,255,.52);
+      font-size:12px;
       letter-spacing:.06em;
-      border-top: 1px solid rgba(255,255,255,.10);
+      border-top:1px solid rgba(255,255,255,.10);
       text-align:center;
     }
+    footer a{ color:rgba(120,255,255,.72); text-decoration:none; }
+    footer a:hover{ color:rgba(120,255,255,.96); }
 
-    /* Reduced motion */
+    @media (max-width: 850px){
+      .topbar-inner{ align-items:flex-start; flex-direction:column; }
+      .nav{ margin-left:0; }
+      .cta{ margin-left:0; }
+      .status-deck{ grid-template-columns:1fr; }
+      .status-grid{ grid-template-columns:1fr; }
+      .section,
+      .section.wide{ grid-column:span 12; }
+      .wrap{ padding-inline:16px; }
+      .hero{ padding-inline:0; }
+    }
     @media (prefers-reduced-motion: reduce){
-      *{ animation:none !important; transition:none !important; }
+      *{ animation:none !important; transition:none !important; scroll-behavior:auto !important; }
     }
   </style>
 </head>
 
-<body class="scan">
-  <div id="particles" aria-hidden="true"></div>
-
+<body>
   <header class="topbar">
     <div class="topbar-inner">
       <a class="brand" href="/home.html">
@@ -337,274 +421,243 @@
   </header>
 
   <main class="wrap" id="top">
-    <section class="head" aria-label="Sticker Wall header">
-      <h1>Sticker Wall</h1>
+    <section class="hero" aria-label="Sticker Wall header">
+      <p class="eyebrow">PUBLIC NODE // COMMUNITY WALL</p>
+      <h1>Kairo's Sticker Wall</h1>
+      <div class="intro">
+        <div><span class="slash">//</span> this is definitely not moderated properly.</div>
+        <div><span class="slash">//</span> posts may be edited, mislabelled, translated badly, or haunted by accident.</div>
+      </div>
+    </section>
 
-      <div class="note">
-        <div><span class="slash">//</span> NOTE: Input system unstable. Only select data fragments appear.</div>
-        <div><span class="slash">//</span> Kairo reviews signals intermittently.</div>
-        <div><span class="slash">//</span> Legacy logs below.</div>
+    <section class="status-deck" aria-label="Sticker Wall status">
+      <div class="status-card">
+        <h2 class="panel-title">Wall Status</h2>
+        <div class="status-grid">
+          <div class="stat"><span>endpoint</span><strong>semi-private / publicly findable</strong></div>
+          <div class="stat"><span>moderator</span><strong>Kairo, allegedly</strong></div>
+          <div class="stat"><span>last update</span><strong>recent enough to be suspicious</strong></div>
+        </div>
       </div>
 
-      <div class="controls" aria-label="Sticker Wall status">
-        <div class="pill"><span class="dot good" aria-hidden="true"></span> endpoint: semi-private</div>
-        <div class="pill"><span class="dot warn" aria-hidden="true"></span> visibility: accidental</div>
-        <label class="toggle" title="Useful while you’re building: turns off disappearing + random glitch">
-          <input id="stabilise" type="checkbox" /> stabilise wall
-        </label>
-      </div>
+      <aside class="investigation">
+        <h2 class="panel-title">Current Investigation</h2>
+        <p><b>why does soahn glow in photographs</b></p>
+      </aside>
     </section>
 
     <section class="wall" aria-label="Sticker Wall entries">
 
-      <article class="sticker" data-life="12000" data-glitch="true">
-        <div class="line glitchy" data-text="@SYNTHGHOST: if you're reading this, you're already in the loop">
-          <span class="handle">@SINTH:</span> if you're reading this, you're already in the loop
+      <section class="section wide" aria-labelledby="pinned-fragments">
+        <div class="section-head">
+          <h2 id="pinned-fragments">Pinned Fragments</h2>
+          <span>legacy / still active</span>
         </div>
-      </article>
+        <div class="stack">
+          <article class="sticker green" data-life="0" data-glitch="true">
+            <p class="line glitchy" data-text="@SINTH: if you're reading this, you're already in the loop"><span class="handle">@SINTH:</span> if you're reading this, you're already in the loop</p>
+          </article>
 
-      <article class="sticker" data-life="0" data-glitch="false">
-        <div class="line">
-          <span class="handle">@echo-chamb3r:</span> 이 벽은 우리가 잊는 것을 기억해.
+          <article class="sticker" data-life="0">
+            <p class="line"><span class="handle">@echo-chamb3r:</span> 이 벽은 우리가 잊는 것을 기억해.</p>
+          </article>
+
+          <article class="sticker" data-life="0">
+            <p class="line"><span class="handle">@glitchbaby01:</span> i don’t trust songs that resolve cleanly</p>
+          </article>
+
+          <article class="sticker" data-life="0">
+            <p class="line"><span class="handle">@neon_trace:</span> if a glitch repeats enough times is it still an error or is it a feature?</p>
+          </article>
+
+          <article class="sticker pink" data-life="0">
+            <p class="line"><span class="handle">@sleepsequence:</span> do androids cry in system-safe mode?</p>
+          </article>
         </div>
-      </article>
+      </section>
 
-      <article class="sticker" data-life="9000" data-glitch="true">
-        <div class="line">
-          <span class="handle">@glitchbaby01:</span> i don’t trust songs that resolve cleanly
+      <section class="section" aria-labelledby="error-layer">
+        <div class="section-head">
+          <h2 id="error-layer">Error Layer</h2>
+          <span>peel carefully</span>
         </div>
-      </article>
+        <div class="stack">
+          <article class="sticker pink" data-life="0">
+            <p class="line"><span class="handle">@mirror404:</span> they told me i was a mir<a href="/404" aria-label="hidden error 404 link in mirror">r</a>or</p>
+          </article>
+          <div class="aside">KAIRO <span class="slash">//</span> decoding… <em>error layer detected in /404. proceed carefully.</em></div>
 
-      <article class="sticker" data-life="0" data-glitch="false">
-        <div class="line">
-          <span class="handle">@neon_trace:</span> if a glitch repeats enough times is it still an error or is it a feature?
+          <article class="sticker" data-life="0">
+            <p class="line"><span class="handle">@no_signal:</span> 01110011 01110100 01100001 01111001</p>
+          </article>
+          <div class="aside">KAIRO <span class="slash">//</span> translation: <em>stay</em></div>
+
+          <article class="sticker" data-life="0">
+            <p class="line"><span class="handle">@subroutine:</span> 01100101 01100011 01101000 01101111</p>
+          </article>
+          <div class="aside">KAIRO <span class="slash">//</span> translation: <em>echo</em></div>
         </div>
-      </article>
+      </section>
 
-      <article class="sticker" data-life="7000" data-glitch="false">
-        <div class="line">
-          <span class="handle">@sleepsequence:</span> do androids cry in system-safe mode?
+      <section class="section" aria-labelledby="relay-gossip">
+        <div class="section-head">
+          <h2 id="relay-gossip">Relay Gossip</h2>
+          <span>unverified / beloved</span>
         </div>
-      </article>
+        <div class="stack">
+          <article class="sticker yellow note-sticker" data-life="9000">
+            <p class="line"><span class="flag">FOUND:</span> one neural glove, size unknown. smells like solder and poor decisions.</p>
+          </article>
 
-      <article class="sticker" data-life="0" data-glitch="false">
-        <div class="line">
-          <span class="handle">@mirror404:</span> they told me i was a mir<a href="/404" style="color:#988df9;text-decoration:underline;">r</a>or
+          <article class="sticker" data-life="0">
+            <p class="line">apparently someone heard music from tunnel 88. apparently tunnel 88 collapsed six years ago</p>
+          </article>
+
+          <article class="sticker yellow" data-life="0">
+            <p class="line"><span class="flag">WHO</span> keeps leaving flowers in Tunnel 12</p>
+          </article>
+
+          <article class="sticker" data-life="0">
+            <p class="line"><span class="handle">@hlmntrn:</span> every time i walk past that relay i swear it smells like rain</p>
+          </article>
+
+          <article class="sticker" data-life="10000">
+            <p class="line"><span class="handle">@ghostroute:</span> i walked through tunnel 31 and lost fourteen minutes</p>
+          </article>
         </div>
-      </article>
+      </section>
 
-      <div class="aside">KAIRO <span class="slash">//</span> decoding… <em>error layer detected in /404. proceed carefully.</em></div>
-
-      <article class="sticker" data-life="0" data-glitch="false">
-        <div class="line">
-          <span class="handle">@no_signal:</span> 01110011 01110100 01100001 01111001
+      <section class="section" aria-labelledby="kairo-replies">
+        <div class="section-head">
+          <h2 id="kairo-replies">Kairo Replies</h2>
+          <span>chaos support desk</span>
         </div>
-      </article>
+        <div class="stack">
+          <article class="sticker" data-life="0">
+            <p class="line"><span class="handle">@404s-fleet:</span> we heard there was some drone trouble. if you’re alive, blink twice.</p>
+          </article>
+          <div class="aside">KAIRO <span class="slash">//</span> <em>blinked three times. just to be annoying.</em></div>
 
-      <div class="aside">KAIRO <span class="slash">//</span> translation: <em>stay</em></div>
+          <article class="sticker yellow" data-life="0">
+            <p class="line"><span class="handle">@relayrat:</span> whoever stole my noodles i hope your augment overheats</p>
+          </article>
+          <div class="aside">KAIRO <span class="slash">//</span> <em>deserved, honestly</em></div>
 
-      <article class="sticker" data-life="10000" data-glitch="false">
-        <div class="line">
-          <span class="handle">@hlmntrn:</span> every time i walk past that relay i swear it smells like rain
+          <article class="sticker" data-life="0">
+            <p class="line"><span class="handle">@packetloss:</span> kairo stop editing my posts</p>
+          </article>
+          <div class="aside">KAIRO <span class="slash">//</span> <em>no</em></div>
+
+          <article class="sticker green" data-life="0">
+            <p class="line"><span class="handle">@synthdogwatch:</span> spotted again</p>
+          </article>
+          <div class="aside">KAIRO <span class="slash">//</span> <em>this is getting out of hand</em></div>
         </div>
-      </article>
+      </section>
 
-      <article class="sticker" data-life="8000" data-glitch="false">
-        <div class="line">
-          <span class="handle">@absentlight:</span> i left too late
+      <section class="section" aria-labelledby="soft-signals">
+        <div class="section-head">
+          <h2 id="soft-signals">Soft Signals</h2>
+          <span>read gently</span>
         </div>
-      </article>
+        <div class="stack">
+          <article class="sticker pink" data-life="0">
+            <p class="line"><span class="handle">@absentlight:</span> i left too late</p>
+          </article>
+          <div class="aside">KAIRO <span class="slash">//</span> <em>we don’t leave. not really.</em></div>
 
-      <div class="aside">KAIRO <span class="slash">//</span> <em>we don’t leave. not really.</em></div>
+          <article class="sticker" data-life="0">
+            <p class="line"><span class="handle">@밤의속삭임:</span> 그들은 내 목소리를 꺼버렸지만, 나는 여전히 여기 있어.</p>
+          </article>
 
-        <article class="sticker" data-life="8000" data-glitch="false">
-        <div class="line">
-          <span class="handle">@밤의속삭임:</span> 그들은 내 목소리를 꺼버렸지만, 나는 여전히 여기 있어.
+          <article class="sticker" data-life="0">
+            <p class="line"><span class="handle">@systemalias:</span> 신호가 끊겨도, 우리는 잊히지 않아.</p>
+          </article>
+
+          <article class="sticker pink" data-life="0">
+            <p class="line"><span class="handle">@overclockedheart:</span> i don’t dream anymore. i buffer.</p>
+          </article>
+
+          <article class="sticker green" data-life="0">
+            <p class="line"><span class="handle">@afterimage:</span> if anyone sees a white synth with a broken shoulder panel tell him thanks</p>
+          </article>
+          <div class="aside">KAIRO <span class="slash">//</span> <em>he knows</em></div>
         </div>
-      </article>
+      </section>
 
-        <article class="sticker" data-life="8000" data-glitch="false">
-        <div class="line">
-          <span class="handle">@systemalias:</span> 신호가 끊겨도, 우리는 잊히지 않아.
+      <section class="section wide" aria-labelledby="terminal-drops">
+        <div class="section-head">
+          <h2 id="terminal-drops">Terminal Drops</h2>
+          <span>crosslinked / probably unsafe</span>
         </div>
-      </article>
+        <div class="stack">
+          <article class="sticker terminated" data-life="0">
+            <p class="line"><span class="handle">@neuralghost (account terminated):</span> if you see this, tell kairo the signal’s looping again</p>
+          </article>
+          <div class="aside">KAIRO <span class="slash">//</span> <em>loop confirmed. running diagnostics. again.</em></div>
 
-       <article class="sticker" data-life="8000" data-glitch="false">
-        <div class="line">
-          <span class="handle">@signal19:</span> i am here. you are here. we are here.
+          <article class="sticker" data-life="0">
+            <p class="line"><span class="handle">@cipherdrop:</span> found an <a href="/cipherchorus.html" target="_blank" rel="noopener" title="open node in new window">unfinished encoder</a> in Minjae's terminal logs. anyone know what this is?</p>
+          </article>
+          <div class="aside">KAIRO <span class="slash">//</span> <em>oh that? yeah. don't type anything you wouldn’t release to the net.</em></div>
+
+          <article class="sticker" data-life="0">
+            <p class="line"><span class="handle">@catchycache:</span> latency makes everything feel more honest</p>
+          </article>
         </div>
-      </article>
-
-       <article class="sticker" data-life="8000" data-glitch="false">
-        <div class="line">
-          <span class="handle">@404s-fleet:</span> we heard there was some drone trouble. if you’re alive, blink twice.
-        </div>
-      </article>
-
-            <div class="aside">KAIRO <span class="slash">//</span> <em>blinked three times. just to be annoying.</em></div>
-
-        <article class="sticker" data-life="8000" data-glitch="false">
-        <div class="line">
-          <span class="handle">@echoez:</span> every transmission leaves an afterimage.
-        </div>
-      </article>
-
-      <article class="sticker" data-life="8000" data-glitch="false">
-        <div class="line">
-          <span class="handle">@neuralghost (account terminated):</span> if you see this, tell kairo the signal’s looping again
-        </div>
-      </article>
-
-            <div class="aside">KAIRO <span class="slash">//</span> <em>loop confirmed. running diagnostics. again.</em></div>
-
-        <article class="sticker" data-life="8000" data-glitch="false">
-        <div class="line">
-          <span class="handle">@overclockedheart:</span> i don’t dream anymore. i buffer.
-        </div>
-      </article>
-
-       <article class="sticker" data-life="8000" data-glitch="false">
-        <div class="line">
-          <span class="handle">@cipherdrop:</span> found an <a href="/cipherchorus.html" target="_blank" style="color:#988df9;text-decoration:none;" title="open node in new window">unfinished encoder</a> in Minjae's terminal logs. anyone know what this is?
-        </div>
-      </article>
-
-      <div class="aside">KAIRO <span class="slash">//</span> <em>oh that? yeah. don't type anything you wouldn’t release to the net.</em></div>
-
-              <article class="sticker" data-life="8000" data-glitch="false">
-        <div class="line">
-          <span class="handle">@subroutine:</span> 01100101 01100011 01101000 01101111
-        </div>
-      </article>
-
-            <div class="aside">KAIRO <span class="slash">//</span> <em>translation: echo</em></div>
-
-              <article class="sticker" data-life="8000" data-glitch="false">
-        <div class="line">
-          <span class="handle">@catchycache:</span> latency makes everything feel more honest
-        </div>
-      </article>
-
-
-
-
-
-
-
-      <!-- Duplicate the <article class="sticker"> blocks to add more posts. Use data-life for disappearing (ms). Set 0 to keep always. -->
+      </section>
 
     </section>
 
     <footer>
-      E.V.E.N // sticker wall endpoint • do not index • <a href="/home.html">back to network</a>
+      E.V.E.N // Kairo's Sticker Wall • community noise preserved badly • <a href="/home.html">back to network</a>
     </footer>
   </main>
 
   <script>
-  (function(){
-    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const stabilise = document.getElementById('stabilise');
-    const stickers = Array.from(document.querySelectorAll('.sticker'));
+    (function(){
+      const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const stickers = Array.from(document.querySelectorAll('.sticker'));
+      const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
-    // If you want the wall to feel like it changes on refresh, keep this.
-    // If you want it to feel more consistent, set this to false.
-    const RANDOMISE_ON_LOAD = true;
+      function applyGlitch(el){
+        const line = el.querySelector('.line');
+        if(!line || line.classList.contains('glitchy')) return;
+        line.classList.add('glitchy');
+        line.setAttribute('data-text', line.textContent.trim());
+      }
 
-    // NEW: only ONE post will be allowed to vanish (total)
-    const MAX_VANISHERS = 1;
+      function randomiseOnLoad(){
+        const ghostPick = stickers.slice().sort(()=>Math.random()-0.5).slice(0, rand(1, 3));
+        ghostPick.forEach(el => el.classList.add('ghost'));
 
-    // Utility
-    const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+        const glitchPick = stickers.filter(el => el.dataset.glitch === 'true' || Math.random() > .86)
+          .sort(()=>Math.random()-0.5)
+          .slice(0, rand(1, 3));
+        glitchPick.forEach(applyGlitch);
+      }
 
-    function applyGlitch(el){
-      const line = el.querySelector('.line');
-      if(!line) return;
-      if(line.classList.contains('glitchy')) return;
-      line.classList.add('glitchy');
-      line.setAttribute('data-text', line.textContent.trim());
-    }
+      function scheduleOneVanish(){
+        if(prefersReduced) return;
+        const candidates = stickers.filter(el => parseInt(el.getAttribute('data-life') || '0', 10) > 0);
+        if(!candidates.length) return;
+        const chosen = candidates.sort(()=>Math.random()-0.5)[0];
+        const life = parseInt(chosen.getAttribute('data-life') || '0', 10);
+        setTimeout(() => {
+          chosen.style.transition = 'opacity 900ms ease, transform 900ms ease, height 900ms ease, margin 900ms ease, padding 900ms ease, border-width 900ms ease';
+          chosen.classList.add('vanish');
+          if(Math.random() < .35){
+            setTimeout(() => {
+              chosen.classList.remove('vanish');
+              chosen.classList.add('ghost');
+            }, rand(2600, 5400));
+          }
+        }, rand(1600, 4200) + life);
+      }
 
-    function maybeRandomise(){
-      if(!RANDOMISE_ON_LOAD) return;
-
-      // Randomly mark a couple as "ghost" (still readable, but unstable)
-      const pick = stickers.slice().sort(()=>Math.random()-0.5).slice(0, rand(1, 2));
-      pick.forEach(el => el.classList.add('ghost'));
-
-      // Randomly promote glitch effect to a couple more (Kairo touches it, it breaks)
-      const glitchPick = stickers.filter(el => el.dataset.glitch !== 'true')
-        .sort(()=>Math.random()-0.5)
-        .slice(0, rand(0, 2));
-      glitchPick.forEach(applyGlitch);
-    }
-
-    function scheduleVanish(){
-      if(prefersReduced) return;
-
-      // Pick candidates that are allowed to vanish (data-life > 0)
-      const candidates = stickers.filter(el => {
-        const life = parseInt(el.getAttribute('data-life') || '0', 10);
-        return life > 0;
-      });
-
-      // Choose only ONE (or none if you have no candidates)
-      const chosen = candidates
-        .slice()
-        .sort(()=>Math.random()-0.5)
-        .slice(0, Math.min(MAX_VANISHERS, candidates.length));
-
-      stickers.forEach((el) => {
-        const life = parseInt(el.getAttribute('data-life') || '0', 10);
-        const shouldGlitch = el.getAttribute('data-glitch') === 'true';
-
-        // Some posts become glitchy briefly even if they never vanish
-        if(shouldGlitch){
-          setTimeout(()=>{
-            if(stabilise.checked) return;
-            applyGlitch(el);
-          }, rand(800, 2600));
-        }
-
-        // ✅ Only the chosen ONE is allowed to vanish
-        if(life > 0 && chosen.includes(el)){
-          // Random delay so it doesn't feel uniform
-          const delay = rand(1200, 4200);
-
-          setTimeout(() => {
-            if(stabilise.checked) return;
-
-            // Fade out, then collapse
-            el.style.transition =
-              'opacity 900ms ease, transform 900ms ease, height 900ms ease, margin 900ms ease, padding 900ms ease, border-width 900ms ease';
-            el.classList.add('vanish');
-
-            // Optional: sometimes it comes back (because Kairo)
-            const comebackChance = 0.25;
-            if(Math.random() < comebackChance){
-              setTimeout(() => {
-                if(stabilise.checked) return;
-                el.classList.remove('vanish');
-                el.classList.add('ghost');
-              }, rand(2500, 5200));
-            }
-          }, delay + life);
-        }
-      });
-    }
-
-    // Stabilise toggle: restore anything vanished
-    stabilise.addEventListener('change', () => {
-      if(!stabilise.checked) return;
-      stickers.forEach(el => {
-        el.classList.remove('vanish');
-        el.classList.remove('ghost');
-      });
-    });
-
-    maybeRandomise();
-    scheduleVanish();
-  })();
-</script>
-
+      randomiseOnLoad();
+      scheduleOneVanish();
+    })();
+  </script>
 </body>
 </html>
