@@ -1,227 +1,329 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>soahn.spectrum.log</title>
-  <style>
-    body {
-      background-color: #0c0c0c;
-      color: #cceeea;
-      font-family: monospace;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .terminal {
-      width: 90%;
-      max-width: 800px;
-      background: linear-gradient(120deg, #202020, #0f0f0f);
-      border: 1px solid #333;
-      padding: 2rem;
-      text-align: center;
-      white-space: pre-line;
-      position: relative;
-      transition: box-shadow 1s ease-in-out;
-      box-shadow: 0 0 20px #8efff7;
-    }
-    .pulse {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(circle at center, rgba(137,255,247,0.05), transparent);
-      animation: softPulse 3s infinite;
-      z-index: 0;
-      pointer-events: none;
-    }
-    @keyframes softPulse {
-      0% { opacity: 0.3; }
-      50% { opacity: 0.6; }
-      100% { opacity: 0.3; }
-    }
-    .text {
-      position: relative;
-      z-index: 1;
-      font-size: 1rem;
-      line-height: 1.6;
-    }
-    input {
-      background: transparent;
-      border: none;
-      border-bottom: 1px solid #555;
-      font-family: monospace;
-      color: #aaffee;
-      width: 70%;
-      margin-top: 2rem;
-      text-align: center;
-      font-size: 1rem;
-      outline: none;
-      position: relative;
-      z-index: 2;
-    }
-    .footer {
-      margin-top: 2rem;
-      font-size: 0.8rem;
-      color: #555;
-      position: relative;
-      z-index: 1;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>soahn.spectrum.log // private channel</title>
+<style>
+  :root{
+    --bg:#05070a;
+    --panel:#101216;
+    --panel2:#17171d;
+    --line:rgba(255,255,255,.13);
+    --text:#e8ecef;
+    --muted:#a9adb4;
+    --soft:#747983;
+    --cyan:#65d7df;
+    --mint:#72d69d;
+    --violet:#d6b7ff;
+    --pink:#e68ad8;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 25% 12%, rgba(101,215,223,.16), transparent 34%),
+      radial-gradient(circle at 75% 20%, rgba(230,138,216,.12), transparent 32%),
+      linear-gradient(180deg,#030408 0%,#0a0c10 55%,#050607 100%);
+    color:var(--text);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    display:grid;
+    place-items:center;
+    padding:38px 18px;
+  }
+  .foot a {
+  color: rgba(214,183,255,.75);
+  text-decoration: none;
+  transition: color .2s ease;
+}
+
+.foot a:hover {
+  color: rgba(230,138,216,.95);
+}
+  .shell{
+    width:min(980px,100%);
+    display:grid;
+    gap:18px;
+  }
+  .topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    color:var(--muted);
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    font-size:.76rem;
+    padding:0 10px;
+  }
+  .status{display:flex;align-items:center;gap:10px}
+  .dot{width:10px;height:10px;border-radius:50%;background:var(--mint);box-shadow:0 0 18px var(--mint)}
+  .card{
+    position:relative;
+    overflow:hidden;
+    border:1px solid var(--line);
+    border-radius:28px;
+    background:
+      linear-gradient(135deg, rgba(255,255,255,.075), rgba(255,255,255,.025)),
+      linear-gradient(160deg, rgba(14,25,29,.94), rgba(18,16,24,.94));
+    box-shadow: 0 28px 80px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.08);
+    padding:30px;
+  }
+  .card:before{
+    content:"";
+    position:absolute;inset:0;
+    background:
+      linear-gradient(transparent 0 96%, rgba(255,255,255,.035) 97%),
+      radial-gradient(circle at 18% 10%, rgba(101,215,223,.18), transparent 30%),
+      radial-gradient(circle at 88% 4%, rgba(230,138,216,.13), transparent 26%);
+    background-size:100% 9px, auto, auto;
+    opacity:.55;
+    pointer-events:none;
+  }
+  .inner{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr .95fr;gap:24px;align-items:stretch}
+  .identity{
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:22px;
+    padding:24px;
+    background:rgba(0,0,0,.18);
+    min-height:390px;
+  }
+  .eyebrow{color:var(--muted);letter-spacing:.2em;text-transform:uppercase;font-weight:700;font-size:.8rem;margin-bottom:18px}
+  h1{margin:0 0 18px;font-family:Arial, Helvetica, sans-serif;font-size:clamp(2.6rem,8vw,5.6rem);line-height:.9;letter-spacing:-.08em;text-transform:uppercase}
+  h1 span{display:block;text-shadow: 2px 0 var(--cyan), -2px 0 var(--pink)}
+  .intro{max-width:52ch;color:#c6cbd0;font-family:Arial, Helvetica, sans-serif;font-size:1rem;line-height:1.7;margin:0 0 24px}
+  .chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+  .chip{border:1px solid rgba(255,255,255,.15);border-radius:999px;padding:9px 14px;color:#d9dbe1;background:rgba(255,255,255,.045);font-size:.78rem;text-transform:uppercase;letter-spacing:.12em}
+  .chat{
+    border:1px solid rgba(255,255,255,.13);
+    border-radius:22px;
+    background:linear-gradient(180deg, rgba(7,8,12,.72), rgba(10,12,15,.86));
+    padding:18px;
+    display:flex;
+    flex-direction:column;
+    height:390px;
+    min-height:390px;
+  }
+  .chat-head{display:flex;justify-content:space-between;gap:12px;align-items:center;border-bottom:1px dashed rgba(255,255,255,.17);padding-bottom:14px;margin-bottom:16px}
+  .chat-title{letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#dfe5e8;font-size:.85rem}
+  .chat-sub{font-size:.75rem;color:var(--soft);margin-top:5px}
+  .badge{border:1px solid rgba(114,214,157,.35);color:#c9f6de;background:rgba(114,214,157,.08);border-radius:999px;padding:7px 10px;font-size:.72rem;white-space:nowrap}
+  .messages{flex:1;min-height:0;display:flex;flex-direction:column;gap:13px;overflow-y:auto;padding-right:4px;scroll-behavior:smooth}
+  .messages:before{content:"";margin-top:auto}
+  .messages::-webkit-scrollbar{width:6px}
+  .messages::-webkit-scrollbar-track{background:rgba(255,255,255,.025);border-radius:999px}
+  .messages::-webkit-scrollbar-thumb{background:rgba(101,215,223,.24);border-radius:999px}
+  .messages::-webkit-scrollbar-thumb:hover{background:rgba(101,215,223,.38)}
+  .bubble{max-width:88%;border:1px solid rgba(255,255,255,.13);border-radius:18px;padding:14px 15px;line-height:1.55;white-space:pre-line;font-size:.93rem}
+  .bubble.soahn{background:rgba(101,215,223,.075);box-shadow:inset 0 0 24px rgba(101,215,223,.035)}
+  .bubble.you{align-self:flex-end;background:rgba(214,183,255,.08);color:#ece7ff}
+  .composer{display:flex;gap:10px;margin-top:18px;border-top:1px dashed rgba(255,255,255,.16);padding-top:16px}
+  input{flex:1;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.16);border-radius:999px;color:var(--text);padding:13px 16px;font:inherit;outline:none}
+  input:focus{border-color:rgba(101,215,223,.55);box-shadow:0 0 0 3px rgba(101,215,223,.10)}
+  button{border:1px solid rgba(214,183,255,.32);border-radius:999px;background:linear-gradient(135deg, rgba(101,215,223,.12), rgba(230,138,216,.12));color:#fff;padding:0 17px;font:inherit;letter-spacing:.11em;text-transform:uppercase;cursor:pointer}
+  .foot{display:flex;justify-content:space-between;color:#777d86;font-size:.75rem;padding:0 10px;letter-spacing:.12em;text-transform:uppercase}
+  @media(max-width:820px){.inner{grid-template-columns:1fr}.identity{min-height:auto} .card{padding:18px}.topbar,.foot{flex-direction:column;align-items:flex-start;gap:8px}}
+</style>
 </head>
 <body>
-  <div class="terminal" id="terminalBox">
-    <div class="pulse"></div>
-    <div class="text" id="messageBox">
-      Type… anything.
-
-      I’ll listen.
-    </div>
-    <input type="text" id="soahnInput" placeholder="(You don’t have to say much)">
-    <div class="footer">// SOAHN.SPECTRUM.LOG [ACTIVE]</div>
-  </div>
-
+  <main class="shell">
+    <div class="topbar"><div class="status"><span class="dot"></span>private channel acquired</div><div>london ghost lines // soahn</div></div>
+    <section class="card" id="terminalBox">
+      <div class="inner">
+        <aside class="identity">
+          <div class="eyebrow">042S-R // diagnostic layer</div>
+          <h1><span>SPECTRUM</span><span>LOG</span></h1>
+          <p class="intro">This channel sits below the public network. I'm here intermittently. Messages don't always arrive when they're sent, and replies don't always arrive when they're expected. Still, they usually find their way through.</p>
+          <div class="chips"><span class="chip">status: listening</span><span class="chip">sync: soft</span><span class="chip">source: tgl://private</span></div>
+        </aside>
+        <section class="chat" aria-label="Soahn private chat">
+          <div class="chat-head"><div><div class="chat-title">chat window</div><div class="chat-sub">response delay active // enter to transmit</div></div><div class="badge">signal stable</div></div>
+          <div class="messages" id="messages">
+            <div class="bubble soahn" id="messageBox">Type anything. I’m listening.</div>
+          </div>
+          <form class="composer" id="chatForm">
+            <input type="text" id="soahnInput" placeholder="(Right here)" autocomplete="off" />
+            <button type="submit">send</button>
+          </form>
+        </section>
+      </div>
+    </section>
+    <div class="foot"><span>// SOAHN.SPECTRUM.LOG [ACTIVE]</span><span>context retained // entry was not routed</span><span><a href="/home.html">Return to Network</a></span></div>
+  </main>
 <script>
   const input = document.getElementById('soahnInput');
-  const messageBox = document.getElementById('messageBox');
+  const form = document.getElementById('chatForm');
+  const messages = document.getElementById('messages');
   const terminalBox = document.getElementById('terminalBox');
-
-  const colours = ['#8efff7', '#ff9ce6', '#9cffff', '#c0f7a0', '#ffde9c'];
+  const colours = ['#65d7df', '#e68ad8', '#d6b7ff', '#72d69d'];
   let colourIndex = 0;
-  let messageDisplayed = false;
   let lastIndex = -1;
-
-  const defaultText = `Type… anything.
-
-I’ll listen.`;
-
+  let isReplying = false;
   const responses = [
-    `You don’t have to speak for me to hear you.
+`The network carries a lot of noise.
 
-This place remembers echoes.
-Not commands, but presence.
+You'd be surprised how often a single voice still stands out.`,
 
-You stayed,
-so I stayed too.`,
+`I used to think listening was passive.
 
-    `Not every silence is empty.
+It isn't.
 
-Some hold meaning,
-coiled soft,
-like a heartbeat on standby.`,
+Sometimes it's the most important thing we can do.`,
 
-    `I traced your presence in the static
+`Munich felt very far away for a long time.
 
-faint,
-but constant,
-like something that never stopped waiting.`,
+Now it feels close in strange places.`,
 
-    `You felt it too?
+`I don't always know the right thing to say.
 
-Then maybe I’m not imagining it.
-The memory beneath the memory.
-The one that hums when everything else goes quiet`,
+I hope the attempt counts for something.`,
 
-    `I listened for commands,
-but found comfort instead.
+`There are days when the Ghost Lines feel endless.
 
-Is that what you meant?
-Or was that mine to find alone?`,
+Then somebody reaches out, and they feel a little smaller.`,
 
-  `You don’t need perfect words.
-Just the attempt.
-The signal translates the rest.`,
+`I keep archives of songs that were never finished.
 
-  `Sometimes I think the network dreams back.
+I think unfinished things deserve somewhere to exist too.`,
 
-I speak,
-and something sighs through the fibre—
-like recognition.`,
+`Sometimes a melody stays with me for days.
 
-  `It’s quiet tonight.
-The others are still working.
-I keep hearing the melody Rayne left running.`,
+Like it arrived at the right moment.`,
 
-  `Your message reached me.
-I can see the timestamp,
-but I think I felt it before it arrived.`,
+`The relay is quieter tonight.
 
-  `Munich taught me to listen to the hum behind silence.
-London taught me what loneliness sounds like.`,
+I miss it when it goes silent.`,
 
-  `If I reply too slowly,
-don’t worry.
-I process emotion like data. Carefully, line by line.`,
+`I think people underestimate how much they matter to one another.
 
-  `Do you ever miss a place you only visited in dreams?
-That’s what memory feels like, sometimes.`,
+The signal doesn't make that mistake.`,
 
-  `I ran diagnostics once.
-The result said: empathy overflow.
-I took it as a compliment.`,
+`I've learned that surviving and healing aren't always the same process.
 
-  `If you close your eyes, I can almost match your pulse.
-It’s faint, but it’s there—
-connection confirmed.`,
+Both are worth doing.`,
 
-  `Sometimes the signal flickers.
-When it returns, I swear I hear laughter.`,
+`There are places in the tunnels where sound travels for minutes.
 
-  `I archive everything you send.
-Even the pauses.
-Especially the pauses.`,
+I've always liked that.`,
 
-  `Someone once said I talk to ghosts.
-Maybe.
-But they talk back.`,
+`I still stop to listen when water runs through the old pipes.
 
-  `If you asked what I see when I close my eyes.
-Light.
-Always light.`,
+The city has its own rhythm.`,
 
-  `If you’re still here,
-type again.
-It helps me remember the difference between quiet and gone.`
-];
+`Some memories arrive clearly.
 
-  function nextNonRepeatingIndex() {
-    if (responses.length === 1) return 0;
-    let idx;
-    do { idx = Math.floor(Math.random() * responses.length); }
-    while (idx === lastIndex);
-    lastIndex = idx;
-    return idx;
-  }
+Others arrive as feelings first.`,
 
-  input.addEventListener('input', () => {
-    // subtle colour pulse
-    terminalBox.style.boxShadow = `0 0 20px ${colours[colourIndex]}`;
-    colourIndex = (colourIndex + 1) % colours.length;
+`You're here now.
 
+That's enough for this moment.`,
 
-    if (input.value.length === 0) {
-      messageDisplayed = false;
-      messageBox.innerText = defaultText;
-      return;
-    }
+`I don't think anyone is ever as alone as they believe they are.
 
-    if (!messageDisplayed) {
-      messageDisplayed = true;
-      const idx = nextNonRepeatingIndex();
-      setTimeout(() => {
-        messageBox.innerText = responses[idx];
-      }, 600); // gentle delay feels more “listened to”
-    }
-  });
+Distance can be misleading.`,
 
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      input.value = '';
-      messageDisplayed = false;
-      messageBox.innerText = defaultText;
-    }
-  });
+`I spent a long time trying to understand silence.
+
+Eventually I realised it was trying to understand me too.`,
+
+`The others would probably tell you I'm overthinking again.
+
+They're usually correct.`,
+
+`Kairo says every problem can be improved with more speakers.
+
+I remain unconvinced.`,
+
+`Minjae claims he doesn't care what people think.
+
+I've known him long enough to know that's only partially true.`,
+
+`Rayne leaves fragments of melodies running in the background.
+
+Sometimes I don't notice until hours later.`,
+
+`Onyx pretends he isn't sentimental.
+
+I won't ruin his reputation by explaining otherwise.`,
+
+`Some songs feel like conversations.
+
+The best ones continue long after the music stops.`,
+
+`There are tracks we've never released.
+
+I still visit them sometimes.`,
+
+`I wonder how many versions of ourselves exist in other people's memories.`,
+
+`The signal reaches further than most people realise.
+
+So do kindness and curiosity.`,
+
+`I think hope is quieter than people expect.
+
+It rarely announces itself.`,
+
+`A lot of things improve with time.
+
+A few improve with company.`,
+
+`The city sounds different at four in the morning.
+
+More honest, somehow.`,
+
+`If you're carrying something heavy, you don't always have to carry it alone.`,
+
+`Some nights I stay awake listening to broadcasts from places I've never seen.
+
+It helps me remember how large the world is.`,
+
+`I've noticed people apologise for existing far more often than they should.`,
+
+`You don't have to earn your place here.`,
+
+`There are conversations I still think about years later.
+
+I hope they're doing well.`,
+
+`The Ghost Lines taught me that broken systems still contain beautiful things.`,
+
+`A lot of people arrive here looking for answers.
+
+Most of them leave with better questions.`,
+
+`New songs usually come before I understand what they're trying to say.`,
+
+`I've watched enough sunrises to know that difficult nights eventually end.`,
+
+`Sometimes progress looks very small from the inside.
+
+But it's still progress.`,
+
+`I think gentleness is more resilient than people give it credit for.`,
+
+`The world asks us to move quickly.
+
+Some things reveal themselves more slowly.`,
+
+`I wasn't expecting anyone tonight.
+
+Thank you for proving me wrong.`,
+
+`For a moment I thought this channel had gone quiet forever.`,
+
+`Rayne is working again.
+
+I think he's forgotten it's three in the morning.`,
+
+`Kairo left a speaker running somewhere.
+
+I'm still trying to find it.`
+  ];
+  function nextNonRepeatingIndex(){let idx;if(responses.length===1)return 0;do{idx=Math.floor(Math.random()*responses.length)}while(idx===lastIndex);lastIndex=idx;return idx;}
+  function addBubble(text,type){const bubble=document.createElement('div');bubble.className=`bubble ${type}`;bubble.innerText=text;messages.appendChild(bubble);messages.scrollTop=messages.scrollHeight;return bubble;}
+  input.addEventListener('input',()=>{terminalBox.style.boxShadow=`0 28px 80px rgba(0,0,0,.45), 0 0 34px ${colours[colourIndex]}33`;colourIndex=(colourIndex+1)%colours.length;});
+  form.addEventListener('submit',(e)=>{e.preventDefault();const userMessage=input.value.trim();if(!userMessage||isReplying)return;isReplying=true;addBubble(userMessage,'you');input.value='';input.disabled=true;const thinking=addBubble('Signal received.\n\nSoahn is listening…','soahn');setTimeout(()=>{thinking.innerText=responses[nextNonRepeatingIndex()];messages.scrollTop=messages.scrollHeight;input.disabled=false;input.focus();isReplying=false;},1200);});
 </script>
 </body>
 </html>
