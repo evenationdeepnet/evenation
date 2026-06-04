@@ -358,6 +358,7 @@ const bulletins = [
   "01:32 UTC // ONYX has repaired the relay. Again. He is requesting fewer experiments.",
   "00:55 UTC // RAYNE uploaded a 9-second harmony loop. The tunnels went quiet after.",
   "00:06 UTC // MINJAE says every station here survived at least one relay collapse, three power failures, and Kairo touching something he shouldn't.",
+  "19:27 UTC // SOAHN says some of these tracks have travelled further than we have.",
 ];
 
 const state = {
