@@ -103,6 +103,17 @@ const stations = {
         mood: "momentum",
         src: "../radio/glitchwavefm/Tracks.mp3",
       },
+
+                          {
+        title: "Seagrass",
+        artist: "Estuary Lights",
+        album: "Salt Memory",
+        tag: "liquid drum & bass",
+        source: "Relay 42",
+        duration: "3:33",
+        mood: "drifting",
+        src: "../radio/glitchwavefm/Seagrass.mp3",
+      },
     ],
   },
 
