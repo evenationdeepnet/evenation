@@ -357,7 +357,7 @@ const bulletins = [
   "02:14 UTC // KAIRO says the left speaker is haunted but only during bridges.",
   "01:32 UTC // ONYX has repaired the relay. Again. He is requesting fewer experiments.",
   "00:55 UTC // RAYNE uploaded a 9-second harmony loop. The tunnels went quiet after.",
-  "00:06 UTC // MINJAE says this is not a fan forum. The fan forum disagrees.",
+  "00:06 UTC // MINJAE says every station here survived at least one relay collapse, three power failures, and Kairo touching something he shouldn't.",
 ];
 
 const state = {
