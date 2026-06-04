@@ -92,6 +92,17 @@ const stations = {
         mood: "dreamy, emotional",
         src: "../radio/glitchwavefm/Aurora.mp3",
       },
+
+                   {
+        title: "Tracks",
+        artist: "Velour Sky",
+        album: "Between Frequencies",
+        tag: "melodic trance",
+        source: "The Hollow",
+        duration: "3:19",
+        mood: "momentum",
+        src: "../radio/glitchwavefm/Tracks.mp3",
+      },
     ],
   },
 
