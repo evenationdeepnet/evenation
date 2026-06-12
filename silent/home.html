@@ -705,6 +705,57 @@
       font-size: .88rem;
     }
 
+    .member-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.member-card {
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(150deg, rgba(243,239,231,.05), rgba(243,239,231,.02)),
+    rgba(8,9,8,.52);
+  padding: 1.2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.member-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(216,201,173,.04),
+    transparent
+  );
+  pointer-events: none;
+}
+
+.member-name {
+  margin: 0;
+  color: var(--paper);
+  font-size: 1.4rem;
+  letter-spacing: -.03em;
+}
+
+.member-role {
+  margin: .45rem 0 .9rem;
+  color: var(--rust);
+  text-transform: uppercase;
+  letter-spacing: .15em;
+  font-size: .68rem;
+}
+
+.member-note {
+  margin: 0;
+  color: var(--bone);
+  line-height: 1.6;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
     .footer {
       padding: 3rem clamp(1.2rem, 5vw, 6rem);
       border-top: 1px solid var(--line);
@@ -774,6 +825,9 @@
   .show-row { grid-template-columns: 1fr; gap: .3rem; }
   .audio-row { grid-template-columns: auto 1fr; }
   .time { grid-column: 2; }
+}
+    .member-grid {
+  grid-template-columns: 1fr;
 }
   </style>
 </head>
@@ -952,6 +1006,44 @@
         </div>
       </section>
     </main>
+
+    <section class="section">
+  <div class="section-header">
+    <div>
+      <div class="kicker">Personnel</div>
+      <h2>The Cartographers</h2>
+    </div>
+    <p class="section-intro">
+      Recorded below the city, whenever they can find a quiet room.
+    </p>
+  </div>
+
+  <div class="member-grid">
+    <article class="member-card">
+      <h3 class="member-name">Alex Smith</h3>
+      <div class="member-role">Vocals, guitar, piano</div>
+      <p class="member-note">Collects old transit maps.</p>
+    </article>
+
+    <article class="member-card">
+      <h3 class="member-name">Tom Bennett</h3>
+      <div class="member-role">Guitar</div>
+      <p class="member-note">Still repairing the same amplifier.</p>
+    </article>
+
+    <article class="member-card">
+      <h3 class="member-name">Mark Ellis</h3>
+      <div class="member-role">Bass</div>
+      <p class="member-note">Knows where everything is.</p>
+    </article>
+
+    <article class="member-card">
+      <h3 class="member-name">David "Dai" Morgan</h3>
+      <div class="member-role">Drums</div>
+      <p class="member-note">Makes the tea.</p>
+    </article>
+  </div>
+</section>
 
     <footer class="footer">
       <span>Silent Cartographers // SC-001</span>
