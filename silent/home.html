@@ -705,9 +705,9 @@
       font-size: .88rem;
     }
 
-    .member-grid {
+.member-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: 1fr;
   gap: 1rem;
 }
 
@@ -754,6 +754,29 @@
   color: var(--bone);
   line-height: 1.6;
   font-family: Georgia, "Times New Roman", serif;
+}
+
+    .member-layout {
+  display: grid;
+  grid-template-columns: minmax(0, .85fr) minmax(360px, 1.15fr);
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+.member-photo {
+  border: 1px solid var(--line);
+  min-height: 100%;
+  background: rgba(8,9,8,.52);
+  overflow: hidden;
+}
+
+.member-photo img {
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(1) contrast(1.08);
 }
 
     .footer {
@@ -825,9 +848,14 @@
   .show-row { grid-template-columns: 1fr; gap: .3rem; }
   .audio-row { grid-template-columns: auto 1fr; }
   .time { grid-column: 2; }
-}
-    .member-grid {
-  grid-template-columns: 1fr;
+
+  .member-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .member-photo img {
+    min-height: 260px;
+  }
 }
   </style>
 </head>
@@ -1018,6 +1046,7 @@
     </p>
   </div>
 
+<div class="member-layout">
   <div class="member-grid">
     <article class="member-card">
       <h3 class="member-name">Alex Smith</h3>
@@ -1043,6 +1072,10 @@
       <p class="member-note">Makes the tea.</p>
     </article>
   </div>
+  <div class="member-photo">
+    <img src="/silent/images/cartographers02.png" alt="Silent Cartographers performing live in black and white">
+  </div>
+</div>
 </section>
 
     <footer class="footer">
