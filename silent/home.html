@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Silent Cartographers // EP</title>
+  <style>
+    :root {
+      --ink: #f3efe7;
+      --paper: #d8c9ad;
+      --bone: #b8ad9a;
+      --ash: #7b817c;
+      --concrete: #252825;
+      --dark: #111311;
+      --black: #080908;
+      --rust: #b2633d;
+      --moss: #73806f;
+      --bluegrey: #8d9aa0;
+      --line: rgba(243,239,231,.18);
+      --soft: rgba(243,239,231,.07);
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 20% 5%, rgba(141,154,160,.2), transparent 26rem),
+        radial-gradient(circle at 90% 10%, rgba(178,99,61,.18), transparent 25rem),
+        linear-gradient(135deg, #090a09, #1c1f1d 45%, #101110);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .19;
+      z-index: 2;
+      background-image:
+        repeating-linear-gradient(0deg, rgba(255,255,255,.025) 0 1px, transparent 1px 2px),
+        repeating-linear-gradient(90deg, rgba(0,0,0,.3) 0 1px, transparent 1px 5px),
+        radial-gradient(circle, rgba(255,255,255,.09) 0 1px, transparent 1.4px);
+      background-size: auto, auto, 4px 4px;
+      mix-blend-mode: overlay;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,.68) 100%);
+      z-index: 3;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .page {
+      position: relative;
+      z-index: 4;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem clamp(1rem, 3vw, 2.5rem);
+      backdrop-filter: blur(18px);
+      background: rgba(8,9,8,.7);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .mark {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      font-size: .72rem;
+      color: var(--bone);
+    }
+
+    .mark-symbol {
+      width: 2rem;
+      height: 2rem;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      position: relative;
+      color: var(--paper);
+    }
+
+    .mark-symbol::before,
+    .mark-symbol::after {
+      content: "";
+      position: absolute;
+      background: currentColor;
+      opacity: .6;
+    }
+
+    .mark-symbol::before { width: 72%; height: 1px; transform: rotate(-24deg); }
+    .mark-symbol::after { width: 1px; height: 72%; transform: rotate(24deg); }
+
+    .nav-links {
+      display: flex;
+      gap: 1.2rem;
+      font-size: .72rem;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--bone);
+    }
+
+    .nav-links a { opacity: .8; }
+    .nav-links a:hover { color: var(--ink); opacity: 1; }
+
+    .hero {
+      min-height: 92vh;
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(300px, .95fr);
+      gap: clamp(2rem, 6vw, 6rem);
+      align-items: center;
+      padding: clamp(3rem, 8vw, 7rem) clamp(1.2rem, 5vw, 6rem);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "SILENT CARTOGRAPHERS";
+      position: absolute;
+      left: -3vw;
+      top: 10vh;
+      font-size: clamp(4rem, 14vw, 13rem);
+      font-weight: 900;
+      letter-spacing: -.08em;
+      line-height: .75;
+      color: rgba(243,239,231,.035);
+      width: 80vw;
+      pointer-events: none;
+    }
+
+ .hero-copy {
+  position: relative;
+  z-index: 5;
+  max-width: 780px;
+}
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: .6rem;
+      margin-bottom: 1rem;
+      padding: .35rem .7rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--paper);
+      background: rgba(255,255,255,.04);
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      font-size: .7rem;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: .45rem;
+      height: .45rem;
+      border-radius: 50%;
+      background: var(--rust);
+      box-shadow: 0 0 20px rgba(178,99,61,.7);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(4.2rem, 13vw, 12rem);
+      line-height: .78;
+      letter-spacing: -.09em;
+      font-weight: 950;
+      text-transform: uppercase;
+      text-shadow: 2px 2px 0 rgba(178,99,61,.32), -2px -1px 0 rgba(141,154,160,.18);
+    }
+
+    .scrape {
+      display: inline-block;
+      position: relative;
+    }
+
+    .scrape::after {
+      content: "";
+      position: absolute;
+      left: .1em;
+      right: -.04em;
+      top: 52%;
+      height: .16em;
+      background: linear-gradient(90deg, transparent, rgba(216,201,173,.45), transparent);
+      transform: rotate(-2deg);
+      mix-blend-mode: screen;
+    }
+
+    .tagline {
+      max-width: 650px;
+      margin: 1.8rem 0 0;
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--bone);
+      font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+      line-height: 1.45;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .8rem;
+      margin-top: 2rem;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 3rem;
+      padding: .9rem 1.1rem;
+      border: 1px solid var(--line);
+      background: rgba(243,239,231,.08);
+      color: var(--ink);
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font-size: .72rem;
+      transition: transform .2s ease, background .2s ease, border-color .2s ease;
+    }
+
+    .button.primary {
+      background: var(--ink);
+      color: var(--black);
+      border-color: var(--ink);
+      font-weight: 800;
+    }
+
+    .button:hover {
+      transform: translateY(-2px) rotate(-.4deg);
+      background: rgba(243,239,231,.15);
+      border-color: rgba(243,239,231,.45);
+    }
+
+.poster-stack {
+  position: relative;
+  z-index: 1;
+  min-height: 620px;
+}
+
+    .poster {
+      position: absolute;
+      inset: 8% 0 auto auto;
+      width: min(470px, 86vw);
+      aspect-ratio: 4/5.4;
+      background:
+        linear-gradient(rgba(0,0,0,.18), rgba(0,0,0,.72)),
+        radial-gradient(circle at 54% 36%, rgba(243,239,231,.82), transparent 3rem),
+        radial-gradient(circle at 54% 38%, rgba(243,239,231,.22), transparent 10rem),
+        linear-gradient(155deg, #424944, #171a18 55%, #070807);
+      border: 1px solid rgba(243,239,231,.2);
+      box-shadow: 0 2rem 5rem rgba(0,0,0,.72);
+      transform: rotate(2deg);
+      padding: 1.4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .poster::before,
+    .poster::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .poster::before {
+      inset: 0;
+      background:
+        linear-gradient(110deg, transparent 0 42%, rgba(255,255,255,.08) 43% 44%, transparent 46%),
+        repeating-linear-gradient(180deg, rgba(255,255,255,.04) 0 1px, transparent 1px 7px);
+      mix-blend-mode: overlay;
+    }
+
+    .poster::after {
+      left: -10%;
+      right: -10%;
+      bottom: 18%;
+      height: 4rem;
+      background: rgba(178,99,61,.85);
+      transform: rotate(-6deg);
+      filter: blur(.2px);
+      opacity: .72;
+    }
+
+    .tape {
+      position: absolute;
+      width: 9rem;
+      height: 2rem;
+      background: rgba(216,201,173,.6);
+      opacity: .7;
+      z-index: 3;
+      filter: drop-shadow(0 5px 8px rgba(0,0,0,.35));
+    }
+
+    .tape.one { top: 4%; left: 8%; transform: rotate(-12deg); }
+    .tape.two { bottom: 10%; right: 2%; transform: rotate(8deg); }
+
+    .poster-title {
+      position: relative;
+      z-index: 2;
+      font-size: clamp(3.4rem, 8vw, 5.6rem);
+      line-height: .78;
+      letter-spacing: -.08em;
+      text-transform: uppercase;
+      font-weight: 950;
+    }
+
+    .poster-meta {
+      position: relative;
+      z-index: 4;
+      display: grid;
+      gap: .4rem;
+      max-width: 70%;
+      font-size: .72rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--paper);
+    }
+
+    .side-note {
+      position: absolute;
+      left: 2%;
+      bottom: 8%;
+      width: 260px;
+      padding: 1rem;
+      background: rgba(8,9,8,.82);
+      border: 1px solid var(--line);
+      color: var(--bone);
+      transform: rotate(-3deg);
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1.5;
+      box-shadow: 0 1rem 3rem rgba(0,0,0,.45);
+    }
+
+    .section {
+      padding: clamp(3.5rem, 8vw, 7rem) clamp(1.2rem, 5vw, 6rem);
+      border-top: 1px solid var(--line);
+    }
+
+    .section-header {
+      display: grid;
+      grid-template-columns: minmax(0, .8fr) minmax(260px, 1fr);
+      gap: 2rem;
+      align-items: end;
+      margin-bottom: 2.5rem;
+    }
+
+    .kicker {
+      color: var(--rust);
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      font-size: .72rem;
+      margin-bottom: .5rem;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(2.6rem, 6vw, 5.5rem);
+      line-height: .86;
+      letter-spacing: -.06em;
+      text-transform: uppercase;
+    }
+
+    .section-intro {
+      margin: 0;
+      color: var(--bone);
+      line-height: 1.75;
+      max-width: 620px;
+      font-size: 1rem;
+    }
+
+    .track-feature {
+      display: grid;
+      grid-template-columns: minmax(0, .85fr) minmax(280px, 1.15fr);
+      gap: clamp(1.4rem, 4vw, 3rem);
+      align-items: stretch;
+    }
+
+    .record-sleeve {
+      min-height: 460px;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(160deg, rgba(243,239,231,.08), rgba(243,239,231,.02)),
+        radial-gradient(circle at 52% 34%, rgba(243,239,231,.75), transparent 3.2rem),
+        radial-gradient(circle at 52% 34%, rgba(141,154,160,.35), transparent 11rem),
+        linear-gradient(135deg, #2d322f, #111311);
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.45), 0 2rem 4rem rgba(0,0,0,.35);
+    }
+
+    .record-sleeve::before {
+      content: "LIGHT WELLS";
+      position: absolute;
+      left: -1rem;
+      bottom: 1rem;
+      font-size: clamp(4rem, 10vw, 8rem);
+      line-height: .75;
+      letter-spacing: -.08em;
+      font-weight: 950;
+      color: rgba(8,9,8,.72);
+      text-shadow: 1px 1px 0 rgba(243,239,231,.18);
+      transform: rotate(-2deg);
+    }
+
+    .record-sleeve::after {
+      content: "";
+      position: absolute;
+      inset: 12%;
+      border: 1px solid rgba(243,239,231,.18);
+      background:
+        linear-gradient(90deg, transparent 49%, rgba(243,239,231,.15) 50%, transparent 51%),
+        linear-gradient(0deg, transparent 49%, rgba(243,239,231,.15) 50%, transparent 51%);
+      opacity: .6;
+    }
+
+    .track-card {
+      border: 1px solid var(--line);
+      background: rgba(8,9,8,.55);
+      padding: clamp(1.2rem, 4vw, 2rem);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 460px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .track-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent, rgba(216,201,173,.08), transparent);
+      transform: translateX(-60%);
+    }
+
+    .track-number {
+      color: var(--rust);
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      font-size: .72rem;
+    }
+
+    .track-title {
+      margin: .7rem 0 .8rem;
+      font-size: clamp(2.5rem, 7vw, 6rem);
+      line-height: .84;
+      letter-spacing: -.07em;
+      text-transform: uppercase;
+      font-weight: 900;
+    }
+
+    .track-desc {
+      max-width: 620px;
+      color: var(--bone);
+      line-height: 1.75;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.1rem;
+    }
+
+    .audio-row {
+      margin-top: 2rem;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: .9rem;
+      align-items: center;
+      padding: 1rem;
+      border: 1px solid var(--line);
+      background: rgba(243,239,231,.045);
+    }
+
+    .play-dot {
+      width: 2.4rem;
+      height: 2.4rem;
+      border-radius: 50%;
+      border: 1px solid rgba(243,239,231,.35);
+      display: grid;
+      place-items: center;
+      color: var(--paper);
+      background: transparent;
+      font: inherit;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .play-dot:hover {
+      border-color: rgba(243,239,231,.65);
+      color: var(--ink);
+    }
+
+    .bar {
+      height: .38rem;
+      background: rgba(243,239,231,.12);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .bar::before {
+      content: "";
+      position: absolute;
+      inset: 0 calc(100% - var(--progress, 0%)) 0 0;
+      background: linear-gradient(90deg, var(--paper), var(--rust));
+    }
+
+    .time {
+      color: var(--bone);
+      font-size: .75rem;
+      letter-spacing: .1em;
+    }
+
+    .ep-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 1rem;
+    }
+
+    .ep-card {
+      grid-column: span 2;
+      min-height: 260px;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(150deg, rgba(243,239,231,.07), rgba(243,239,231,.02)),
+        rgba(8,9,8,.52);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform .2s ease, border-color .2s ease, background .2s ease;
+    }
+
+    .ep-card:nth-child(2), .ep-card:nth-child(5) { transform: translateY(1.2rem); }
+    .ep-card:nth-child(3) { transform: rotate(.8deg); }
+    .ep-card:hover,
+    .ep-card:focus-visible { transform: translateY(-.35rem) rotate(-.4deg); border-color: rgba(243,239,231,.36); outline: none; }
+
+    .ep-card.is-active {
+      border-color: rgba(216,201,173,.7);
+      background:
+        linear-gradient(150deg, rgba(216,201,173,.12), rgba(243,239,231,.03)),
+        rgba(8,9,8,.62);
+    }
+
+    .ep-card.is-active::after {
+      content: "Now playing";
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      color: var(--paper);
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      font-size: .62rem;
+      opacity: .78;
+    }
+
+    .ep-card::before {
+      content: attr(data-track);
+      position: absolute;
+      right: -.4rem;
+      bottom: -.6rem;
+      font-size: 6rem;
+      line-height: 1;
+      font-weight: 950;
+      color: rgba(243,239,231,.035);
+    }
+
+    .ep-card h3 {
+      margin: 0;
+      font-size: clamp(1.7rem, 3vw, 2.8rem);
+      line-height: .9;
+      letter-spacing: -.05em;
+      text-transform: uppercase;
+    }
+
+    .ep-card p {
+      margin: 1rem 0 0;
+      color: var(--bone);
+      line-height: 1.55;
+      position: relative;
+      z-index: 1;
+    }
+
+    .ep-meta {
+      color: var(--rust);
+      text-transform: uppercase;
+      letter-spacing: .15em;
+      font-size: .7rem;
+      margin-top: 1rem;
+    }
+
+    .manifesto {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, .75fr);
+      gap: clamp(1.5rem, 5vw, 4rem);
+      align-items: start;
+    }
+
+    .manifesto-text {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.35rem, 2.6vw, 2.1rem);
+      line-height: 1.45;
+      color: var(--paper);
+      margin: 0;
+    }
+
+    .note-board {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .note {
+      padding: 1rem;
+      border: 1px solid var(--line);
+      background: rgba(243,239,231,.07);
+      color: var(--bone);
+      line-height: 1.55;
+      transform: rotate(var(--tilt));
+      box-shadow: 0 1rem 2.5rem rgba(0,0,0,.24);
+    }
+
+    .note strong {
+      display: block;
+      color: var(--ink);
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      font-size: .68rem;
+      margin-bottom: .45rem;
+    }
+
+    .shows {
+      display: grid;
+      gap: .6rem;
+    }
+
+    .show-row {
+      display: grid;
+      grid-template-columns: 110px 1fr auto;
+      gap: 1rem;
+      align-items: center;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .show-date {
+      color: var(--rust);
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      font-size: .76rem;
+    }
+
+    .show-title {
+      font-size: 1.15rem;
+      color: var(--paper);
+    }
+
+    .show-place {
+      color: var(--bone);
+      font-size: .88rem;
+    }
+
+    .footer {
+      padding: 3rem clamp(1.2rem, 5vw, 6rem);
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      color: var(--bone);
+      font-size: .76rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 920px) {
+      .hero,
+      .section-header,
+      .track-feature,
+      .manifesto {
+        grid-template-columns: 1fr;
+      }
+
+      .poster-stack {
+        min-height: 560px;
+      }
+
+      .poster {
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%) rotate(2deg);
+      }
+
+      .side-note {
+        left: 0;
+        bottom: 1rem;
+      }
+
+      .ep-card { grid-column: span 3; }
+      .ep-card:nth-child(2), .ep-card:nth-child(5), .ep-card:nth-child(3) { transform: none; }
+    }
+
+@media (max-width: 640px) {
+  .nav { align-items: flex-start; gap: .8rem; flex-direction: column; }
+  .nav-links { flex-wrap: wrap; gap: .8rem; }
+
+  .hero { padding-top: 3rem; }
+
+  .hero-copy {
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .tagline {
+    max-width: 100%;
+  }
+
+  h1 {
+    font-size: clamp(3.4rem, 18vw, 5.4rem);
+    letter-spacing: -.075em;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .poster-stack { min-height: 480px; }
+  .poster { width: min(350px, 90vw); }
+  .side-note { width: min(280px, 80vw); bottom: 10rem; }
+  .ep-card { grid-column: 1 / -1; min-height: 220px; }
+  .show-row { grid-template-columns: 1fr; gap: .3rem; }
+  .audio-row { grid-template-columns: auto 1fr; }
+  .time { grid-column: 2; }
+}
+  </style>
+</head>
+<body>
+  <div class="page">
+    <nav class="nav">
+      <a class="mark" href="#top" aria-label="Silent Cartographers home">
+        <span class="mark-symbol"></span>
+        <span>Silent Cartographers</span>
+      </a>
+      <div class="nav-links">
+        <a href="#light-well">Light Wells</a>
+        <a href="#ep">EP</a>
+        <a href="#notes">Field Notes</a>
+        <a href="#transmissions">Shows</a>
+      </div>
+    </nav>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow">Ghost Lines / post-rock transmission</div>
+          <h1><span class="scrape">Silent</span><br />Cartographers</h1>
+          <p class="tagline">Maps for places the city forgot. Guitars like light through cracked concrete. Songs built for tunnels, rooflines, and the quiet devastation of finding beauty where nobody bothered to look.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#light-well">Listen to Light Wells</a>
+            <a class="button" href="#ep">Explore the EP</a>
+          </div>
+        </div>
+
+        <div class="poster-stack" aria-hidden="true">
+          <div class="poster">
+            <span class="tape one"></span>
+            <span class="tape two"></span>
+            <div class="poster-title"></div>
+            <div class="poster-meta">
+              <span>SC-001</span>
+              <span>Recorded below Tunnel 19</span>
+              <span>Alt rock / post-rock</span>
+            </div>
+          </div>
+          <div class="side-note">They found an old municipal map, drew over every sealed station in graphite, and called it a setlist.</div>
+        </div>
+      </section>
+
+      <section class="section" id="light-well">
+        <div class="section-header">
+          <div>
+            <div class="kicker" id="featuredKicker">Featured transmission</div>
+            <h2 id="featuredTitle">Light Wells</h2>
+          </div>
+          <p class="section-intro">The first signal from Silent Cartographers opens like a buried room breathing for the first time. Slow-build guitars, bruised drums, and a final lift that feels painfully hopeful.</p>
+        </div>
+
+        <div class="track-feature">
+          <div class="record-sleeve"></div>
+          <article class="track-card">
+            <div>
+              <div class="track-number" id="playerTrackNumber">Track 01 / single</div>
+              <div class="track-title" id="playerTrackTitle">Light Wells</div>
+              <p class="track-desc" id="playerTrackDesc">A song for the vertical shafts where daylight still reaches The Ghost Lines. It begins almost politely, then keeps widening until the whole tunnel feels full of sky.</p>
+            </div>
+            <div class="audio-row" aria-label="Audio player">
+              <button class="play-dot" id="playButton" type="button" aria-label="Play selected track">▶</button>
+              <div class="bar" id="progressBar" role="progressbar" aria-label="Track progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+              <div class="time" id="playerDuration">04:54</div>
+              <audio id="audioPlayer" preload="metadata" src="PLACEHOLDER-light-wells.mp3"></audio>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="ep">
+        <div class="section-header">
+          <div>
+            <div class="kicker">Upcoming EP</div>
+            <h2>Below the Dayline</h2>
+          </div>
+          <p class="section-intro">A six-track EP about underground geography and half-remembered exits. The strange hope of people making music where the city buried its failures.</p>
+        </div>
+
+        <div class="ep-grid">
+          <article class="ep-card is-active" data-track="01" data-title="Light Wells" data-number="Track 01 / single" data-duration="04:54" data-src="PLACEHOLDER-light-wells.mp3" data-desc="A song for the vertical shafts where daylight still reaches The Ghost Lines. It begins almost politely, then keeps widening until the whole tunnel feels full of sky." tabindex="0" role="button" aria-label="Load Light Wells">
+            <div>
+              <h3>Light Wells</h3>
+              <p>The luminous one. Slow, gorgeous, and absolutely unfair about it.</p>
+            </div>
+            <div class="ep-meta">04:54 / post-rock</div>
+          </article>
+          <article class="ep-card" data-track="02" data-title="Salt Map" data-number="Track 02 / EP" data-duration="05:19" data-src="PLACEHOLDER-salt-map.mp3" data-desc="A route-song built from motion, trust, and the marks people leave for strangers they will never meet." tabindex="0" role="button" aria-label="Load Salt Map">
+            <div>
+              <h3>Salt Map</h3>
+              <p>A grainy, oceanic track built on bowed guitar textures and heavy, patient drums.</p>
+            </div>
+            <div class="ep-meta">05:19 / alt-rock</div>
+          </article>
+          <article class="ep-card" data-track="03" data-title="Dead Station Choir" data-number="Track 03 / EP" data-duration="05:28" data-src="PLACEHOLDER-dead-station-choir.mp3" data-desc="A vast, reverent transmission where empty places remember that they were loved." tabindex="0" role="button" aria-label="Load Dead Station Choir">
+            <div>
+              <h3>Dead Station Choir</h3>
+              <p>Field recordings, distant voices, and a chorus that sounds like a platform remembering commuters.</p>
+            </div>
+            <div class="ep-meta">05:28 / ambient rock</div>
+          </article>
+          <article class="ep-card" data-track="04" data-title="Signal Fire" data-number="Track 04 / EP" data-duration="05:04" data-src="PLACEHOLDER-signal-fire.mp3" data-desc="The heavier one. A faster, brighter flare from the deep: urgent drums, huge guitars, and a signal answered in the dark." tabindex="0" role="button" aria-label="Load Signal Fire">
+            <div>
+              <h3>Signal Fire</h3>
+              <p>Soft verses, massive guitars, and the exact moment a leak becomes weather.</p>
+            </div>
+            <div class="ep-meta">05:04 / slow-build</div>
+          </article>
+          <article class="ep-card" data-track="05" data-title="Ashes of the Surveyor" data-number="Track 05 / EP" data-duration="04:59" data-src="PLACEHOLDER-ashes-of-the-surveyor.mp3" data-desc="The closing track. Strange, expansive, and built around the pattern surviving the meaning." tabindex="0" role="button" aria-label="Load Ashes of the Surveyor">
+            <div>
+              <h3>Ashes of the Surveyor</h3>
+              <p>The closing track. Beautiful in that dangerous, staring-at-a-wall-afterwards sort of way.</p>
+            </div>
+            <div class="ep-meta">04:59 / finale</div>
+          </article>
+          <article class="ep-card" data-track="06" data-title="Margin Notes" data-number="Bonus track / demo" data-duration="02:44" data-src="PLACEHOLDER-margin-notes.mp3" data-desc="A stripped, almost-unplugged afterthought. Sparse guitar, soft piano, and the quiet humanity left in the margins." tabindex="0" role="button" aria-label="Load Margin Notes">
+            <div>
+              <h3>Bonus: Margin Notes</h3>
+              <p>A stripped demo recorded on a cracked handheld device beneath the west service road.</p>
+            </div>
+            <div class="ep-meta">02:44 / demo</div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="notes">
+        <div class="manifesto">
+          <p class="manifesto-text">Silent Cartographers write maps for the people who stayed. Their music sits under the skin of The Ghost Lines: grainy, bruised, stubbornly tender, carrying the kind of beauty that only grows where the world stopped polishing the edges.</p>
+          <div class="note-board">
+            <div class="note" style="--tilt:-1.5deg"><strong>Sound</strong>Post-rock crescendos, alternative guitar weight, room noise, tape hiss, found percussion, soft vocals buried low in the mix.</div>
+            <div class="note" style="--tilt:1deg"><strong>Visual language</strong>Torn gig posters, photocopied maps, rust stains, damp paper, scratched type, warm light caught in ruined places.</div>
+            <div class="note" style="--tilt:-.7deg"><strong>Origin</strong>No one seems entirely sure where Silent Cartographers came from. Their recordings appear and disappear across old relay frequencies, often attached to route archives, forgotten signal logs, or damaged map files. Most tracks are untitled in their original uploads. The names came later.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="transmissions">
+        <div class="section-header">
+          <div>
+            <div class="kicker">Unlicensed appearances</div>
+            <h2>Cellar shows</h2>
+          </div>
+          <p class="section-intro">Half gig listings, half rumours. Nobody officially confirms these.</p>
+        </div>
+
+        <div class="shows">
+          <div class="show-row">
+            <div class="show-date">Jun 14</div>
+            <div>
+              <div class="show-title">Listening Room</div>
+              <div class="show-place">Light Well 16, near the old lift access</div>
+            </div>
+            <a class="button" href="#">Signal locked</a>
+          </div>
+          <div class="show-row">
+            <div class="show-date">Jul 02</div>
+            <div>
+              <div class="show-title">Below the Dayline test pressing</div>
+              <div class="show-place">Scrap Garden 6, near the south arch</div>
+            </div>
+            <a class="button" href="#">Watch for posters</a>
+          </div>
+          <div class="show-row">
+            <div class="show-date">Aug 09</div>
+            <div>
+              <div class="show-title">Dead Station Choir live transmission</div>
+              <div class="show-place">Disused platform / location withheld</div>
+            </div>
+            <a class="button" href="#">No signal</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>Silent Cartographers // SC-001</span>
+      <span>Maps are not exits. Songs might be.</span>
+    </footer>
+  </div>
+  <script>
+    const audioPlayer = document.getElementById("audioPlayer");
+    const playButton = document.getElementById("playButton");
+    const progressBar = document.getElementById("progressBar");
+    const playerTrackNumber = document.getElementById("playerTrackNumber");
+    const playerTrackTitle = document.getElementById("playerTrackTitle");
+    const playerTrackDesc = document.getElementById("playerTrackDesc");
+    const playerDuration = document.getElementById("playerDuration");
+    const featuredTitle = document.getElementById("featuredTitle");
+    const epCards = document.querySelectorAll(".ep-card");
+
+    function setPlayingState(isPlaying) {
+      playButton.textContent = isPlaying ? "❚❚" : "▶";
+      playButton.setAttribute("aria-label", isPlaying ? "Pause selected track" : "Play selected track");
+    }
+
+    function updateProgress() {
+      if (!audioPlayer.duration) return;
+
+      const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+      progressBar.style.setProperty("--progress", `${progress}%`);
+      progressBar.setAttribute("aria-valuenow", Math.round(progress));
+    }
+
+    function loadTrack(card, shouldPlay = true) {
+      epCards.forEach((item) => item.classList.remove("is-active"));
+      card.classList.add("is-active");
+
+      const title = card.dataset.title;
+      const trackNumber = card.dataset.number;
+      const desc = card.dataset.desc;
+      const duration = card.dataset.duration;
+      const src = card.dataset.src;
+
+      playerTrackNumber.textContent = trackNumber;
+      playerTrackTitle.textContent = title;
+      playerTrackDesc.textContent = desc;
+      featuredTitle.textContent = title;
+      playerDuration.textContent = duration;
+
+      progressBar.style.setProperty("--progress", "0%");
+      progressBar.setAttribute("aria-valuenow", "0");
+
+      if (audioPlayer.getAttribute("src") !== src) {
+        audioPlayer.src = src;
+        audioPlayer.load();
+      }
+
+      if (shouldPlay) {
+        audioPlayer.play().then(() => {
+          setPlayingState(true);
+        }).catch(() => {
+          setPlayingState(false);
+        });
+      }
+    }
+
+    epCards.forEach((card) => {
+      card.addEventListener("click", () => {
+        loadTrack(card, true);
+        document.getElementById("light-well").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+
+      card.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          loadTrack(card, true);
+          document.getElementById("light-well").scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+    });
+
+    playButton.addEventListener("click", () => {
+      if (audioPlayer.paused) {
+        audioPlayer.play().then(() => {
+          setPlayingState(true);
+        }).catch(() => {
+          setPlayingState(false);
+        });
+      } else {
+        audioPlayer.pause();
+        setPlayingState(false);
+      }
+    });
+
+    progressBar.addEventListener("click", (event) => {
+      if (!audioPlayer.duration) return;
+
+      const rect = progressBar.getBoundingClientRect();
+      const clickPosition = (event.clientX - rect.left) / rect.width;
+      audioPlayer.currentTime = clickPosition * audioPlayer.duration;
+      updateProgress();
+    });
+
+    audioPlayer.addEventListener("timeupdate", updateProgress);
+    audioPlayer.addEventListener("ended", () => setPlayingState(false));
+    audioPlayer.addEventListener("pause", () => setPlayingState(false));
+    audioPlayer.addEventListener("play", () => setPlayingState(true));
+  </script>
+</body>
+</html>
