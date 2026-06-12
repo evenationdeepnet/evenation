@@ -468,13 +468,14 @@
       overflow: hidden;
     }
 
-    .track-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(120deg, transparent, rgba(216,201,173,.08), transparent);
-      transform: translateX(-60%);
-    }
+.track-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent, rgba(216,201,173,.08), transparent);
+  transform: translateX(-60%);
+  pointer-events: none;
+}
 
     .track-number {
       color: var(--rust);
