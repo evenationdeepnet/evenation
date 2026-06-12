@@ -252,6 +252,26 @@
       border-color: rgba(243,239,231,.45);
     }
 
+    .listen-prompt {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  margin: 0 0 1.75rem;
+  padding: .75rem 1rem;
+  border: 1px solid var(--line);
+  background: rgba(243,239,231,.06);
+  color: var(--paper);
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  font-size: .72rem;
+  font-weight: 700;
+}
+
+.listen-prompt::before {
+  content: "▶";
+  color: var(--rust);
+}
+
 .poster-stack {
   position: relative;
   z-index: 1;
@@ -833,6 +853,9 @@
           </div>
           <p class="section-intro">A six-track EP about underground geography and half-remembered exits. The strange hope of people making music where the city buried its failures.</p>
         </div>
+        <div class="listen-prompt">
+  Click a track below to listen
+</div>
 
         <div class="ep-grid">
           <article class="ep-card is-active" data-track="01" data-title="Light Wells" data-number="Track 01 / single" data-duration="04:54" data-src="/silent/tracks/lightwells.mp3" data-desc="A song for the vertical shafts where daylight still reaches The Ghost Lines. It begins almost politely, then keeps widening until the whole tunnel feels full of sky." tabindex="0" role="button" aria-label="Load Light Wells">
