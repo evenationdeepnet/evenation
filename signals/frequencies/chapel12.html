@@ -1,0 +1,836 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Signal Chapel 12 | Frequencies | E.V.E.N</title>
+
+  <style>
+    :root{
+      color-scheme: light;
+
+      /* warm grey / paper layer */
+      --bg: #f2f1ee;
+      --bg2:#eceae6;
+
+      --panel: rgba(20,20,24,.06);
+      --panel2: rgba(20,20,24,.04);
+      --stroke: rgba(20,20,24,.12);
+
+      --text: rgba(18,18,20,.88);
+      --muted: rgba(18,18,20,.60);
+
+      /* restrained accents */
+      --accent: rgba(30,180,190,.85);   /* muted cyan */
+      --accent2: rgba(172,120,210,.55); /* lilac whisper */
+
+      --radius: 18px;
+      --radius2: 26px;
+      --shadow: 0 18px 70px rgba(0,0,0,.10);
+      --shadow2: 0 12px 40px rgba(0,0,0,.08);
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --serifish: ui-serif, Georgia, "Times New Roman", Times, serif;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; min-height:100vh; }
+
+    body{
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(900px 420px at 20% 0%, rgba(30,180,190,.10), transparent 60%),
+        radial-gradient(900px 420px at 80% 0%, rgba(172,120,210,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      overflow-x:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+
+    /* subtle grain/noise */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(1px 1px at 18% 24%, rgba(0,0,0,.12), transparent 60%),
+        radial-gradient(1px 1px at 42% 62%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 78% 38%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 60% 80%, rgba(0,0,0,.08), transparent 60%);
+      opacity:.08;
+      filter: blur(.3px);
+      z-index:0;
+    }
+
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 44px 20px 76px;
+      position:relative;
+      z-index:1;
+    }
+
+    /* header */
+    .head{
+      text-align:center;
+      margin-bottom: 18px;
+    }
+
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.18em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.66);
+    }
+
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 0 rgba(30,180,190,.25);
+      animation: pulse 2.6s infinite;
+      flex:none;
+    }
+
+    @keyframes pulse{
+      0%{ box-shadow: 0 0 0 0 rgba(30,180,190,.22); }
+      70%{ box-shadow: 0 0 0 12px rgba(30,180,190,0); }
+      100%{ box-shadow: 0 0 0 0 rgba(30,180,190,0); }
+    }
+
+    h1{
+      margin: 14px 0 8px;
+      font-size: clamp(32px, 4.6vw, 54px);
+      line-height: 1.06;
+      letter-spacing: -0.02em;
+    }
+
+    .meta{
+      margin: 0 auto;
+      max-width: 70ch;
+      color: rgba(18,18,20,.62);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* story card */
+    .card{
+      margin-top: 22px;
+      border-radius: var(--radius2);
+      background: linear-gradient(180deg, rgba(255,255,255,.70), rgba(255,255,255,.52));
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(700px 240px at 25% 0%, rgba(30,180,190,.14), transparent 60%),
+        radial-gradient(700px 240px at 75% 0%, rgba(172,120,210,.12), transparent 60%);
+      opacity:.70;
+      pointer-events:none;
+    }
+
+    .card-inner{
+      position:relative;
+      z-index:1;
+      padding: 28px 28px 24px;
+    }
+
+    /* divider inside card */
+    .divider{
+      height: 1px;
+      background: linear-gradient(90deg, rgba(172,120,210,.40), rgba(30,180,190,.40));
+      opacity:.7;
+      margin: 16px 0 22px;
+    }
+
+    /* story typography */
+    .story{
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.9;
+      color: rgba(18,18,20,.84);
+    }
+
+    .story p{
+      margin: 0 0 16px;
+    }
+
+    .story em{ color: rgba(18,18,20,.86); }
+
+    .center-text {
+  text-align: center;
+}
+
+    /* optional little “file tag” row */
+    .filetag{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.62);
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.40);
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(18,18,20,.66);
+      letter-spacing:.06em;
+      white-space:nowrap;
+    }
+
+    /* --- SoundCloud block (Signals story pages) --- */
+.audio-block{
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px dashed rgba(18,18,20,.18);
+}
+
+.audio-label{
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(18,18,20,.62);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom: 10px;
+}
+
+.audio-label .dot{
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 rgba(30,180,190,.20);
+}
+
+.sc-embed{
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(18,18,20,.14);
+  background: rgba(255,255,255,.48);
+  box-shadow: 0 12px 40px rgba(0,0,0,.08);
+  height: 120px; /* matches your preferred compact player */
+}
+
+.sc-embed iframe{
+  display:block;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0;
+}
+
+    /* back nav */
+    .back{
+      margin-top: 18px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .back a{
+      text-decoration:none;
+      font-family: var(--mono);
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: rgba(18,18,20,.62);
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.55);
+      transition: .16s ease;
+    }
+
+    .back a:hover{
+      color: rgba(18,18,20,.82);
+      border-color: rgba(18,18,20,.22);
+      box-shadow: 0 12px 40px rgba(0,0,0,.10);
+      transform: translateY(-1px);
+    }
+
+    /* reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+
+    <header class="head">
+      <div class="kicker"><span class="dot" aria-hidden="true"></span> signals // frequencies // recovered story</div>
+      <h1>Signal Chapel 12</h1>
+      <p class="meta">File integrity: partial. Playback: safe.</p>
+    </header>
+
+    <article class="card" aria-label="Story container">
+      <div class="card-inner">
+
+        <div class="filetag" aria-label="File tags">
+          <span class="pill">frequencies</span>
+          <span class="pill">the ghost lines</span>
+          <span class="pill">signal chapels</span>
+        </div>
+
+        <div class="divider" aria-hidden="true"></div>
+
+        <div class="story">
+
+          <!-- Paste story paragraphs exactly as you have them -->
+<p>The candle nearest Elliot had burned low enough that wax was beginning to spill over the lip of the bottle. Purple wax, thick as syrup, crawling slowly down green glass and pooling on the concrete below. Somebody had pushed another candle into the softened mound weeks ago, maybe months. The whole thing leaned slightly to one side like it was tired. Nobody seemed bothered by it, and Elliot didn&rsquo;t know anyone well enough to start making adjustments without being asked, so he sat silently, watching the candles drip and lean.</p>
+<p>At the front of the room, The Listener stood beneath a bank of old monitors mounted to the wall, hands folded loosely before them. Most of the screens showed nothing but static, but one wavered with fragments of an old weather report, while another displayed a frozen image of a train station somewhere above ground, commuters trapped forever in the act of passing one another.</p>
+<p>Purple light filled the room from somewhere overhead, washing the congregation in soft colour and making the pale robes glow around the edges.</p>
+<p>Elliot sat in the third row. Beside him, a woman with silver wires braided through her hair offered him a small smile as she settled into her seat. Across the aisle, someone passed around cups of weak tea poured from a battered metal flask.</p>
+<p>The tea tasted vaguely minty and floral, a combination Elliot didn&rsquo;t particularly like, but he held it anyway, letting the cup warm his hands. That alone felt worth staying for.</p>
+<p>&ldquo;Signals do not simply vanish.&rdquo; The Listener&rsquo;s voice drifted across the room, low and resonant. Behind them, the monitors crackled softly. &ldquo;Energy changes shape. Sound changes shape. Memory changes shape.&rdquo;</p>
+<p>The thing that struck Elliot most about this place was how nobody checked their comms, not even once, and nobody seemed in a hurry to be anywhere else. It was warm, and the steady thrum of the equipment was strangely soothing; everything was kept low-power so that you almost didn&rsquo;t notice it.</p>
+<p>Back at the flat Topside, the heating had been broken for nearly two weeks. The landlord kept promising to send somebody, and his mother kept saying she&rsquo;d call again tomorrow, and then the next day, then the next. But the radiator beneath the kitchen window remained stubbornly cold. Elliot had given up mentioning it, and he&rsquo;d started to understand that some things settled into the shape of life if you left them long enough.</p>
+<p>&ldquo;The city teaches us that absence is permanent,&rdquo; the Listener continued. &ldquo;That when a signal is lost, it&rsquo;s gone forever.&rdquo;</p>
+<p>A few heads nodded. The woman beside Elliot nodded too.</p>
+<p>&ldquo;But the city is wrong.&rdquo;</p>
+<p>Elliot had never heard anyone talk like this before; everything above ground always felt like it was pretending. Pretending to be perfect. Pretending everything was okay.</p>
+<p>The Chapel simply existed.</p>
+<p>The woman beside him leaned over slightly. &ldquo;First time?&rdquo; she whispered.</p>
+<p>Elliot shook his head. &ldquo;Third.&rdquo;</p>
+<p>&ldquo;Ah.&rdquo; She smiled again. &ldquo;Then you&rsquo;re one of us already.&rdquo;</p>
+<p>At that, his chest tightened unexpectedly, and Elliot lowered his head. One of us. Nobody had said that to him in a while.</p>
+<p>Up front, the Listener stepped away from the monitors and moved slowly between the rows, robe brushing tracks in the dust on the floor. Elliot noticed that the hem had been repaired several times; different thread colours crossed the fabric in neat lines. &ldquo;We carry traces of those we&rsquo;ve lost,&rdquo; they said. &ldquo;I don&rsquo;t mean metaphorically or spiritually, but literally.&rdquo;</p>
+<p>Elliot stared down at the tea in his cup, a single fragment of leaf floating on the surface. Then his comm suddenly vibrated inside his pocket. The sensation startled him; instinctively, he pulled it out.</p>
+<p>One notification from his photo app, reminding him of a memory from a year ago. The thumbnail was tiny, almost too small to make out the details, though he knew exactly who was in the image.</p>
+<p>Emily.</p>
+<p>He let his thumb hover over the notification for a few seconds, and then he locked the screen and shoved the comm away before it could open.&nbsp;</p>
+<p>The Listener&rsquo;s voice still travelled smoothly through the room. &ldquo;Every conversation leaves an imprint.&rdquo; They slowed beside a row of candles and stared at the wavering flames. &ldquo;Every laugh.&rdquo; Another step. &ldquo;Every song.&rdquo; Another. &ldquo;Every goodbye.&rdquo;</p>
+<p><em>Goodbye</em>. The word settled heavily inside Elliot. Emily used to leave voice notes for him all the time, hundreds of them, mainly just stupid things &mdash; jokes she half-told before giggling too hard to finish, complaints about teachers, stories about people she&rsquo;d never met, her plans for the future. He still couldn&rsquo;t bring himself to delete them. Most nights he listened to one and then another and then another until the battery warning appeared.</p>
+<p>The woman beside him gently touched his arm and he startled. &ldquo;You&rsquo;re okay,&rdquo; she murmured.</p>
+<p>Elliot didn&rsquo;t know what to say, his throat strangely tight, so he nodded.</p>
+<p>The Listener had moved to the front of the room again and now stood on the low platform, smiling. &ldquo;Tonight,&rdquo; they said, &ldquo;we welcome a new signal.&rdquo;</p>
+<p>The congregation stirred and a few people mumbled in approval. Elliot lifted his gaze, wondering, for a ridiculous moment, if they meant him. The thought arrived embarrassed but also a little warm, and he squeezed the cup between his palms.</p>
+<p>&ldquo;Every new voice strengthens the Chapel,&rdquo; the Listener continued. &ldquo;We preserve what the city abandons.&rdquo;</p>
+<p>The woman beside him squeezed his shoulder once, a simple gesture, friendly and casual. Elliot swallowed hard. He thought about the flat again, and the washing machine that&rsquo;d stopped halfway through a cycle three days ago. Mum hadn&rsquo;t noticed. Or maybe she had. The damp clothes were still sitting inside, the kitchen smelling of detergent and cold toast. Nobody spoke much anymore at home.</p>
+<p>Here, people listened, and that somehow seemed important.</p>
+<p>Behind the Listener, static crawled across the monitors, and for a moment, just a heartbeat, the interference pulled together into an almost human-like shape before dissolving again. Elliot blinked, wondering if he&rsquo;d really seen it.</p>
+<p>&ldquo;The dead are never as far away as we&rsquo;ve been taught to believe.&rdquo;</p>
+<p>The room remained perfectly still.</p>
+<p>&ldquo;If you continue your studies with us,&rdquo; the Listener said, gaze moving across the congregation, &ldquo;you may discover that some signals still wish to be heard.&rdquo;</p>
+<p>Someone in the row in front of Elliot quietly wiped away tears, and despite everything, despite the part of him that knew he should probably stand up and leave, despite the late hour and the walk home back through The Ghost Lines and up into the city, despite the cold flat waiting for him&mdash;</p>
+<p>Elliot stayed where he was. Listening, hoping. And for the first time in months, he found himself wondering whether Emily might still have something left to say.</p>
+<p><br></p>
+<p align="center">~*~</p>
+<p><br></p>
+<p>Kairo had opened the comments section three times before he realised he was looking for somebody.</p>
+<p>Around him, the relay bunker was unusually quiet, the only sound coming from one of the old servers near the back which was emitting an intermittent buzz like it was considering a small electrical fire. The portable speaker perched on the crate beside him was playing an unfinished E.V.E.N mix at low volume, the bassline cutting out every few minutes whenever he accidentally brushed the cable with his elbow.&nbsp;</p>
+<p>Kairo spun slightly in his chair and kicked one foot against the desk, watching as the comments scrolled past.</p>
+<p><strong><em>northbound:</em></strong><em>&nbsp;nice track!</em></p>
+<p><strong><em>Sat3llit3:</em></strong><em>&nbsp;where can I get the stems?</em></p>
+<p><strong><em>ghostcurrent:</em></strong><em>&nbsp;who mixed this???</em></p>
+<p><strong><em>BlueMeridian:</em></strong><em>&nbsp;This one goes hard</em></p>
+<p>None of the usernames was the one he was looking for, and the absence of it was starting to bug him. Frowning, he scrolled back up, then down again, then up. &ldquo;Huh.&rdquo; He clicked into another upload, but it was the same story: plenty of comments, none of them from <em>maintenancekid</em>, at least not for a few weeks, which was weird. It wasn&rsquo;t even like they commented often; mostly, they listened, downloaded tracks, liked broadcasts, and occasionally left a short and weirdly polite comment. A &ldquo;thanks,&rdquo; or a &ldquo;good track,&rdquo; or a &ldquo;listened while studying.&rdquo; Things like that.</p>
+<p>Kairo couldn&rsquo;t remember when he&rsquo;d started recognising the name. Probably months ago. People left digital fingerprints everywhere if you paid attention long enough. Somebody downloaded every acoustic version Soahn ever uploaded? Fingerprint. Somebody listened to the same track forty-seven times in a week? Fingerprint. Somebody only appeared after midnight? Fingerprint.</p>
+<p>Attention wandering back to the screen, Kairo frowned to himself and clicked into the activity logs. The system immediately protested. &ldquo;Don&rsquo;t make that face,&rdquo; Kairo told it, as the loading icon continued spinning. &ldquo;You know I&rsquo;m coming in anyway.&rdquo;</p>
+<p>A few seconds later, the logs opened and rows of activity filled the screen: downloads, comments, broadcast attendance, usernames, dates, times. Kairo leaned forward.</p>
+<p>There &mdash; <em>maintenancekid</em>&rsquo;s account. Kairo looked at the activity, the last timestamp dated three weeks ago. His frown deepened. That wasn&rsquo;t right. Three weeks felt longer than it should.</p>
+<p>Leaning back in his chair, he scrubbed his hand over his face. The unfinished track on the speaker reached a section he no longer liked, so he muted it, and immediately the bunker felt emptier. His gaze remained fixed on the screen and the account that hadn&rsquo;t logged in for a while, not even to download new stuff or drop a small comment. Just&hellip; nothing. A hard stop.</p>
+<p>It was weird. People usually drifted away gradually &mdash; they found jobs, moved sectors, got distracted, started dating somebody, discovered healthier hobbies than lurking around E.V.E.N broadcasts at two in the morning.</p>
+<p>Accounts rarely disappeared overnight.</p>
+<p>Kairo opened another window, and then another, and then another. By the time Minjae appeared holding a steaming mug that smelled suspiciously like it&rsquo;d been spiked with alcohol, six different windows were open.</p>
+<p>Minjae stopped beside Kairo&rsquo;s terminal. &ldquo;Oh no.&rdquo;</p>
+<p>Kairo didn&rsquo;t look up. &ldquo;Oh no what?&rdquo;</p>
+<p>&ldquo;You&rsquo;ve adopted another stray.&rdquo;</p>
+<p>&ldquo;I have not.&rdquo; Kairo closed a couple of the windows. &ldquo;Isn&rsquo;t it a bit early to be drinking?&rdquo;</p>
+<p>&ldquo;It&rsquo;s 10 pm,&rdquo; Minjae said, sipping whatever nightmare substance lived inside the mug.</p>
+<p>&ldquo;Oh. Shit, didn&rsquo;t realise the time.&rdquo; Kairo clicked through another page.</p>
+<p>Minjae grabbed a nearby chair and dragged it closer, dropping into it like a man who had just lost a fight with a network error. &ldquo;Go on, then. Tell me about them. I need a break anyway.&rdquo;</p>
+<p>Lifting one shoulder, Kairo said, &ldquo;I honestly don&rsquo;t know. I don&rsquo;t even know their real name.&rdquo;</p>
+<p>&ldquo;Mmhm.&rdquo;</p>
+<p>&ldquo;Or where they&rsquo;re from,&rdquo; Kairo continued. &ldquo;Just&hellip; they suddenly stopped replying.&rdquo;</p>
+<p>&ldquo;So? Happens all the time,&rdquo; Minjae said.</p>
+<p>Kairo shook his head. &ldquo;Not like this. This one was consistently active, up until a few weeks ago.&rdquo; He pointed at the screen. &ldquo;Then they just vanished.&rdquo;</p>
+<p>&ldquo;I could run a trace, you know,&rdquo; Minjae told him. &ldquo;You&rsquo;ve only got to ask.&rdquo;</p>
+<p>Kairo glanced at him sideways. &ldquo;Thought we swore we&rsquo;d never do that. Not to fans.&rdquo;</p>
+<p>&ldquo;We did. Just testing your morals.&rdquo;</p>
+<p>Kairo huffed. &ldquo;This is serious. I don&rsquo;t know how I know, but I do. Something&rsquo;s wrong.&rdquo;</p>
+<p>&ldquo;All right, Gremlin King. If you feel it in your waters, I believe you.&rdquo; Minjae set down his mug and leaned closer to Kairo&rsquo;s screen, squinting at the activity feed. He read for a few seconds, his brows steadily drawing down. &ldquo;Huh.&rdquo;</p>
+<p>&ldquo;That&rsquo;s what I said.&rdquo;</p>
+<p>&ldquo;Move over,&rdquo; Minjae told him, and Kairo did, giving him room to access the keyboard. Minjae tapped a few keys and more data appeared. &ldquo;I&rsquo;m not tracing them. Just checking a couple of things.&rdquo; The account history expanded with location pings, connection points, and network imprints. For several moments, neither of them spoke.</p>
+<p>Kairo waited, head tipped back, listening to the old server buzzing and water dripping somewhere nearby.</p>
+<p>&ldquo;This is odd,&rdquo; Minjae finally said, his expression more thoughtful than annoyed.</p>
+<p>&ldquo;What?&rdquo; Kairo leaned close again.</p>
+<p>&ldquo;Every account has connection histories, right?&rdquo; Minjae pointed to a location marker on the screen. &ldquo;Most of them originate from public terminals, like relay stations or community hubs. Totally normal. And your stray was connecting from Topside up until two months ago. But this one, here&mdash;&rdquo; A couple more keystrokes, &ldquo;Clusters around a different area. Not Topside, not a relay, and, well, not any community hub I&rsquo;d want to deal with.&rdquo;</p>
+<p>Kairo scanned the location. Same place, again and again. &ldquo;Where is it?&rdquo; he asked.</p>
+<p>&ldquo;Signal Chapel Twelve,&rdquo; Minjae said, wincing as if he&rsquo;d just tasted something nasty. &ldquo;You might actually have a good reason to be concerned.&rdquo;</p>
+<p>Kairo stared at the location label, a cold trickle working down his spine. &ldquo;Shit.&rdquo;</p>
+<p>&ldquo;Yeah. I&rsquo;m going to need a stronger drink for this,&rdquo; Minjae muttered. Then, already reaching for the comms, he sighed. &ldquo;We should probably tell the others.&rdquo;</p>
+<p><br></p>
+<p align="center">~*~</p>
+<p><br></p>
+<p>The broadcast began with signal degradation, soft and uneven and drifting through the speakers while the stream connected. Soahn adjusted the volume slightly and waited, a cup of tea already turning cold at his elbow.</p>
+<p>A crackle rang out, and then he heard voices, though the feed remained dark. Audio-only, then. Intentional, presumably. It didn&rsquo;t exactly surprise him that the Chapels were secretive and insular, although getting a visual would&rsquo;ve made things easier. Still, it was better than nothing.</p>
+<p>&ldquo;Welcome, listeners,&rdquo; a voice said, echoing slightly through the speaker. The tone was gentle and unhurried, but it was a gentleness that sounded too practised to Soahn, the way a lot of marketing AIs spoke. Reassuring, trustworthy, but in a way that promised it was going to try and sell you something you didn&rsquo;t realise you definitely needed.</p>
+<p>Soahn leaned back in his chair.</p>
+<p>&ldquo;We gather beneath Signal Twelve,&rdquo; the voice said. &ldquo;Twelve among many.&rdquo;</p>
+<p>Grabbing his pen, Soahn pulled his notebook closer and started writing.</p>
+<p>&ldquo;Tonight we welcome guest listeners from Signal Three, Signal Five and Signal Nine...&rdquo;</p>
+<p>The list went on. The voice patiently introduced the guests, some of them entire families, others loners. The main thing that struck Soahn was how the chapels were connected and how far they spread. At the mention of Signal Chapel Twent-Six, a sinking sensation settled in his gut. These weren&rsquo;t just random pop-up communities; this was an organised network that spanned probably the entirety of The Ghost Lines.</p>
+<p>&ldquo;&mdash;Many of you joining us carry absence with you,&rdquo; the voice said.</p>
+<p>Soahn stopped writing.</p>
+<p>&ldquo;You arrive searching for explanations, for understanding.&rdquo; A pause. &ldquo;Searching for voices you believed were gone. But I invite you all to consider that nothing is ever truly gone.&rdquo;</p>
+<p>Soahn noticed the careful choice of words. Promises triggered suspicion more often than not, but invitations encouraged participation. The voice wasn&rsquo;t telling listeners what to believe, but creating space for listeners to convince themselves. That was much more effective and much harder to fight.</p>
+<p>The worst part was that Soahn understood exactly why it worked. The Ghost Lines attracted damaged people, those holding regret, loneliness, grief, and questions. Sometimes all at once. And the Signal Chapels appeared to offer a place to belong &mdash; a place that had answers, or at least the possibility of answers.</p>
+<p>For somebody standing in the dark long enough, possibilities could be irresistible.</p>
+<p>The voice continued. &ldquo;Every signal leaves an echo. Every conversation changes the shape of the network.&rdquo;</p>
+<p>Soahn wrote that down, too. The speaker&rsquo;s cadence remained slow and measured and comforting, like somebody sitting beside a hospital bed, reaching out to hold your hand. The thought unsettled him because now he could hear the technique clearly, the performance in it, how easy it would be for a vulnerable person to sink into the steadiness of it.</p>
+<p>The chapel didn&rsquo;t pull people in; it welcomed them home, which was arguably worse.</p>
+<p>A burst of static interrupted the broadcast and Soahn tweaked a dial. When it stabilised again, the voice had moved onto another subject.</p>
+<p>&ldquo;Our Listeners have spent many years studying transmission, preserving voices others discard. They recover what the city forgets, listening when nobody else will.&rdquo;</p>
+<p>Discomfort pulled across Soahn&rsquo;s shoulders. The best manipulation never began with lies, but with truth.</p>
+<p>The broadcast wavered again, the voice cutting out for a few seconds.</p>
+<p>Then: &ldquo;We have received reports from Chapel Six,&rdquo; the voice said. &ldquo;The Returned Frequency has been observed again.&rdquo;</p>
+<p>Soahn wrote down &lsquo;The Returned Frequency&rsquo; and underlined it, and then added a question mark.</p>
+<p><em>What do you suppose that means?</em> SEER-9 asked.</p>
+<p>&ldquo;No idea,&rdquo; Soahn said. &ldquo;Doesn&rsquo;t sound good, though.&rdquo;</p>
+<p>&ldquo;We understand it is nearby,&rdquo; the voice continued. &ldquo;Though we do not know its origin point yet, I&rsquo;m certain we will in time.&rdquo;</p>
+<p><em>It sounds important to them,&nbsp;</em>SEER-9 said.</p>
+<p>&ldquo;We ask you all to remain vigilant. The Returned Frequency moves often. If you see it, the best thing you can do is report it to us. Do not approach it.&rdquo;</p>
+<p>This was getting weirder. Soahn frowned, wondering what they could be talking about.&nbsp;</p>
+<p>&ldquo;It is a living echo. We do not wish to startle it. And it is rarely alone.&rdquo;</p>
+<p>A murmur of approval drifted through the gathered congregation on the recording, the sort of sound people made when discussing a sacred artefact.</p>
+<p><em>Soahn&hellip; I have a theory,</em> SEER-9 said.</p>
+<p>Lowering his pen, Soahn frowned again. &ldquo;Yes, so do I.&rdquo;</p>
+<p><em>Do you think they&rsquo;re talking about him?</em></p>
+<p>&ldquo;I can&rsquo;t imagine who else it could be,&rdquo; Soahn said, cold certainty settling over him. There was only one person in The Ghost Lines strange enough to inspire mythology.</p>
+<p>Rayne.</p>
+<p>But that was ridiculous.</p>
+<p>Only, the more Soahn listened to the recording, and the more he thought about it, the less ridiculous it started to sound. He pictured Rayne quietly at a workbench, white coat sleeves rolled neatly back while he adjusted a synthesiser component with painstaking concentration. The image collided uncomfortably with the words coming through the speakers.</p>
+<p>&ldquo;The Returned Frequency represents proof,&rdquo; the voice said. &ldquo;We must all take heart in that.&rdquo;</p>
+<p>Soahn wrote down &lsquo;proof, but of what?&rsquo; and turned the pen between his fingers. The broadcast never clarified it, and soon after the voice moved onto other topics. He was certain the ambiguity was intentional, allowing the congregation to insert their own meaning.</p>
+<p>The more he thought about it, the less he liked this. Soahn closed the notebook as the voice started reading testimonials, his attention pulled elsewhere, to Kairo&rsquo;s concern about young, vulnerable people finding broadcasts exactly like this one. Soahn&rsquo;s sense of unease only continued to grow, because for all the manipulative language, for all the half-truths and mythology, he could still hear why someone might stay.</p>
+<p>The broadcast ended ten minutes later, static reclaiming the speakers. Soahn sat for a long time without moving before picking up his comm. But before he called the others, his gaze drifted toward one line in his notebook:&nbsp;</p>
+<p>&lsquo;Carrying absence.&rsquo;</p>
+<p>Such a simple concept, and so dangerous at the same time.</p>
+<p>After a moment, he underlined it twice.</p>
+<p><br></p>
+<p align="center">~*~</p>
+<p><br></p>
+<p>Rayne was halfway through recalibrating a damaged synth module when Minjae dropped a data slate onto the workbench, the impact rattling a screwdriver loose. It rolled across the metal surface and came to rest against Rayne&rsquo;s wrist.</p>
+<p>&ldquo;Afternoon,&rdquo; Minjae said.</p>
+<p>Rayne adjusted the screwdriver back into place. &ldquo;Good afternoon.&rdquo;</p>
+<p>&ldquo;You&rsquo;re supposed to ask what that is.&rdquo;</p>
+<p>&ldquo;I assume you&rsquo;ll tell me.&rdquo;</p>
+<p>Minjae stared at him for a moment, and across the bunker, Kairo laughed loudly enough to suggest he&rsquo;d been listening.</p>
+<p>Rayne returned his attention to the synth module, where the casing had cracked near one corner. It had been repaired years ago using a patchwork of salvaged plastic and stubborn optimism. The circuitry beneath remained functional, though only just. He carefully reseated a loose connection.</p>
+<p>&ldquo;Just watch it, smartarse,&rdquo; Minjae told him and moved over to the threadbare sofa.</p>
+<p>Rayne set the screwdriver down and picked up the slate. A paused video feed filled the screen. Purple lighting. Robed figures. A symbol painted across a concrete wall. The image reminded him of abandoned relay stations he&rsquo;d visited in the past. People always decorated places they intended to stay, usually with graffiti and murals, sometimes stickers and bits of fabric. But this had shrines.</p>
+<p>Rayne tapped play and the recording began.</p>
+<p>The quality was poor, the footage likely captured through several layers of compression before being copied again, but he could make out a figure standing before a congregation, illuminated by old monitors and candlelight.</p>
+<p>&ldquo;&hellip; Proof that transmission doesn&rsquo;t end with silence.&rdquo;</p>
+<p>The speaker&rsquo;s voice emerged, and the congregation listened attentively. Rayne noticed the way some of them held hands, while others bowed their heads in reverence. He watched as a woman near the front passed a cup of tea to the person beside her, and someone else adjusted a blanket around an elderly man. It struck him that the scene seemed less like a cult gathering and more like a community meeting, which, he suspected, was part of the problem and why Minjae had shown him this.</p>
+<p>&ldquo;The Returned Frequency reminds us that identity survives disruption.&rdquo; A murmur moved through the gathering.</p>
+<p>Across the room, Kairo had stopped pretending not to pay attention. Minjae eyed Rayne from the sofa, and Onyx remained nearby with his arms folded. Soahn was sitting at another workbench, notebook open in front of him, but rather than watching the screen, he was also staring at Rayne.</p>
+<p>&ldquo;It wraps itself in white to represent the truth beneath the static. This demonstrates that continuity exists beyond conventional understanding,&rdquo; the speaker went on. &ldquo;And The Returned Frequency walks among us to show us that&mdash;&rdquo;</p>
+<p>Rayne paused the video and then turned slowly to face them. &ldquo;They appear to have constructed a mythology.&rdquo;</p>
+<p>&ldquo;Yeah,&rdquo; Kairo said. &ldquo;Around you.&rdquo;</p>
+<p>Rayne tilted his head. &ldquo;No. Around an idea of me.&rdquo; The distinction was important; one involved a person, the other involved symbolism. Everything Rayne had just seen clearly demonstrated the latter. Whoever these people were, they weren&rsquo;t interested in knowing his name or his music or where he came from. The sermon existed independently of reality.</p>
+<p>Turning back to the screen, Rayne resumed playback. The speaker moved on, telling stories, accounts from congregation members, always building that sense of community. One woman described receiving messages from her dead husband, and a young man spoke about hearing his brother&rsquo;s voice after years of silence. Rayne listened as the young man played a segment of a recording to the crowd, a strange crackling soundscape with occasional patterns emerging.</p>
+<p>Then he stopped the recording, rewound it a few seconds, and listened again. Then again. Then again. &ldquo;This is interesting,&rdquo; he said.</p>
+<p>&ldquo;Well, don&rsquo;t keep us in suspense, mate,&rdquo; Minjae said from the sofa.</p>
+<p>&ldquo;There&rsquo;s a subtle inconsistency,&rdquo; Rayne said. He played it again, though the others didn&rsquo;t seem to understand what he was hearing. &ldquo;This man says he hears his brother&rsquo;s voice. But the emotional cadence is too precise.&rdquo;</p>
+<p>&ldquo;What does that mean?&rdquo; Kairo asked, rising and coming over to Rayne.</p>
+<p>Rayne attached the data slate to one of their consoles and isolated the audio, dragging the waveform across the screen. &ldquo;Here,&rdquo; he said. &ldquo;Compression artefacts and reconstruction markers. Synthetic interpolation.&rdquo;</p>
+<p>&ldquo;Like AI.&rdquo; Minjae shook his head, wincing.</p>
+<p>&ldquo;Yes,&rdquo; said Rayne. &ldquo;Exactly like AI.&rdquo;</p>
+<p>Beside him, Kairo scowled at the screen. &ldquo;They&rsquo;re duping people into thinking those are real human voices.&rdquo;</p>
+<p>&ldquo;Yes.&rdquo;</p>
+<p>&ldquo;Holy shit.&rdquo;</p>
+<p>&ldquo;Yes.&rdquo; Rayne set the slate down. &ldquo;People hear what they want to hear.&rdquo;</p>
+<p>&ldquo;What they <em>need</em> to hear,&rdquo; Onyx corrected.</p>
+<p>&ldquo;Why does this not surprise me?&rdquo; Minjae said, slumping back in the chair.</p>
+<p>Rayne glanced at Kairo again; he was still in a way he rarely was, his body tense, brows drawn down low, staring at the waveform like he had a personal issue with it.</p>
+<p>&ldquo;Right, so we&rsquo;ve nailed down that the Signal Chapels are bullshitting people into thinking they&rsquo;re back in touch with dead relatives,&rdquo; Minjae went on. &ldquo;That tracks with cult behaviour. And now we know that they worship Rayne as some second-coming signal-Jesus. Which would make a great album title, by the way.&rdquo; Minjae sighed. &ldquo;But now we have another problem. Kairo&rsquo;s stray.&rdquo;</p>
+<p>&ldquo;I know.&rdquo; Kairo worried his lower lip with his teeth. &ldquo;This is bad.&rdquo;</p>
+<p>&ldquo;Stray?&rdquo; Rayne asked.</p>
+<p>&ldquo;It&rsquo;s just this kid who used to listen to us, but they stopped recently,&rdquo; Kairo said. &ldquo;Me and Minjae looked into it and they joined Signal Chapel Twelve a few weeks back.&rdquo;</p>
+<p>&ldquo;We can assume they&rsquo;re looking for something,&rdquo; Soahn said. &ldquo;If not a signal from a loved one, then at the very least somewhere to belong.&rdquo;</p>
+<p>&ldquo;They belong with us,&rdquo; Kairo mumbled. &ldquo;Not there. Not with those people. Those liars.&rdquo;</p>
+<p>&ldquo;It isn&rsquo;t all of them,&rdquo; Onyx told him. &ldquo;Just the leaders. Most people there are probably vulnerable too.&rdquo;</p>
+<p>Rayne stared over at the damaged synth module he&rsquo;d been working on, still where he left it, a disconnected wire hanging loose from the casing. For a moment, his attention drifted there, to the repair, to the difference between rebuilding something and replacing it.</p>
+<p>Eventually, he looked back at the frozen image of the congregation, purple light illuminated faces filled with hope. &ldquo;They&rsquo;re creating false experiences and exploiting grief.&rdquo;</p>
+<p>A quiet stillness settled over the base.</p>
+<p>Finally, Soahn closed the notebook. &ldquo;I don&rsquo;t know about you, but I can&rsquo;t sit here and pretend that isn&rsquo;t happening.&rdquo;</p>
+<p>&ldquo;No, absolutely not,&rdquo; Kairo said.</p>
+<p>&ldquo;All right,&rdquo; Minjae said, rising from the sofa and going to the main console. &ldquo;Then we&rsquo;d better make a plan.&rdquo;</p>
+<p><br></p>
+<p align="center">~*~</p>
+<p><br></p>
+<p>By the second week, Elliot had been trusted with candles. The responsibility seemed absurdly small when he thought about it afterwards, but he found himself taking it seriously anyway. The Chapel kept boxes of them stacked in a storage room behind the main gathering hall, wax pillars wrapped in old newspaper and sorted by colour. Purple occupied an entire shelf, while white candles filled another. Somebody had arranged them neatly enough that the rows looked a bit like a library.</p>
+<p>Elliot carried two boxes through to the hall and set them beside the front wall, then straightened and scanned around the space. The congregation would start arriving soon; people always arrived early, mainly to catch the broadcasts and not miss the start of a sermon. Others just stayed because there was always tea and somewhere warm to sit.</p>
+<p>The heaters rattled steadily overhead, but the hall always felt different when it was empty. Smaller, somehow. A new symbol had appeared over the entrance in the last few days &mdash; a humanoid figure in white. It was familiar, though Elliot couldn&rsquo;t place it. He liked looking at it anyway.</p>
+<p>A voice drifted through the doorway. &ldquo;Elliot?&rdquo;</p>
+<p>He turned to find Mara standing nearby, holding a crate of mugs.</p>
+<p>&ldquo;Could you give me a hand?&rdquo;</p>
+<p>A few minutes later they were arranging cups on the long folding tables while people filtered steadily into the Chapel. Mara thanked him three times, and then an older man called Lewis asked him if he&rsquo;d fixed the loose chair near the front row.</p>
+<p>&ldquo;I tightened it yesterday,&rdquo; Elliot said.</p>
+<p>Lewis nodded approvingly. &ldquo;Good work.&rdquo;</p>
+<p>Elliot smiled at that, but the smile went deeper than his face. Good work. Back at the flat, conversations had become smaller over the past few months. Questions stayed unanswered, meals happened whenever someone remembered, and the LIVV feed often remained on long after everyone had stopped watching it, cycling through terrible reality shows and even worse soap operas.</p>
+<p>Most evenings, his mother occupied the same corner of the sofa beneath the living room window, light from passing traffic moving across her face while entire programmes came and went. Sometimes Elliot wondered if she even knew what day it was.</p>
+<p>At the Chapel, people remembered to clear up after themselves and switch off monitors when not in use. They knew his name and told him he did good work when he helped. They asked questions about him and genuinely seemed interested in his life.</p>
+<p>By the second week, he was handed a maintenance list.</p>
+<p>By the start of the third week, he had keys to two storage rooms.</p>
+<p>And the congregation always greeted him when he arrived, people nodding or offering little waves. The Chapel gradually settled over him like a familiar jacket.</p>
+<p>One evening, while replacing batteries in a portable speaker, Elliot realised he hadn&rsquo;t slept at home in three nights. The realisation probably should&rsquo;ve worried him, but instead, he tightened the battery cover and moved on to the next task. Broadcasts started in an hour, and there was still plenty to do.</p>
+<p>The recording arrived four days later.</p>
+<p>Elliot knew something was up when the Listener found him after the evening gathering. Most of the congregation had drifted away, though a few volunteers cleared tables while somebody swept wax fragments into a dustpan near the entrance. Soft music played through the overhead speakers.</p>
+<p>The Listener approached quietly, their robe brushing the floor as they crossed the hall toward him. &ldquo;Elliot.&rdquo;</p>
+<p>Elliot straightened. &ldquo;Yeah?&rdquo;</p>
+<p>Between two fingers, the Listener held a small data card, just a simple, unmarked piece of plastic, worn a little smooth at the edges. &ldquo;We&rsquo;d like you to hear something.&rdquo;</p>
+<p>For a moment, Elliot forgot to breathe. The hall carried on around him, chairs being stacked and moved to the sides, people talking, laughing, a kettle clicking off nearby.</p>
+<p>The Listener waited patiently, the data card still extended.</p>
+<p>&ldquo;Is it&hellip;?&rdquo; Elliot asked, his voice barely more than a whisper.</p>
+<p>For just a moment, the Listener looked down at the card in their hand. &ldquo;We believe so.&rdquo; There was no performance in their words this time, no sermon voice, just tiredness. Or perhaps sadness.</p>
+<p>Slowly, Elliot took the card, holding it lightly in his palm as if it might disintegrate if he touched it too much.</p>
+<p>&ldquo;There is a space beneath the Chapel,&rdquo; the Listener told him. &ldquo;It&rsquo;s small and private. There will only be a few of us there. You may listen to it there if you like?&rdquo;</p>
+<p>Elliot nodded, unable to speak, and when the Listener turned and headed toward one of the doors to the backrooms, Elliot followed.</p>
+<p>The small chamber was warm and low-lit. As soon as they entered, the Listener indicated for Elliot to sit in one of the comfy chairs. After a while, Mara entered the room and sat next to him, and Lewis also appeared, lingering near the back.</p>
+<p>The Listener inserted the data card into an old playback unit resting on the table. The machine hummed, and a gentle crackle filled the space. Elliot stared at the speaker, his heart beating so hard it felt visible, and waited. For a long time all he heard was static.</p>
+<p>And then, suddenly, it changed.</p>
+<p>&ldquo;Elliot&hellip;&rdquo;</p>
+<p>In that second, the room disappeared. Elliot gripped the arm of the chair, every muscle in his body locked tight, his mouth dry, his eyes hot. The voice laughed softly and it was so painfully familiar that he almost couldn&rsquo;t stand it.</p>
+<p>&ldquo;Emily?&rdquo; he heard himself say, distantly, through the thunder of his own heartbeat in his ears.</p>
+<p>&ldquo;Oh wow, you actually answered me.&rdquo; His sister&rsquo;s voice filled the room, hitting him like a physical blow. He felt Mara put a steadying hand on his arm, but Elliot felt anything but steady. &ldquo;You used to ignore my messages.&rdquo;</p>
+<p>&ldquo;Not all the time,&rdquo; he said. He thought again of old voice notes sent at two in the morning, arguments over ridiculous things, songs she&rsquo;d made him listen to.</p>
+<p>&ldquo;I found the caf&eacute; again,&rdquo; Emily said. It was a little hard to hear her words clearly, but he still caught them. &ldquo;The one with the terrible hot chocolate.&rdquo;</p>
+<p>Elliot&rsquo;s vision blurred, and he lowered his head.</p>
+<p>&ldquo;And before you complain, yes, I ordered it anyway.&rdquo;</p>
+<p>The room tilted and Elliot clung to the chair, listening as his sister talked about old memories, like the river path they used to walk home from school, the birthday present she&rsquo;d hidden badly, the stray cat they&rsquo;d tried to adopt despite her being allergic.</p>
+<p>Elliot scrubbed his cheeks with his hands, his fingers coming away damp. Around him, nobody rushed or interrupted; they just remained there with him, a quiet circle holding space around his grief.&nbsp;</p>
+<p>By the time the recording ended, Elliot&rsquo;s face was wet with tears.</p>
+<p>&ldquo;Signals endure in ways the city struggles to understand,&rdquo; the Listener said. &ldquo;And they often persist. There may be more.&rdquo;</p>
+<p>Hope surged through him so hard it almost hurt. More. More conversations, more pieces of her. The possibility filled every available space in him.</p>
+<p>When Mara squeezed his hand, and Lewis approached him with a tissue, Elliot thought about family and what it meant. It meant being there when it mattered, being understanding and patient, and that was exactly what it felt like right then.</p>
+<p>After everyone else left, Elliot offered to lock up and stayed behind in the hall for a while, staring at the purple light pooled across the floor. He&rsquo;d tucked the data card safely in his pocket; he was so grateful that they&rsquo;d let him keep it. Above him, the monitors whispered, and for the first time since Emily died, the future felt like it was worth moving toward.</p>
+<p>When he finally headed out, he didn&rsquo;t turn toward home. Instead, he walked deeper into the Chapel complex to where the communal sleeping quarters were situated, to where his people waited.</p>
+<p>And somewhere ahead, if he proved himself worthy enough to continue listening, Emily&rsquo;s voice waited too.</p>
+<p><br></p>
+<p align="center">~*~</p>
+<p><br></p>
+<p>Kairo paced back and forth across the relay bunker, which now looked like it had been declared a crime scene by someone with poor organisational skills. Portable consoles occupied every available surface, three monitors displayed maps, another showed account activity logs, and two empty mugs sat dangerously close to one of Minjae&rsquo;s keyboards that probably cost more than anything Kairo owned.</p>
+<p>&ldquo;If you wear a groove into the floor,&rdquo; Minjae said from the main workstation. &ldquo;You&rsquo;re fixing it.&rdquo; He was surrounded by enough open windows to make a lesser human being cry. Beside him, Onyx occupied the chair and was methodically cross-referencing routes through a series of maintenance schematics. Soahn sat nearby with his notebook, while Rayne quietly repaired an electronic that probably didn&rsquo;t need repairing.</p>
+<p>Rayne had been a little off since watching the recording. More distant than usual, which was saying something. Kairo suspected most people would struggle after discovering they&apos;d accidentally become a religious symbol, but Rayne seemed more bothered by the synthetic voices than the sermons.</p>
+<p>After completing another lap of the bunker, Kairo dipped over to the main workstation and stole a cracker from an open packet someone had left there. Nobody objected. The investigation continued.</p>
+<p>For a while, things almost felt normal.</p>
+<p>And then Minjae swore under his breath.</p>
+<p>&ldquo;What&rsquo;s up?&rdquo; Kairo asked.</p>
+<p>&ldquo;Found it,&rdquo; Minjae said, leaning back from his screen. &ldquo;Files and files of synthetic voices, all stored on servers shared across the Chapel network.&rdquo;</p>
+<p>Kairo peered at them. &ldquo;Wow. Okay, that&rsquo;s a lot.&rdquo;</p>
+<p>&ldquo;There are a lot of Chapels,&rdquo; Soahn said.</p>
+<p>&ldquo;Bastards,&rdquo; Kairo spat, squinting at the screen.</p>
+<p>&ldquo;You have no idea what you&rsquo;re looking at,&rdquo; Minjae said.</p>
+<p>&ldquo;No.&rdquo;</p>
+<p>&ldquo;Excellent. At least we&rsquo;re communicating honestly.&rdquo;</p>
+<p>Kairo threw a pen at him, and Minjae caught it without looking, an infuriating skill.&nbsp;</p>
+<p>&ldquo;Anyway, voice reconstruction,&rdquo; Minjae said more seriously. &ldquo;Interpolation, just like Rayne said. They&rsquo;re using predictive modelling and generated memory stitching.&rdquo;</p>
+<p>&ldquo;I imagine they&rsquo;re using specific techniques to gather information from new members,&rdquo; Soahn said, rising and coming over to join them. &ldquo;Cold reading. Confirmation bias. Encouraging people to talk about the people they&apos;ve lost and recording the details. Most people tell you far more than they realise when they&apos;re grieving.&rdquo;</p>
+<p>Minjae nodded. &ldquo;Then they feed it into the model,&rdquo; he said.</p>
+<p>&ldquo;And the model feeds it back,&rdquo; Soahn replied. &ldquo;Specific memories feel convincing. People remember the details that fit and overlook the ones that don&apos;t. It&apos;s the same principle fortune tellers and fraudulent psychics have used for centuries.&rdquo;</p>
+<p>Kairo frowned. &ldquo;That&apos;s horrifying.&rdquo;</p>
+<p>&ldquo;Yes,&rdquo; Soahn said quietly. &ldquo;It is.&rdquo;</p>
+<p>Kairo couldn&rsquo;t believe that a few weeks ago <em>maintenancekid</em> had been downloading tracks and dropping comments here and there on their uploads. Now, most likely, some creepy strangers were feeding him manufactured conversations with the dead.</p>
+<p>&ldquo;I&rsquo;ve found the routes,&rdquo; Onyx said, and everyone looked up as he expanded the map across his screen. A cluster of tunnels appeared, and several locations flashed briefly. Then one remained highlighted. &ldquo;That&rsquo;s where Signal Chapel Twelve is.&rdquo; Onyx zoomed in further. &ldquo;They&rsquo;re using a former communications hub. This,&rdquo; he pointed at one larger section, &ldquo;is likely the main hall. These side rooms could be storage or residential.&rdquo;</p>
+<p>&ldquo;Residential?&rdquo; Kairo said.</p>
+<p>&ldquo;Yeah, you don&rsquo;t just visit these types of places,&rdquo; Minjae said. &ldquo;They get their hooks in, and before you know it, you&rsquo;re living among them.&rdquo;</p>
+<p>&ldquo;Jesus.&rdquo;</p>
+<p>&ldquo;Lovely, isn&rsquo;t it?&rdquo;</p>
+<p>&ldquo;No,&rdquo; Kairo said.</p>
+<p>Onyx studied the layout again. &ldquo;There&rsquo;s only one direct exit from the back,&rdquo; he said. &ldquo;If somebody changed their mind about being there, they&rsquo;d have to walk through the hall to leave.&rdquo;</p>
+<p>Kairo&rsquo;s expression darkened. &ldquo;You think that&rsquo;s deliberate?&rdquo;</p>
+<p>&ldquo;I think someone designed this place around keeping everyone together,&rdquo; Onyx told him. &ldquo;Whether that was the intention or not, it has the same effect. Either way, leaving won&rsquo;t be as simple as sneaking out the front door.&rdquo;</p>
+<p>Minjae opened another file, revealing a collection of account activity: connection histories, location pings, timestamps. But the pattern was already obvious to Kairo &mdash; <em>maintenancekid</em>&rsquo;s activity narrowed over several weeks, with fewer external connections and more Chapel access points.</p>
+<p>&ldquo;Hey, Min-Min,&rdquo; Kairo said. &ldquo;You know how we swore we&rsquo;d never look up personal details about our fans?&rdquo;</p>
+<p>&ldquo;Already on it,&rdquo; Minjae said, keying in commands before Kairo had finished. It took a few minutes, but eventually he muttered, &ldquo;Elliot Smith. Christ, this kid is only fifteen.&rdquo;</p>
+<p>Kairo clenched his fists at his sides. Fifteen. That was no age. Sure, it was old enough to make decisions, but young enough to be targeted. Young enough to hear the right voice at the wrong moment and follow it anywhere.</p>
+<p>Across the room, Rayne carefully set down the component he&rsquo;d been working on. &ldquo;We should get him out. Sooner rather than later.&rdquo;</p>
+<p>&ldquo;Okay,&rdquo; Minjae said. &ldquo;But we still don&rsquo;t have much of a plan.&rdquo;</p>
+<p>&ldquo;The routes there are manageable,&rdquo; Onyx said. &ldquo;Nothing we can&rsquo;t cross.&rdquo;</p>
+<p>&ldquo;We need to be careful,&rdquo; Soahn said. &ldquo;By this time, I imagine Elliot trusts them. It might not be as easy as walking in there and getting him to come with us.&rdquo;</p>
+<p>Kairo groaned. &ldquo;Great.&rdquo;</p>
+<p>&ldquo;It&rsquo;s all right,&rdquo; Rayne said, drifting closer now. &ldquo;I will be able to convince him.&rdquo;</p>
+<p>&ldquo;Oh no, we&rsquo;re not sending you in there, Rayney,&rdquo; Kairo protested. &ldquo;Next thing, those weirdoes will be wearing your skin over their own faces.&rdquo;</p>
+<p>&ldquo;Doubtful,&rdquo; Rayne said.</p>
+<p>&ldquo;Rayne won&rsquo;t be alone,&rdquo; Onyx told them. &ldquo;We&rsquo;re all going.&rdquo;</p>
+<p>Minjae smiled, but it wasn&rsquo;t friendly. &ldquo;Yeah, let me in there for five minutes with them&hellip;&rdquo;</p>
+<p>&ldquo;Remember, a lot of them are innocent,&rdquo; Onyx pointed out.</p>
+<p>&ldquo;Okay.&rdquo; Kairo nodded, already feeling a little better. &ldquo;When do we leave?&rdquo;</p>
+<p><br></p>
+<p align="center">~*~</p>
+<p><br></p>
+<p>The first thing Soahn noticed was the silence that fell as soon as they entered the Chapel, broken only by the intermittent crackle of monitors lining the walls. The air was thick with heat and burnt candle wax; it stuck to the back of his throat as the five of them stepped into the aisle.</p>
+<p>Dozens of people occupied the room. At the head, the Listener had stopped speaking, cutting off mid-sentence when he spotted them. Slowly, every head turned to stare at them.</p>
+<p>No, not at them, Soahn corrected. At Rayne.</p>
+<p>Onyx had instinctively moved closer to Rayne, closer than he&rsquo;d usually stand, and Kairo, for his part, looked about ready to jump anyone who moved even an inch in Rayne&rsquo;s direction.</p>
+<p>Purple light spilled from the monitors, washing the room in a strange, sickly colour and catching in widened eyes and on open mouths. A flurry of chatter moved through the congregation, but nobody raised their voice high enough for Soahn to hear what they were saying. He caught the gist from the tone, though. Shock. Disbelief. Wonder.</p>
+<p>A woman near the front row slowly rose to her feet, while another clasped both hands over her mouth.</p>
+<p>&ldquo;The Returned Frequency,&rdquo; the Listener called, voice booming in the near-quiet. &ldquo;Signal Zero. The Living Echo. Our One True&mdash;&rdquo;</p>
+<p>&ldquo;Are you done?&rdquo; Minjae asked suddenly, raising his own voice to be heard by everyone. &ldquo;Because as hilarious as this is, we haven&rsquo;t got all day.&rdquo;</p>
+<p>Soahn saw the Listener visibly stiffen beneath their robes. The rest of the congregation didn&rsquo;t seem fazed by his tone, though, many of them lowering their heads in reverence, one man going so far as to slide off his chair and kneel on the floor beside it, facing Rayne&rsquo;s direction.</p>
+<p>Soahn glanced sideways. Rayne blinked once, twice, his face perfectly calm.</p>
+<p><em>He&rsquo;s troubled</em>, SEER-9 said. <em>But he&rsquo;s holding it.</em></p>
+<p>At first, Soahn had assumed this was a religion, but watching it unfold in person, he was starting to think the word wasn&rsquo;t accurate. Religions took time, generations, stories passed from parent to child. This felt newer, stranger, a thing growing quickly in the dark corners of The Ghost Lines, a mythology still being written.</p>
+<p>Movement ahead caught his eye and he watched as the congregation parted, the Listener now coming toward them. They stopped a few metres away and lifted one pale hand. Soahn couldn&rsquo;t make out much of their features beneath the hood pulled low over their face, but he thought he caught the curve of a smile.</p>
+<p>&ldquo;Welcome,&rdquo; they said softly. &ldquo;Our special guests.&rdquo;</p>
+<p>&ldquo;Yeah, we&rsquo;re not staying,&rdquo; Kairo said.</p>
+<p>Minjae pinched the bridge of his nose.</p>
+<p>&ldquo;Some arrivals have a special significance,&rdquo; the Listener said. &ldquo;There are moments when the network aligns in unexpected ways. Moments when prophecy and reality&mdash;&rdquo;</p>
+<p>&ldquo;I am no prophecy,&rdquo; Rayne said.</p>
+<p>The Listener paused at that, and a few congregation members exchanged confused glances.</p>
+<p>&ldquo;I believe,&rdquo; the Listener said slowly, &ldquo;that you misunderstand.&rdquo;</p>
+<p>&ldquo;While that is possible,&rdquo; Rayne said politely. &ldquo;It&rsquo;s also unlikely.&rdquo;</p>
+<p>&ldquo;The Returned Frequency&mdash;&rdquo;</p>
+<p>&ldquo;I am Rayne.&rdquo;</p>
+<p>The Listener paused again, seemingly caught off guard, though Soahn was almost sure they were quickly trying to mentally refocus. It was interesting to watch them simultaneously speak to Rayne while keeping the illusion in place for the entire congregation. Underlying the confusion, he could pick up the barest hint of panic from the Listener.</p>
+<p>It satisfied him more than it probably should.</p>
+<p>&ldquo;Of course you are,&rdquo; they finally said.</p>
+<p>&ldquo;And I&rsquo;m unfamiliar with the phrase The Returned Frequency,&rdquo; Rayne said. &ldquo;And also Signal Zero. These things sound made up.&rdquo;</p>
+<p>Somewhere behind Soahn, Kairo made a noise suspiciously close to laughter.</p>
+<p>The Listener&rsquo;s smile strained slightly at the edges. &ldquo;We have long studied the significance of your existence.&rdquo;</p>
+<p>Rayne considered this for approximately one second, then said, &ldquo;That seems inefficient.&rdquo;</p>
+<p>This time, Kairo failed at stifling a snort.</p>
+<p>A few congregation members shuffled their feet, while others were starting to look increasingly uncertain. Here they were, mythology meeting reality, and reality was proving unexpectedly awkward and a little defiant.</p>
+<p>&ldquo;But you are welcome to explain it to me,&rdquo; Rayne added. And there was Soahn and Kairo&rsquo;s cue.</p>
+<p>Soahn glanced over at Kairo and Kairo shook his head. Damn. He hadn&rsquo;t been able to locate anyone resembling the boy, Elliot, within the crowd. With a silent sigh, Soahn inclined his head toward the side of the hall, to a single door set into the wall. Kairo nodded this time, and as Rayne held the attention of everyone in the room, they quietly slipped away.</p>
+<p>Beyond the door, the air cooled, and that horrible purple light faded into a more normal glow from torches.</p>
+<p>&ldquo;Wow, they are so weird,&rdquo; Kairo muttered.</p>
+<p>&ldquo;Yeah. Let&rsquo;s hope Rayne can keep them occupied long enough.&rdquo;</p>
+<p>&ldquo;Do you think he&rsquo;s here?&rdquo;</p>
+<p>&ldquo;I hope so.&rdquo; Soahn glanced at him. &ldquo;If he&rsquo;s here, we can&rsquo;t expect him to just come with us.&rdquo;</p>
+<p>&ldquo;I know,&rdquo; Kairo said.</p>
+<p>&ldquo;We&rsquo;re just going to introduce ourselves.&rdquo;</p>
+<p>&ldquo;Yeah, I know.&rdquo;</p>
+<p>They began checking adjoining rooms, finding two storage areas and a communal bathroom. Finally, at the end of the corridor, they opened a door into the sleeping quarters. Soahn scanned around the low-ceilinged space, amazed that people lived here. The band had stayed in some pretty rough places since the start, but this was claustrophobic in a way he hadn&rsquo;t seen before. Beds were lined up close together, blankets folded on some of them, or tossed haphazardly across others. There were handwritten notes pinned to the walls, and a collection of mismatched shoes was gathered near the doorway.</p>
+<p>At the far end of the room, sitting on a narrow cot, was a boy.</p>
+<p>&ldquo;So,&rdquo; Kairo said. &ldquo;I think that could be him.&rdquo;</p>
+<p>They picked their way through the beds, and as they approached, the boy turned. Surprise passed over his face, then confusion, closely followed by recognition. He was holding a small portable console in one hand, static dancing across the screen, and earbuds were hooked into his ears. He pulled them out and rose as Soahn and Kairo stopped.</p>
+<p>&ldquo;E.V.E.N,&rdquo; he breathed.</p>
+<p>Soahn offered him a smile. &ldquo;Hello. Are you Elliot?&rdquo;</p>
+<p>He stared at them for a long moment, and then finally nodded. &ldquo;I know who you are,&rdquo; he said.</p>
+<p>&ldquo;We suspected you might,&rdquo; Soahn said.</p>
+<p>&ldquo;Um&hellip; why are you here?&rdquo; Elliot asked.</p>
+<p>&ldquo;Can we sit down?&rdquo; Soahn indicated a nearby cot. Elliot lifted a shoulder, then nodded. They went to the cot and sat side-by-side opposite him, and after a moment, Elliot sat back down, too.</p>
+<p>&ldquo;We were concerned,&rdquo; Soahn said.</p>
+<p>&ldquo;About&hellip; me?&rdquo;</p>
+<p>&ldquo;Yeah.&rdquo; Kairo leaned forward, bracing his elbows on his knees. &ldquo;You went quiet on our feeds. We just wanted to check you&rsquo;re okay.&rdquo;</p>
+<p>Elliot seemed confused at that. He picked at a loose thread on his sleeve. &ldquo;I&rsquo;m okay.&rdquo;</p>
+<p><em>He isn&rsquo;t telling the truth</em>, SEER-9 observed.</p>
+<p>Soahn waited to see if the boy would say anything else, but he didn&rsquo;t, just looked away from them, like he was embarrassed.</p>
+<p>&ldquo;You know,&rdquo; Soahn said. &ldquo;When I was young, my father used to collect vinyl records. He had hundreds, some of them a century old. Some probably older than that. He spent years searching for specific pressings.&rdquo;</p>
+<p>Elliot glanced at him.</p>
+<p>&ldquo;He knew exactly where every scratch was, and I was told never to touch them. When he died, I still couldn&rsquo;t bring myself to touch them or move them.&rdquo; Out of the corner of his eye, he saw Kairo turn to stare at him. Soahn had never spoken about this with anyone before, but it seemed right in that moment. &ldquo;I left everything where it was. The records, his chair, the mug beside the player.&rdquo;</p>
+<p>Elliot lowered his eyes. &ldquo;You wanted him back.&rdquo;</p>
+<p>&ldquo;Yes,&rdquo; Soahn said. &ldquo;Of course. But that isn&rsquo;t how it works. My memories of him were connected to the things he loved and left behind.&rdquo;</p>
+<p>For a long time, Elliot said nothing, lost in his thoughts. Then he shrugged one shoulder. &ldquo;They let me hear her.&rdquo;</p>
+<p>&ldquo;We know,&rdquo; Soahn said.</p>
+<p>&ldquo;Nobody else could,&rdquo; Elliot added.</p>
+<p>&ldquo;I think,&rdquo; Soahn said carefully, &ldquo;when you miss someone long enough, eventually you start searching everywhere for them.&rdquo;</p>
+<p>&nbsp;Elliot closed his eyes.</p>
+<p>&ldquo;Songs,&rdquo; Soahn went on, &ldquo;Old messages. Places they used to sit.&rdquo;</p>
+<p>&ldquo;I just wanted to hear her again,&rdquo; Elliot whispered.</p>
+<p>&ldquo;There isn&rsquo;t anything wrong with that,&rdquo; Kairo said. &ldquo;You just have to be a bit careful, yeah? Because there are people who will latch onto that and use you.&rdquo;</p>
+<p>The words hung between them. And for the first time since they entered the room, Elliot looked uncertain. Maybe not convinced, but wavering.</p>
+<p>&ldquo;Anyway, we really just wanted to make sure you&rsquo;re all right,&rdquo; Kairo added. &ldquo;No harm. We&rsquo;ll leave you to it.&rdquo;</p>
+<p>Elliot looked up at that. &ldquo;You&rsquo;re going?&rdquo;</p>
+<p>Kairo grinned. &ldquo;Got a new album to make. And when I say &lsquo;make&rsquo; what I really mean is argue over. The fun never stops.&rdquo;</p>
+<p>&ldquo;Oh.&rdquo; A tiny smile appeared.</p>
+<p>It was enough for Soahn. For now. They wouldn&rsquo;t push &mdash; they couldn&rsquo;t, not yet &mdash; but the seed was there.</p>
+<p>&ldquo;Hey,&rdquo; Kairo added as they rose to leave. &ldquo;Don&rsquo;t be a stranger on our feeds, okay? It&rsquo;s you guys who keep this whole operation going.&rdquo;</p>
+<p>Elliot&rsquo;s cheeks darkened a little at that. &ldquo;Okay.&rdquo;</p>
+<p><br></p>
+<p align="center">~*~</p>
+<p><br></p>
+<p>The room was fuller than usual, people occupying every row. Extra chairs had been brought in from storage, and several congregation members stood along the walls. The air carried the familiar scent of candle wax and old circuitry, warm beneath the purple glow spilling from the monitors overhead.</p>
+<p>Elliot sat near the front, the data card still resting safely in his pocket. Occasionally, he brushed his fingers over it, just to make sure it was still there, a habit he&rsquo;d developed without noticing. The small rectangle of plastic had become a kind of anchor over the past few days, a tangible thing he could hold onto whenever doubt tried to creep in.</p>
+<p>And yet&hellip; he kept thinking about E.V.E.N.</p>
+<p>Soahn and Kairo had come to see him because they&rsquo;d been concerned. While the last few weeks had felt a bit better since finding the Chapel, nobody had crossed half The Ghost Lines just to check he was okay.</p>
+<p>Around him, people settled into their seats. Mara appeared with a couple of mugs and handed one to him before taking her usual place nearby, and Lewis was just in front near the aisle. Tonight, a few unfamiliar faces had arrived from other Chapels. Elliot recognised the colours stitched on their robes: Signal Chapel Eight, Signal Chapel Five, and one person from Signal Chapel Ten. Everyone seemed more excited than usual, conversations louder and drifting through the hall in hushed bursts, people glancing toward the front of the room where the Listener waited for everyone to settle down.</p>
+<p>A strange nervous energy lingered under everything.</p>
+<p>Finally, the Listener stepped forward and the room gradually quietened. &ldquo;We gather tonight to celebrate connection.&rdquo; The voice rolled gently through the halls. &ldquo;We gather because every week our understanding deepens.&rdquo;</p>
+<p>A murmur of agreement swept through the congregation.</p>
+<p>&ldquo;And because some signals continue to reach us. A few days ago, as you all know, The Returned Frequency offered us a test of faith.&rdquo;</p>
+<p>Elliot felt the atmosphere change immediately, people exchanging glances, sitting up a little straighter.</p>
+<p>&ldquo;The Living Echo came to this Chapel, and it did not come alone.&rdquo;</p>
+<p>A few people nodded.</p>
+<p>&ldquo;The network tests all things,&rdquo; the Listener said. &ldquo;Faith. Connection. Understanding. Those who accompanied The Returned Frequency brought questions. Doubt. Uncertainty.&rdquo; The Listener folded their hands in front of them in an almost prayer-like gesture. &ldquo;But doubt is not the enemy of truth.&rdquo;</p>
+<p>Elliot blinked. That wasn&rsquo;t where he was expecting this to go.</p>
+<p>&ldquo;Truth survives examination, and in opening our doors, in welcoming questions, in refusing fear, Chapel Twelve demonstrated exactly that.&rdquo;</p>
+<p>More nodding, more smiles. The Listener&rsquo;s gaze drifted across the room.</p>
+<p>&ldquo;We did not turn away those who challenged us. We listened. And in doing so, we passed the test.&rdquo;</p>
+<p>Now the Listener&rsquo;s attention narrowed, turning toward Elliot. Tightening his grip around the edge of his chair, Elliot tried not to shrink into himself as a few people turned toward him. He wondered if anyone else was feeling as uneasy as he was.</p>
+<p>&ldquo;Our friend Elliot showed remarkable commitment.&rdquo; The Listener gave him a small, approving nod. &ldquo;And tonight, we have another message.&rdquo; From within their robe, they produced another data card, similar to the first one they&rsquo;d given him.</p>
+<p>Hope flared before he could stop it. Could that one be&hellip; for him, too?</p>
+<p>Whatever Soahn had said, no matter how reassuring Kairo had been, whatever doubts had started to gather at the corners of his thoughts, whatever questions had followed him from the sleeping quarters&hellip; none of it mattered in that moment.</p>
+<p>&ldquo;May we share this with everyone this time?&rdquo; the Listener asked him.</p>
+<p>Heat flushed through Elliot&rsquo;s cheeks, but he nodded.</p>
+<p>The playback unit clicked and static filled the hall. Just like before, nothing happened for a while, but then, finally, a voice emerged.</p>
+<p>&ldquo;Elliot?&rdquo;</p>
+<p>Emily.</p>
+<p>His chest clenched hard and he sucked in a breath.</p>
+<p>&ldquo;I was thinking about that awful hot chocolate again,&rdquo; she said through the speakers, and then she laughed.</p>
+<p>The cadence was right. The slight upward lift at the end of certain words was right. Every part of him leaned toward it.</p>
+<p>&ldquo;You always said it tasted like melted cardboard.&rdquo;</p>
+<p>The memory surfaced easily: rain streaking down the caf&eacute; windows, Emily making dramatic faces over the rim of her mug, the smell of chocolate and wet coats, and her insisting she liked it anyway.</p>
+<p>The recording moved forward, and more stories from his past surfaced. The congregation listened along with him, some turning to smile encouragingly, others wiping away tears. The entire hall was bound together by the same thing: hope. Longing. The desperate belief that loss might not be permanent.</p>
+<p>And yet&hellip;</p>
+<p>A strange thought surfaced in Elliot&rsquo;s mind, momentarily pulling him away from the voice of his sister.</p>
+<p>Emily always got distracted. Always. She never really told one story at a time; it was always six stories all tangled together, like her brain was running too fast to fixate on just one thing. This Emily, though, perfectly transitioned from one story to the next, her voice always seeming to know where it was going.</p>
+<p>Elliot frowned slightly.</p>
+<p>As the recording came to an end, the Listener clicked the player off, lowering their head as they spoke. &ldquo;You see? The network remembers. The city teaches us that death severs connections. Our work proves otherwise.&rdquo;</p>
+<p>Elliot&rsquo;s hand drifted again to the data card in his pocket, but paused before he touched it.</p>
+<p>&ldquo;The recording is synthetic,&rdquo; said a calm, deep voice from behind.</p>
+<p>Everyone turned in their chairs.</p>
+<p>At the back of the room, just within the threshold, stood Rayne, long white coat bright against the purple glow of the monitors. Behind him, Elliot could see Onyx in the corridor, standing tall and looking as intense as a Doberman on alert.</p>
+<p>Gasps rang out, and a few people slipped to the floor on their knees.</p>
+<p>&ldquo;Your work proves nothing,&rdquo; Rayne said.</p>
+<p>Elliot stared at him, an ache spreading through his chest. Not because he thought Rayne was wrong or lying. Because a small part of him had already started to wonder.</p>
+<p>If Rayne was right&hellip;</p>
+<p>The Listener&rsquo;s voice rose. &ldquo;As we&rsquo;ve discussed before, some experiences resist conventional explanation.&rdquo;</p>
+<p>&ldquo;Yes,&rdquo; Rayne agreed. &ldquo;But the waveform does not.&rdquo;</p>
+<p>Elliot tore his gaze away from Rayne and looked at the Listener. For the first time since he&rsquo;d met them, they looked less like somebody delivering a sermon and more like somebody trying very hard to keep control of a conversation.</p>
+<p>An unpleasant sensation churned in Elliot&rsquo;s gut, and suddenly, he found himself paying close attention to everything: to how the Listener&rsquo;s hands figeted within their sleeves, to how they shook their head as if trying desperately to find the correct response.</p>
+<p>&ldquo;This person is lying to you all,&rdquo; Rayne said.</p>
+<p>Before the Listener could speak, a few pings rang out from people&rsquo;s personal devices. Then a few more. Then even more, the Chapel filling with the sound of messages arriving on every switched-on comm. Elliot&rsquo;s own comm vibrated in his pocket and he drew it out, staring down at the message.</p>
+<p>At first, it looked like nonsense, just technical diagrams and waveforms. There was no sender name, just a code in the sender box: 00C9-M.</p>
+<p>Elliot scrolled through the message. Synthetic vocal generation, reconstructed markers highlighted, compare timestamps, source paths. Below it were several attached files, although Elliot didn&rsquo;t need to open them.</p>
+<p>Around the room, dozens of screens glowed in the purple light.</p>
+<p>&ldquo;Please,&rdquo; the Listener began, raising their voice above the growing murmur of the crowd. &ldquo;These files have been altered.&rdquo;</p>
+<p>&ldquo;They really haven&rsquo;t,&rdquo; said a new voice, and Elliot turned to see Minjae now standing just beside Rayne. &ldquo;I stole them from your servers.&rdquo;</p>
+<p>And then the room erupted all at once, questions flying.</p>
+<p>&ldquo;What servers?&rdquo;</p>
+<p>&ldquo;Synthetic?&rdquo;</p>
+<p>&ldquo;What is this?&rdquo;</p>
+<p>The Listener spread their arms wide. &ldquo;This is another test, an attempt to undermine&mdash;&rdquo;</p>
+<p>&ldquo;The voice of my husband,&rdquo; one woman interrupted. She held her comm out toward the Listener. &ldquo;The recording I received? Was it real?&rdquo;</p>
+<p>The Listener hesitated only for a second, but it was enough. &ldquo;The files require context,&rdquo; they said, then stopped, shook their head.</p>
+<p>People were talking over one another now, comparing messages, sharing screens, pointing at highlighted sections they barely understood. Most of them were no longer paying attention to anything the Listener was saying.</p>
+<p>For weeks, Elliot had watched people hang on every word, and now, heads remained lowered toward their devices, questions spreading faster than the sermons ever had.</p>
+<p>&ldquo;The city fears what we&rsquo;ve discovered,&rdquo; the Listener said.</p>
+<p>&ldquo;Keep telling yourself that, mate,&rdquo; Minjae said.</p>
+<p>The playback unit behind the Listener crackled, then cut out entirely. Slowly, Elliot drew the data card out of his pocket and stared at it. Just a simple bit of plastic. One he&rsquo;d built so much hope around.&nbsp;</p>
+<p>Emily had forgotten birthdays.</p>
+<p>Emily had lost train tickets.</p>
+<p>Emily once spent twenty minutes looking for sunglasses while they sat on top of her head.</p>
+<p>The Emily in his palm remembered everything perfectly, and spoke as though she were reading from a script.</p>
+<p>Heat rising through him, he clenched his fist around it tightly, bending it. Beside him, Mara was still reading her comm, her face pale.</p>
+<p>&ldquo;I&rsquo;m sorry,&rdquo; Elliot said to her, though he wasn&rsquo;t sure why he was apologising. It just felt right. All these people, the good, honest people who were just looking for comfort like he was, were hurting. Real people, real hurt.</p>
+<p>Elliot swallowed hard.</p>
+<p>The Listener was still speaking, trying to regain control, trying to stitch the story back together somehow, but it wasn&rsquo;t working. People were rising from their seats now, heading toward the exit.</p>
+<p>That was when Elliot noticed that E.V.E.N were gone.</p>
+<p>Slowly, he stood and pushed his chair back. Nobody tried to stop him. Nobody even noticed when he headed toward the backrooms. The Listener was still talking, still trying to hold the room together with words, but the spell had already broken. People weren&apos;t listening anymore. And neither was Elliot.</p>
+<p><br></p>
+<p align="center">~*~</p>
+<p><br></p>
+<p>The next day, Elliot got lost twice trying to find the relay bunker. The directions Kairo had sent consisted primarily of landmarks that probably made sense only to Kairo.</p>
+<p><em>Turn left at the haunted vending machine, then keep going until the tunnel smells weird.</em></p>
+<p>What did that even mean?</p>
+<p><em>If you reach the frog mural, you&rsquo;ve definitely gone too far. It&rsquo;s a cool mural, though.</em></p>
+<p>Incredibly, the vending machine turned out to be real, though the weird smell was considerably less helpful. By the time Elliot finally located the correct corridor, he was beginning to suspect the directions had been a practical joke.</p>
+<p>Then he heard music drifting from a doorway ahead and low voices speaking. No, not speaking, arguing, judging by the tone. The same section of a song was repeating until somebody stopped it. Then there was more arguing.</p>
+<p>Elliot smiled despite himself.</p>
+<p>The bunker door stood partially open, and inside, organised chaos occupied every available surface, cables coiled across tables, equipment filling shelves, semi-disassembled speakers sitting beside stacks of storage drives. One crate had been labelled IMPORTANT and then crossed out three times, replaced with MOSTLY IMPORTANT. A second note underneath read: ASK MINJAE. And then someone else had added: DON&rsquo;T ASK MINJAE.</p>
+<p>Elliot stepped inside, but nobody noticed him at first.</p>
+<p>Kairo sat cross-legged on top of a workbench, speaking with Soahn. &ldquo;I&rsquo;m telling you, that bassline is too sensible.&rdquo;</p>
+<p>&ldquo;It&rsquo;s a bassline,&rdquo; Soahn said with a sigh.</p>
+<p>&ldquo;It&rsquo;s boring.&rdquo;</p>
+<p>&ldquo;It&rsquo;s structurally sound.&rdquo;</p>
+<p>&ldquo;Yeah, but we&rsquo;re not,&rdquo; Minjae added without looking up from his screen.</p>
+<p>&ldquo;See, Min-Min agrees,&rdquo; Kairo said.</p>
+<p>Onyx spotted him first; he set down his headphones and nodded at Elliot once. Somehow, the simple movement managed to feel welcoming.</p>
+<p>Rayne glanced up next, and then rose smoothly from his chair. &ldquo;Elliot,&rdquo; he said.</p>
+<p>The others fell silent, everyone turning to look at him.</p>
+<p>&ldquo;Oh! Hey,&rdquo; Kairo said cheerfully, offering him a wide grin. &ldquo;You made it.&rdquo;</p>
+<p>&ldquo;Yeah,&rdquo; Elliot said awkwardly, rubbing the back of his neck and not sure what to do with himself now that he was here.</p>
+<p>&ldquo;Well, might as well make yourself useful,&rdquo; Kairo added, indicating toward a tangle of cables spread on the floor nearby. &ldquo;We&rsquo;ve got snacks. And electricity.&rdquo;</p>
+<p>&ldquo;Amazing selling points,&rdquo; Minjae muttered.</p>
+<p>&ldquo;I know.&rdquo; Kairo slid off the workbench and came over to him, grin still stuck firmly in place. &ldquo;I don&rsquo;t suppose you know anything about basslines?&rdquo;</p>
+<p>&ldquo;Uh&hellip;&rdquo; Elliot said.</p>
+<p>&ldquo;Leave him alone,&rdquo; Soahn called.</p>
+<p>&ldquo;All right,&rdquo; Kairo laughed.</p>
+<p>Elliot laughed too, still a little awkward, but already starting to sink into the warm chaos of the room. He followed Kairo over to the workstation, and Minjae tossed a handful of cable ties toward him.</p>
+<p>&ldquo;If you don&rsquo;t mind,&rdquo; Minjae said.</p>
+<p>&ldquo;I don&rsquo;t mind,&rdquo; Elliot replied. He dropped to a crouch and started untangling the cables while the argument resumed above him. Nobody seemed particularly interested in winning; the conversation simply evolved and wandered and changed shape, like weather, or music. Or family.</p>
+<p>Elliot focused on the cables, and for the first time in a long time, he knew that he was somewhere he could trust.</p>
+<p><br></p>
+<p align="center">~*~</p>
+<p><br></p>
+<p>Within a few hours, the argument had transformed into a discussion about vocals. The snacks had largely disappeared, and Rayne had brought a mug of tea over to Elliot, who was now perched on a stool beside the workbench, watching Kairo, Soahn and Minjae wrestle with audio layers.</p>
+<p>He&rsquo;d come to understand a few things about how E.V.E.N worked over the course of the afternoon.</p>
+<p>Most obviously, they bickered. Constantly. But it was never nasty. More like people approaching the same problem from a completely different direction and refusing to surrender until everyone else saw the brilliance of their particular solution. Kairo spoke with his hands, waving them around whenever words failed him. Minjae responded by looking increasingly offended by reality itself. Soahn mostly listened, occasionally saying something so sensible that the other two immediately started arguing with him as well.</p>
+<p>Across the room, Onyx remained carefully outside the blast radius, repairing a relay module with the patience of someone who had learned long ago that certain interactions needed to burn themselves out naturally. Every so often, though, he&apos;d glance up and quietly offer an observation, usually in six words or fewer. And the funny part was, he was almost always right.</p>
+<p>Rayne operated differently. He rarely joined the discussions while they were happening, instead lingering nearby and listening. But just when you thought the disagreement was destined to continue for another hour, he&rsquo;d drop a comment that would make everyone stop. Never anything obvious, but always something nobody else had considered.</p>
+<p>And probably the part that surprised Elliot the most was that nobody asked him about the Signal Chapel, or about his sister, or anything personal. They just&hellip; let him be, and whenever he did speak, they all listened and made him feel a part of it.</p>
+<p>&ldquo;Want to try your hand at some lyrics?&rdquo; Minjae asked him, sliding a battered old notebook over to Elliot. The pages were worn and curling, some ripped, others holding together only because of transparent tape which had already started to turn yellow.</p>
+<p>&ldquo;I don&rsquo;t think I&rsquo;d be any good at it,&rdquo; Elliot said.</p>
+<p>&ldquo;You&rsquo;d be surprised,&rdquo; Minjae told him. &ldquo;No pressure. But look at it this way: everyone&rsquo;s got something they need to say.&rdquo;</p>
+<p>Elliot considered this for a few minutes as the others went back to the screen, and then, eventually, he picked up the pencil stub Minjae had placed at his elbow and began to jot down a few words. He knew they were rubbish, definitely not something E.V.E.N would put into their music, but as he wrote, he found himself writing more, words turning into fragments, fragments turning into sentences. Probably none of it would make sense to anyone. And Elliot knew that it didn&rsquo;t matter.</p>
+<p>Finally, he finished and sat back, staring down at the page. It was now full of his scratchy handwriting. Part of him was embarrassed that he&rsquo;d actually written all of that in Minjae&rsquo;s notebook, but the other part, the one below the awkwardness, was grateful.</p>
+<p>Silently, he slid the book back across the worktop. Minjae picked it up wordlessly, closed the cover, and nodded to himself.</p>
+<p>That made Elliot feel better.</p>
+<p>&ldquo;I&rsquo;d better get going,&rdquo; Elliot said. &ldquo;My mum&rsquo;s making us dinner tonight.&rdquo;</p>
+<p>&ldquo;Ooh, nice,&rdquo; Kairo said. &ldquo;Why don&rsquo;t you ever make me dinner, Min-Min?&rdquo;</p>
+<p>&ldquo;I&rsquo;m not your mum.&rdquo;</p>
+<p>&ldquo;So?&rdquo;</p>
+<p>&ldquo;Don&rsquo;t look at me,&rdquo; Soahn said.</p>
+<p>Kairo glanced toward Onyx, then closed his mouth, thinking better of it.</p>
+<p>&ldquo;Anyway, enjoy,&rdquo; Kairo told Elliot.</p>
+<p>As Elliot rose to grab his jacket, Soahn slipped off his stool and followed him to the door. &ldquo;Are you okay?&rdquo; he asked.</p>
+<p>Elliot looked at him. &ldquo;I think so. Just&hellip;&rdquo;</p>
+<p>Soahn waited patiently for Elliot to find the words.&nbsp;</p>
+<p>&ldquo;What if I forget her?&rdquo; he added quietly. He thought about the Signal Chapel and how he&rsquo;d been searching for proof, and how ultimately, by the end, all he&rsquo;d ever really wanted was to remember Emily as she was.</p>
+<p>Soahn shook his head. &ldquo;You won&rsquo;t.&rdquo; The certainty in his voice felt grounding in ways the static recordings never had. &ldquo;You change, and sometimes you don&rsquo;t remember things exactly as they were, but you don&rsquo;t forget what they meant.&rdquo; Then he smiled, a little sadly.&nbsp;</p>
+<p>Elliot thought about that. About growth and time and all the versions of himself still waiting somewhere ahead.</p>
+<p>&ldquo;Thanks,&rdquo; he said.</p>
+<p>&ldquo;Any time,&rdquo; Soahn told him. &ldquo;You&rsquo;re always welcome here, you know.&rdquo;</p>
+<p>Behind them, Kairo was already arguing with Minjae again. Something about the chorus this time. Rayne said something from across the room that immediately brought the discussion to a halt, and Onyx muttered a quiet, &ldquo;Told you,&rdquo; without looking up from the relay module in his hands.</p>
+<p>The argument started again ten seconds later.</p>
+<p>Elliot smiled. Then he pulled on his jacket and stepped out into the corridor.</p>
+<p>The Ghost Lines stretched away in both directions, dimly lit tunnels disappearing into darkness. Somewhere above them, London carried on as it always had. People went to work. Skytrains ran. The LIVV feed played endlessly from screens mounted in station walls and shop windows.</p>
+<p>His mum was making dinner.</p>
+<p>The thought felt strange.</p>
+<p>Normal.</p>
+<p><em>Good</em>.</p>
+<p>From inside the bunker, the music started again. Elliot paused for a moment longer, listening as a new melody emerged from the speakers. The song wasn&apos;t finished yet.&nbsp;</p>
+<p>And neither was he.</p>
+
+        </div>
+    </article>
+
+    <nav class="back" aria-label="Return">
+      <a href="/signals/">← Back to Signals</a>
+    </nav>
+
+  </main>
+</body>
+</html>
