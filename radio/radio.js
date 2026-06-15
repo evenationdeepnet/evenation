@@ -6,7 +6,7 @@ const stations = {
   glitchwave: {
     name: "Glitchwave FM",
     shortName: "Glitchwave",
-    subtitle: "EDM // drum and bass // melodic techno",
+    subtitle: "EDM // drum and bass // trance // melodic techno",
     description: "Fast relay music for tunnel runners, midnight coders, and anyone pretending the bassline is a survival strategy.",
     status: "high-energy relay",
     tracks: [
