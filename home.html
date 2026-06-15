@@ -888,7 +888,15 @@
   grid-column: 1 / -1;
 }
 
+/* --- mobile fix: status pills wrapping --- */
+@media (max-width: 720px){
 
+  .status{
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+}
   </style>
 </head>
 <body>
