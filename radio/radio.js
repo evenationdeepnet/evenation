@@ -20,6 +20,16 @@ const stations = {
         mood: "momentum",
         src: "../radio/glitchwavefm/Run_Until_Morning.mp3",
       },
+             {
+        title: "For A Little While",
+        artist: "Phase Eight",
+        album: "Mile Zero",
+        tag: "euphoric trance",
+        source: "Relay 2",
+        duration: "3:38",
+        mood: "drifting",
+        src: "../radio/glitchwavefm/LittleWhile.mp3",
+      },
       {
         title: "Right Here in the Light",
         artist: "CIRCUITFLOWER",
