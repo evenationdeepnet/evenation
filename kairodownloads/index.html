@@ -1040,7 +1040,7 @@
       <nav class="file-list" aria-label="Desktop folders">
         <div class="file-item" tabindex="0" data-name="music">
           <div class="folder-icon" aria-hidden="true"></div>
-          <div><div class="file-name">&gt; music</div><div class="file-meta">7 items</div></div>
+          <div><div class="file-name">&gt; music</div><div class="file-meta">8 items</div></div>
         </div>
         <div class="file-item" tabindex="0" data-name="screenshots">
           <div class="folder-icon" aria-hidden="true"></div>
@@ -1936,11 +1936,16 @@
               <div class="media-icon" aria-hidden="true"></div>
               <div class="label">onyx_verse.mp3</div>
             </div>
+
+            <div class="folder-file" tabindex="0" data-open="basslineWindow">
+              <div class="media-icon" aria-hidden="true"></div>
+              <div class="label">meant_to_be_a_bassline.mp3</div>
+            </div>
             
           </div>
         </div>
         <div class="window-statusbar">
-          <span>7 tracks recovered</span>
+          <span>8 tracks recovered</span>
           <span>playback quality: degraded</span>
         </div>
       </article>
@@ -2110,6 +2115,30 @@
         <div class="window-statusbar">
           <span>format: MP3</span>
           <span>fragment integrity: solid</span>
+        </div>
+      </article>
+
+                  <article class="boot-window" id="basslineWindow" aria-label="Bassline audio player" tabindex="-1" style="left: 540px; top: 190px; width: min(420px, calc(100vw - 560px)); min-height: 260px; z-index: 43;">
+        <div class="window-titlebar">
+          <div class="window-title">meant_to_be_a_bassline.mp3</div>
+          <button class="window-close" type="button" aria-label="Close Bassline audio player" onclick="closeWindow('basslineWindow')">×</button>
+        </div>
+        <div class="folder-window-body">
+          <div class="audio-player">
+            <div class="audio-track-title">THIS_WAS_MEANT_TO_BE_A_BASSLINE</div>
+            <div class="audio-meta">
+              <span>source: almost entered our disco phase</span>
+              <span>status: (thankfully we didn't)</span>
+            </div>
+            <audio controls>
+              <source src="music/ThisWasMeantToBeABassline.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+        </div>
+        <div class="window-statusbar">
+          <span>format: MP3</span>
+          <span>fragment integrity: groovy</span>
         </div>
       </article>
       
