@@ -586,10 +586,74 @@
   outline:none;
 }
 
-    /* Reduced motion */
-    @media (prefers-reduced-motion: reduce){
-      *{ animation:none !important; transition:none !important; }
-    }
+   /* --- mobile fixes --- */
+@media (max-width: 720px){
+
+  /* HEADER: wrap and make CTA drop underneath */
+  .topbar-inner{
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .brand{
+    flex: 1 1 auto;
+    min-width: 200px;
+  }
+
+  .nav{
+    margin-left: 0;
+    width: 100%;
+    order: 2;
+  }
+
+  .cta{
+    width: 100%;
+    order: 3;
+    margin-left: 0;
+    text-align: center;
+    justify-content: center;
+  }
+
+  /* PAGE CONTAINMENT */
+  .wrap{
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  /* GHOST THREADS */
+  .entry{
+    grid-template-columns: 1fr;
+  }
+
+  .search{
+    min-width: 100%;
+  }
+
+  .status{
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .section{
+    padding: 18px 14px;
+  }
+
+  .section-header,
+  .feed-head{
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .section-header .btn{
+    width: 100%;
+  }
+}
+
+/* accessibility / reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *{ animation:none !important; transition:none !important; }
+}
   </style>
 </head>
 
