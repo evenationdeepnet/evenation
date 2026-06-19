@@ -531,8 +531,41 @@
       border-top: 1px solid rgba(255,255,255,.10);
     }
 
+/* --- mobile fixes --- */
 @media (max-width: 720px){
 
+  /* HEADER: wrap and make CTA drop underneath */
+  .topbar-inner{
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .brand{
+    flex: 1 1 auto;
+    min-width: 200px;
+  }
+
+  .nav{
+    margin-left: 0;
+    width: 100%;
+    order: 2;
+  }
+
+  .cta{
+    width: 100%;
+    order: 3;
+    margin-left: 0;
+    text-align: center;
+    justify-content: center;
+  }
+
+  /* PAGE CONTAINMENT */
+  .wrap{
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  /* GHOST THREADS */
   .entry{
     grid-template-columns: 1fr;
   }
@@ -541,48 +574,30 @@
     min-width: 100%;
   }
 
-  /* Header fixes */
-
-  .hero-top{
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    overflow: hidden;
-  }
-
-  .brand{
-    flex: 1 1 100%;
-    min-width: 0;
-  }
-
-  .brand-wrap{
-    flex-wrap: wrap;
-  }
-
-  .hero-nav{
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
-  .hero-nav a{
-    white-space: normal;
-  }
-
-  .hero-cta{
-    width: 100%;
+  .status{
     justify-content: flex-start;
+    flex-wrap: wrap;
   }
 
-  .hero-cta .btn{
+  .section{
+    padding: 18px 14px;
+  }
+
+  .section-header,
+  .feed-head{
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .section-header .btn{
     width: 100%;
-    text-align: center;
   }
 }
 
+/* accessibility / reduced motion */
 @media (prefers-reduced-motion: reduce){
-  *{
-    animation:none !important;
-    transition:none !important;
-  }
+  *{ animation:none !important; transition:none !important; }
 }
   </style>
 </head>
