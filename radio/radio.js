@@ -188,7 +188,7 @@ const stations = {
         title: "We Scream in Code",
         artist: "E.V.E.N",
         album: "Echo Memory",
-        tag: "post-dubstep, 2-step garage",
+        tag: "post-dubstep, 2-step",
         source: "Relay 7B",
         duration: "4:16",
         mood: "momentum",
