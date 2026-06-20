@@ -277,21 +277,75 @@
     .release-meta{display:flex;flex-wrap:wrap;gap:.55rem;margin:1rem 0 1.4rem}
     .pill{border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:999px;padding:.42rem .65rem;color:rgba(247,248,255,.76);font-size:.76rem}
 
+    .album-player{
+  margin:1.2rem 0;
+  padding:.9rem;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:18px;
+  background:rgba(255,255,255,.055);
+}
+
+.album-player iframe{
+  display:block;
+  border-radius:14px;
+  overflow:hidden;
+}
+
+.now-playing{
+  margin:0 0:.7rem;
+  color:var(--muted);
+  font-size:.82rem;
+}
+
+.now-playing strong{
+  color:#fff;
+}
+
+.track{
+  width:100%;
+  font-family:inherit;
+  color:inherit;
+  text-align:left;
+  cursor:pointer;
+}
+
+.track.active{
+  border-color:rgba(100,243,255,.5);
+  background:rgba(100,243,255,.105);
+  box-shadow:0 0 24px rgba(100,243,255,.08);
+}
+
     .tracklist{list-style:none;padding:0;margin:1.2rem 0 0;display:grid;gap:.55rem}
-    .track{
-      display:grid;
-      grid-template-columns:auto 1fr auto;
-      gap:.75rem;
-      align-items:center;
-      padding:.75rem .85rem;
-      border:1px solid rgba(255,255,255,.1);
-      border-radius:16px;
-      background:rgba(255,255,255,.055);
-    }
+.track{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  gap:.75rem;
+  align-items:center;
+  padding:.75rem .85rem;
+  border-radius:16px;
+  background:rgba(255,255,255,.055);
+
+  appearance:none;
+  border:1px solid rgba(255,255,255,.1);
+
+  transition:
+    background .25s ease,
+    border-color .25s ease,
+    box-shadow .25s ease,
+    transform .25s ease;
+}
     .track:hover{background:rgba(255,255,255,.09);border-color:rgba(100,243,255,.3)}
     .track em{font-style:normal;color:var(--cyan);font-size:.78rem;font-weight:800}
     .track strong{font-weight:650}
     .track span{color:var(--muted);font-size:.86rem}
+
+.track.active{
+  border-color:rgba(100,243,255,.5);
+  background:rgba(100,243,255,.105);
+  box-shadow:
+    0 0 28px rgba(100,243,255,.12),
+    inset 0 0 14px rgba(255,255,255,.03);
+}
 
     .bio-grid{display:grid;grid-template-columns:1fr .86fr;gap:clamp(1.5rem,4vw,3rem);align-items:center}
     .glass-card{
@@ -427,16 +481,29 @@
               <span class="pill">Runtime: 41:23</span>
             </div>
 
-            <ul class="tracklist" role="list">
-              <li class="track"><em>01</em><strong>Soft Launch</strong><span>1:12</span></li>
-              <li class="track"><em>02</em><strong>Better Shape</strong><span>4:38</span></li>
-              <li class="track"><em>03</em><strong>Permission to Drift</strong><span>5:04</span></li>
-              <li class="track"><em>04</em><strong>Leave the Lights On</strong><span>4:47</span></li>
-              <li class="track"><em>05</em><strong>Idle State</strong><span>5:12</span></li>
-              <li class="track"><em>06</em><strong>Close Enough</strong><span>6:01</span></li>
-              <li class="track"><em>07</em><strong>Refactor</strong><span>5:19</span></li>
-              <li class="track"><em>08</em><strong>After You Sleep</strong><span>2:50</span></li>
-            </ul>
+            <div class="album-player">
+  <p class="now-playing">Now playing: <strong id="nowPlaying">Soft Launch</strong></p>
+  <iframe
+    id="soundcloudPlayer"
+    width="100%"
+    height="166"
+    scrolling="no"
+    frameborder="no"
+    allow="autoplay; encrypted-media"
+    src="PASTE_SOFT_LAUNCH_SOUNDCLOUD_EMBED_URL_HERE">
+  </iframe>
+</div>
+
+<ul class="tracklist" role="list">
+  <li><button class="track active" type="button" data-title="Soft Launch" data-src="PASTE_SOFT_LAUNCH_SOUNDCLOUD_EMBED_URL_HERE"><em>01</em><strong>Soft Launch</strong><span>1:12</span></button></li>
+  <li><button class="track" type="button" data-title="Better Shape" data-src="PASTE_BETTER_SHAPE_SOUNDCLOUD_EMBED_URL_HERE"><em>02</em><strong>Better Shape</strong><span>4:38</span></button></li>
+  <li><button class="track" type="button" data-title="Permission to Drift" data-src="PASTE_PERMISSION_TO_DRIFT_SOUNDCLOUD_EMBED_URL_HERE"><em>03</em><strong>Permission to Drift</strong><span>5:04</span></button></li>
+  <li><button class="track" type="button" data-title="Leave the Lights On" data-src="PASTE_LEAVE_THE_LIGHTS_ON_SOUNDCLOUD_EMBED_URL_HERE"><em>04</em><strong>Leave the Lights On</strong><span>4:47</span></button></li>
+  <li><button class="track" type="button" data-title="Idle State" data-src="PASTE_IDLE_STATE_SOUNDCLOUD_EMBED_URL_HERE"><em>05</em><strong>Idle State</strong><span>5:12</span></button></li>
+  <li><button class="track" type="button" data-title="Close Enough" data-src="PASTE_CLOSE_ENOUGH_SOUNDCLOUD_EMBED_URL_HERE"><em>06</em><strong>Close Enough</strong><span>6:01</span></button></li>
+  <li><button class="track" type="button" data-title="Refactor" data-src="PASTE_REFACTOR_SOUNDCLOUD_EMBED_URL_HERE"><em>07</em><strong>Refactor</strong><span>5:19</span></button></li>
+  <li><button class="track" type="button" data-title="After You Sleep" data-src="PASTE_AFTER_YOU_SLEEP_SOUNDCLOUD_EMBED_URL_HERE"><em>08</em><strong>After You Sleep</strong><span>2:50</span></button></li>
+</ul>
           </div>
         </div>
       </div>
@@ -510,5 +577,26 @@
       <div>PRISM ARTIST FILE: NYELLE WARD · STATUS: ACTIVE</div>
     </div>
   </footer>
+
+  <script>
+  const tracks = document.querySelectorAll('.track');
+  const player = document.getElementById('soundcloudPlayer');
+  const nowPlaying = document.getElementById('nowPlaying');
+
+  tracks.forEach(track => {
+    track.addEventListener('click', () => {
+      const src = track.dataset.src;
+      const title = track.dataset.title;
+
+      if (!src) return;
+
+      player.src = src;
+      nowPlaying.textContent = title;
+
+      tracks.forEach(item => item.classList.remove('active'));
+      track.classList.add('active');
+    });
+  });
+</script>
 </body>
 </html>
