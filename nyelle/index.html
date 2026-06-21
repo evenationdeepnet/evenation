@@ -490,12 +490,22 @@
     scrolling="no"
     frameborder="no"
     allow="autoplay; encrypted-media"
-    src="PASTE_SOFT_LAUNCH_SOUNDCLOUD_EMBED_URL_HERE">
+    src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%3Atracks%3A2343450095%3Fsecret_token%3Ds-e8hYecGTpEq&color=%23311d45&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true">
   </iframe>
 </div>
 
 <ul class="tracklist" role="list">
-  <li><button class="track active" type="button" data-title="Soft Launch" data-src="PASTE_SOFT_LAUNCH_SOUNDCLOUD_EMBED_URL_HERE"><em>01</em><strong>Soft Launch</strong><span>1:12</span></button></li>
+<li>
+  <button
+    class="track active"
+    type="button"
+    data-title="Soft Launch"
+    data-src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%3Atracks%3A2343450095%3Fsecret_token%3Ds-e8hYecGTpEq&color=%23311d45&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true">
+    <em>01</em>
+    <strong>Soft Launch</strong>
+    <span>3:00</span>
+  </button>
+</li>
   <li><button class="track" type="button" data-title="Better Shape" data-src="PASTE_BETTER_SHAPE_SOUNDCLOUD_EMBED_URL_HERE"><em>02</em><strong>Better Shape</strong><span>4:38</span></button></li>
   <li><button class="track" type="button" data-title="Permission to Drift" data-src="PASTE_PERMISSION_TO_DRIFT_SOUNDCLOUD_EMBED_URL_HERE"><em>03</em><strong>Permission to Drift</strong><span>5:04</span></button></li>
   <li><button class="track" type="button" data-title="Leave the Lights On" data-src="PASTE_LEAVE_THE_LIGHTS_ON_SOUNDCLOUD_EMBED_URL_HERE"><em>04</em><strong>Leave the Lights On</strong><span>4:47</span></button></li>
@@ -588,7 +598,7 @@
       const src = track.dataset.src;
       const title = track.dataset.title;
 
-      if (!src) return;
+if (!src || src.includes('PASTE_')) return;
 
       player.src = src;
       nowPlaying.textContent = title;
