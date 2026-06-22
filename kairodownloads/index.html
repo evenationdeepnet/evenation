@@ -587,9 +587,24 @@
       outline: none;
     }
 
-    .folder-window-body {
-      padding: 18px;
-    }
+.folder-window-body {
+  padding: 18px 18px 44px;
+  max-height: 590px;
+  overflow-y: auto;
+}
+
+    .folder-window-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.folder-window-body::-webkit-scrollbar-track {
+  background: rgba(154, 124, 255, 0.08);
+}
+
+.folder-window-body::-webkit-scrollbar-thumb {
+  background: rgba(154, 124, 255, 0.48);
+  border-radius: 999px;
+}
 
     .folder-path {
       border: 1px solid rgba(154, 124, 255, 0.26);
