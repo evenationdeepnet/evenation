@@ -124,6 +124,17 @@ const stations = {
         mood: "drifting",
         src: "../radio/glitchwavefm/Seagrass.mp3",
       },
+
+                                 {
+        title: "Signal Drift",
+        artist: "Elara Grey",
+        album: "Passing Through",
+        tag: "melodic techno",
+        source: "Relay 9",
+        duration: "4:07",
+        mood: "atmospheric",
+        src: "../radio/glitchwavefm/SignalDrift.mp3",
+      },
     ],
   },
 
