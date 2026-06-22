@@ -1962,6 +1962,11 @@
               <div class="media-icon" aria-hidden="true"></div>
               <div class="label">min-min_no4.mp3</div>
             </div>
+
+            <div class="folder-file" tabindex="0" data-open="sleeping4Window">
+              <div class="media-icon" aria-hidden="true"></div>
+              <div class="label">everyone_is_sleeping.mp3</div>
+            </div>
             
           </div>
         </div>
@@ -2139,7 +2144,7 @@
         </div>
       </article>
 
-                  <article class="boot-window" id="basslineWindow" aria-label="Bassline audio player" tabindex="-1" style="left: 540px; top: 190px; width: min(420px, calc(100vw - 560px)); min-height: 260px; z-index: 43;">
+     <article class="boot-window" id="basslineWindow" aria-label="Bassline audio player" tabindex="-1" style="left: 540px; top: 190px; width: min(420px, calc(100vw - 560px)); min-height: 260px; z-index: 43;">
         <div class="window-titlebar">
           <div class="window-title">meant_to_be_a_bassline.mp3</div>
           <button class="window-close" type="button" aria-label="Close Bassline audio player" onclick="closeWindow('basslineWindow')">×</button>
@@ -2163,7 +2168,7 @@
         </div>
       </article>
 
-                        <article class="boot-window" id="min4Window" aria-label="Min 4 audio player" tabindex="-1" style="left: 540px; top: 190px; width: min(420px, calc(100vw - 560px)); min-height: 260px; z-index: 43;">
+       <article class="boot-window" id="min4Window" aria-label="Min 4 audio player" tabindex="-1" style="left: 540px; top: 190px; width: min(420px, calc(100vw - 560px)); min-height: 260px; z-index: 43;">
         <div class="window-titlebar">
           <div class="window-title">min-min_no4.mp3</div>
           <button class="window-close" type="button" aria-label="Close Min 4 audio player" onclick="closeWindow('min4Window')">×</button>
@@ -2184,6 +2189,30 @@
         <div class="window-statusbar">
           <span>format: MP3</span>
           <span>fragment integrity: mm-mm</span>
+        </div>
+      </article>
+
+       <article class="boot-window" id="sleeping4Window" aria-label="Everyone is Sleeping audio player" tabindex="-1" style="left: 540px; top: 190px; width: min(420px, calc(100vw - 560px)); min-height: 260px; z-index: 43;">
+        <div class="window-titlebar">
+          <div class="window-title">min-min_no4.mp3</div>
+          <button class="window-close" type="button" aria-label="Close Everyone is Sleeping audio player" onclick="closeWindow('sleepingWindow')">×</button>
+        </div>
+        <div class="folder-window-body">
+          <div class="audio-player">
+            <div class="audio-track-title">EVERYONE_IS_SLEEPING</div>
+            <div class="audio-meta">
+              <span>source: bunker 2</span>
+              <span>status: unfinished</span>
+            </div>
+            <audio controls>
+              <source src="music/everyone_is_sleeping.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+        </div>
+        <div class="window-statusbar">
+          <span>format: MP3</span>
+          <span>fragment integrity: 90%</span>
         </div>
       </article>
       
