@@ -288,6 +288,17 @@ const stations = {
         mood: "winding down",
         src: "../radio/ghostlinesbroadcast/margin.mp3",
       },
+
+                 {
+        title: "Things That Still Work",
+        artist: "Monday Parade",
+        album: "The Long Weekend",
+        tag: "pop-punk",
+        source: "Tunnel 37",
+        duration: "2:54",
+        mood: "upbeat, energetic",
+        src: "../radio/ghostlinesbroadcast/StillWork.mp3",
+      },
       
     ],
   },
