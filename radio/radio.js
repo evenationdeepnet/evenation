@@ -371,6 +371,7 @@ const stations = {
         mood: "atmospheric, ethereal",
         src: "../radio/subculture/Ghosts_Dont_Sleep.mp3",
       },
+       
        {
         title: "Cathedral Cinema",
         artist: "MOURNING TV",
@@ -381,6 +382,7 @@ const stations = {
         mood: "atmospheric, hypnotic",
         src: "../radio/subculture/Cathedral_Cinema.mp3",
       },
+       
       {
         title: "Silver Tongue",
         artist: "Mothbyte",
@@ -390,6 +392,17 @@ const stations = {
         duration: "3:57",
         mood: "hypnotic, dangerous",
         src: "../radio/subculture/SilverTongue.mp3",
+      },
+
+             {
+        title: "Infect Me Slow",
+        artist: "Mothbyte",
+        album: "Low Light Saints",
+        tag: "darkwave, post-punk",
+        source: "Signal Chapel 5",
+        duration: "4:01",
+        mood: "hypnotic, aching",
+        src: "../radio/subculture/InfectMeSlow.mp3",
       },
        
     ],
