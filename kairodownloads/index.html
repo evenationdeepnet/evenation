@@ -546,6 +546,16 @@
       border-color: var(--line-active);
     }
 
+    .boot-window:has(.image-preview-frame) {
+  height: auto;
+  max-height: 85vh;
+}
+
+    .boot-window:has(.image-preview-frame) .folder-window-body {
+  height: auto;
+  overflow: hidden;
+}
+
     .window-titlebar {
       height: 40px;
       border-bottom: 1px solid var(--line);
