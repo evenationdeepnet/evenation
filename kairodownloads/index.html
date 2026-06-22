@@ -1981,6 +1981,11 @@
               <div class="media-icon" aria-hidden="true"></div>
               <div class="label">everyone_is_sleeping.mp3</div>
             </div>
+
+              <div class="folder-file" tabindex="0" data-open="forrayneWindow">
+              <div class="media-icon" aria-hidden="true"></div>
+              <div class="label">this_is_for_rayne.mp3</div>
+            </div>
             
           </div>
         </div>
@@ -2227,6 +2232,30 @@
         <div class="window-statusbar">
           <span>format: MP3</span>
           <span>fragment integrity: 90%</span>
+        </div>
+      </article>
+
+             <article class="boot-window" id="forrayneWindow" aria-label="This is for Rayne audio player" tabindex="-1" style="left: 540px; top: 190px; width: min(420px, calc(100vw - 560px)); min-height: 260px; z-index: 43;">
+        <div class="window-titlebar">
+          <div class="window-title">this_is_for_rayne.mp3</div>
+          <button class="window-close" type="button" aria-label="Close This is for Rayne audio player" onclick="closeWindow('forrayneWindow')">×</button>
+        </div>
+        <div class="folder-window-body">
+          <div class="audio-player">
+            <div class="audio-track-title">THIS_IS_FOR_RAYNE</div>
+            <div class="audio-meta">
+              <span>source: hideout 18</span>
+              <span>status: could become something?</span>
+            </div>
+            <audio controls>
+              <source src="music/this_is_for_rayne.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+        </div>
+        <div class="window-statusbar">
+          <span>format: MP3</span>
+          <span>fragment integrity: stable</span>
         </div>
       </article>
       
