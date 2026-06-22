@@ -536,22 +536,26 @@
   overflow: hidden;
 }
 
-    .boot-window.is-open {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-      visibility: visible;
-    }
+.boot-window.is-open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  visibility: visible;
+}
 
-    .boot-window.is-active {
-      border-color: var(--line-active);
-    }
+.boot-window.is-active {
+  border-color: var(--line-active);
+}
 
-    .boot-window:has(.image-preview-frame) {
+.boot-window:has(.image-preview-frame),
+.boot-window:has(.audio-player),
+.boot-window:has(.video-preview-frame) {
   height: auto;
   max-height: 85vh;
 }
 
-    .boot-window:has(.image-preview-frame) .folder-window-body {
+.boot-window:has(.image-preview-frame) .folder-window-body,
+.boot-window:has(.audio-player) .folder-window-body,
+.boot-window:has(.video-preview-frame) .folder-window-body {
   height: auto;
   overflow: hidden;
 }
