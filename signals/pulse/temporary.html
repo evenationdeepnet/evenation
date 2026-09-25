@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+  <title>Temporary Things | Pulse | E.V.E.N</title>
+
+  <style>
+    :root{
+      color-scheme: light;
+
+      /* warm grey / paper layer */
+      --bg: #f2f1ee;
+      --bg2:#eceae6;
+
+      --panel: rgba(20,20,24,.06);
+      --panel2: rgba(20,20,24,.04);
+      --stroke: rgba(20,20,24,.12);
+
+      --text: rgba(18,18,20,.88);
+      --muted: rgba(18,18,20,.60);
+
+      /* restrained accents */
+      --accent: rgba(30,180,190,.85);   /* muted cyan */
+      --accent2: rgba(172,120,210,.55); /* lilac whisper */
+
+      --radius: 18px;
+      --radius2: 26px;
+      --shadow: 0 18px 70px rgba(0,0,0,.10);
+      --shadow2: 0 12px 40px rgba(0,0,0,.08);
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --serifish: ui-serif, Georgia, "Times New Roman", Times, serif;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; min-height:100vh; }
+
+    body{
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(900px 420px at 20% 0%, rgba(30,180,190,.10), transparent 60%),
+        radial-gradient(900px 420px at 80% 0%, rgba(172,120,210,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      overflow-x:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+
+    /* subtle grain/noise */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(1px 1px at 18% 24%, rgba(0,0,0,.12), transparent 60%),
+        radial-gradient(1px 1px at 42% 62%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 78% 38%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 60% 80%, rgba(0,0,0,.08), transparent 60%);
+      opacity:.08;
+      filter: blur(.3px);
+      z-index:0;
+    }
+
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 44px 20px 76px;
+      position:relative;
+      z-index:1;
+    }
+
+    /* header */
+    .head{
+      text-align:center;
+      margin-bottom: 18px;
+    }
+
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.18em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.66);
+    }
+
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 0 rgba(30,180,190,.25);
+      animation: pulse 2.6s infinite;
+      flex:none;
+    }
+
+    @keyframes pulse{
+      0%{ box-shadow: 0 0 0 0 rgba(30,180,190,.22); }
+      70%{ box-shadow: 0 0 0 12px rgba(30,180,190,0); }
+      100%{ box-shadow: 0 0 0 0 rgba(30,180,190,0); }
+    }
+
+    h1{
+      margin: 14px 0 8px;
+      font-size: clamp(32px, 4.6vw, 54px);
+      line-height: 1.06;
+      letter-spacing: -0.02em;
+    }
+
+    .meta{
+      margin: 0 auto;
+      max-width: 70ch;
+      color: rgba(18,18,20,.62);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* story card */
+    .card{
+      margin-top: 22px;
+      border-radius: var(--radius2);
+      background: linear-gradient(180deg, rgba(255,255,255,.70), rgba(255,255,255,.52));
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(700px 240px at 25% 0%, rgba(30,180,190,.14), transparent 60%),
+        radial-gradient(700px 240px at 75% 0%, rgba(172,120,210,.12), transparent 60%);
+      opacity:.70;
+      pointer-events:none;
+    }
+
+    .card-inner{
+      position:relative;
+      z-index:1;
+      padding: 28px 28px 24px;
+    }
+
+    /* divider inside card */
+    .divider{
+      height: 1px;
+      background: linear-gradient(90deg, rgba(172,120,210,.40), rgba(30,180,190,.40));
+      opacity:.7;
+      margin: 16px 0 22px;
+    }
+
+    /* story typography */
+    .story{
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.9;
+      color: rgba(18,18,20,.84);
+    }
+
+    .story p{
+      margin: 0 0 16px;
+    }
+
+    .story em{ color: rgba(18,18,20,.86); }
+
+    /* optional little “file tag” row */
+    .filetag{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.62);
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.40);
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(18,18,20,.66);
+      letter-spacing:.06em;
+      white-space:nowrap;
+    }
+
+    /* --- SoundCloud block (Signals story pages) --- */
+.audio-block{
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px dashed rgba(18,18,20,.18);
+}
+
+.audio-label{
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(18,18,20,.62);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom: 10px;
+}
+
+.audio-label .dot{
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 rgba(30,180,190,.20);
+}
+
+.sc-embed{
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(18,18,20,.14);
+  background: rgba(255,255,255,.48);
+  box-shadow: 0 12px 40px rgba(0,0,0,.08);
+  height: 120px; /* matches your preferred compact player */
+}
+
+.sc-embed iframe{
+  display:block;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0;
+}
+
+    /* back nav */
+    .back{
+      margin-top: 18px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .back a{
+      text-decoration:none;
+      font-family: var(--mono);
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: rgba(18,18,20,.62);
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.55);
+      transition: .16s ease;
+    }
+
+    .back a:hover{
+      color: rgba(18,18,20,.82);
+      border-color: rgba(18,18,20,.22);
+      box-shadow: 0 12px 40px rgba(0,0,0,.10);
+      transform: translateY(-1px);
+    }
+
+    /* reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+
+    <header class="head">
+      <div class="kicker"><span class="dot" aria-hidden="true"></span> signals // pulse // recovered story</div>
+      <h1>Temporary Things</h1>
+      <p class="meta">File integrity: partial. Playback: safe.</p>
+    </header>
+
+    <article class="card" aria-label="Story container">
+      <div class="card-inner">
+
+        <div class="filetag" aria-label="File tags">
+          <span class="pill">pulse</span>
+          <span class="pill">e.v.e.n</span>
+          <span class="pill">leaving</span>
+        </div>
+
+        <div class="divider" aria-hidden="true"></div>
+
+        <div class="story">
+
+          <!-- Paste story paragraphs exactly as you have them -->
+<p>The bunker vibrated beneath Kairo&rsquo;s feet, though not from the original systems; those had died decades ago. These were his systems, and that felt significantly cooler. He crouched beside two cracked interface panels and twisted a dial to the left, listening as a low thrum spread through the floor.</p>
+<p>Perfect.</p>
+<p>Well, almost perfect. He frowned and adjusted it again.</p>
+<p>Better.</p>
+<p>The relay conduit running up the wall had once carried surveillance data across three sectors of London, but now it was attached to one of his speakers with a collection of cables that even he had to admit looked unsafe. At some point years ago, someone had written DO NOT TOUCH on the wall beside it in faded marker. Kairo took it as a gentle suggestion more than a warning. He liked the sign, though, because it gave the room personality. More recently, he strung a line of tiny battery-powered fairy lights through the letters.</p>
+<p>Behind him, Onyx was checking power lines. Again. Kairo didn&rsquo;t need to turn around to know that; he always checked them twice before sitting down.</p>
+<p>&ldquo;Did you do that?&rdquo; Onyx said.</p>
+<p>&ldquo;Hm?&rdquo;</p>
+<p>&ldquo;The lights.&rdquo;</p>
+<p>Kairo looked up. &ldquo;Oh. Yeah.&rdquo;</p>
+<p>&ldquo;Why?&rdquo;</p>
+<p>Kairo blinked. &ldquo;Because it looked sad.&rdquo;</p>
+<p>Onyx stared at him.</p>
+<p>The fairy lights blinked softly between the letters. DO&nbsp;✨&nbsp;NOT&nbsp;✨&nbsp;TOUCH.</p>
+<p>&ldquo;Think of it as ambience,&rdquo; Kairo told him, and Onyx sighed in a way that suggested he&rsquo;d temporarily given up on humanity.</p>
+<p>Grinning, Kairo turned back to the deck. Onyx never quite understood his obsession with ambience, which was fine. Nobody was perfect.</p>
+<p>The current bunker had become surprisingly&hellip; comfortable. Usually, they arrived somewhere, unpacked just enough to function, then vanished again a few weeks later. Staying put too long was dangerous. Little routines appeared without anybody noticing, and NuYu loved routines.&nbsp;</p>
+<p>Minjae once said, &ldquo;People are alarmingly repetitive,&rdquo; and then he&rsquo;d pointed at Kairo and added, &ldquo;Especially you.&rdquo;</p>
+<p>Rude. But maybe he had a point. The trick, apparently, was to be random, which was annoyingly more difficult than it sounded.</p>
+<p>But this place was different. They&rsquo;d been here a couple of months now, long enough for little pieces of themselves to accumulate. Storage crates lined one wall. Minjae had colonised two terminals with sticky notes. Four mugs sat on a shelf. Nobody really cared whose mug was whose anymore.</p>
+<p>Kairo even had a drawer. It hadn&rsquo;t started that way, but at some point, the others had simply begun sweeping his things into it whenever they passed his workstation. So now it was his drawer, which felt strangely official.</p>
+<p>His attention snagged briefly on the shelf beside him, full of good copper, backup copper, and questionable copper. The labels stared back at him. He blinked, then quickly looked away.</p>
+<p>Minjae must&rsquo;ve caught him looking, though, because he said, &ldquo;Oh no,&rdquo; from across the room.</p>
+<p>&ldquo;What?&rdquo; Kairo asked.</p>
+<p>&ldquo;You&rsquo;re nesting.&rdquo;</p>
+<p>&ldquo;I am not.&rdquo;</p>
+<p>Minjae gestured at the copper shelf. &ldquo;You&rsquo;re like a cyber raccoon at this point.&rdquo;</p>
+<p>&ldquo;It&rsquo;s practical,&rdquo; Kairo protested.</p>
+<p>But Minjae only smirked and turned back toward his screen.</p>
+<p>Kairo rolled his eyes and returned to his work. Still, he glanced around the bunker again, at the lights, the shelves, the benches and all the half-finished projects scattered where they&rsquo;d been left. Their lives, really.</p>
+<p>Fine. Maybe he liked this bunker. It wasn&rsquo;t a big deal. People liked places all the time.</p>
+<p>Probably.</p>
+<p>Kairo twisted another dial, and the vibration dropped into a low, steady rhythm. &ldquo;Right,&rdquo; he announced. &ldquo;Time to make questionable music.&rdquo;</p>
+<p><br></p>
+<p align="center">~*~</p>
+<p><br></p>
+<p>&ldquo;Okay,&rdquo; Kairo said. &ldquo;Everyone shut up.&rdquo;</p>
+<p>&ldquo;Nobody was saying anything,&rdquo; Minjae pointed out.</p>
+<p>Kairo ignored him and hit play. Ghosted chords drifted from the speakers, rough around the edges and choked with two decades of dust. A heartbeat sat beneath the melody, uneven and imperfect. It wasn&apos;t finished yet, but that was his favourite stage. Before everything became fixed.</p>
+<p>Onyx frowned immediately. &ldquo;It&rsquo;s off-tempo.&rdquo;</p>
+<p>&ldquo;It&rsquo;s intentionally off-tempo.&rdquo;</p>
+<p>&ldquo;That isn&rsquo;t how rhythm works.&rdquo;</p>
+<p>&ldquo;Not with that attitude.&rdquo; Kairo grinned and turned a dial. &ldquo;Look, if I layer this over the bassline&hellip;&rdquo;</p>
+<p>The room shuddered gently.</p>
+<p>&ldquo;&hellip;and then&hellip;&rdquo;</p>
+<p>He pointed at Onyx. &ldquo;Your turn.&rdquo;</p>
+<p>Onyx blinked. &ldquo;My turn?&rdquo;</p>
+<p>&ldquo;Broody synth.&rdquo;</p>
+<p>&ldquo;That isn&rsquo;t a thing.&rdquo;</p>
+<p>&ldquo;It absolutely is.&rdquo;</p>
+<p>Onyx looked like he wanted to argue, but reached for the touchpad anyway. One slow note rippled through the room, cold and a little sharp at the edges; it slid beneath the existing layers, and suddenly the whole thing made sense.</p>
+<p>Kairo&rsquo;s eyes widened. &ldquo;Oh.&rdquo;</p>
+<p>Onyx glanced at him. &ldquo;What?&rdquo;</p>
+<p>&ldquo;I just realised.&rdquo; He immediately pointed at him. &ldquo;You do have feelings.&rdquo;</p>
+<p>Onyx gave him a flat look. &ldquo;I&rsquo;m taking my note back.&rdquo;</p>
+<p>&ldquo;Too late. I&rsquo;ve already recorded it.&rdquo; From the corner of his eye, Kairo spotted Soahn leaning forward slightly, attention fixed on the display. He did that sometimes, like he could see patterns before anybody else knew they existed.</p>
+<p>Rayne pushed away from the wall and came over, resting one hand against the microphone pad. For a moment, he simply stood there in silence. Kairo felt a small frisson work up his back, because he knew that look Rayne got, right before&mdash;</p>
+<p>Rayne opened his mouth and sang one long note. Just one. But holy hell. It wove through everything else effortlessly, slipping into spaces Kairo hadn&rsquo;t even realised were empty. How did he do that? It felt unfair, somehow, like everyone else was assembling furniture and Rayne had quietly walked in holding a sunset.</p>
+<p>Kairo froze with one hand hovering over a dial. Even Minjae stopped typing.</p>
+<p>The note arced through the bunker before gradually fading back into silence.</p>
+<p>And then Rayne did what Rayne always did: he stepped away, as if nothing unusual had taken place.</p>
+<p>&ldquo;Right,&rdquo; Minjae muttered after a moment. &ldquo;So that happened.&rdquo;</p>
+<p>Kairo stared at him, and then he laughed helplessly. &ldquo;Okay, Rayney. That was incredibly rude.&rdquo;</p>
+<p>&ldquo;Excuse me?&rdquo; Rayne asked.</p>
+<p>&ldquo;Well, now the rest of us have to compete with <em>that</em>.&rdquo;</p>
+<p>&ldquo;I wasn&rsquo;t competing,&rdquo; Rayne said.</p>
+<p>&ldquo;Yeah, and that makes it worse,&rdquo; Kairo told him, then laughed again.</p>
+<p>Onyx leaned toward the deck. &ldquo;We should layer it in.&rdquo;</p>
+<p>&ldquo;Oh, we absolutely are,&rdquo; Kairo said, spinning back to the controls. &ldquo;That&rsquo;s staying.&rdquo;&nbsp;Without thinking, he looped the track, and Rayne&rsquo;s note returned, just as good. Kairo looped it a second time. Perfect.</p>
+<p>Out of the corner of his eye, he spotted Soahn rise from his chair and head toward the door, head lowered, shoulders a little drawn. Kairo knew Soahn well enough now to recognise it immediately: overload.&nbsp;</p>
+<p>Nobody tried to stop him, but after a few moments, Minjae rose from his terminal, too, grabbed something from his jacket pocket, and followed.</p>
+<p>It was becoming a pattern.</p>
+<p>A good one.</p>
+<p>Kairo turned back to the touchpad and looped the track again, listening and feeling the vibration through the stone beneath him. And for a fleeting moment, he had the strange thought that if somebody had looked through the doorway a few minutes ago, they&rsquo;d think this was ordinary.</p>
+<p>Five people.</p>
+<p>Making music.</p>
+<p>Existing together.</p>
+<p>As if they&apos;d been doing it forever.</p>
+<p><br></p>
+<p align="center">~*~</p>
+<p><br></p>
+<p>The corridor was colder. Soahn liked that, because it stripped things back a little. The noise from the bunker still reached him, softened by layers of stone and old relay conduits until it became gentler, more distant, and he could follow it without having to absorb all of it.&nbsp;Sliding down the wall, he rested his arms loosely over his knees.</p>
+<p><em>Your neural activity is elevated</em>, SEER-9 said.</p>
+<p>&ldquo;I know.&rdquo;</p>
+<p><em>Not dangerous.</em></p>
+<p>&ldquo;No.&rdquo;</p>
+<p><em>Just full.</em></p>
+<p>Full. Yes, that was probably the best way to explain it. Too many sounds and frequencies, too many thoughts all trying to occupy the same space at once, and then there was Rayne&rsquo;s note.</p>
+<p>He could still hear it in his head. Honestly, there was nothing unusual about that; it was simply&hellip; Rayne.</p>
+<p>Beautiful things tended to leave impressions.</p>
+<p>Tipping his head back against the wall, Soahn closed his eyes, waiting for the pressure behind them to ease.</p>
+<p><em>Your synchronisation is improving</em>, SEER-9 observed.</p>
+<p>&ldquo;Mm.&rdquo;</p>
+<p>Then footsteps approached. Soahn recognised the familiar rhythm.</p>
+<p>Minjae wandered to the opposite wall and sat down, stretching his legs out in front of him. &ldquo;Phew, nothing like emotional damage disguised as music.&rdquo;</p>
+<p>Soahn smiled. &ldquo;You liked it.&rdquo;</p>
+<p>&ldquo;Unfortunately.&rdquo; Minjae grimaced. &ldquo;The worst kind of liking.&rdquo; He held out a squashed protein bar. &ldquo;Cherry flavour. Or that&rsquo;s what the label says, but I have doubts.&rdquo;</p>
+<p>&ldquo;Oh.&rdquo; Soahn accepted it immediately. &ldquo;Thanks.&rdquo;</p>
+<p>They sat in silence for a while, and Soahn made a start on the energy bar, even though he wasn&rsquo;t particularly hungry. Sometimes the act of eating helped ground him.</p>
+<p>&ldquo;Does it taste of cherry?&rdquo; Minjae asked.</p>
+<p>&ldquo;Not in the slightest,&rdquo; Soahn said, and took another bite.</p>
+<p>&ldquo;You okay?&rdquo;</p>
+<p>Swallowing, Soahn said, &ldquo;Yes. Just a bit&hellip; full.&rdquo;</p>
+<p>Minjae nodded slowly. &ldquo;Yeah.&rdquo; Another pause. &ldquo;You ever feel like you&rsquo;re made of exposed wires?&rdquo;</p>
+<p>&ldquo;Oh yes,&rdquo; Soahn said. &ldquo;All the time.&rdquo;</p>
+<p>&ldquo;Me too.&rdquo;</p>
+<p>A fresh draught moved through the tunnel, bringing the distant music with it. Soahn tucked the empty energy bar wrapper into his pocket. &ldquo;Sometimes I think I&rsquo;m made of the static between sounds.&rdquo;</p>
+<p>Minjae looked at him. &ldquo;That&rsquo;s poetic as hell.&rdquo;</p>
+<p>&ldquo;It&rsquo;s exhausting,&rdquo; Soahn admitted.</p>
+<p>&ldquo;Yeah.&rdquo; Minjae leaned his head back against the wall. &ldquo;That too.&rdquo;</p>
+<p>For a while, neither of them spoke. Minjae liked solving things, but he&apos;d never tried to solve this; he always just sat beside Soahn and let the silence stay quiet.</p>
+<p>&ldquo;Thanks,&rdquo; Soahn said after a while.</p>
+<p>Minjae raised an eyebrow, then offered a small grin. &ldquo;You&rsquo;re welcome, static boy.&rdquo;</p>
+<p><em>His presence reduces your neural activity</em>, SEER-9 observed.</p>
+<p>Soahn didn&apos;t know what to say to that, or what to think about it, so instead, he stayed where he was a little while longer.</p>
+<p><br></p>
+<p align="center">~*~</p>
+<p><br></p>
+<p>By the time Soahn and Minjae returned, the track had softened into a low loop. Kairo was still crouched beside the deck, adjusting things and pretending he wasn&rsquo;t trying to make it perfect.</p>
+<p>Soahn slid back into his chair.</p>
+<p>&ldquo;Better?&rdquo; Kairo asked.</p>
+<p>Soahn nodded. &ldquo;Much.&rdquo;</p>
+<p>&ldquo;Excellent.&rdquo; Kairo turned back to the controls. &ldquo;Then we can continue making questionable art.&rdquo;</p>
+<p>&ldquo;Questionable is generous,&rdquo; Minjae said, sitting at his terminal.</p>
+<p>Kairo gasped. &ldquo;How dare you.&rdquo;</p>
+<p>But Minjae was already typing.</p>
+<p>For a few minutes, the bunker slipped back into its usual rhythm. Kairo fiddled with the track while Rayne listened from beside the speakers, and Onyx returned to whatever deeply exciting power-related task had occupied him before. Then Minjae suddenly stopped typing and leaned closer to his screen.</p>
+<p>&ldquo;Oh,&rdquo; he said.</p>
+<p>Kairo frowned. &ldquo;What sort of oh is that?&rdquo;</p>
+<p>Minjae stared at the display for another second, then sighed. &ldquo;The annoying sort.&rdquo;</p>
+<p>Damn. Kairo&rsquo;s heart sank as Minjae turned the screen towards them, revealing a map of London crossed with relay routes and search grids. Tiny markers blinked beneath the city, most scattered far beyond the Ghost Lines. One cluster glowed yellow. Kairo knew immediately that it was too close.</p>
+<p>&ldquo;They&rsquo;re narrowing their search patterns,&rdquo; Minjae said.</p>
+<p>Onyx was on his feet before anybody else moved. &ldquo;How close?&rdquo;</p>
+<p>Minjae enlarged the affected sector. &ldquo;We&rsquo;ve got time. But not much.&rdquo;</p>
+<p>Kairo glanced from the map to the room around him. The deck continued playing quietly behind them, and the fairy lights blinked against the wall in cheerful defiance of the faded warning beneath them.</p>
+<p>DO&nbsp;✨&nbsp;NOT&nbsp;✨&nbsp;TOUCH.</p>
+<p>Even so, the bunker looked different now.</p>
+<p>Temporary again.</p>
+<p>Onyx was already reaching for cables and storage cases, every movement calm and efficient, but pointed.</p>
+<p>&ldquo;I&rsquo;ll prep the disruptors,&rdquo; Rayne said, stepping away from the speakers.</p>
+<p>&ldquo;I&rsquo;ll start scrubbing our traces.&rdquo; Soahn moved over to the terminal beside Minjae.</p>
+<p>Staying by the deck, Kairo rested one hand against the battered casing. There were shelves. The mugs. The benches. His drawer.</p>
+<p>His stupid, weirdly official drawer.</p>
+<p>Funny how quickly a place became familiar. Apparently it took even less time for familiarity to become dangerous.</p>
+<p>&ldquo;Hey.&rdquo;</p>
+<p>Minjae glanced up. &ldquo;Hm?&rdquo;</p>
+<p>Kairo shrugged one shoulder. &ldquo;I thought we&rsquo;d get another week.&rdquo;</p>
+<p>For a second, Minjae said nothing, but his expression softened as he looked around the bunker too. &ldquo;Yeah,&rdquo; he said. &ldquo;Me too.&rdquo;</p>
+<p>That was it; there wasn&rsquo;t really anything else to say. The Ghost Lines taught you early that nothing stayed forever, and Kairo knew that. They all did.</p>
+<p>But leaving wasn&rsquo;t the same as losing.</p>
+<p>Drawing in a breath, Kairo pushed himself away from the deck. &ldquo;Right. Let&rsquo;s erase ourselves.&rdquo;</p>
+<p><br></p>
+<p align="center">~*~</p>
+<p><br></p>
+<p>They had plenty of practice at leaving. That was one of the first things you learned in the Ghost Lines: take what mattered and leave nothing useful behind. Piece by piece, the bunker disappeared around them: Soahn wiped terminal histories while Minjae fed false patterns through the relay network, burying traces of their activity beneath meaningless noise; Rayne crossed the room, placing disruptor tiles at the junctions they&rsquo;d used most often; Onyx started dismantling Kairo&rsquo;s workstation.</p>
+<p>Kairo pretended not to notice.</p>
+<p>The fairy lights came down first, followed by the speaker and cable hooks. Each bare patch of wall made the room look bigger, and a little less familiar.</p>
+<p>Then there was the drawer.</p>
+<p>Pulling it open, Kairo peered down at the contents. Still weird. Still his. Good copper, backup copper, and questionable copper.</p>
+<p>Into his bag they went.</p>
+<p>Probably for the best. Questionable copper had become surprisingly sentimental.</p>
+<p>Around him, the rest of their lives vanished just as efficiently. Four mugs disappeared from the shelf. Minjae peeled his sticky notes from the terminals. Tools went back into cases, cables into bags, food into whatever storage container happened to have room. Before long, there would be nothing here to suggest five people had spent months making music, arguing, eating terrible ration bars and leaving their belongings in increasingly inconvenient places.</p>
+<p>The bunker would go back to being another empty, forgotten room beneath London.</p>
+<p>Kairo stood in the middle of it and re-checked that they had everything, even though he already knew they did.</p>
+<p>He wasn&rsquo;t delaying.</p>
+<p>Obviously.</p>
+<p>He just liked making sure; that was all.</p>
+<p>Emergency lighting washed across the newly bare shelves and benches. Ten minutes ago, the room had felt alive. Now it could have belonged to anybody, or nobody at all.</p>
+<p>&ldquo;You know,&rdquo; Minjae said behind him, slinging his rucksack over his shoulder, &ldquo;one day we&rsquo;re going to land somewhere and not have to run.&rdquo;</p>
+<p>Kairo looked over. &ldquo;Real mattresses?&rdquo;</p>
+<p>&ldquo;Real mattresses.&rdquo;</p>
+<p>&ldquo;An irresponsible quantity of fairy lights?&rdquo;</p>
+<p>Minjae grinned. &ldquo;Absolutely irresponsible.&rdquo;</p>
+<p>&ldquo;The dream.&rdquo;</p>
+<p>Nearby, Onyx clipped the final tool back onto his belt. &ldquo;We&rsquo;ve got the track.&rdquo;</p>
+<p>Rayne nodded. &ldquo;That matters.&rdquo;</p>
+<p>Kairo looked around one final time. It wasn&rsquo;t like he meant to say anything, but the words came out anyway. &ldquo;I really liked this bunker.&rdquo;</p>
+<p>And even though it was a little absurd, nobody laughed.</p>
+<p>Instead, Soahn smiled. &ldquo;So did I.&rdquo;</p>
+<p>Onyx gave a single nod. &ldquo;It was a good one.&rdquo;</p>
+<p>&ldquo;We made it a good one,&rdquo; Rayne added.</p>
+<p>Kairo blinked. Oh. Well, that was horribly sincere. He turned away before anybody could accuse him of having attachment issues and found himself staring at the faded warning on the wall.</p>
+<p>DO NOT TOUCH.</p>
+<p>Except the fairy lights were gone now, packed safely into his bag.</p>
+<p>The bunker itself hadn&rsquo;t done anything. It had been concrete and old wiring when they arrived, another dead room in an undercity of dead rooms. They were the ones who filled it with lights and music, mugs and tools, arguments and unfinished projects.</p>
+<p>And all of that was coming with them.</p>
+<p>Onyx opened the tunnel door, letting cold air sweep into the room. &ldquo;Time to go.&rdquo;</p>
+<p>Adjusting the bag on his shoulder, Kairo followed the others towards the doorway, but at the threshold he stopped and glanced back. &ldquo;Bye,&rdquo; he said.</p>
+<p>Minjae snorted. &ldquo;Did you just say goodbye to a bunker?&rdquo;</p>
+<p>Kairo pointed at him. &ldquo;Don&rsquo;t make this weird.&rdquo;</p>
+<p>&ldquo;You&rsquo;re the one talking to a building.&rdquo;</p>
+<p>Kairo grinned and reached for the light control, and the bunker went dark.</p>
+<p>Then he followed the others into the Ghost Lines.</p>
+
+        </div>
+
+      </div>
+    </article>
+
+    <nav class="back" aria-label="Return">
+      <a href="/signals/">← Back to Signals</a>
+    </nav>
+
+  </main>
+</body>
+</html>
