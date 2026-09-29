@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+  <title>Original Parts Where Possible | Pulse | E.V.E.N</title>
+
+  <style>
+    :root{
+      color-scheme: light;
+
+      /* warm grey / paper layer */
+      --bg: #f2f1ee;
+      --bg2:#eceae6;
+
+      --panel: rgba(20,20,24,.06);
+      --panel2: rgba(20,20,24,.04);
+      --stroke: rgba(20,20,24,.12);
+
+      --text: rgba(18,18,20,.88);
+      --muted: rgba(18,18,20,.60);
+
+      /* restrained accents */
+      --accent: rgba(30,180,190,.85);   /* muted cyan */
+      --accent2: rgba(172,120,210,.55); /* lilac whisper */
+
+      --radius: 18px;
+      --radius2: 26px;
+      --shadow: 0 18px 70px rgba(0,0,0,.10);
+      --shadow2: 0 12px 40px rgba(0,0,0,.08);
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --serifish: ui-serif, Georgia, "Times New Roman", Times, serif;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; min-height:100vh; }
+
+    body{
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(900px 420px at 20% 0%, rgba(30,180,190,.10), transparent 60%),
+        radial-gradient(900px 420px at 80% 0%, rgba(172,120,210,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      overflow-x:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+
+    /* subtle grain/noise */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(1px 1px at 18% 24%, rgba(0,0,0,.12), transparent 60%),
+        radial-gradient(1px 1px at 42% 62%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 78% 38%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 60% 80%, rgba(0,0,0,.08), transparent 60%);
+      opacity:.08;
+      filter: blur(.3px);
+      z-index:0;
+    }
+
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 44px 20px 76px;
+      position:relative;
+      z-index:1;
+    }
+
+    /* header */
+    .head{
+      text-align:center;
+      margin-bottom: 18px;
+    }
+
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.18em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.66);
+    }
+
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 0 rgba(30,180,190,.25);
+      animation: pulse 2.6s infinite;
+      flex:none;
+    }
+
+    @keyframes pulse{
+      0%{ box-shadow: 0 0 0 0 rgba(30,180,190,.22); }
+      70%{ box-shadow: 0 0 0 12px rgba(30,180,190,0); }
+      100%{ box-shadow: 0 0 0 0 rgba(30,180,190,0); }
+    }
+
+    h1{
+      margin: 14px 0 8px;
+      font-size: clamp(32px, 4.6vw, 54px);
+      line-height: 1.06;
+      letter-spacing: -0.02em;
+    }
+
+    .meta{
+      margin: 0 auto;
+      max-width: 70ch;
+      color: rgba(18,18,20,.62);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* story card */
+    .card{
+      margin-top: 22px;
+      border-radius: var(--radius2);
+      background: linear-gradient(180deg, rgba(255,255,255,.70), rgba(255,255,255,.52));
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(700px 240px at 25% 0%, rgba(30,180,190,.14), transparent 60%),
+        radial-gradient(700px 240px at 75% 0%, rgba(172,120,210,.12), transparent 60%);
+      opacity:.70;
+      pointer-events:none;
+    }
+
+    .card-inner{
+      position:relative;
+      z-index:1;
+      padding: 28px 28px 24px;
+    }
+
+    /* divider inside card */
+    .divider{
+      height: 1px;
+      background: linear-gradient(90deg, rgba(172,120,210,.40), rgba(30,180,190,.40));
+      opacity:.7;
+      margin: 16px 0 22px;
+    }
+
+    /* story typography */
+    .story{
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.9;
+      color: rgba(18,18,20,.84);
+    }
+
+    .story p{
+      margin: 0 0 16px;
+    }
+
+    .story em{ color: rgba(18,18,20,.86); }
+
+    /* optional little “file tag” row */
+    .filetag{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.62);
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.40);
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(18,18,20,.66);
+      letter-spacing:.06em;
+      white-space:nowrap;
+    }
+
+    /* --- SoundCloud block (Signals story pages) --- */
+.audio-block{
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px dashed rgba(18,18,20,.18);
+}
+
+.audio-label{
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(18,18,20,.62);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom: 10px;
+}
+
+.audio-label .dot{
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 rgba(30,180,190,.20);
+}
+
+.sc-embed{
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(18,18,20,.14);
+  background: rgba(255,255,255,.48);
+  box-shadow: 0 12px 40px rgba(0,0,0,.08);
+  height: 120px; /* matches your preferred compact player */
+}
+
+.sc-embed iframe{
+  display:block;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0;
+}
+
+    /* back nav */
+    .back{
+      margin-top: 18px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .back a{
+      text-decoration:none;
+      font-family: var(--mono);
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: rgba(18,18,20,.62);
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.55);
+      transition: .16s ease;
+    }
+
+    .back a:hover{
+      color: rgba(18,18,20,.82);
+      border-color: rgba(18,18,20,.22);
+      box-shadow: 0 12px 40px rgba(0,0,0,.10);
+      transform: translateY(-1px);
+    }
+
+    /* reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+
+    <header class="head">
+      <div class="kicker"><span class="dot" aria-hidden="true"></span> signals // pulse // recovered story</div>
+      <h1>Original Parts Where Possible</h1>
+      <p class="meta">File integrity: partial. Playback: safe.</p>
+    </header>
+
+    <article class="card" aria-label="Story container">
+      <div class="card-inner">
+
+        <div class="filetag" aria-label="File tags">
+          <span class="pill">pulse</span>
+          <span class="pill">rayne</span>
+          <span class="pill">minjae</span>
+        </div>
+
+        <div class="divider" aria-hidden="true"></div>
+
+        <div class="story">
+
+          <!-- Paste story paragraphs exactly as you have them -->
+<p>So far, Rayne had spent thirty-three minutes looking for Minjae, which seemed excessive for what should have been a simple errand. The instructions were straightforward: find Minjae; get him to look at the corrupted file on Kairo&apos;s terminal that was now throwing up a creative series of error messages. Kairo tried three recovery tools, swore at all of them, and finally announced that the problem needed somebody who enjoyed being angry at computers.</p>
+<p>Minjae was the obvious choice.</p>
+<p>But finding him was proving less obvious.</p>
+<p>The bunker was the first logical place to check, but he wasn&rsquo;t there. And he wasn&rsquo;t in the relay room, or the narrow workshop near the western junction where Minjae occasionally vanished when he wanted access to equipment they didn&rsquo;t own. Nobody there had seen him. A message sent to his comm went unanswered, though whether that meant Minjae was busy or had decided not to answer was impossible to determine.</p>
+<p>The Ghost Lines grew older the further Rayne walked, the patched lighting thinning out between stretches of wall stained by years of damp. Old municipal markings still clung to the stone under newer graffiti, their arrows directing him towards platforms that no longer existed. Rayne knew enough of the current routes to ignore them. He was just about to turn back towards the Ghostlines Exchange when a different mark caught his attention.</p>
+<p>A small doodle of a crow, right next to a large maintenance panel. A few scratches to make a hooked beak, an angular back, two short legs, and a tail that was slightly larger than the rest of it. Minjae drew them everywhere. Sometimes the bird marked a Lockbox; elsewhere it meant spare equipment, a safe route, or a place Minjae had claimed for reasons only he knew. Kairo had once added a speech bubble to one with the words <em>I am deeply unpleasant</em>, and Minjae had called him a prick.</p>
+<p>Crouching beside the panel, Rayne checked for hinges or obvious seams. The crow was drawn on the right-hand side, so he ran his fingertips along the edge until they found a recessed catch under a strip of old sealant.</p>
+<p>The panel popped open.</p>
+<p>Behind it, a narrow opening led into darkness. Rayne glanced down the corridor, though he wasn&rsquo;t entirely sure why; Minjae was already involved in enough activities of questionable legality that a concealed space under an abandoned transit route barely qualified as suspicious. Chances were, it contained equipment, or maybe supplies from The Hollow, or possibly weapons (although Onyx tended to object whenever Minjae stored those without telling anyone).</p>
+<p>Rayne decided that the corrupted audio file could wait another minute, and squeezed through. A light strip immediately activated above him, illuminating a tiny room, barely wider than a cupboard.</p>
+<p>But that wasn&rsquo;t what made Rayne freeze.</p>
+<p>There were keyboards everywhere, in different colours and sizes, on shelves from waist height to the ceiling, arranged in rows under narrow display light strips. Some were protected under clear covers, while others rested upright on stands, their cables wound neatly behind them. Handwritten cards sat beside some of them with Minjae&rsquo;s cramped scrawl &mdash; <em>hot-swappable, gasket mount, 62g tactile, soldered, aluminium plate, stabilisers are fucking awful</em> &mdash; though their significance wasn&rsquo;t immediately apparent to Rayne.</p>
+<p>He took another step inside the small space.</p>
+<p>This wasn&rsquo;t storage, because storage generally didn&rsquo;t involve individual lighting.</p>
+<p>Rayne let his attention linger on a few of them: one nearby keyboard had a translucent casing, and he could see its internal components inside. Next to it, a heavy black board, its keys worn almost grey from use. Another in bright yellow, with a crack repaired across one corner. None of them matched. Some looked expensive. Others looked like Minjae had retrieved them from the bottom of a bin.</p>
+<p>Footsteps interrupted him, and Rayne turned.</p>
+<p>Minjae was standing in the opening with a plastic crate braced against one hip, staring at him through narrowed eyes.</p>
+<p>For a moment, neither of them spoke.</p>
+<p>Then Minjae said, &ldquo;Hey.&rdquo;</p>
+<p>Rayne inclined his head. &ldquo;Is this yours?&rdquo;</p>
+<p>&ldquo;Yeah,&rdquo; Minjae said slowly. &ldquo;Guess someone found it after all.&rdquo; Stepping inside, he put the crate on the nearest workbench with more force than necessary.</p>
+<p>&ldquo;It has display lighting,&rdquo; Rayne observed.</p>
+<p>&ldquo;Electricity is hardly a luxury these days.&rdquo;</p>
+<p>Rayne thought he detected frustration in Minjae&rsquo;s voice, though he wasn&rsquo;t sure. &ldquo;It has labels.&rdquo;</p>
+<p>&ldquo;So does a library.&rdquo;</p>
+<p>Rayne considered this while Minjae closed the concealed panel behind him, shutting them in the little room. &ldquo;Then you have a keyboard library.&rdquo;</p>
+<p>Letting out a small sigh, Minjae shrugged one shoulder. &ldquo;Yeah, so?&rdquo;</p>
+<p>&ldquo;How many are there?&rdquo;</p>
+<p>Minjae followed his gaze and made a quiet sound through his nose. &ldquo;Why are you even down here?&rdquo;</p>
+<p>&ldquo;Kairo needs you.&rdquo;</p>
+<p>Rolling his eyes, Minjae said, &ldquo;What&rsquo;d he break this time?&rdquo;</p>
+<p>&ldquo;There&rsquo;s a file,&rdquo; Rayne said. &ldquo;He said it needs somebody who enjoys being angry at computers.&rdquo; Before he could help himself, he cast another glance around the shelves of keyboards. They didn&rsquo;t give him the impression of someone who disliked computers at all. Perhaps he&rsquo;d misunderstood Kairo earlier.</p>
+<p>&ldquo;How many recovery tools has he used on it so far?&rdquo; Minjae asked.</p>
+<p>&ldquo;Three.&rdquo;</p>
+<p>The narrow-eyed stare returned. &ldquo;Do you remember the error?&rdquo;</p>
+<p>&ldquo;Yes,&rdquo; Rayne said, and recited it.</p>
+<p>Immediately, Minjae&rsquo;s face changed, irritation redirecting towards a problem approximately three levels above it. &ldquo;Oh, for fuck&rsquo;s sake. Tell him not to touch it,&rdquo; he muttered. &ldquo;I&rsquo;ll be up in a bit.&rdquo;</p>
+<p>&ldquo;You&rsquo;re staying here?&rdquo; Rayne asked.</p>
+<p>&ldquo;Just for a bit,&rdquo; Minjae said.</p>
+<p>&ldquo;All right.&rdquo; Rayne skimmed the shelves one last time, and then edged his way past Minjae towards the panel.</p>
+<p>&ldquo;Oh, and Rayne?&rdquo; Minjae said as he pushed it open.</p>
+<p>&ldquo;Yes?&rdquo;</p>
+<p>&ldquo;Don&rsquo;t&hellip; don&rsquo;t tell anyone about this, okay?&rdquo;</p>
+<p>&ldquo;Of course,&rdquo; Rayne said, although compared to what could&rsquo;ve been hidden away in the room, he wasn&rsquo;t sure why keyboards needed to be kept secret. Still, Minjae had asked, and Rayne respected his privacy.</p>
+<p>As he closed the panel, he heard the crate making a soft plastic thump as Minjae put it on the floor and started moving things out of it.</p>
+<p><br></p>
+<p align="center">~*~</p>
+<p><br></p>
+<p>Rayne didn&rsquo;t mention the hidden locker again. Kairo&rsquo;s audio file survived with most of its dignity intact, Minjae complained about the damage done by three incompatible recovery tools, and the evening went on without anybody learning that a cupboard full of mechanical keyboards existed three levels below the Ghostlines Exchange. Rayne saw no reason to tell the others; Minjae had asked him not to, and the request seemed simple enough.</p>
+<p>But then, two days later, one of the keyboards appeared in the bunker.</p>
+<p>Rayne recognised it because of its yellow casing and the repaired crack at the corner. Without its display stand, it looked older. Half the keycaps were missing, exposing switches in uneven rows.</p>
+<p>Minjae was hunched over it with his sleeves pushed back and a screwdriver tucked behind one ear. A few switches were on the mat beside his hand, tiny components arranged in an order Rayne assumed was intentional, and every few seconds Minjae pressed one of the remaining keys, frowned at the result, and returned to whatever adjustment he was working on.</p>
+<p>Sitting down at the other end of the table, Rayne watched him.</p>
+<p>There was nothing unusual about Minjae repairing equipment; he fixed cracked comms, relay boards, old terminals, broken cables and anything else that survived long enough to reach him, usually while criticising its manufacturer, previous owner or fundamental reason for existing. The difference here was harder to identify. The keyboard wasn&rsquo;t connected to anything, and nobody appeared to need it. Even if they did, newer models were easy enough to find on the market, and Rayne doubted replacing this one would cost more than the hours Minjae was already spending on it.</p>
+<p>A key clicked under Minjae&rsquo;s finger, and he frowned. The key clicked again, and the frown deepened.</p>
+<p>&ldquo;Why don&rsquo;t you replace it?&rdquo; Rayne asked.</p>
+<p>Minjae glanced over at him. &ldquo;Replace what?&rdquo;</p>
+<p>&ldquo;The keyboard.&rdquo;</p>
+<p>That earned him a raised eyebrow. &ldquo;Why would I replace it?&rdquo;</p>
+<p>Rayne wasn&rsquo;t sure which part of his reasoning needed explanation, but he said, &ldquo;It&rsquo;s old, and three of the screws don&rsquo;t match. Most of the keys are missing.&rdquo;</p>
+<p>&ldquo;Yeah, I took those off,&rdquo; Minjae said.</p>
+<p>&ldquo;Surely it would still be easier to replace the whole thing?&rdquo;</p>
+<p>&ldquo;Easier isn&rsquo;t really the point,&rdquo; Minjae muttered, his mouth pulling to one side.</p>
+<p>That answer was less useful.</p>
+<p>Moving closer, Rayne peered down at the switch Minjae was cleaning, then the keyboard itself. Fine scratches crossed the casing, and the spacebar was so worn that the light reflected along one edge.</p>
+<p>Minjae fitted the switch back together, pressed it into the board and tested the key.</p>
+<p><em>Click.</em></p>
+<p>Rayne spotted the moment a tiny bit of the tension in Minjae&rsquo;s face eased.</p>
+<p>Interesting.</p>
+<p>Reaching for another keycap, Minjae paused when he noticed that Rayne was staring at him. &ldquo;What?&rdquo;</p>
+<p>&ldquo;I didn&rsquo;t say anything,&rdquo; Rayne said.</p>
+<p>Rolling his eyes, Minjae went back to the next switch.</p>
+<p>&ldquo;Do you mind me watching?&rdquo; Rayne asked.</p>
+<p>&ldquo;Honestly, mate,&rdquo; Minjae muttered, &ldquo;out of all the things I&rsquo;ve seen you do, this is one of the least weird ones. Go for it.&rdquo;</p>
+<p>Pulling the chair over, Rayne sat down beside him and waited while Minjae sorted through a small pile of spare keys. He methodically wiped them, chipped off a small bit of dirt from under one of them, and then held them over the missing spaces on the board.</p>
+<p>&ldquo;See these here?&rdquo; Minjae said, indicating a few of the keys.</p>
+<p>Rayne nodded.</p>
+<p>&ldquo;They&rsquo;ve been used more than the rest.&rdquo; Tapping one of the polished keys with the end of his screwdriver, he added, &ldquo;Movement cluster. Spacebar&rsquo;s worn to hell. Number row isn&rsquo;t much better.&rdquo; Then he pointed to the upper edge of the board, where a handful of keys showed the same dull shine. &ldquo;Whoever owned this played games.&rdquo;</p>
+<p>&ldquo;You can tell that just from looking at them?&rdquo;</p>
+<p>&ldquo;Yep.&rdquo; Minjae tossed the cap he was holding back into the pile and selected another one. &ldquo;Either that, or they were writing the world&rsquo;s most repetitive novel.&rdquo; Turning the board slightly, he brought the wear into better view. &ldquo;Look at the pattern. Same four movement keys, same modifiers, spacebar, numbers one through five. Everything else is comparatively clean.&rdquo;</p>
+<p>Rayne leaned closer and traced the pattern without touching it. The distribution of wear was remarkably consistent; someone&rsquo;s hands had returned to the same positions often enough to change the material itself.</p>
+<p>This was all logical now that Minjae had pointed it out, though Rayne still wasn&rsquo;t sure why it mattered.</p>
+<p>&ldquo;Are you replacing the damaged ones?&rdquo;</p>
+<p>&ldquo;No.&rdquo; Throwing him a quick sideways glance, Minjae added, &ldquo;Anyway, they aren&rsquo;t damaged. Just worn.&rdquo;</p>
+<p>Apparently, that distinction was important. &ldquo;Even though the legends are disappearing,&rdquo; Rayne said.</p>
+<p>&ldquo;Even so. They still work.&rdquo;</p>
+<p>&ldquo;But if you replaced them&mdash;&rdquo;</p>
+<p>&ldquo;Then it&rsquo;d be a totally different keyboard, and that isn&rsquo;t what I&rsquo;m doing.&rdquo; Minjae returned to his work, selecting another switch from the tray beside him. For a while, the only sounds between them came from the tools against the workbench and the occasional click of a key under Minjae&rsquo;s fingers.</p>
+<p>Whenever Rayne heard that click, he noticed the minuscule changes in Minjae: the release of a breath, the slight softening around his mouth. Satisfaction, if Rayne had to guess.</p>
+<p>The first time he saw the locker, he&rsquo;d noticed differences in colour, shape, age and arrangement because those were the most obvious things. But he hadn&rsquo;t thought to look for patterns of use.</p>
+<p>&ldquo;Do the others have these patterns?&rdquo;</p>
+<p>Minjae lifted one shoulder. &ldquo;Sure. Some of them do. But they weren&rsquo;t all used for gaming.&rdquo;</p>
+<p>Minjae pressed the repaired key twice, checked the response on the diagnostic display beside him, then began putting his tools away. The screwdriver disappeared into its case. Loose switches went into a compartmented box, followed by the tweezers and a narrow brush Rayne hadn&apos;t seen him use.</p>
+<p>Once Minjae was done cleaning up, he stretched, yawned, and then looked at Rayne. &ldquo;You busy?&rdquo; he asked.</p>
+<p>&ldquo;No,&rdquo; Rayne said.</p>
+<p>Tucking the keyboard under one arm, Minjae rose from his chair. &ldquo;Come on.&rdquo;</p>
+<p>&ldquo;Where are we going?&rdquo; Rayne asked as he rose and followed Minjae to the door.</p>
+<p>&ldquo;Where do you think?&rdquo;</p>
+<p><br></p>
+<p align="center">~*~</p>
+<p><br></p>
+<p>Minjae led him back through the older tunnels, the repaired keyboard tucked securely under one arm. He didn&rsquo;t explain where they were going again, and Rayne didn&rsquo;t ask. By the time the little crow appeared beside the maintenance panel, he already knew.</p>
+<p>This time, Minjae opened it, pulling the panel wide and ducking through the narrow gap. Rayne stopped outside, waiting while the display lights came on.</p>
+<p>&ldquo;You coming?&rdquo; Minjae said, glancing back.</p>
+<p>Rayne ducked his head and followed him inside.</p>
+<p>Nothing had changed in the two days since Rayne found the locker, as far as he could tell, but it seemed different now. Instead of noticing just how many keyboards were in here, he immediately noticed other small details he&rsquo;d missed the first time. The nearest board had a spacebar worn smooth in the centre but nowhere else. Another had lost the lettering from half its keys, while the opposite side remained almost untouched. On a compact black model near the workbench, one corner shone from years of contact with a hand. Even the cleaner examples began to reveal smaller inconsistencies once he knew to look for them: a replacement keycap in a slightly different shade, scratches around particular switches, one new screw among older ones.</p>
+<p>Minjae returned the yellow keyboard to its stand, then adjusted it until it lined up with the edge of the shelf.</p>
+<p>&ldquo;Did you repair all of these?&rdquo; Rayne asked.</p>
+<p>&ldquo;God, no.&rdquo; Minjae stepped back and looked across the collection. &ldquo;Some came in working. That one&rsquo;s never needed anything beyond a clean.&rdquo; He pointed towards a beige keyboard high on the opposite wall. Its casing had yellowed unevenly with age, but otherwise Rayne could see little remarkable about it.</p>
+<p>&ldquo;That thing&rsquo;s nearly eighty years old,&rdquo; Minjae said. &ldquo;Original switches, original plate, original controller. Whoever built it knew what they were doing.&rdquo;</p>
+<p>&ldquo;You sound surprised.&rdquo;</p>
+<p>&ldquo;I&rsquo;ve opened enough newer ones to know better.&rdquo; Moving to another shelf, Minjae pulled out a compact board with a translucent green case. Three of its keycaps were black instead of green, and the spacebar appeared to belong to a different keyboard entirely. &ldquo;This one was a disaster.&rdquo;</p>
+<p>Rayne examined it. &ldquo;It works now?&rdquo;</p>
+<p>&ldquo;Yeah,&rdquo; Minjae said. &ldquo;Replaced four of the switches. Controller needed repairing too, and whoever opened it before me stripped two screws and put one of the stabilisers back in wrong.&rdquo; Turning the keyboard over, he indicated a small mark near the rear edge. &ldquo;Case was already like that.&rdquo;</p>
+<p>&ldquo;You left it.&rdquo;</p>
+<p>Minjae shrugged one shoulder. &ldquo;It&apos;s a scratch.&rdquo;</p>
+<p>Rayne glanced towards the mismatched keys. &ldquo;And those?&rdquo;</p>
+<p>&ldquo;Originals were missing.&rdquo;</p>
+<p>&ldquo;So you replaced those.&rdquo;</p>
+<p>&ldquo;Well, yeah.&rdquo;</p>
+<p>The distinction seemed perfectly straightforward to Minjae. He returned the green board to its place and reached for another. This one was smaller, built into a heavy metal case with a row of pale blue keys along the top.</p>
+<p>&ldquo;Custom build,&rdquo; Minjae said. &ldquo;Nice PCB. Awful choice of switches.&rdquo;</p>
+<p>&ldquo;Why?&rdquo;</p>
+<p>&ldquo;Too heavy.&rdquo;</p>
+<p>&ldquo;For you?&rdquo;</p>
+<p>&ldquo;For anyone with functioning hands.&rdquo;</p>
+<p>Rayne pressed one experimentally. The key resisted him, then dropped with a dense click. &ldquo;It works.&rdquo;</p>
+<p>&ldquo;That isn&rsquo;t a defence.&rdquo;</p>
+<p>Rayne pressed it again, frowning.</p>
+<p>Minjae made a quiet, disapproving noise and took the keyboard from him. &ldquo;They put ninety-gram switches in the entire thing.&rdquo; Then he pulled a small plastic container from beneath the workbench. Inside were rows of switches. Minjae selected a couple, hooked the ninety-gram switches out, and replaced them. &ldquo;These are sixty-two.&rdquo;</p>
+<p>Rayne pressed each switch when Minjae offered them.</p>
+<p>There was a difference, but not just in the way it felt under his fingertip. It was the sound, too. Softer, deeper. &ldquo;Hm.&rdquo;</p>
+<p>Minjae&apos;s mouth twitched.</p>
+<p>Rayne pressed the tactile switch again.</p>
+<p>&ldquo;You like that one.&rdquo;</p>
+<p>&ldquo;Yes.&rdquo;</p>
+<p>Minjae hooked the switches back out and dropped them into their compartments, and returned the box beneath the bench. When he straightened, Rayne noticed another keyboard on the lowest shelf, pushed farther back than the others. Half its keys were gone, the casing was open, and a bundle of wiring showed through one side.</p>
+<p>&ldquo;What&rsquo;s wrong with that one?&rdquo;</p>
+<p>Crouching, Minjae pulled it forward enough to inspect it. &ldquo;Controller&apos;s dead. Couple of traces on the PCB are damaged. One stabiliser&apos;s missing, half the switches are corroded, and somebody tried to repair the cable with electrical tape and optimism.&rdquo;</p>
+<p>Rayne considered this list. &ldquo;Wouldn&rsquo;t replacing it be easier?&rdquo; Then he realised, a fraction too late, that he had asked this question before.</p>
+<p>&ldquo;Sure, it&rsquo;d be technically easier and faster,&rdquo; Minjae said.</p>
+<p>&ldquo;But you enjoy it,&rdquo; Rayne observed.</p>
+<p>&ldquo;There you go, champ.&rdquo;&nbsp;</p>
+<p>Rayne looked at the open casing again. &ldquo;How much of it can you replace before it becomes a different keyboard?&rdquo;</p>
+<p>Minjae gave him an odd glance, and he didn&rsquo;t answer immediately. &ldquo;If I started taking off your limbs and pulling out your internal hardware, then replaced it with new stuff, would you still be Rayne?&rdquo;</p>
+<p>That made Rayne hesitate.</p>
+<p>He knew the technical answer. Most of his components could be replaced. Some already had been. Damage could be repaired, systems rebuilt, parts exchanged for newer versions without altering the designation attached to him. NuYu had designed his body with maintenance in mind.</p>
+<p>But that wasn&apos;t what Minjae had asked.</p>
+<p><em>Would you still be Rayne?</em></p>
+<p>Minjae was watching him now, waiting for an answer as though there could only be one.</p>
+<p>Rayne glanced down at himself. &ldquo;I am not broken.&rdquo;</p>
+<p>Minjae huffed. &ldquo;We&rsquo;re all a bit broken, mate.&rdquo; Then he smiled, a genuine smile; Rayne knew the difference now between sarcastic and real. &ldquo;Look, we don&apos;t chuck you out every time you get battered, do we?&rdquo;</p>
+<p>&ldquo;No.&rdquo;</p>
+<p>&ldquo;Right. You fix what&apos;s broken. Doesn&apos;t mean you have to replace everything else while you&apos;re in there.&rdquo;</p>
+<p>Rayne glanced at the exposed controller again, then at the worn keys Minjae had left untouched. &ldquo;So the wear doesn&apos;t matter.&rdquo;</p>
+<p>&ldquo;Course it matters.&rdquo; Minjae frowned. &ldquo;It just isn&apos;t a fault.&rdquo;</p>
+<p>Rayne considered that.</p>
+<p>Minjae, apparently satisfied that the matter was resolved, pushed the keyboard back onto the shelf. &ldquo;Anyway, that one&apos;s going to be a bastard. I can&apos;t find the original controller anywhere.&rdquo;</p>
+<p>He moved on to the next shelf.</p>
+<p>Rayne stayed where he was for another moment, assessing the worn keycaps.</p>
+<p>Then he followed.</p>
+<p><br></p>
+<p align="center">~*~</p>
+<p><br></p>
+<p>Two days later, Rayne went with Minjae back to the locker. There was no invitation this time, at least not formally.&nbsp;Minjae opened the maintenance panel, ducked through and left it open behind him, apparently assuming Rayne would follow. By the time Rayne stepped inside, he was already pulling the unfinished keyboard from the lowest shelf.</p>
+<p>The controller was still dead, but Minjae had managed to repair the damaged traces on the PCB and replace the missing stabiliser. The corroded switches remained in a small pile beside the open case, along with another container of parts Rayne didn&apos;t recognise.</p>
+<p>Minjae dragged a second chair towards the workbench with his foot. &ldquo;Sit down.&rdquo;</p>
+<p>Rayne took the seat.</p>
+<p>Minjae picked up one of the old switches, turned it over between his fingers and held it out. &ldquo;These need cleaning.&rdquo;</p>
+<p>Rayne accepted it. &ldquo;All of them?&rdquo;</p>
+<p>&ldquo;Unless you&apos;ve got somewhere else to be.&rdquo;</p>
+<p>&ldquo;I don&apos;t.&rdquo;</p>
+<p>Minjae pulled another switch from the pile and showed him how to open it without damaging the housing, working the small clips free with the edge of a narrow tool. The casing separated to reveal components Rayne recognised from watching him two days earlier, though these were dirtier, the metal contacts darkened by corrosion.</p>
+<p>&ldquo;Don&apos;t force it,&rdquo; Minjae said. &ldquo;Plastic gets brittle when it&apos;s this old. If the clip doesn&apos;t move, change the angle.&rdquo;</p>
+<p>Rayne copied him.</p>
+<p>&ldquo;Not like that.&rdquo;</p>
+<p>Rayne stopped.</p>
+<p>&ldquo;Give it here.&rdquo;</p>
+<p>Minjae took the switch back, repositioned the tool by less than a millimetre and handed it over again. Rayne tried from the new angle. The clip released immediately.</p>
+<p>&ldquo;Oh.&rdquo;</p>
+<p>&ldquo;Yeah. They&apos;re annoying little bastards.&rdquo;</p>
+<p>The remaining clips came free more easily. Rayne opened the housing and laid the pieces on the mat in the same arrangement Minjae used.</p>
+<p>&ldquo;Now clean the contact. Gently.&rdquo;</p>
+<p>Rayne picked up the narrow brush.</p>
+<p>&ldquo;Gently,&rdquo; Minjae repeated.</p>
+<p>&ldquo;I understand the word.&rdquo;</p>
+<p>&ldquo;I&apos;ve seen you bend steel.&rdquo;</p>
+<p>&ldquo;Not accidentally.&rdquo;</p>
+<p>&ldquo;That isn&apos;t reassuring.&rdquo;</p>
+<p>Rayne cleaned the contact, and after a while, Minjae leaned across to inspect it.</p>
+<p>&ldquo;Like that?&rdquo; Rayne asked.</p>
+<p>&ldquo;Yeah,&rdquo; Minjae grunted.</p>
+<p>&ldquo;You sound disappointed.&rdquo;</p>
+<p>&ldquo;I was hoping you&apos;d be shit at it for at least ten minutes.&rdquo;</p>
+<p>That seemed unreasonable, but Minjae had already reached for another switch.</p>
+<p>Rayne began cleaning the next one.</p>
+<p>For a while, Minjae talked him through the process as they worked. Corrosion could be removed; a damaged spring could be replaced. A housing with a cracked clip was no longer worth preserving merely for the satisfaction of claiming it was original, which Minjae described as the kind of thinking that turned restoration into &ldquo;historical cosplay.&rdquo; Rayne wasn&apos;t entirely sure who this criticism was aimed at, but Minjae appeared to have strong opinions about them.</p>
+<p>By the fifth switch, he stopped checking Rayne&apos;s work.</p>
+<p>By the eighth, he started passing them across without explanation.</p>
+<p>Somewhere around the twelfth, Minjae said, &ldquo;Oh, you missed it at The Hollow the other day.&rdquo;</p>
+<p>Rayne looked up. &ldquo;Missed what?&rdquo;</p>
+<p>&ldquo;This bloke tried to steal a chair.&rdquo;</p>
+<p>&ldquo;A chair.&rdquo;</p>
+<p>&ldquo;Not even a good chair. One of those horrible plastic ones from downstairs.&rdquo;</p>
+<p>Rayne waited.</p>
+<p>Minjae was smiling already. &ldquo;He gets it halfway through the market before Mara spots him. So she shouts after him, right? Doesn&apos;t even accuse him of stealing it. Just goes, &lsquo;Mate, if you&apos;re taking that, you&apos;ve got to take the other five.&rsquo;&rdquo;</p>
+<p>Rayne opened another switch. &ldquo;Why?&rdquo;</p>
+<p>&ldquo;Because those plastic chairs are awful.&rdquo;</p>
+<p>&ldquo;I understood that part. Why did he take one?&rdquo;</p>
+<p>&ldquo;No idea.&rdquo; Minjae laughed under his breath. &ldquo;That&apos;s not even the best bit. The idiot panics, puts it down, <em>sits on it</em>, and pretends he takes it everywhere with him.&rdquo;</p>
+<p>Rayne paused.</p>
+<p>Minjae looked across at him, still grinning.</p>
+<p>&ldquo;Did Mara believe him?&rdquo;</p>
+<p>&ldquo;Rayne.&rdquo;</p>
+<p>&ldquo;No, then.&rdquo;</p>
+<p>Minjae snorted and returned to the PCB. &ldquo;She made him take all six.&rdquo;</p>
+<p>Rayne tried to reconstruct the sequence of decisions that led from attempted theft to voluntarily removing six unwanted chairs from The Hollow. None of them appeared particularly rational.</p>
+<p>Beside him, Minjae started laughing again. He was bent over the keyboard with the soldering tool in one hand, shoulders moving with the effort of trying not to laugh hard enough to interfere with what he was doing. Apparently the funniest part of the story was not the theft, the lie, or even the acquisition of five additional chairs, but the fact that the man had somehow been manipulated into performing unpaid rubbish removal while attempting to commit a crime.</p>
+<p>Rayne added this to what he already knew about Minjae&apos;s sense of humour. &ldquo;You find people making bad decisions amusing,&rdquo; he said.</p>
+<p>&ldquo;Sometimes.&rdquo;</p>
+<p>&ldquo;Kairo makes bad decisions often,&rdquo; Rayne said. &ldquo;You usually shout at him.&rdquo;</p>
+<p>&ldquo;That&apos;s different.&rdquo;</p>
+<p>&ldquo;How?&rdquo;</p>
+<p>&ldquo;I have to live with the consequences of Kairo&apos;s decisions.&rdquo;</p>
+<p>Rayne considered that. &ldquo;Yes,&rdquo; he said. &ldquo;That is different.&rdquo; Another switch opened cleanly under Rayne&apos;s fingers.</p>
+<p>The work developed its own rhythm after that. Minjae repaired the board while Rayne worked through the remaining switches, and their conversation wandered with no obvious destination. Minjae complained about the price of coffee at the Exchange, then spent nearly five minutes explaining why Kairo&rsquo;s habit of putting tools back in the wrong drawer was objectively worse than not putting them away at all. Rayne pointed out that Minjae himself left screwdrivers in at least four locations around the bunker.</p>
+<p>&ldquo;I have a system,&rdquo; Minjae said.</p>
+<p>Eventually, the pile between them dwindled to three.</p>
+<p>Then two.</p>
+<p>Then one.</p>
+<p>Rayne opened the final housing, cleaned the contact and checked the spring before putting it back together. Then he placed the finished switch beside Minjae&apos;s hand.</p>
+<p>Minjae picked it up without looking. There was no inspection this time; he fitted it immediately into the board.</p>
+<p>Rayne watched his hands move across the open casing, connecting what could be saved and replacing what couldn&apos;t. The scratches remained. So did the faded keys, the damaged corner and the places where years of use had changed the surface beneath somebody else&apos;s hands. None of those things prevented it from being what it was.</p>
+<p>Minjae pressed a key.</p>
+<p><em>Click.</em></p>
+<p>He pressed another.</p>
+<p><em>Click.</em></p>
+<p>A small smile appeared at the corners of his mouth.</p>
+<p>Rayne reached for the next switch before remembering there weren&apos;t any left.</p>
+<p>Minjae noticed. &ldquo;Don&apos;t worry,&rdquo; he said. &ldquo;I&apos;ve got another box.&rdquo; Reaching under the workbench, he produced another container, sliding half its contents towards Rayne before returning to the open keyboard.</p>
+<p>Outside the locker, footsteps passed through the tunnel and disappeared towards The Hollow. Minjae bent closer to the board, screwdriver turning carefully between his fingers, while Rayne picked up the next switch and worked the casing loose exactly as he&apos;d been shown.</p>
+<p>Between them, one key at a time, the old keyboard began to work again.</p>
+
+        </div>
+
+      </div>
+    </article>
+
+    <nav class="back" aria-label="Return">
+      <a href="/signals/">← Back to Signals</a>
+    </nav>
+
+  </main>
+</body>
+</html>
