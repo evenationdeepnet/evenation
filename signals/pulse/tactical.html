@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+  <title>Tactical Reasons | Pulse | E.V.E.N</title>
+
+  <style>
+    :root{
+      color-scheme: light;
+
+      /* warm grey / paper layer */
+      --bg: #f2f1ee;
+      --bg2:#eceae6;
+
+      --panel: rgba(20,20,24,.06);
+      --panel2: rgba(20,20,24,.04);
+      --stroke: rgba(20,20,24,.12);
+
+      --text: rgba(18,18,20,.88);
+      --muted: rgba(18,18,20,.60);
+
+      /* restrained accents */
+      --accent: rgba(30,180,190,.85);   /* muted cyan */
+      --accent2: rgba(172,120,210,.55); /* lilac whisper */
+
+      --radius: 18px;
+      --radius2: 26px;
+      --shadow: 0 18px 70px rgba(0,0,0,.10);
+      --shadow2: 0 12px 40px rgba(0,0,0,.08);
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --serifish: ui-serif, Georgia, "Times New Roman", Times, serif;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; min-height:100vh; }
+
+    body{
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(900px 420px at 20% 0%, rgba(30,180,190,.10), transparent 60%),
+        radial-gradient(900px 420px at 80% 0%, rgba(172,120,210,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      overflow-x:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+
+    /* subtle grain/noise */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(1px 1px at 18% 24%, rgba(0,0,0,.12), transparent 60%),
+        radial-gradient(1px 1px at 42% 62%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 78% 38%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 60% 80%, rgba(0,0,0,.08), transparent 60%);
+      opacity:.08;
+      filter: blur(.3px);
+      z-index:0;
+    }
+
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 44px 20px 76px;
+      position:relative;
+      z-index:1;
+    }
+
+    /* header */
+    .head{
+      text-align:center;
+      margin-bottom: 18px;
+    }
+
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.18em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.66);
+    }
+
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 0 rgba(30,180,190,.25);
+      animation: pulse 2.6s infinite;
+      flex:none;
+    }
+
+    @keyframes pulse{
+      0%{ box-shadow: 0 0 0 0 rgba(30,180,190,.22); }
+      70%{ box-shadow: 0 0 0 12px rgba(30,180,190,0); }
+      100%{ box-shadow: 0 0 0 0 rgba(30,180,190,0); }
+    }
+
+    h1{
+      margin: 14px 0 8px;
+      font-size: clamp(32px, 4.6vw, 54px);
+      line-height: 1.06;
+      letter-spacing: -0.02em;
+    }
+
+    .meta{
+      margin: 0 auto;
+      max-width: 70ch;
+      color: rgba(18,18,20,.62);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* story card */
+    .card{
+      margin-top: 22px;
+      border-radius: var(--radius2);
+      background: linear-gradient(180deg, rgba(255,255,255,.70), rgba(255,255,255,.52));
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(700px 240px at 25% 0%, rgba(30,180,190,.14), transparent 60%),
+        radial-gradient(700px 240px at 75% 0%, rgba(172,120,210,.12), transparent 60%);
+      opacity:.70;
+      pointer-events:none;
+    }
+
+    .card-inner{
+      position:relative;
+      z-index:1;
+      padding: 28px 28px 24px;
+    }
+
+    /* divider inside card */
+    .divider{
+      height: 1px;
+      background: linear-gradient(90deg, rgba(172,120,210,.40), rgba(30,180,190,.40));
+      opacity:.7;
+      margin: 16px 0 22px;
+    }
+
+    /* story typography */
+    .story{
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.9;
+      color: rgba(18,18,20,.84);
+    }
+
+    .story p{
+      margin: 0 0 16px;
+    }
+
+    .story em{ color: rgba(18,18,20,.86); }
+
+    /* optional little “file tag” row */
+    .filetag{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.62);
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.40);
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(18,18,20,.66);
+      letter-spacing:.06em;
+      white-space:nowrap;
+    }
+
+    /* --- SoundCloud block (Signals story pages) --- */
+.audio-block{
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px dashed rgba(18,18,20,.18);
+}
+
+.audio-label{
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(18,18,20,.62);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom: 10px;
+}
+
+.audio-label .dot{
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 rgba(30,180,190,.20);
+}
+
+.sc-embed{
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(18,18,20,.14);
+  background: rgba(255,255,255,.48);
+  box-shadow: 0 12px 40px rgba(0,0,0,.08);
+  height: 120px; /* matches your preferred compact player */
+}
+
+.sc-embed iframe{
+  display:block;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0;
+}
+
+    /* back nav */
+    .back{
+      margin-top: 18px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .back a{
+      text-decoration:none;
+      font-family: var(--mono);
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: rgba(18,18,20,.62);
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.55);
+      transition: .16s ease;
+    }
+
+    .back a:hover{
+      color: rgba(18,18,20,.82);
+      border-color: rgba(18,18,20,.22);
+      box-shadow: 0 12px 40px rgba(0,0,0,.10);
+      transform: translateY(-1px);
+    }
+
+    /* reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+
+    <header class="head">
+      <div class="kicker"><span class="dot" aria-hidden="true"></span> signals // pulse // recovered story</div>
+      <h1>Tactical Reasons</h1>
+      <p class="meta">File integrity: partial. Playback: safe.</p>
+    </header>
+
+    <article class="card" aria-label="Story container">
+      <div class="card-inner">
+
+        <div class="filetag" aria-label="File tags">
+          <span class="pill">pulse</span>
+          <span class="pill">onyx</span>
+          <span class="pill">kairo</span>
+        </div>
+
+        <div class="divider" aria-hidden="true"></div>
+
+        <div class="story">
+
+          <!-- Paste story paragraphs exactly as you have them -->
+<p>It was that in-between time of the morning when Soahn and Rayne had already headed out, but Minjae and Kairo hadn&rsquo;t surfaced yet. Most days left a small pocket of quiet between the two, when Onyx found himself with the bunker largely to himself.</p>
+<p>Their little makeshift kitchenette was dim except for the light strip above the workstation, hastily taped there when they moved in. Kairo&rsquo;s doing, probably. It wasn&rsquo;t even straight. Onyx still hadn&rsquo;t worked out why Kairo insisted on taping, draping and wedging lights across every available surface, but over the months he&rsquo;d learned to accept that wherever Kairo spent more than a few days, illumination multiplied.</p>
+<p>Onyx stood beneath the latest example with a mug of coffee beside him and the maintenance panel on his right forearm open. The adjustment was minor; one of the tension regulators was compensating too aggressively since the last calibration, making his wrist joint resist a tiny bit whenever he rotated it past a certain angle. Most people wouldn&rsquo;t have noticed, but Onyx had spent too many years relying on the arm to ignore even small discrepancies.</p>
+<p>Tightening the regulator, he flexed his hand experimentally, then rotated the wrist.</p>
+<p>Better.</p>
+<p>A yawn echoed from down the nearby corridor, and Onyx paused. Another yawn followed, louder than the first, followed by a soft thump and a curse, possibly a shoulder striking a wall. Bare feet shuffled.</p>
+<p>When Kairo appeared in the doorway a few seconds later, he was wearing loose trousers and an old, ragged t-shirt that barely constituted a t-shirt anymore. Even in the low light, Onyx could see that he was barely awake, his hair sticking up like he&rsquo;d spent the night engaged in armed conflict.</p>
+<p>Kairo spotted him and stopped, his eyes brightening. &ldquo;Oh. Hey, big guy.&rdquo; There were certain tones in Kairo&rsquo;s voice that experience had taught Onyx to recognise. There was the <em>I&rsquo;ve broken something</em> tone. And the <em>I&rsquo;m about to break something</em> tone. There was also the tone that usually preceded a request involving tools, restricted access, or an assurance that whatever he was doing was <em>probably fine</em>. But this tone was the one he used when he was pleased to see him.</p>
+<p>&ldquo;Morning,&rdquo; Onyx said.</p>
+<p>Kairo stretched until his shirt rode halfway up his stomach, made a noise somewhere between a groan and another yawn, then wandered into the kitchenette. &ldquo;Didn&apos;t know anyone else was up.&rdquo;</p>
+<p>&ldquo;Soahn left an hour ago. Rayne went with him.&rdquo;</p>
+<p>&ldquo;Where?&rdquo;</p>
+<p>&ldquo;They were heading for the south relay.&rdquo;</p>
+<p>&ldquo;Oh, yeah.&rdquo; Kairo scratched at his hair, somehow making it worse. &ldquo;Forgot about that.&rdquo; He grinned and made a beeline for the coffee.</p>
+<p>Onyx watched him take a mug from the shelf. &ldquo;When did you last eat?&rdquo;</p>
+<p>Inspecting the bottom of the mug like a scientist might inspect a specimen on a slide, Kairo said, &ldquo;Last night.&rdquo; Then he paused, tilting his head slightly. &ldquo;Or maybe yesterday afternoon. No, wait. Lunchtime yesterday. If ten in the morning counts as lunchtime?&rdquo; He glanced over. &ldquo;Okay, judging by your face, it doesn&rsquo;t.&rdquo;</p>
+<p>&ldquo;No, it doesn&rsquo;t,&rdquo; Onyx said, closing the maintenance panel over his forearm and pulling a chipped plate from one of the nearby shelves.</p>
+<p>Leaning one hip against the counter beside him, Kairo poured himself a coffee and then topped up Onyx&rsquo;s mug. Onyx winced as he reached for the sugar stash, then watched with horror as Kairo began dumping spoonfuls of it into his coffee.</p>
+<p>Kairo must&rsquo;ve caught him looking because he shrugged one shoulder and said, &ldquo;It&rsquo;s fuel.&rdquo;</p>
+<p>&ldquo;It&rsquo;s gut-rot.&rdquo;</p>
+<p>&ldquo;Same circuit, different wire.&rdquo;</p>
+<p>&ldquo;Does that make sense to anyone but you?&rdquo; Onyx muttered, opening the cold storage. &ldquo;Sit down.&rdquo;</p>
+<p>&ldquo;I can make something,&rdquo; Kairo said behind him.</p>
+<p>&ldquo;You could. But knowing you, it&rsquo;d end up eighty per cent sugar.&rdquo; Onyx reached for the eggs, checking them first because they&rsquo;d been in there a few days. These were from the Hollow&rsquo;s own Scrap Garden; birds with an alarming amount of energy considering their age and questionable environment. Last week, Onyx had seen Sol from catering mix something into their feed. Sol claimed it was extra protein, though Onyx suspected stimulants because one of the chickens had chased Sol halfway out of the Scrap Garden not long after.</p>
+<p>Satisfied the eggs were fine, Onyx turned. Kairo was now seated at the workbench, coffee cradled between his fingers. He stared at Onyx from beneath his fringe of messy hair.</p>
+<p>Onyx broke three of the eggs into a pan, and for about thirty seconds, the room was peaceful, filled with the sound of sizzling oil.</p>
+<p>Then Kairo said, &ldquo;Did you do something to your arm?&rdquo;</p>
+<p>Onyx glanced over his shoulder. &ldquo;Yeah. Tension adjustment.&rdquo;</p>
+<p>&ldquo;Oh.&rdquo; He heard Kairo put his mug down. &ldquo;What does that mean?&rdquo;</p>
+<p>&ldquo;It means the wrist joint was compensating incorrectly.&rdquo;</p>
+<p>&ldquo;Was it broken?&rdquo;</p>
+<p>&ldquo;No.&rdquo;</p>
+<p>&ldquo;Is it stronger now, though?&rdquo;</p>
+<p>Onyx turned the eggs one by one. &ldquo;No.&rdquo;</p>
+<p>&ldquo;But like, you could make it stronger if you wanted to?&rdquo;</p>
+<p>Onyx considered that. Sure, his arm could be enhanced further; NuYu techs often left hardware open to further modifications, though Onyx didn&rsquo;t really see the point now that he wasn&rsquo;t in the military anymore. &ldquo;I could. But I won&rsquo;t.&rdquo;</p>
+<p>&ldquo;Hm.&rdquo;</p>
+<p>The kitchenette fell silent again for a while. Onyx watched the pan.</p>
+<p>&ldquo;So,&rdquo; Kairo said slowly. &ldquo;When you were in the military, did you ever have to break anything really strong? Like, just with your hands?&rdquo;</p>
+<p>&ldquo;What?&rdquo; Onyx said, turning again. &ldquo;Don&rsquo;t be ridiculous.&rdquo;</p>
+<p>&ldquo;Did you, though?&rdquo;</p>
+<p>Ignoring him, Onyx plated up the eggs and took them over. &ldquo;Eat.&rdquo;</p>
+<p>&ldquo;You didn&rsquo;t answer my question.&rdquo;</p>
+<p>&ldquo;Because it&rsquo;s a stupid question.&rdquo;</p>
+<p>&ldquo;That still isn&rsquo;t a no. Come on, what was it? Was it like, a steel girder or something?&rdquo;</p>
+<p>&ldquo;Kairo.&rdquo;</p>
+<p>&ldquo;Come on.&rdquo; Kairo grabbed up the fork Onyx set down at his elbow and poked at the eggs. &ldquo;You know I&rsquo;m just going to keep guessing until you tell me.&rdquo;</p>
+<p>The thing was, Onyx knew he would, and he also knew that Kairo&rsquo;s guesses would get increasingly dumb. &ldquo;Gun,&rdquo; he murmured.</p>
+<p>Kairo&rsquo;s eyebrows shot up. &ldquo;Oh my God.&rdquo;</p>
+<p>&ldquo;It was already damaged,&rdquo; Onyx told him. &ldquo;So technically, I didn&rsquo;t snap it.&rdquo;</p>
+<p>&ldquo;Holy shit. You snapped a gun in half.&rdquo;</p>
+<p>&ldquo;The receiver housing was compromised,&rdquo; Onyx clarified again, though he was pretty sure Kairo wasn&rsquo;t listening anymore.</p>
+<p>&ldquo;With your bare hands?&rdquo;</p>
+<p>&ldquo;Hand.&rdquo;</p>
+<p>Kairo&rsquo;s mouth opened, and he shook his head incredulously. &ldquo;Amazing.&rdquo;</p>
+<p>&ldquo;Eat,&rdquo; Onyx said.</p>
+<p>&ldquo;I am eating,&rdquo; Kairo said. &ldquo;That is the coolest thing you&rsquo;ve ever admitted to.&rdquo;</p>
+<p>&ldquo;I&rsquo;ve told you more important things.&rdquo;</p>
+<p>&ldquo;Yeah, but none of them involved you snapping a freaking gun in half.&rdquo; Kairo&rsquo;s eyes were doing that glittery thing, full of too much interest and excitement. He took another mouthful of egg, though.</p>
+<p>Good.</p>
+<p>Returning to his own coffee, Onyx waited while Kairo worked through the eggs. As far as he was concerned, the matter of snapping guns was over. He took the chair opposite and stretched his right hand once beneath the table, testing the regulator under normal load, pleased to feel the joint move cleanly.</p>
+<p>Across from him, Kairo was grinning, and Onyx&rsquo;s heart sank. Apparently, it wasn&rsquo;t over.&nbsp;</p>
+<p>&ldquo;Did you ever kick a door off its hinges?&rdquo;</p>
+<p>&ldquo;Once.&rdquo; Onyx took a sip of coffee. &ldquo;The locking mechanism had failed.&rdquo;</p>
+<p>&ldquo;WHAT?&rdquo;</p>
+<p>&ldquo;It was faster.&rdquo;</p>
+<p>Kairo put his fork down. &ldquo;What kind of door?&rdquo;</p>
+<p>&ldquo;Eat.&rdquo;</p>
+<p>Picking up the fork again, Kairo waved it at him. &ldquo;What kind of door was it?&rdquo;</p>
+<p>&ldquo;Security.&rdquo;</p>
+<p>&ldquo;Ooh, so reinforced?&rdquo;</p>
+<p>&ldquo;Yes.&rdquo;</p>
+<p>&ldquo;Amazing,&rdquo; Kairo said, laughing. He took another bite of the food.</p>
+<p>&ldquo;Like I said, the lock was already damaged.&rdquo;</p>
+<p>&ldquo;Why do you keep trying to make this stuff sound less impressive?&rdquo;</p>
+<p>&ldquo;Because context matters,&rdquo; Onyx said.</p>
+<p>&ldquo;Sometimes,&rdquo; Kairo agreed. &ldquo;But it doesn&rsquo;t matter to me.&rdquo;</p>
+<p>&ldquo;Eat the other egg.&rdquo;</p>
+<p>Kairo ate the other egg. &ldquo;Did you ever punch through a wall?&rdquo;</p>
+<p>Onyx sighed.</p>
+<p>&ldquo;Oh my God. What kind of wall?&rdquo;</p>
+<p>&ldquo;Kairo.&rdquo;</p>
+<p>Kairo took an enormous bite without breaking eye contact.</p>
+<p>&ldquo;Plasterboard,&rdquo; Onyx muttered into his mug.</p>
+<p>Kairo looked far too delighted by this, and unfortunately for Onyx, the questions kept coming after that. They moved from walls to barricades, from barricades to security shutters and from security shutters, for reasons Onyx couldn&apos;t identify, to vehicles. After the eggs were gone, Onyx got him a flatbread and told him to eat that, too.</p>
+<p>&ldquo;Could you stop a moving car?&rdquo;</p>
+<p>&ldquo;No.&rdquo;</p>
+<p>&ldquo;What about a small one?&rdquo;</p>
+<p>&ldquo;No.&rdquo;</p>
+<p>&ldquo;What if it wasn&apos;t going very fast?&rdquo;</p>
+<p>&ldquo;You&apos;ve fundamentally misunderstood how momentum works.&rdquo;</p>
+<p>&ldquo;I know how momentum works.&rdquo; Kairo tore off another piece of flatbread. &ldquo;I&apos;m establishing parameters.&rdquo;</p>
+<p>&ldquo;For what?&rdquo;</p>
+<p>&ldquo;I don&apos;t know yet.&rdquo; Kairo chewed the flatbread thoughtfully. &ldquo;What about a motorbike?&rdquo;</p>
+<p>&ldquo;Possibly.&rdquo;</p>
+<p>Kairo&apos;s eyebrows went up.</p>
+<p>&ldquo;At low speed,&rdquo; Onyx said.</p>
+<p><em>Oh my God</em>, Kairo mouthed.</p>
+<p>&ldquo;Under specific circumstances,&rdquo; Onyx added.</p>
+<p>Kairo grinned. &ldquo;You mean, if one of us was in danger?&rdquo;</p>
+<p>&ldquo;Hm. That wasn&rsquo;t really where I was going with this,&rdquo; Onyx said, though he couldn&rsquo;t exactly deny it. Over the months, during riskier missions Topside, he&rsquo;d put his strength to use more than once. Hauling Minjae out of the path of falling debris, forcing jammed doors when Soahn was trapped on the wrong side, once catching Kairo by the back of his jacket before he disappeared over the edge of a maintenance platform. It made sense for Onyx to step in when the situation called for it. He could take more punishment than any of them except Rayne, and these days even that distinction had become questionable. Rayne was considerably stronger than his build suggested, though Onyx had yet to establish exactly where his limits were.</p>
+<p>He suspected Rayne hadn&rsquo;t either.</p>
+<p>Kairo, meanwhile, appeared delighted by the implication.</p>
+<p>&ldquo;So you would stop a motorbike for us.&rdquo;</p>
+<p>&ldquo;I said I possibly could. For tactical reasons.&rdquo; Onyx took another drink of coffee.</p>
+<p>&ldquo;Tactical reasons,&rdquo; Kairo echoed.</p>
+<p>&ldquo;Yes.&rdquo;</p>
+<p>Kairo laughed, the sound quick and sudden and warm, echoing around the bunker. He was more awake now and mostly fed, a little more colour in his cheeks. Onyx reached for a protein pack, then slid it across the workbench.</p>
+<p>Without seeming to notice, Kairo unwrapped it and started eating, never taking his attention off Onyx. &ldquo;Could you catch someone falling off a building?&rdquo;</p>
+<p>&ldquo;Yes.&rdquo; The answer came before Onyx thought about it, and a memory dragged up through his mind. Only a few years into his military service, another soldier had gone over the edge of a damaged platform during an extraction. Onyx remembered the designation stencilled across their armour more clearly than the face under the helmet, the sudden weight when he caught them one-handed and the violent pull through his shoulder as their momentum sent them both towards the edge. He&rsquo;d braced, hauled them back up and returned to the operation. They exchanged little more than a nod before moving on.</p>
+<p>That was how things worked back then. They didn&rsquo;t need to know each other. A designation, an objective and the same uniform had been enough. Duty meant reaching out when someone beside you fell.</p>
+<p>Onyx supposed that part of him hadn&rsquo;t changed much.</p>
+<p>Kairo stopped, the humour in his face softening into genuine surprise. &ldquo;Oh.&rdquo; He didn&rsquo;t push any further after that, just quietly finished the protein bar.</p>
+<p>Objective complete.</p>
+<p>Onyx relaxed back into his chair, and again they fell into silence as they finished their drinks.</p>
+<p>When Kairo drained the last of his coffee, he sat back, looking entirely too pleased with the morning. His plate was empty. The protein bar was gone. His earlier exhaustion had faded beneath the particular restless energy that usually pulled him through the next twelve hours.</p>
+<p>Finally, Kairo stood and collected his mug, then came around the table and gave Onyx&rsquo;s shoulder a thump as he passed. &ldquo;Thanks for breakfast.&rdquo;</p>
+<p>Onyx grunted.</p>
+<p>He listened as Kairo disappeared back down the corridor, silence returning gradually. Onyx sat there for a while, enjoying the peace. Eventually, he rose and gathered the plate, noticing that his right wrist moved smoothly. The adjustment had worked. Later, he would run a diagnostic and make sure the compensator remained stable under heavier load.</p>
+<p>Preferably without Kairo present.</p>
+<p>Onyx had just finished making a fresh cup of coffee when footsteps approached from the corridor, and Minjae appeared in the doorway.</p>
+<p>His hair looked marginally better than Kairo&apos;s, though only because gravity seemed to have won. He wore yesterday&apos;s shirt and carried the exhausted expression of someone who had been conscious for less than a minute and already found the world disappointing.</p>
+<p>He was frowning. &ldquo;Why did Kairo just ask me how much a motorbike weighs?&rdquo;</p>
+<p>Onyx closed his eyes. &ldquo;Just forget it,&rdquo; he said.</p>
+        </div>
+
+      </div>
+    </article>
+
+    <nav class="back" aria-label="Return">
+      <a href="/signals/">← Back to Signals</a>
+    </nav>
+
+  </main>
+</body>
+</html>
