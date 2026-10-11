@@ -563,7 +563,7 @@ function renderApp() {
           <a href="../ghost-threads.html">/ghost-threads</a>
          <a href="../radio/radio.html">/radio</a>
           <a
-            href="https://www.youtube.com/@EncryptedVirtualEchoNetwork"
+            href="https://e-v-e-n-shop.fourthwall.com/"
             target="_blank"
             rel="noopener noreferrer"
             class="cta-link"
