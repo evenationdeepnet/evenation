@@ -1,0 +1,932 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>A Study in Structural Integrity | Frequencies | E.V.E.N</title>
+
+  <style>
+    :root{
+      color-scheme: light;
+
+      /* warm grey / paper layer */
+      --bg: #f2f1ee;
+      --bg2:#eceae6;
+
+      --panel: rgba(20,20,24,.06);
+      --panel2: rgba(20,20,24,.04);
+      --stroke: rgba(20,20,24,.12);
+
+      --text: rgba(18,18,20,.88);
+      --muted: rgba(18,18,20,.60);
+
+      /* restrained accents */
+      --accent: rgba(30,180,190,.85);   /* muted cyan */
+      --accent2: rgba(172,120,210,.55); /* lilac whisper */
+
+      --radius: 18px;
+      --radius2: 26px;
+      --shadow: 0 18px 70px rgba(0,0,0,.10);
+      --shadow2: 0 12px 40px rgba(0,0,0,.08);
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --serifish: ui-serif, Georgia, "Times New Roman", Times, serif;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; min-height:100vh; }
+
+    body{
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(900px 420px at 20% 0%, rgba(30,180,190,.10), transparent 60%),
+        radial-gradient(900px 420px at 80% 0%, rgba(172,120,210,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      overflow-x:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+
+    /* subtle grain/noise */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(1px 1px at 18% 24%, rgba(0,0,0,.12), transparent 60%),
+        radial-gradient(1px 1px at 42% 62%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 78% 38%, rgba(0,0,0,.10), transparent 60%),
+        radial-gradient(1px 1px at 60% 80%, rgba(0,0,0,.08), transparent 60%);
+      opacity:.08;
+      filter: blur(.3px);
+      z-index:0;
+    }
+
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 44px 20px 76px;
+      position:relative;
+      z-index:1;
+    }
+
+    /* header */
+    .head{
+      text-align:center;
+      margin-bottom: 18px;
+    }
+
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.18em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.66);
+    }
+
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 0 rgba(30,180,190,.25);
+      animation: pulse 2.6s infinite;
+      flex:none;
+    }
+
+    @keyframes pulse{
+      0%{ box-shadow: 0 0 0 0 rgba(30,180,190,.22); }
+      70%{ box-shadow: 0 0 0 12px rgba(30,180,190,0); }
+      100%{ box-shadow: 0 0 0 0 rgba(30,180,190,0); }
+    }
+
+    h1{
+      margin: 14px 0 8px;
+      font-size: clamp(32px, 4.6vw, 54px);
+      line-height: 1.06;
+      letter-spacing: -0.02em;
+    }
+
+    .meta{
+      margin: 0 auto;
+      max-width: 70ch;
+      color: rgba(18,18,20,.62);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* story card */
+    .card{
+      margin-top: 22px;
+      border-radius: var(--radius2);
+      background: linear-gradient(180deg, rgba(255,255,255,.70), rgba(255,255,255,.52));
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(700px 240px at 25% 0%, rgba(30,180,190,.14), transparent 60%),
+        radial-gradient(700px 240px at 75% 0%, rgba(172,120,210,.12), transparent 60%);
+      opacity:.70;
+      pointer-events:none;
+    }
+
+    .card-inner{
+      position:relative;
+      z-index:1;
+      padding: 28px 28px 24px;
+    }
+
+    /* divider inside card */
+    .divider{
+      height: 1px;
+      background: linear-gradient(90deg, rgba(172,120,210,.40), rgba(30,180,190,.40));
+      opacity:.7;
+      margin: 16px 0 22px;
+    }
+
+    /* story typography */
+    .story{
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.9;
+      color: rgba(18,18,20,.84);
+    }
+
+    .story p{
+      margin: 0 0 16px;
+    }
+
+    .story em{ color: rgba(18,18,20,.86); }
+
+    .center-text {
+  text-align: center;
+}
+
+    /* optional little “file tag” row */
+    .filetag{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      color: rgba(18,18,20,.62);
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.40);
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(18,18,20,.66);
+      letter-spacing:.06em;
+      white-space:nowrap;
+    }
+
+    /* --- SoundCloud block (Signals story pages) --- */
+.audio-block{
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px dashed rgba(18,18,20,.18);
+}
+
+.audio-label{
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(18,18,20,.62);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom: 10px;
+}
+
+.audio-label .dot{
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 rgba(30,180,190,.20);
+}
+
+.sc-embed{
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(18,18,20,.14);
+  background: rgba(255,255,255,.48);
+  box-shadow: 0 12px 40px rgba(0,0,0,.08);
+  height: 120px; /* matches your preferred compact player */
+}
+
+.sc-embed iframe{
+  display:block;
+  width: 100% !important;
+  height: 100% !important;
+  border: 0;
+}
+
+    /* back nav */
+    .back{
+      margin-top: 18px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .back a{
+      text-decoration:none;
+      font-family: var(--mono);
+      letter-spacing:.10em;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: rgba(18,18,20,.62);
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(18,18,20,.14);
+      background: rgba(255,255,255,.55);
+      transition: .16s ease;
+    }
+
+    .back a:hover{
+      color: rgba(18,18,20,.82);
+      border-color: rgba(18,18,20,.22);
+      box-shadow: 0 12px 40px rgba(0,0,0,.10);
+      transform: translateY(-1px);
+    }
+
+    /* reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+
+    <header class="head">
+      <div class="kicker"><span class="dot" aria-hidden="true"></span> signals // frequencies // recovered story</div>
+      <h1>A Study in Structural Integrity</h1>
+      <p class="meta">File integrity: partial. Playback: safe.</p>
+    </header>
+
+    <article class="card" aria-label="Story container">
+      <div class="card-inner">
+
+        <div class="filetag" aria-label="File tags">
+          <span class="pill">soahn</span>
+          <span class="pill">kairo</span>
+          <span class="pill">beginnings</span>
+        </div>
+
+        <div class="divider" aria-hidden="true"></div>
+
+        <div class="story">
+
+          <!-- Paste story paragraphs exactly as you have them -->
+
+<p>After listening to the same eight seconds of music for the seventeenth time, Kairo started to think the problem might be the eighth second. The arrangement sounded good. Really good, actually, at least until the vocals came in, at which point everything became a little too crowded, and the whole thing fell apart. First, he tried lowering the bass. Then he tried moving the percussion. Then he took out some of the synth layers. And then he put everything back how it was because all of those were terrible ideas.&nbsp;</p>
+<p>Damn it, nothing seemed to work.</p>
+<p>Beside him, Soahn was sitting on an overturned storage crate, listening with his head tipped slightly to one side.</p>
+<p>&ldquo;Okay,&rdquo; Kairo muttered, stopping playback. &ldquo;I hate it.&rdquo;</p>
+<p>Soahn frowned. &ldquo;You said you loved it ten minutes ago.&rdquo;</p>
+<p>&ldquo;Yeah, well, we&rsquo;ve grown apart.&rdquo;</p>
+<p>&ldquo;That was quick.&rdquo;</p>
+<p>&ldquo;Creative differences.&rdquo; Leaning forward, Kairo dragged the vocal track a little to the left. &ldquo;Listen. It&rsquo;s fine here, right? And here. But then the second harmony comes in, and suddenly everybody&rsquo;s trying to be in the same bit of music.&rdquo;</p>
+<p>He played it again, and the workshop filled with a low, steady beat, followed by a wash of synthesised strings that rose under Soahn&rsquo;s recorded voice. To be fair, Kairo <em>liked</em> that part. Quite a lot, actually. The first vocal line slipped into the arrangement beautifully, soft but clear, with the second vocal layer following half a note behind. It made the song sound almost unearthly. But then the bass came back in, and the percussion doubled, and the harmonies piled up on top of each other until the whole thing sounded like an argument taking place between a number of extremely talented people.</p>
+<p>Kairo stopped playback again. &ldquo;See?&rdquo;</p>
+<p>Soahn nodded thoughtfully. &ldquo;Yeah, I think it&rsquo;s because the second harmony comes in too early.&rdquo;</p>
+<p>&ldquo;That&rsquo;s what I thought, too, but if I move it any further back, you&rsquo;ll be singing in a different song entirely.&rdquo;</p>
+<p>One corner of Soahn&rsquo;s mouth quirked at that. &ldquo;Does it need to follow the chord change?&rdquo;</p>
+<p>Kairo blinked. &ldquo;Well, yeah. Otherwise it sounds weird.&rdquo;</p>
+<p>&ldquo;Perhaps it should.&rdquo;</p>
+<p>Oh.</p>
+<p>That was interesting.</p>
+<p>&ldquo;Go on,&rdquo; Kairo said.</p>
+<p>Soahn leaned in, studying the arrangement on the little display. &ldquo;The first voice is already following the melody. If the second one waits until after the chord changes, it might create a little tension before they come together again.&rdquo;</p>
+<p>Man, this was why it was so nice to have someone to work with; Kairo was trying to make the harmonies fit neatly into the overall song, which was probably where he was going wrong. Neat was boring. Neat was what happened when people with expensive equipment and no imagination got involved.</p>
+<p>&ldquo;Okay,&rdquo; he said slowly. &ldquo;Okay, hold on.&rdquo;</p>
+<p>Soahn watched while he worked, occasionally leaning closer to check the display. &ldquo;Try it without the percussion,&rdquo; he suggested.</p>
+<p>Kairo muted the relevant channel. &ldquo;Like that?&rdquo;</p>
+<p>&ldquo;Mm. And perhaps let the first note have a bit more space.&rdquo;</p>
+<p>&ldquo;You&rsquo;re making a lot of demands for somebody who isn&rsquo;t paying rent on my equipment.&rdquo;</p>
+<p>Soahn smiled. &ldquo;You asked.&rdquo;</p>
+<p>&ldquo;Yeah, I did. Terrible mistake. Now you&rsquo;re in charge.&rdquo;</p>
+<p>&ldquo;I wouldn&rsquo;t go that far.&rdquo;</p>
+<p>&ldquo;Too late. You&rsquo;ve been promoted.&rdquo; Kairo hit play, and the opening notes drifted through the workshop, followed by the first vocal line. The second layer waited, just as Soahn suggested, allowing the chord beneath it to change.</p>
+<p>The harmony entered, drawing the two voices together.</p>
+<p>&ldquo;Oh,&rdquo; Kairo said. &ldquo;Holy shit.&rdquo;</p>
+<p>Soahn&rsquo;s smile widened.</p>
+<p>&ldquo;No, seriously.&rdquo; Kairo turned towards him, pointing at the speakers. &ldquo;Did you hear that?&rdquo;</p>
+<p>&ldquo;I did, yes.&rdquo;</p>
+<p>&ldquo;That&rsquo;s ridiculous.&rdquo;</p>
+<p>&ldquo;I thought it sounded rather nice.&rdquo;</p>
+<p>&ldquo;Rather nice?&rdquo; Kairo stared at him incredulously. &ldquo;So, that is not rather nice. That&rsquo;s the difference between a track that&rsquo;s nearly finished and a track that makes people stop what they&rsquo;re doing and wonder what the hell just happened.&rdquo;</p>
+<p>Soahn laughed, and Kairo grinned helplessly before turning back to the controls.</p>
+<p>Damn, he&rsquo;d been making music for years, mostly by himself, occasionally with whoever happened to wander through the Hollow and take an interest. People liked listening, for the most part. Some of them even liked helping, although their contributions generally involved suggesting he made things louder or asking if he could put a proper beat under whatever he was doing.</p>
+<p>Amateurs.</p>
+<p>But this was different.</p>
+<p>Soahn actually listened to the music, like he could hear all the tiny decisions Kairo made, including the ones he hadn&rsquo;t even thought of yet. He always noticed when a note came too early, when a sound needed space, when a perfectly good arrangement could be better if someone stopped trying to make it behave.</p>
+<p>And the really unfair part was that he could sing.</p>
+<p>Man, he could sing.</p>
+<p>There was a strange, second quality to Soahn&apos;s voice sometimes, like another intention moving through the harmonies, and Kairo still hadn&apos;t worked out how to capture it properly.</p>
+<p>Though he was having an excellent time trying.</p>
+<p>&ldquo;Right,&rdquo; he announced, opening another channel. &ldquo;New idea.&rdquo;</p>
+<p>Soahn looked amused. &ldquo;Already?&rdquo;</p>
+<p>&ldquo;Obviously. We can&rsquo;t stop now, because that would be irresponsible.&rdquo;</p>
+<p>&ldquo;I see.&rdquo;</p>
+<p>&ldquo;What if we take that delayed harmony and put it under the opening instead? Really quiet, so you barely notice it until the main vocal comes in.&rdquo;</p>
+<p>Soahn considered the suggestion. &ldquo;That could work.&rdquo;</p>
+<p>&ldquo;Could?&rdquo;</p>
+<p>&ldquo;It depends on what you do with the lower frequencies.&rdquo;</p>
+<p>Kairo gave him a wounded face. &ldquo;You don&rsquo;t trust me?&rdquo;</p>
+<p>&ldquo;I&rsquo;ve seen your cables.&rdquo;</p>
+<p>&ldquo;Wow.&rdquo;</p>
+<p>&ldquo;One of them was smoking yesterday.&rdquo;</p>
+<p>&ldquo;It was expressing itself.&rdquo;</p>
+<p>&ldquo;It was melting.&rdquo;</p>
+<p>&ldquo;Temporarily.&rdquo;</p>
+<p>Soahn laughed again, and Kairo decided that was probably the best possible response.</p>
+<p>It&rsquo;d only been a few weeks since Soahn found him, though it somehow felt longer. Not in a bad way, either. More like he&rsquo;d squeezed months&rsquo; worth of musical discoveries into a handful of evenings, most of which ended with one of them realising they&rsquo;d forgotten to eat.</p>
+<p>That first session &mdash; that had been an accident, really. Soahn followed the music into the workshop, Kairo asked him to sing, and then he did it. Just like that. As if people routinely wandered into forgotten underground rooms and turned out to have extraordinary voices. Since then, Soahn returned often enough that Kairo stopped being surprised when he appeared in the doorway. There was even a second crate beside the workstation now, cleared of tools and covered with an old folded blanket because Soahn mentioned, very politely, that sitting on bare metal for hours was uncomfortable.</p>
+<p>Kairo thought, many times, about finding him an actual chair.</p>
+<p>Unfortunately, that would mean locating a comfortable chair in the Ghost Lines, and, well. Unlikely.</p>
+<p>&ldquo;Hey,&rdquo; he said. &ldquo;Can you sing that opening again?&rdquo;</p>
+<p>&ldquo;Of course,&rdquo; Soahn said.</p>
+<p>&ldquo;Brilliant.&rdquo; Kairo reached for the microphone, then paused. &ldquo;Actually, wait. I&rsquo;ve got a better idea.&rdquo;</p>
+<p>Soahn raised an eyebrow. &ldquo;I&rsquo;m starting to understand why you have so many unfinished tracks.&rdquo;</p>
+<p>Rummaging through the equipment scattered across his desk, Kairo located a second mic cable, which was tangled around three other cables and what appeared to be part of a broken torch. He freed it with some difficulty, plugged it into the interface and checked the levels. &ldquo;Okay. What I want to try is two versions. First one normal, second one with that other voice you do.&rdquo;</p>
+<p>Soahn&rsquo;s expression changed slightly.</p>
+<p>Kairo noticed it immediately. &ldquo;Unless that&rsquo;s difficult,&rdquo; he added. &ldquo;We can do something else.&rdquo;</p>
+<p>&ldquo;No, it&rsquo;s all right.&rdquo; Soahn eyed the microphone. &ldquo;It just isn&rsquo;t always easy to separate them.&rdquo;</p>
+<p>&ldquo;Ah.&rdquo; Kairo knew a little about what had happened to him. Not everything, obviously, and he wasn&rsquo;t about to start asking questions in case Soahn wasn&rsquo;t ready to answer. But he&rsquo;d gathered that the second voice wasn&rsquo;t just a clever vocal technique, and that there were days when Soahn found the whole business more exhausting than he let on. &ldquo;Well, don&rsquo;t force it,&rdquo; he said, adjusting the microphone stand. &ldquo;We can record the first one and see what happens.&rdquo;</p>
+<p>Soahn nodded, then rose from the crate and stepped towards the microphone.</p>
+<p>Kairo put the opening on a loop. &ldquo;Whenever you&rsquo;re ready.&rdquo;</p>
+<p>For a few seconds, Soahn listened, eyes half-closed, following the melody as it moved through the speakers. Then he began to sing.</p>
+<p>Kairo watched the levels, making a small adjustment as the first phrase came through. Soahn&rsquo;s voice was clear and beautifully controlled, holding the melody with an ease that still struck Kairo as slightly offensive. Like, how could anyone be that good and not seem to realise it? He listened as Soahn reached the end of the line and let the final note linger before it faded.</p>
+<p>&ldquo;Good,&rdquo; Kairo said. &ldquo;Really good. One more?&rdquo;</p>
+<p>Soahn nodded. &ldquo;Could we try it without the opening chord?&rdquo;</p>
+<p>&ldquo;What, just the vocal?&rdquo;</p>
+<p>&ldquo;Only for the first phrase. Then bring everything in under the second.&rdquo;</p>
+<p>Oh, that was clever. Kairo muted the opening chord and played the track from the start. Soahn waited through the first few beats, then sang into the empty space. His voice came on its own for a moment, before the synthesised strings rose under it.</p>
+<p>Kairo forgot to watch the levels.</p>
+<p>The second voice was there, almost imperceptible at first, close enough to the first that he couldn&rsquo;t tell where one ended and the other began. For a few seconds, the two moved together, then separated into a harmony so delicate that Kairo found himself leaning towards the speakers as if that might help him hear it better.</p>
+<p>The phrase ended, and silence returned to the workshop.</p>
+<p>Kairo stared at the display. Then he slowly turned towards Soahn. &ldquo;Okay, that&rsquo;s just rude.&rdquo;</p>
+<p>A small smile appeared. &ldquo;Sorry?&rdquo;</p>
+<p>&ldquo;You can&rsquo;t just do that.&rdquo;</p>
+<p>&ldquo;Do what?&rdquo;</p>
+<p>&ldquo;That!&rdquo; Kairo gestured helplessly at the microphone. &ldquo;Walk in here, casually rearrange my entire track, and then sing like you&rsquo;ve got a direct connection to whatever god is responsible for music.&rdquo;</p>
+<p>Soahn laughed. &ldquo;I don&rsquo;t think that&rsquo;s quite how it works.&rdquo;</p>
+<p>&ldquo;Well, somebody needs to explain it to me, because I&rsquo;ve been trying to get that sound for three days.&rdquo;</p>
+<p>&ldquo;Perhaps you were trying too hard.&rdquo;</p>
+<p>Kairo opened his mouth, considered arguing, then closed it again. &ldquo;Right,&rdquo; he said, turning back to the deck. &ldquo;We&rsquo;re keeping that.&rdquo; He saved the recording, then immediately made a backup. And another backup, because he&rsquo;d learned that particular lesson the hard way.</p>
+<p>Behind him, Soahn returned to his crate and pulled the blanket over his knees. &ldquo;Do you always make three copies?&rdquo; he asked.</p>
+<p>&ldquo;Only when I like something.&rdquo;</p>
+<p>&ldquo;And when you don&rsquo;t?&rdquo;</p>
+<p>&ldquo;Four. In case I change my mind.&rdquo;</p>
+<p>Soahn shook his head.</p>
+<p>Kairo grinned at the screen and played the new arrangement from the beginning, and this time, he let it run all the way through. Sure, there were still things he wanted to change; the percussion needed work, and the bassline could probably lose a few notes. But he would get to that.</p>
+<p>They would get to that.</p>
+<p>Huh. Kairo paused with one hand on the controls. Usually, when he thought about unfinished tracks, he thought about the hours he&rsquo;d need to spend fixing them, the equipment he&rsquo;d have to borrow, and the inevitable argument with whichever piece of hardware decided to stop cooperating.</p>
+<p>Now he was wondering what Soahn would think of the next section, and whether he&rsquo;d have another idea to improve it, and whether they could make the ending even better.</p>
+<p>Kairo glanced sideways at him. Soahn was listening with his eyes closed, one hand resting loosely on his knee, his face thoughtful. A few strands of pale hair had fallen across his forehead, the mint green filaments woven through them catching the light from the display.</p>
+<p>&ldquo;Hey, So?&rdquo;</p>
+<p>&ldquo;Mm?&rdquo;</p>
+<p>&ldquo;How do you feel about extremely questionable percussion?&rdquo;</p>
+<p>Soahn opened his eyes. &ldquo;How questionable?&rdquo;</p>
+<p>&ldquo;Morally? Very.&rdquo;</p>
+<p>&ldquo;Musically?&rdquo;</p>
+<p>&ldquo;That&rsquo;s what we&rsquo;re going to find out.&rdquo;</p>
+<p>Soahn smiled. &ldquo;All right.&rdquo;</p>
+<p>&ldquo;Excellent.&rdquo; Kairo reached for the controls, already thinking about the next arrangement. &ldquo;I should warn you, though. Once we start experimenting with this stuff, there&rsquo;s a very real possibility we&rsquo;ll make something terrible.&rdquo;</p>
+<p>&ldquo;I think I can live with that.&rdquo;</p>
+<p>&ldquo;Good. Because there&rsquo;s also a chance we&rsquo;ll make something amazing.&rdquo;</p>
+<p>Soahn leaned forward, studying the display again. &ldquo;Then perhaps we should find out.&rdquo;</p>
+<p>Kairo looked at him for a moment, then laughed.</p>
+<p>Oh, he liked this guy.</p>
+<p>He really, really liked this guy.</p>
+<p>&ldquo;Right,&rdquo; he said, opening a fresh channel. &ldquo;Let&rsquo;s make some noise.&rdquo;</p>
+<p><br></p>
+<p align="center">~*~</p>
+<p><br></p>
+<p>By the time they left the workshop, Soahn was beginning to suspect Kairo had a different understanding of the word <em>finished</em>.</p>
+<p>They&rsquo;d spent most of the afternoon working on the same arrangement, and although it sounded better than it had that morning, Kairo was already talking about three more ideas he wanted to try. Two involved percussion, one involved recording a length of copper pipe, and all three were enthusiastically described as &lsquo;essential.&rsquo;</p>
+<p>Soahn wasn&rsquo;t convinced about the copper pipe.</p>
+<p><em>The acoustic properties might be interesting</em>, SEER-9 observed.</p>
+<p>Sighing, Soahn wished it wouldn&rsquo;t encourage him.</p>
+<p>Kairo was walking a few paces ahead, rummaging through his jacket pockets as they made their way towards the Hollow. Shortly after leaving the workshop, he&rsquo;d announced that they were going to revolutionise experimental music, but first he needed a few bits and pieces. He&rsquo;d also reminded Soahn that neither of them had eaten since breakfast, which Soahn considered the more pressing concern.</p>
+<p>&ldquo;Found it,&rdquo; Kairo said, pulling a small washer out of his pocket.</p>
+<p>&ldquo;Is that a bit or a piece?&rdquo; Soahn asked.</p>
+<p>&ldquo;This is what I was supposed to bring so I could get the right size,&rdquo; Kairo said, examining the washer. &ldquo;Actually, this might be the wrong one.&rdquo; With a shrug, he dropped it back into his pocket and kept walking.</p>
+<p>They reached the checkpoint, and thankfully, the person at the gate recognised both of them as friendly, letting them through after a quick scan. Once through, the passage widened ahead of them, opening into one of the Hollow&rsquo;s busier communal areas. A row of lamps had been rigged along the ceiling, their warm light spilling across tables and desks, mismatched benches and an assortment of storage crates. The air smelled of hot food drifting in from the canteen, and the underlying metallic tang of warm consoles and equipment. It was so different from the sterile, over-filtered, almost non-air of the NuYu buildings Soahn was used to. Well, right up until a few weeks ago. The Hollow itself was now familiar to him, and he knew which corridors led to the medi-bay, where to find clean water, the cupboard that had spare blankets, and which of the communal tables tended to have someone willing to share a meal.</p>
+<p>Kairo waved to somebody across the room, then steered them towards the canteen, where the cooks had assembled a food counter from old shelving and a broad sheet of reinforced plastic. Behind it, Claire was ladling thick vegetable stew into bowls.</p>
+<p>&ldquo;Two, please,&rdquo; Kairo said, reaching into his pocket. He held out a voltage regulator module that Soahn had seen him working on the day before.</p>
+<p>Claire eyed it suspiciously. &ldquo;That working?&rdquo;</p>
+<p>&ldquo;Of course,&rdquo; Kairo told her. &ldquo;I wouldn&rsquo;t offer you broken equipment. Your stew&rsquo;s too good to risk getting banned.&rdquo;</p>
+<p>She fought a smile and rolled her eyes before accepting the module and filling two bowls. Before she handed them over, she paused, eyed them both, then added one extra spoonful to each bowl.</p>
+<p>They took their food over to an empty table.</p>
+<p><em>It&rsquo;s encouraging to see you attending to your basic nutritional requirements,&nbsp;</em>SEER-9 observed as Soahn settled down opposite Kairo.</p>
+<p>When had it got so sarcastic?</p>
+<p><em>I was expressing approval</em>, SEER-9 said.</p>
+<p>Across from him, Kairo was already tucking in, although he paused long enough to pull a face at the first mouthful.</p>
+<p>&ldquo;Hot,&rdquo; he managed.</p>
+<p>&ldquo;Yes,&rdquo; Soahn said. &ldquo;It generally is.&rdquo;</p>
+<p>Kairo gave him an accusing look and took another bite.</p>
+<p>Soahn tried the stew, which was thick and mildly spiced and far better than he expected, with pieces of root vegetable and a few unfamiliar greens. He knew not to ask too many questions about ingredients; most of the food here came from local Scrap Gardens, community stores or whichever traders managed to bring supplies down from Topside, and people were understandably proud of what they could make from limited resources.</p>
+<p>Back in Munich, meals at NuYu came according to schedules, always carefully measured and prepared in facilities he never had any reason to visit. Here, someone spent hours cooking for whoever happened to be hungry, and people contributed what they could.</p>
+<p>It was a different way of living, and it worked, for the most part. Though Soahn was still discovering how much effort went into keeping even the simplest things functioning. But people helped one another, often without being asked, and Soahn found that he liked being part of it.</p>
+<p>Or beginning to be, at least.</p>
+<p>Kairo was explaining why the connector they needed was particularly difficult to find when a raised voice from the next table caught Soahn&rsquo;s attention.</p>
+<p>&ldquo;Well, she can&rsquo;t go, can she? Juno said three days minimum.&rdquo;</p>
+<p>&ldquo;Four,&rdquo; somebody corrected. &ldquo;And that&rsquo;s if the antibiotics work quickly.&rdquo;</p>
+<p>Nearby, a broad-shouldered woman in a patched grey coat was leaning over a table, speaking to a younger man who had a canvas delivery bag beside his feet. Between them sat a small parcel wrapped in waterproof material.</p>
+<p>&ldquo;Wire Fever doesn&rsquo;t clear up overnight,&rdquo; the woman continued. &ldquo;Not when it&rsquo;s got that far into the socket.&rdquo;</p>
+<p>&ldquo;Yeah, I know. I&rsquo;m not suggesting she goes. I&rsquo;m asking what we&rsquo;re supposed to do with this while one of our fastest Runners is out of commission.&rdquo;</p>
+<p>&ldquo;Find somebody else.&rdquo;</p>
+<p>&ldquo;Brilliant. Hadn&rsquo;t thought of that.&rdquo;</p>
+<p>Kairo stopped talking.</p>
+<p>&ldquo;Do you know them?&rdquo; Soahn asked him.</p>
+<p>&ldquo;Mm. That&rsquo;s Mara. She organises a few of the Tunnel Runners who use the western routes.&rdquo; He nodded towards the younger man. &ldquo;And that&rsquo;s Pell. Think he helps with the Waterworks deliveries.&rdquo;</p>
+<p>At the next table, Mara rubbed her forehead. &ldquo;Look, Tessa&rsquo;s already furious about being told to stay in bed,&rdquo; she said. &ldquo;Juno practically threatened to tie her to it if she tried leaving the clinic.&rdquo;</p>
+<p>&ldquo;Sounds like Juno,&rdquo; Kairo muttered.</p>
+<p>Soahn remembered her well. She was one of the first people to help him when he arrived at the Hollow, exhausted and barely able to manage the constant pressure of his own thoughts. She was kind, although her kindness tended to come with instructions that were definitely easier to follow than to argue with. He could imagine her being firm with an uncooperative patient.</p>
+<p>&ldquo;They need those regulator assemblies before the end of the week,&rdquo; Pell was saying. &ldquo;Their filtration system&rsquo;s still working, but they&rsquo;ve got one unit bypassed and another that&rsquo;s starting to fail. If they lose that one too, they&rsquo;ll have to start rationing.&rdquo;</p>
+<p>&ldquo;Then somebody needs to take them,&rdquo; Mara said.</p>
+<p>&ldquo;Yeah. That&rsquo;s what I&rsquo;ve been saying.&rdquo;</p>
+<p>Soahn frowned down at his bowl. The delivery didn&rsquo;t sound particularly complicated. A small parcel, a destination somewhere within the Ghost Lines, and a community waiting for parts that would help keep its water supply running. And while admittedly he knew little about the routes, Kairo seemed to know most of the nearby tunnels, along with an astonishing number of people who lived in the area.</p>
+<p>And it wasn&rsquo;t like they were doing anything urgent.</p>
+<p>Well, apart from the music.</p>
+<p>Soahn eyed Kairo, who was now scraping the remaining stew from the bottom of his bowl.</p>
+<p>&ldquo;We could take it,&rdquo; he said.</p>
+<p>Kairo glanced up, and for a second, Soahn wondered if he&rsquo;d made an unreasonable suggestion. He never went too far beyond the Hollow without someone accompanying him, and he knew the Ghost Lines could be dangerous. Maybe Kairo had other plans, anyway, or perhaps the delivery needed experience they didn&rsquo;t have&hellip;</p>
+<p>Then Kairo shrugged. &ldquo;Yeah, just don&rsquo;t expect me to actually run.&rdquo;</p>
+<p>Soahn laughed.</p>
+<p>Mara turned towards them. &ldquo;You two volunteering?&rdquo;</p>
+<p>&ldquo;Apparently,&rdquo; Kairo said, pushing his bowl aside. &ldquo;Where&rsquo;s it going?&rdquo;</p>
+<p>&ldquo;West Waterworks. Lower collection point.&rdquo;</p>
+<p>&ldquo;Oh, I know it.&rdquo; Kairo nodded. &ldquo;Past the old drainage junction?&rdquo;</p>
+<p>&ldquo;That&rsquo;s the one.&rdquo;</p>
+<p>&ldquo;Easy enough.&rdquo;</p>
+<p>Pell looked relieved. &ldquo;Seriously? You can take it?&rdquo;</p>
+<p>&ldquo;Sure. Unless there&rsquo;s a secret requirement to sprint the entire way, in which case we&rsquo;re going to have a problem.&rdquo;</p>
+<p>Mara gave him a long look. &ldquo;It&rsquo;s a delivery, Kairo. Not a race.&rdquo;</p>
+<p>&ldquo;Excellent. Because I was planning to take the scenic route.&rdquo;</p>
+<p>&ldquo;Please don&rsquo;t.&rdquo;</p>
+<p>&ldquo;Fine. The moderately scenic route.&rdquo;</p>
+<p>Kairo rose from the bench and wandered over to inspect the parcel. For some reason, Soahn expected at least a little discussion before they committed themselves, but Kairo seemed happy to accept the task. In fact, he was already asking about the condition of the western passage and whether the last flood was clear.</p>
+<p>Mara answered without hesitation. Apparently, she trusted him to know what he was doing.</p>
+<p>That was interesting. Soahn had seen Kairo at his happiest in the workshop, surrounded by equipment and unfinished arrangements, but he&rsquo;d also begun noticing how comfortably he moved through the Hollow. People knew him. They called out greetings, asked him to fix things, complained about cables he hadn&rsquo;t returned and, occasionally, added an extra spoonful of stew to his bowl when he was cheeky.</p>
+<p>He belonged here.</p>
+<p>And although Soahn had known that intellectually, watching him now made it feel more significant.</p>
+<p><em>You seem pleased</em>, SEER-9 observed. <em>Is it because you can help these people?</em></p>
+<p>Partly, Soahn supposed.</p>
+<p>Kairo picked up the parcel and turned it over to check the waterproof wrapping. It was small enough to fit into a rucksack, and after a brief discussion, Mara gave him an old padded carrier with adjustable straps. &ldquo;Don&rsquo;t drop it,&rdquo; she said.</p>
+<p>&ldquo;Wasn&rsquo;t planning to,&rdquo; Kairo replied.</p>
+<p>&ldquo;And don&rsquo;t open it.&rdquo;</p>
+<p>&ldquo;Wasn&rsquo;t planning that either.&rdquo;</p>
+<p>&ldquo;And if you get lost&mdash;&rdquo;&nbsp;</p>
+<p>&ldquo;Mara.&rdquo;</p>
+<p>She stopped.</p>
+<p>&ldquo;I know the way,&rdquo; Kairo said, slipping the carrier onto his back.</p>
+<p>&ldquo;Then you won&rsquo;t mind me telling you to be careful.&rdquo;</p>
+<p>Kairo grinned. &ldquo;Fair.&rdquo;</p>
+<p>Soahn finished the last of his stew and took both empty bowls back to the counter, thanking Claire for the meal. When he returned, Kairo was adjusting the straps on the carrier and listening to Pell.</p>
+<p>&ldquo;There&rsquo;s a note inside for the Waterworks crew,&rdquo; Pell said. &ldquo;They&rsquo;ll know what to do with it.&rdquo;</p>
+<p>&ldquo;Good,&rdquo; Kairo replied. &ldquo;Because my expertise is mostly limited to making expensive noises with cheap equipment.&rdquo;</p>
+<p>&ldquo;You&rsquo;re underselling yourself,&rdquo; Soahn said.</p>
+<p>Pell snorted at that.</p>
+<p>&ldquo;How long will it take?&rdquo; Soahn asked Kairo once they were ready.</p>
+<p>&ldquo;Couple of hours, maybe,&rdquo; Kairo said. &ldquo;Depends which passages are clear. There&rsquo;s a quicker route through the Dead Tracks, but I want to check the markers before we commit to it. Just watch where you put your feet. Some of the old sections are a mess.&rdquo;</p>
+<p>&ldquo;I&rsquo;ll be careful.&rdquo;</p>
+<p>&ldquo;Good. Oh, and if I tell you not to touch something, don&rsquo;t touch it.&rdquo;</p>
+<p>Soahn raised an eyebrow, surprised by this version of Kairo, more focused, a little more serious. &ldquo;Is that advice you follow yourself?&rdquo;</p>
+<p>&ldquo;Not consistently, no,&rdquo; Kairo admitted, and then he grinned.</p>
+<p>Mara handed Soahn a small folded map marked with several coloured routes. &ldquo;In case you need it. The western markers were checked yesterday, so they should still be accurate.&rdquo;</p>
+<p>&ldquo;Thank you.&rdquo; Soahn unfolded it briefly, studying the markings before putting it safely into his jacket. Maps like this were passed around all the time, but this one was more detailed than the sketches he usually saw. Narrow tunnels branched from larger transit routes, connecting old maintenance corridors, service chambers and areas that were hard to distinguish from each other. It reminded him just how much of the Ghost Lines he hadn&rsquo;t seen yet.</p>
+<p>For the first time since arriving, the prospect of exploring them was quite appealing, especially because he wouldn&rsquo;t be doing it alone.</p>
+<p>Kairo was already heading towards the door. &ldquo;Come on, So. Daylight&rsquo;s wasting.&rdquo;</p>
+<p>&ldquo;We&rsquo;re underground,&rdquo; Soahn pointed out as he joined him.</p>
+<p>&ldquo;Yeah, you&rsquo;ve got to imagine it.&rdquo;</p>
+<p>Behind them, the Hollow went on with its usual business: people talking, working, tools clattering, the food counter serving another group of hungry residents. Nobody seemed surprised or especially interested in the two people who came for lunch and were now leaving with a delivery. Perhaps that was just how things worked here. Somebody needed help; somebody else offered.</p>
+<p>And occasionally, apparently, that somebody was him.</p>
+<p>&ldquo;Ready?&rdquo; Kairo asked.</p>
+<p>&ldquo;I think so.&rdquo;</p>
+<p>&ldquo;Excellent. I&rsquo;ll show you the good bits.&rdquo;</p>
+<p>Well, that sounded promising.</p>
+<p><br></p>
+<p align="center">~*~</p>
+<p><br></p>
+<p>The thing about the Ghost Lines was that they were a lot easier to navigate if you stopped expecting them to make sense. Kairo learned that early on.</p>
+<p>The old transit routes were a good example. On paper, most of them still connected the same places they had decades ago, but paper didn&rsquo;t account for caved-in ceilings, flooded junctions, sealed access points or the occasional community that figured an abandoned station would make an excellent place to grow psychedelic mushrooms. Some routes were perfectly usable one week and completely impassable the next, which was why the markings on the walls were more useful than any official map.</p>
+<p>Soahn, however, appeared determined to understand the entire system.</p>
+<p>&ldquo;What does that one mean?&rdquo; he asked, pointing at a faded blue triangle beside a door.</p>
+<p>&ldquo;Dry passage. Usually.&rdquo;</p>
+<p>&ldquo;Usually?&rdquo;</p>
+<p>&ldquo;Well, it was dry when somebody painted it.&rdquo; Kairo grinned. &ldquo;Relax. That one&rsquo;s fine. I came through here last week.&rdquo;</p>
+<p>It had been half an hour since they&rsquo;d left the Hollow, and they were following a series of narrow tunnels that gradually took them away from the busier sections of the Lines. The air was cooler here, a little damp, and their footsteps echoed between walls covered in decades of graffiti, directional markings and warnings left by people who knew the routes better than anyone Topside.</p>
+<p>Kairo liked this part of the journey. It was familiar enough that he could walk most of it without thinking, but there was always a chance of finding a new route, an interesting piece of discarded equipment or somebody selling questionable electronics from a hole in the wall.</p>
+<p>Soahn was studying the markings again. &ldquo;Is there a standard system?&rdquo;</p>
+<p>&ldquo;Sort of.&rdquo;</p>
+<p>&ldquo;That doesn&rsquo;t sound reliable.&rdquo;</p>
+<p>&ldquo;The important ones are pretty consistent.&rdquo; Kairo pointed towards a cluster of symbols painted beside a junction. &ldquo;Blue means water. Yellow usually means power, although sometimes it means somebody&rsquo;s found something worth salvaging. Red means trouble, and if you see three red lines together, you turn around.&rdquo;</p>
+<p>&ldquo;Why?&rdquo;</p>
+<p>&ldquo;Because somebody went to the trouble of painting three red lines.&rdquo;</p>
+<p>Soahn rolled his eyes. &ldquo;Fair enough.&rdquo;</p>
+<p>&ldquo;See? You&rsquo;re learning.&rdquo; They continued along the passage, passing under a row of exposed conduits that disappeared into the ceiling. At the next junction, Kairo stopped and pointed at a white line crossing an older blue symbol. &ldquo;That means the lower passage is blocked. Probably flooded again.&rdquo;</p>
+<p>&ldquo;Can we go around?&rdquo;</p>
+<p>&ldquo;Yeah. We&rsquo;ll take the upper maintenance route.&rdquo;</p>
+<p>He adjusted the carrier on his shoulder and turned towards a narrow stairwell. The parcel wasn&rsquo;t heavy, but the straps were designed for somebody with broader shoulders, and one of them kept slipping whenever he climbed.</p>
+<p>Annoying.</p>
+<p>Soahn followed him up the stairs, occasionally stopping to check the old equipment mounted along the walls. Kairo had noticed that about him. He paid attention to things like they were interesting even when they were obviously broken, which was a refreshing change from most people, who tended to see broken equipment and ask Kairo whether he could make it work again.</p>
+<p>Usually, he could.</p>
+<p>Sometimes, the result was even useful.</p>
+<p>At the top of the stairs, they emerged into a broader service corridor where a row of old electrical cabinets hung against the wall. Somebody had painted a large arrow pointing west, along with the words KEEP LEFT in bright orange.</p>
+<p>&ldquo;That&rsquo;s helpful,&rdquo; Soahn observed.</p>
+<p>&ldquo;Yeah. Whoever painted that was having a good day.&rdquo;</p>
+<p>&ldquo;What happens if we go right?&rdquo;</p>
+<p>&ldquo;Depends how much you like standing in water.&rdquo;</p>
+<p>&ldquo;Not particularly.&rdquo;</p>
+<p>&ldquo;Left it is, then.&rdquo;</p>
+<p>They continued west, passing through a narrow corridor that eventually opened onto the Dead Tracks.</p>
+<p>The old railway tunnel stretched away in both directions, its warped, rusted tracks disappearing beneath shallow pools of dark water and heaps of fallen masonry. Sections of the ceiling had fallen years ago, leaving piles of concrete and twisted reinforcement bars scattered along the route. Somebody had rigged a line of battery-powered lamps along the wall, although only about half of them were working.</p>
+<p>Kairo stopped at the entrance. &ldquo;Right. This bit&rsquo;s a little messy.&rdquo;</p>
+<p>Soahn joined him. &ldquo;I can see that.&rdquo;</p>
+<p>&ldquo;Used to be one of the main transit routes. Before everything went to hell.&rdquo;</p>
+<p>&ldquo;When was that?&rdquo;</p>
+<p>&ldquo;Depends who you ask.&rdquo; Kairo pointed towards the far end of the tunnel. &ldquo;We&rsquo;re going that way. There&rsquo;s a walkway along the left side. Keeps us out of the water.&rdquo; Climbing over a low barrier, he dropped onto the old track bed. The water was shallow here, barely covering the old sleepers, but he avoided it anyway. There were places further down where the floor had given way beneath the surface, and he wasn&rsquo;t especially interested in finding out whether any of them had got worse.</p>
+<p>Soahn followed, stepping carefully over the uneven ground.</p>
+<p>&ldquo;Watch that cable,&rdquo; Kairo told him, pointing towards a length of black insulation lying across the tracks. &ldquo;It isn&rsquo;t live, but it&rsquo;s attached to a whole lot of other rubbish.&rdquo;</p>
+<p>Soahn stepped over it. &ldquo;You know this route well.&rdquo;</p>
+<p>&ldquo;Yeah. Used to come through here all the time.&rdquo;</p>
+<p>&ldquo;On deliveries?&rdquo;</p>
+<p>&ldquo;Sometimes. Mostly looking for equipment.&rdquo; Kairo pointed towards a rusted junction box. &ldquo;Found a really good signal converter down here once.&rdquo;</p>
+<p>&ldquo;Really good?&rdquo;</p>
+<p>&ldquo;Well, it was after I fixed it.&rdquo;</p>
+<p>The lights grew less reliable as they moved further into the older passages. Many fixtures had failed, leaving long stretches illuminated only by the occasional emergency strip and their own torches.</p>
+<p>Kairo glanced back to make sure Soahn was keeping up, then slowed. &ldquo;Can I ask you something?&rdquo;</p>
+<p>&ldquo;You usually do.&rdquo;</p>
+<p>&ldquo;Yeah, but this one&rsquo;s been bothering me for ages.&rdquo; He gestured vaguely towards Soahn&rsquo;s head. &ldquo;Your hair. Those little glowing bits.&rdquo;</p>
+<p>&ldquo;The filaments?&rdquo;</p>
+<p>&ldquo;Yeah. I know what they do, more or less. But why did you get them?&rdquo;</p>
+<p>Soahn reached up, brushing his fingers through the loose strands near his temple. In the poor light, the filaments glowed a gentle blue.</p>
+<p>&ldquo;It was a long time ago,&rdquo; Soahn said. &ldquo;My father died when I was seventeen. Afterwards, I went through a period of questioning a few things about myself. I was always focused on school, and I suppose I was beginning to wonder whether I spent too much time doing what everyone expected of me.&rdquo;</p>
+<p>Kairo hesitated, his brows lowering. &ldquo;I&rsquo;m sorry about your dad.&rdquo;</p>
+<p>&ldquo;Thanks.&rdquo; Soahn kept his attention on the tunnel ahead. &ldquo;It was a difficult time. And I made a few decisions that were&hellip; unlike me.&rdquo;</p>
+<p>&ldquo;Like getting glowing hair?&rdquo;</p>
+<p>&ldquo;Yes.&rdquo;</p>
+<p>Kairo thought about that. &ldquo;Honestly, that&rsquo;s pretty tame. I was expecting you to say you&rsquo;d stolen a vehicle or joined a criminal gang.&rdquo;</p>
+<p>&ldquo;I skipped classes.&rdquo;</p>
+<p>&ldquo;You rebel.&rdquo;</p>
+<p>&ldquo;And there might have been a crush involved.&rdquo;</p>
+<p>Kairo stopped walking. &ldquo;Oh, this just keeps getting better.&rdquo;</p>
+<p>Soahn gave him a flat look.</p>
+<p>&ldquo;What? I&rsquo;m interested!&rdquo;</p>
+<p>&ldquo;I saw an ad for the filaments. Someone I liked mentioned they liked them, and I thought&hellip;&rdquo; Soahn hesitated, apparently reconsidering whether he wanted to finish the story. &ldquo;Well. I thought they might suit me.&rdquo;</p>
+<p>&ldquo;And did they?&rdquo;</p>
+<p>&ldquo;I thought so.&rdquo;</p>
+<p>&ldquo;No, I mean, did it work? With the crush?&rdquo;</p>
+<p>&ldquo;We never dated,&rdquo; Soahn said with a wry smile.</p>
+<p>&ldquo;Jesus, So.&rdquo; Kairo laughed. &ldquo;Well, for what it&rsquo;s worth, I think they&rsquo;re brilliant.&rdquo;</p>
+<p>&ldquo;Thank you.&rdquo;</p>
+<p>They reached the maintenance walkway a few minutes later. It ran along the left wall, raised above a flooded drainage pipe trench. The metal grating was old and rusted in places, supported by brackets bolted into the stone.</p>
+<p>Kairo tested the first section with his foot.</p>
+<p>Solid.</p>
+<p>&ldquo;Okay,&rdquo; he said. &ldquo;Stay close to the wall. And don&rsquo;t put your weight on anything that looks loose.&rdquo;</p>
+<p>Soahn nodded.</p>
+<p>As they started across, the walkway creaked under their feet, although that wasn&rsquo;t unusual. Most of the old metalwork down here complained whenever anyone stepped on it. Keeping one hand on the wall, Kairo watched the grating ahead for gaps and dangerous sections. About halfway along, he noticed a loose bolt protruding from one of the support brackets.</p>
+<p>Huh.</p>
+<p>It wasn&rsquo;t like that last time.</p>
+<p>He slowed.</p>
+<p>&ldquo;Hang on, So.&rdquo;</p>
+<p>Soahn stopped behind him.</p>
+<p>Dropping into a crouch, Kairo inspected the bracket to find that the bolt had worked partway out of the concrete, leaving a narrow gap between the support and the wall. Not ideal, but the surrounding section appeared sound enough.</p>
+<p>Still, he pressed one foot against the grating and felt it flex slightly.</p>
+<p>He straightened, turning towards Soahn. &ldquo;Okay, we&rsquo;re going to&mdash;&rdquo;</p>
+<p>Before he could finish, a sharp crack sounded. Kairo spun back just as the bracket tore free from the wall. For one horrible second, the walkway seemed to hang suspended in the air&hellip; and then the grating lurched sideways, pulling away from the wall as the supports beneath it began to fail.</p>
+<p>&ldquo;Soahn!&rdquo;</p>
+<p>Grabbing the front of Soahn&rsquo;s jacket, Kairo twisted towards the wall and hauled him past, back towards the section they&rsquo;d just crossed. He stumbled after him, catching himself awkwardly against the wall just as the metal gave way beneath them. Instinctively, he turned, putting himself between Soahn and the collapsing metal as a length of grating tore loose and crashed into the trench below. The noise was enormous, metal striking concrete, followed by a splash that sent waves of filthy water spraying across the remaining supports. A loose section of railing twisted down after it, clattering against the wall before disappearing into the darkness.</p>
+<p>Kairo stood with one hand braced against the wall, the other still gripping Soahn&rsquo;s jacket. For a moment, he couldn&rsquo;t quite make sense of what he was seeing. There was a huge gap in the walkway where they&rsquo;d been standing just seconds ago.</p>
+<p>Holy shit.</p>
+<p>&ldquo;Kairo?&rdquo;</p>
+<p>Soahn&rsquo;s voice brought him back, and he looked over his shoulder. Soahn was pressed against the wall, eyes wide, one hand gripping Kairo&rsquo;s sleeve.</p>
+<p>&ldquo;You okay?&rdquo; Kairo asked.</p>
+<p>&ldquo;I think so.&rdquo;</p>
+<p>Kairo glared at the collapsed section.</p>
+<p>Yeah.</p>
+<p>That could&rsquo;ve been bad.</p>
+<p><em>Really</em> bad.</p>
+<p>Heart hammering, he became abruptly aware that his fingers were still clamped in Soahn&rsquo;s jacket; he let go, flexing his hand once before stepping back. &ldquo;That was close,&rdquo; he said.</p>
+<p>&ldquo;This is probably my least favourite part of the tour so far,&rdquo; Soahn said, panting slightly.</p>
+<p>Kairo stared at him for a second, and then burst out laughing. &ldquo;Jesus.&rdquo;</p>
+<p>&ldquo;You pulled me back,&rdquo; Soahn said.</p>
+<p>&ldquo;Well, yeah.&rdquo;</p>
+<p>&ldquo;You could&rsquo;ve fallen.&rdquo;</p>
+<p>&ldquo;What? You think I&rsquo;m going to let you get flattened?&rdquo; Kairo said incredulously. &ldquo;Have you heard yourself sing?&rdquo;</p>
+<p>&ldquo;Priorities, Kairo.&rdquo;</p>
+<p>&ldquo;I <em>am</em> thinking about priorities,&rdquo; Kairo told him, still smiling, maybe a little manically.</p>
+<p>Soahn blew out a breath and shook his head, his gaze returning briefly to the broken walkway. &ldquo;Thank you,&rdquo; he said.</p>
+<p>Kairo shrugged. &ldquo;Yeah, well. You&rsquo;re welcome.&rdquo;</p>
+<p>Right.</p>
+<p>New plan.</p>
+<p>&ldquo;There&rsquo;s another route through the upper service corridor. Takes a bit longer, but at least the floor&rsquo;s attached to the wall.&rdquo;</p>
+<p>&ldquo;An appealing feature.&rdquo;</p>
+<p>&ldquo;One of my favourites.&rdquo;</p>
+<p>Kairo began retracing their steps, testing each section carefully before putting his weight on it, and Soahn followed close behind, neither speaking until they reached the solid ground at the entrance. Only then did Kairo stop and turn back. The broken grating lay twisted in the dark water below, one end still hanging from a twisted bracket. He&rsquo;d crossed that walkway dozens of times before, and while it had never been particularly pretty, it had always been usable.</p>
+<p>But not anymore.</p>
+<p>One more thing to tell Mara when they got back. This was probably going to annoy the regular Tunnel Runners.</p>
+<p>&ldquo;Are you all right?&rdquo; Soahn asked.</p>
+<p>Kairo turned to him. &ldquo;Yeah. Fine.&rdquo;</p>
+<p>Soahn looked at him for a moment. &ldquo;You seem a bit shaken.&rdquo;</p>
+<p>&ldquo;Well, yeah. The floor just tried to murder us.&rdquo;</p>
+<p>&ldquo;At least the parcel survived.&rdquo;</p>
+<p>Oh.</p>
+<p>Right.</p>
+<p>&ldquo;Ha!&rdquo; Kairo pulled the carrier around and checked the straps. Everything was intact, although the waterproof wrapping was now coated in a generous covering of dust and grime. &ldquo;Excellent. Professional couriers, us. Only nearly died once.&rdquo;</p>
+<p>&ldquo;So far,&rdquo; Soahn added.</p>
+<p>They both laughed.</p>
+<p>Man, that felt better. Kairo hitched the carrier up on his shoulders, then pointed back the opposite way. &ldquo;Come on, I know another route.&rdquo;</p>
+<p>For a while, they walked in comfortable silence, their footsteps echoing through the old tunnel. Kairo kept an eye on the ground ahead, watching for loose cables and uneven sections of track, but his thoughts kept wandering back to the moment the walkway gave way. He hadn&rsquo;t really thought about grabbing Soahn; he&rsquo;d just done it. Which was probably a good thing, considering how little time there was to react. Still, the sight of that gap in the grating had been unpleasantly memorable.</p>
+<p>He glanced sideways.</p>
+<p>Soahn was examining a set of markings on the wall, his face thoughtful again. There was a smear of dust on his sleeve, and another across his jaw, and his hair was a mess, the filaments now a dark bluish purple, but otherwise he seemed unharmed.</p>
+<p>Good.</p>
+<p>&ldquo;Hey, So?&rdquo;</p>
+<p>&ldquo;Yes?&rdquo;</p>
+<p>&ldquo;Next time I say we&rsquo;re taking the scenic route, remind me about this.&rdquo;</p>
+<p>Kairo led the way to the upper corridors, already thinking about the warning he would need to leave at the junction. Three red lines, probably. Maybe four.</p>
+<p>Yeah, it definitely deserved four.</p>
+<p><br></p>
+<p align="center">~*~</p>
+<p><br></p>
+<p>By the time they reached the West Waterworks, Soahn had learned three things about travelling with Kairo.</p>
+<p>The first was that Kairo knew far more about the Ghost Lines than he realised. The second was that he appeared to know at least one person in every inhabited section they passed through, although not all of them seemed particularly pleased to see him.</p>
+<p>And the third was that his definition of a shortcut was somewhat unreliable.</p>
+<p>&ldquo;This is definitely shorter,&rdquo; Kairo insisted, stepping over a broken drainage pipe.</p>
+<p>Soahn followed him. &ldquo;You said that twenty minutes ago.&rdquo;</p>
+<p>&ldquo;Yeah, and I was right then, too.&rdquo;</p>
+<p>&ldquo;We&rsquo;ve been walking for nearly three hours.&rdquo;</p>
+<p>&ldquo;Two and a half.&rdquo;</p>
+<p>&ldquo;Two hours and forty-six minutes.&rdquo;</p>
+<p>Kairo huffed, but Soahn just smiled and continued after him.</p>
+<p>The upper route took them through a series of narrow corridors, past an abandoned pumping station and down a flight of stairs that had been repaired with materials salvaged from at least four different buildings. Kairo stopped twice to check the markings on the walls, and once to warn a pair of scavengers about the walkway on the Dead Tracks. Soahn waited while he explained the grating, pointing out the damaged supports, telling them to avoid the entire area until somebody took a look at it. One of them offered to take the warning back to the Hollow, and Kairo thanked her before they went on their way.</p>
+<p>It was a small interaction, really, but Soahn found himself thinking about the walkway, remembering the force of being yanked backwards, his shoulder striking the wall, the sight of Kairo standing between him and the falling grating. No hesitation at all.</p>
+<p>He wasn&rsquo;t sure what to make of that.</p>
+<p>&ldquo;Come on, So,&rdquo; Kairo called. &ldquo;Nearly there.&rdquo;</p>
+<p>The West Waterworks made up a sprawling collection of old chambers under what was once a municipal plumbing facility. A number of the original tanks were still in use, though most were modified or had been replaced with equipment assembled from salvaged parts. Thick pipes ran along the walls and disappeared into the floor, while a network of smaller conduits pulled water between filtration units housed behind protective screens. The air was warmer here, heavy with moisture and the smell of wet stone. Nearby, machinery rattled steadily.</p>
+<p>&ldquo;Impressive,&rdquo; Soahn murmured.</p>
+<p>&ldquo;Yeah. They do good work down here.&rdquo;</p>
+<p>&ldquo;All of this is operational?&rdquo;</p>
+<p>&ldquo;Most of it. They&rsquo;ve got a couple of units offline, but the main system&rsquo;s still running.&rdquo; Kairo led him towards a small office built into the side of the chamber.</p>
+<p>A woman in a faded green work jacket rose from behind a terminal as they approached. Her hair was tied back, and there was a dark smear of grease across one cheek. &ldquo;Kairo,&rdquo; she said with a smile.</p>
+<p>&ldquo;Hi, Senna.&rdquo;</p>
+<p>&ldquo;What are you doing here?&rdquo;</p>
+<p>&ldquo;Delivery, with a side order of excellent customer service.&rdquo;</p>
+<p>&ldquo;That&rsquo;s new.&rdquo;</p>
+<p>&ldquo;Wow. Everybody&rsquo;s a critic today.&rdquo;</p>
+<p>Senna laughed, wiping her hands on a cloth. &ldquo;Where&rsquo;s Tessa?&rdquo;</p>
+<p>&ldquo;Juno&rsquo;s got her confined to bed. Wire Fever, apparently.&rdquo;</p>
+<p>&ldquo;Ah, hell.&rdquo; Her smile dropped away. &ldquo;Is she all right?&rdquo;</p>
+<p>&ldquo;Think so. Juno&rsquo;s treating her, but she&rsquo;s not allowed to go anywhere for a few days.&rdquo;</p>
+<p>&ldquo;Good. Last thing we need is her making it worse.&rdquo; Senna nodded towards the carrier on Kairo&rsquo;s shoulder. &ldquo;You got the regulators?&rdquo;</p>
+<p>&ldquo;Indeed we do.&rdquo;</p>
+<p>Removing the parcel, Kairo handed it over with an exaggerated flourish. &ldquo;One delivery, professionally transported through the finest scenic routes the Ghost Lines have to offer.&rdquo;</p>
+<p>Soahn cast him a sideways glance.</p>
+<p>Kairo ignored him.</p>
+<p>Senna checked the waterproof wrapping before opening it. Inside were a number of small metal assemblies, each packed separately and labelled with handwritten notes. &ldquo;Oh, thank goodness.&rdquo; She lifted one out. &ldquo;These are the right ones.&rdquo;</p>
+<p>&ldquo;Excellent,&rdquo; Kairo said. &ldquo;I&rsquo;d hate to have brought the wrong parcel all this way.&rdquo;</p>
+<p>&ldquo;How was the route?&rdquo;</p>
+<p>&ldquo;Mostly fine. Except the lower walkway on the Dead Tracks has collapsed.&rdquo;</p>
+<p>Senna winced. &ldquo;The one beside the drainage trench?&rdquo;</p>
+<p>&ldquo;Yeah. The whole middle section went. We got clear, but nobody should be using it.&rdquo;</p>
+<p>&ldquo;Shit.&rdquo; She put down the regulator. &ldquo;I&rsquo;ll get a warning sent out.&rdquo;</p>
+<p>&ldquo;Already told a couple of scavengers on the way here. They&rsquo;ll pass it along towards the Hollow.&rdquo;</p>
+<p>&ldquo;Good thinking.&rdquo; Then Senna&rsquo;s eyes settled on Soahn. &ldquo;Hello. I don&rsquo;t think we&rsquo;ve met.&rdquo;</p>
+<p>&ldquo;Oh! Right,&rdquo; Kairo said. &ldquo;This is Soahn.&rdquo;</p>
+<p>&ldquo;Hello,&rdquo; Soahn said, bowing his head politely.</p>
+<p>&ldquo;You two all right?&rdquo; Senna asked.</p>
+<p>&ldquo;Yeah,&rdquo; Kairo said. &ldquo;Bit dusty, but otherwise excellent.&rdquo;</p>
+<p>Soahn nodded. &ldquo;We&rsquo;re fine.&rdquo;</p>
+<p>Senna studied them for another moment, then apparently decided there was little point in arguing with two people who were standing in front of her and appeared to have all their limbs. &ldquo;Well, thank you. Seriously. We&rsquo;ve been waiting on these for days.&rdquo;</p>
+<p>&ldquo;Happy to help,&rdquo; Kairo said.</p>
+<p>&ldquo;And tell Tessa not to worry about the next run. We&rsquo;ll manage.&rdquo;</p>
+<p>&ldquo;Will do.&rdquo;</p>
+<p>Senna disappeared into the adjoining chamber with the parcel, already calling instructions to somebody working near the filtration tanks.</p>
+<p>Kairo watched her go, then turned towards Soahn. &ldquo;Right. Job done. See? Told you it would be straightforward.&rdquo; He paused. &ldquo;Well, mostly straightforward.&rdquo;</p>
+<p>They were offered water and a place to sit before leaving, which Soahn accepted gratefully. The journey had been longer than expected, and although he wasn&rsquo;t particularly tired, his legs were beginning to protest against the uneven terrain.</p>
+<p>They sat together on a low bench beside one of the larger tanks, drinking their water from metal cups while workers moved between filtration units nearby.</p>
+<p>&ldquo;What do you think of it all?&rdquo; Kairo asked after a while.</p>
+<p>&ldquo;Of the Waterworks?&rdquo;</p>
+<p>&ldquo;Yeah.&rdquo;</p>
+<p>&ldquo;I think it&rsquo;s remarkable,&rdquo; Soahn said. &ldquo;Like a lot of things down here. When I heard about a resistance group in London, I honestly didn&rsquo;t expect&hellip; all this.&rdquo;</p>
+<p>One corner of Kairo&rsquo;s mouth quirked. &ldquo;Yeah, well, people have been building everything you see for decades, long before I showed up.&rdquo;</p>
+<p>Soahn almost asked him where he was from, what he had been doing before the Ghost Lines, but so far Kairo hadn&rsquo;t mentioned anything about his past, and Soahn wasn&rsquo;t the type to pry. There was so much about him Soahn didn&apos;t know yet, and the more time they spent together, the more curious he became. Still, he struggled to piece together what had made Kairo the sort of person who could lose the screwdriver that was hooked behind his ear one second, then be alarmingly competent and save your life the next.</p>
+<p>Kairo leaned back against the wall. &ldquo;Every time something breaks, somebody finds a way to keep it going.&rdquo;</p>
+<p>Soahn nodded thoughtfully. That seemed to describe a great deal of life in the Ghost Lines, so different from the world he left behind.</p>
+<p>At NuYu, he&rsquo;d spent years working with equipment designed and manufactured to specifications so exacting that even minor deviations meant a formal investigation and a lot of paperwork. Here, the community had built a functioning filtration network from discarded machinery, replacement parts and an extraordinary amount of ingenuity.</p>
+<p>He wondered what some of his former colleagues like Jonas or Hannah would make of it. Probably a lengthy report.</p>
+<p>The thought amused him.</p>
+<p>&ldquo;Ready to head back?&rdquo; Kairo asked, rising from the bench.</p>
+<p>Soahn stood. &ldquo;Yes.&rdquo;</p>
+<p>&ldquo;Good. I know a quicker way.&rdquo;</p>
+<p>&ldquo;Then why didn&rsquo;t we use the quicker way to get here?&rdquo;</p>
+<p>&ldquo;Never underestimate a scenic route,&rdquo; Kairo told him. &ldquo;We learned loads about each other.&rdquo;</p>
+<p>Hm, he was right about that; Soahn couldn&rsquo;t exactly argue or complain.</p>
+<p>&ldquo;Like how,&rdquo; Kairo added, turning towards the exit, &ldquo;you got glowing hair just to impress someone.&rdquo;</p>
+<p>&ldquo;I really wish I hadn&rsquo;t told you that,&rdquo; Soahn sighed, catching up to him.</p>
+<p>Kairo just laughed.</p>
+<p><br></p>
+<p align="center">~*~</p>
+<p><br></p>
+<p>They took a higher route on the return journey, avoiding the damaged section of the Dead Tracks. It was narrower in places, with steep stairways and long stretches where water dripped steadily from overhead pipes, but the floor remained reassuringly solid.</p>
+<p>Kairo seemed more relaxed now that the delivery was complete; he chatted about the Waterworks, the people who maintained them, and a disastrous attempt he once made to build a portable water purifier using an old filtration cartridge and a pump salvaged from a cooling system.</p>
+<p>&ldquo;I mean, technically, it worked,&rdquo; he said.</p>
+<p>&ldquo;Technically?&rdquo;</p>
+<p>&ldquo;It purified the water.&rdquo;</p>
+<p>&ldquo;Okay, well that sounds successful.&rdquo;</p>
+<p>&ldquo;Yeah, except it also sprayed about twenty litres of it across somebody&rsquo;s workshop.&rdquo;</p>
+<p>Soahn laughed. Honestly, he&rsquo;d laughed more over the last few weeks than he had in years before he left Munich.</p>
+<p>&ldquo;Turns out pressure regulation is important,&rdquo; Kairo continued. &ldquo;Who knew?&rdquo;</p>
+<p>They continued walking, Kairo occasionally pointing out a useful landmark or explaining the meaning of a marking Soahn hadn&rsquo;t encountered before. At one junction, he stopped to inspect a fresh warning painted across the wall, then nodded approvingly.</p>
+<p>&ldquo;Good. Somebody&rsquo;s already marked the lower route. Must&rsquo;ve been those scavengers.&rdquo;</p>
+<p>Soahn spotted the four red lines crossing the old directional symbol. &ldquo;That was quick.&rdquo;</p>
+<p>&ldquo;News travels fast down here.&rdquo; Kairo shrugged. &ldquo;Has to.&rdquo;</p>
+<p>Soahn had spent most of their time together listening to Kairo talk about music, equipment and the increasingly ambitious collection of projects on his console. It was easy to think of him primarily in those terms, as somebody whose enthusiasm for sound seemed capable of overcoming almost any practical obstacle.</p>
+<p>But there was more to him than that.</p>
+<p>He&apos;d taken a delivery halfway across the Ghost Lines without complaint, even after a section of walkway had nearly dropped them into a flooded trench. And when things went wrong, he&apos;d pulled Soahn out of danger without stopping to consider his own safety.</p>
+<p>Soahn stuffed his hands in his pockets and thought about it. Though he thanked Kairo at the time, the words suddenly felt inadequate, especially after Kairo immediately turned the incident into a joke about his singing.</p>
+<p>Perhaps he should try again.</p>
+<p>&ldquo;Kairo?&rdquo;</p>
+<p>&ldquo;Hm?&rdquo;</p>
+<p>&ldquo;About what happened earlier.&rdquo;</p>
+<p>&ldquo;The walkway?&rdquo; Kairo asked.</p>
+<p>&ldquo;Yes.&rdquo;</p>
+<p>&ldquo;Oh, don&rsquo;t worry about that. I&rsquo;ll tell Mara when we get back.&rdquo;</p>
+<p>Soahn slowed slightly, and Kairo matched his pace. &ldquo;I wanted to thank you.&rdquo;</p>
+<p>Kairo blinked. &ldquo;You already did.&rdquo;</p>
+<p>&ldquo;I know,&rdquo; Soahn said, then hesitated. &ldquo;I don&rsquo;t think you quite understand.&rdquo;</p>
+<p>&ldquo;Probably not. Happens often.&rdquo;</p>
+<p>&ldquo;You could have been hurt.&rdquo;</p>
+<p>Kairo watched him for a moment, then shrugged. &ldquo;Yeah, well. So could you.&rdquo;</p>
+<p>&ldquo;That&rsquo;s my point.&rdquo;</p>
+<p>Kairo frowned slightly, as though he was trying to work out what Soahn wanted him to say.</p>
+<p>For a few seconds, they continued walking.</p>
+<p>Then Kairo glanced over. &ldquo;Look, So. I saw the grating go, and you were standing right there. What else was I supposed to do?&rdquo; There was no particular pride in his voice, and he didn&rsquo;t seem to expect any recognition for what he did. If anything, he sounded a bit puzzled that Soahn was still thinking about it.</p>
+<p>&ldquo;I don&rsquo;t know,&rdquo; Soahn admitted.</p>
+<p>&ldquo;Well, neither do I.&rdquo; Kairo gave him a small grin. &ldquo;So I reckon we&rsquo;re even.&rdquo;</p>
+<p>Soahn laughed softly. It was a ridiculous answer.</p>
+<p>And somehow, a rather lovely one.</p>
+<p>&ldquo;All right,&rdquo; he said. &ldquo;But thank you anyway.&rdquo;</p>
+<p>&ldquo;No worries.&rdquo;</p>
+<p>They continued along the tunnel, and Soahn felt a little better for having brought it up.</p>
+<p>After a while, Kairo pointed towards a narrow opening in the wall. &ldquo;See that?&rdquo;</p>
+<p>Soahn followed his hand, spotting the tight passage to their right. &ldquo;Yes.&rdquo;</p>
+<p>&ldquo;That was dug out more recently. It leads to one of the old listening posts, just in case you ever need to take yourself off somewhere quiet to listen to music or write. It used to be a relay station, back when half this stuff still worked.&rdquo;</p>
+<p>&ldquo;Do you go there?&rdquo;</p>
+<p>&ldquo;Sometimes. Good place to find old components. And it&rsquo;s quiet.&rdquo; Kairo shrugged. &ldquo;Well, quieter than the Hollow, anyway. Sometimes you just want somewhere you can think.&rdquo;</p>
+<p>&ldquo;I understand that.&rdquo;</p>
+<p>&ldquo;Yeah, figured you might.&rdquo;</p>
+<p>They passed the opening, and Kairo continued talking about the old relay systems, explaining how some of the equipment had been repurposed for local communications. Soahn listened with interest, occasionally asking questions that led to increasingly elaborate explanations involving scavenged transmitters, unreliable power supplies and a man named Dax who apparently believed every technical problem could be solved with more copper.</p>
+<p>&ldquo;He&rsquo;s wrong, obviously,&rdquo; Kairo said. &ldquo;Sometimes you need more capacitors.&rdquo;</p>
+<p>&ldquo;How long have you been down here?&rdquo; Soahn asked, then immediately regretted it. Maybe it was skirting too close to the past that Kairo never talked about.</p>
+<p>Kairo was silent for a couple of seconds. &ldquo;Long time. As long as I can remember, anyway.&rdquo; He seemed about to leave it there, but then his eyes narrowed, as though he were searching for something just beyond his reach. &ldquo;There&rsquo;s nothing before the Lines.&rdquo;</p>
+<p>Soahn was uncertain whether there was more to the story or whether Kairo genuinely couldn&rsquo;t remember. Either way, he didn&rsquo;t think it was his place to ask, so he let the subject go.</p>
+<p>&ldquo;Anyway,&rdquo; Kairo added more brightly. &ldquo;I&rsquo;ve figured out most of this place through getting lost in it. There&rsquo;s loads I haven&rsquo;t shown you yet. The old Sound Rooms, for one. You&rsquo;d love those.&rdquo;</p>
+<p>&ldquo;Sound Rooms?&rdquo;</p>
+<p>&ldquo;Yeah. Some of them have amazing acoustics. There&rsquo;s one near the eastern junction where you can clap your hands and hear the echo come back about three seconds later.&rdquo;</p>
+<p>It was strange to think that a few weeks ago he didn&rsquo;t have a clue what to do next, and now here he was walking through the Ghost Lines with somebody who wanted to show him places just because he thought Soahn might enjoy them.</p>
+<p><em>You trust him</em>, SEER-9 observed.</p>
+<p>Soahn glanced towards Kairo, who was explaining how he&rsquo;d once tried to record the sound of water dripping through an abandoned ventilation shaft and accidentally captured twenty minutes of somebody arguing with a broken generator.</p>
+<p>Yeah, he did trust Kairo. The man had risked his life for him. What wasn&rsquo;t there to trust? And if Kairo didn&rsquo;t want to talk about what he was doing before the Lines or if he didn&rsquo;t remember, that was fine.</p>
+<p>&ldquo;Hey, So?&rdquo;</p>
+<p>&ldquo;Hm?&rdquo;</p>
+<p>&ldquo;Next time we come this way, remind me to bring a recorder.&rdquo;</p>
+<p>&ldquo;For the Sound Rooms?&rdquo;</p>
+<p>&ldquo;Yeah. And maybe some food. We could make a day of it.&rdquo;</p>
+<p>Soahn nodded. &ldquo;I&rsquo;d like that.&rdquo;</p>
+<p>Kairo seemed pleased. &ldquo;Excellent. I&rsquo;ll plan something.&rdquo;</p>
+<p><br></p>
+<p align="center">~*~</p>
+<p><br></p>
+<p>It was eleven in the evening by the time they got back to the workshop, and Kairo had decided that being a professional courier was more exhausting than he&rsquo;d been led to believe. For one thing, there was all the walking. Okay, he was expecting that, obviously, but walking was much less enjoyable when you were lugging someone else&rsquo;s expensive equipment and trying not to fall through the floor. Then there was the responsibility, which was frankly unreasonable. People expected you to deliver things to the correct destination, preferably in one piece, and they also expected you to come back alive.</p>
+<p>Ridiculous.</p>
+<p>Dumping his bag beside his workstation, he stretched his arms above his head and yawned. &ldquo;Right,&rdquo; he announced. &ldquo;That&rsquo;s enough charitable work for one day.&rdquo;</p>
+<p>Soahn followed him inside, far less dishevelled than Kairo felt he had any right to be. His jacket was dusty, there was a smear of dirt across his cheek, and his usually tidy hair was sticking up in a few places, but somehow he was still reasonably presentable &mdash; like he&rsquo;d spent the afternoon doing something mildly inconvenient rather than narrowly avoiding death by dodgy walkway.</p>
+<p>Kairo, meanwhile, had somehow managed to tear the left leg of his jeans, bruise his shoulder, scrape his right hand to the point where it stung, and generally looked like he&rsquo;d been dragged through half the Ghost Lines backwards.</p>
+<p>Unfair.</p>
+<p>&ldquo;Are we retiring from our courier business?&rdquo; Soahn asked, setting his jacket across the back of Kairo&rsquo;s chair.</p>
+<p>&ldquo;Effective immediately,&rdquo; Kairo grumbled.</p>
+<p>&ldquo;That&rsquo;s a shame. We were doing so well.&rdquo;</p>
+<p>&ldquo;Yeah, well, I&rsquo;ve reviewed the working conditions, and they&rsquo;re terrible. No proper breaks, questionable safety standards, and the management&rsquo;s an idiot.&rdquo;</p>
+<p>Soahn smiled. &ldquo;I thought you were the management.&rdquo;</p>
+<p>&ldquo;Exactly.&rdquo;</p>
+<p>Kairo pulled off his jacket and draped it over Soahn&rsquo;s, his attention drifting towards the workstation.</p>
+<p>Oh yeah.</p>
+<p>The arrangement. It was still open on his display, the waveform frozen halfway through the section Soahn had helped him fix. When they&rsquo;d gone to get food, he&rsquo;d left everything running, which was probably a terrible habit, but the equipment seemed happy enough and nothing smelled like it was about to catch fire.</p>
+<p>Excellent.</p>
+<p>Dropping into his chair, he rubbed his hands together. &ldquo;Now,&rdquo; he said, &ldquo;back to something more important. Music.&rdquo;</p>
+<p>&ldquo;You know, we haven&rsquo;t eaten since lunch,&rdquo; Soahn pointed out.</p>
+<p>Kairo paused.</p>
+<p>Oh.</p>
+<p>Damn. That was a fair point. And now that Soahn had brought it up, he realised his stomach felt hollowed out and a bit achy. Across the workstation, there was a small collection of supplies, just a couple of energy rations, half a packet of dried fruit, and a container of yellowish stuff &mdash; possibly pasta, possibly not. Either way, it was definitely no longer edible. Kairo winced. &ldquo;Slim pickings, I&rsquo;m afraid.&rdquo;</p>
+<p>Soahn selected an energy bar, then settled down on the crate next to Kairo&rsquo;s desk. &ldquo;This&rsquo;ll do.&rdquo;</p>
+<p>&ldquo;All right, but we&rsquo;ll head back to the Hollow tomorrow morning for something more substantial,&rdquo; Kairo said. &ldquo;But first, we need to fix the song.&rdquo; During their walk back, he&rsquo;d actually had a pretty good idea about it. Reaching for the controls, he pressed play. &ldquo;Okay. Listen to this.&rdquo;</p>
+<p>The workshop filled with the familiar opening notes, followed by Soahn&rsquo;s recorded voice. Kairo leaned forward, listening as the delayed harmony entered just beyond the chord change, exactly where they placed it that morning.</p>
+<p>Still brilliant.</p>
+<p>He grinned. &ldquo;God, that&rsquo;s good.&rdquo;</p>
+<p>Soahn tilted his head thoughtfully. &ldquo;It does sound better.&rdquo;</p>
+<p>&ldquo;Better? It&rsquo;s beautiful.&rdquo;</p>
+<p>&ldquo;I thought you said it was ridiculous.&rdquo;</p>
+<p>&ldquo;Both can be true.&rdquo;</p>
+<p>The track continued, moving into the section where the percussion returned beneath the bassline. Kairo frowned slightly.</p>
+<p>There.</p>
+<p>That was the bit.</p>
+<p>&ldquo;I think we need to change&mdash;&rdquo; he began.&nbsp;</p>
+<p>&ldquo;It&rsquo;s the bassline,&rdquo; Soahn said at the same moment.</p>
+<p>They both paused, then laughed.</p>
+<p>&ldquo;Yeah, it struck me on the way back,&rdquo; Kairo said.</p>
+<p>&ldquo;Me too.&rdquo;</p>
+<p>&ldquo;I think it was that clunky pipe we passed. Reminded me of this.&rdquo;</p>
+<p>&ldquo;That&rsquo;s it,&rdquo; Soahn said. &ldquo;The pipe.&rdquo;</p>
+<p>They laughed again. Man, Kairo could get used to this, having someone around who just <em>got it</em>. Who heard the possibilities in everyday noises, saw the shape of what could be in what they had. Teammate. Co-conspirator.</p>
+<p>Friend.</p>
+<p>&ldquo;Right,&rdquo; he said. &ldquo;What would you do with it instead?&rdquo;</p>
+<p>Soahn leaned forward, studying the waveform. &ldquo;I think the bass is competing with the second vocal. If you simplify it for a few beats, the harmony might come through more clearly.&rdquo;</p>
+<p>Huh. Kairo was thinking about changing the rhythm, but that was a better suggestion. &ldquo;Okay, hang on,&rdquo; he said, opening the bass channel.</p>
+<p>They worked on it for a while, tweaking the gap under the delayed harmony, adjusting the following phrase so the bass came back in just as the voices came together.</p>
+<p>When he hit play the next time, the opening unfolded through the speakers with a low, satisfying throb.</p>
+<p>Kairo&rsquo;s eyes went wide. &ldquo;Holy shit. Oh, that&rsquo;s lovely.&rdquo;</p>
+<p>Soahn smiled.</p>
+<p>&ldquo;No, seriously. That&rsquo;s exactly what it needed.&rdquo;</p>
+<p>&ldquo;Pipe,&rdquo; Soahn said.</p>
+<p>&ldquo;The pipe of truth,&rdquo; Kairo agreed. He played the section again, then a third time, listening to the way the bass supported the vocals instead of crowding them.</p>
+<p>Perfect.</p>
+<p>&ldquo;You know,&rdquo; he said slowly, half-joking, &ldquo;we should start a band.&rdquo;</p>
+<p>&ldquo;Oh yikes, this is getting serious,&rdquo; Soahn said.</p>
+<p>&ldquo;Well, we&rsquo;ve already got a great band name,&rdquo; Kairo told him.</p>
+<p>&ldquo;What&rsquo;s that?&rdquo;</p>
+<p>&ldquo;The Pipe of Truth.&rdquo;</p>
+<p>&ldquo;Oh lord.&rdquo;</p>
+<p>Kairo grinned and saved the arrangement, then grabbed one of the remaining energy bars and leaned back in his chair. He chewed thoughtfully for a while.</p>
+<p>&ldquo;Hey.&rdquo;</p>
+<p>&ldquo;Mm?&rdquo;</p>
+<p>&ldquo;All jokes about bands aside, this track does need a name. I can&rsquo;t keep calling it &lsquo;You Stubborn Little Bitch&rsquo;.&rdquo;</p>
+<p>&ldquo;You&rsquo;ve been calling it what?&rdquo; Soahn said.</p>
+<p>&ldquo;You Stubborn Little Bitch.&rdquo;</p>
+<p>&ldquo;Yes, I heard you. I was hoping I&rsquo;d misunderstood.&rdquo;</p>
+<p>&ldquo;It was being difficult,&rdquo; Kairo explained. &ldquo;And I was having a particularly bad afternoon when I named the file.&rdquo;</p>
+<p>&ldquo;And you thought insulting it would help?&rdquo;</p>
+<p>&ldquo;Well, it didn&rsquo;t make things worse.&rdquo;</p>
+<p>Soahn shook his head. &ldquo;I think we can do better than that.&rdquo;</p>
+<p>&ldquo;Go on, then. I&rsquo;m open to suggestions.&rdquo;</p>
+<p>&ldquo;What about Midnight Signal?&rdquo; Soahn said. &ldquo;Since it&rsquo;s almost midnight and my stomach is currently giving me a strong signal that we didn&rsquo;t eat dinner.&rdquo;</p>
+<p>&ldquo;Ha! I love it. Yeah, Midnight Signal.&rdquo; Kairo selected the working file and typed in the name. &ldquo;Definitely better than anything I was thinking.&rdquo;</p>
+<p>Kairo glanced towards Soahn, who was studying the display again, and wondered what else they could make. Not just this track. There were other arrangements scattered across his hard drive, old recordings he&rsquo;d never quite worked out what to do with, and a collection of experimental sounds that were waiting for the right idea to come along. He could show Soahn those, too, and they could record more vocals, experiment with the old relay systems. Maybe even find a way to capture the acoustics in the Sound Rooms.</p>
+<p>There were loads of possibilities.</p>
+<p>Actually, there were probably too many.</p>
+<p>&ldquo;Hey, So?&rdquo;</p>
+<p>&ldquo;Hm?&rdquo;</p>
+<p>&ldquo;I&rsquo;ve got an idea.&rdquo;</p>
+<p>Soahn looked amused. &ldquo;Another one?&rdquo;</p>
+<p>&ldquo;Yeah. But this one&rsquo;s really good.&rdquo;</p>
+<p>&ldquo;Does it involve recording copper pipe?&rdquo;</p>
+<p>&ldquo;The copper pipe is still a good idea.&rdquo;</p>
+<p>&ldquo;Of course.&rdquo;</p>
+<p>Kairo opened another recording channel. &ldquo;Okay, hear me out. What if we take that final note and build an entirely new track around it?&rdquo;</p>
+<p>Soahn considered the suggestion, then nodded slowly. &ldquo;I think we should try it.&rdquo;</p>
+<p>Oh, this was going to be brilliant. Kairo turned back to the controls, already thinking about the arrangement, the instruments, the tempo. They&rsquo;d need to record a few more vocal layers, maybe experiment with some different frequencies, and there was that old synthesiser he kept meaning to repair.</p>
+<p>He could probably get it working.</p>
+<p>With Soahn&rsquo;s help, definitely.</p>
+<p>&ldquo;Right,&rdquo; Kairo announced. &ldquo;Let&rsquo;s see what we can make.&rdquo;</p>
+<p>And together, they got back to work.</p>
+
+  </div>
+</div>
+    </article>
+
+    <nav class="back" aria-label="Return">
+      <a href="/signals/">← Back to Signals</a>
+    </nav>
+
+  </main>
+</body>
+</html>
