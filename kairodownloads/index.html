@@ -1443,6 +1443,19 @@ background-repeat: no-repeat;
         <div class="window-statusbar"><span>format: PNG</span><span>coolness level: dangerous</span></div>
       </article>
 
+      <article class="boot-window" id="onyxUserManualWindow" aria-label="Onyx owner manual image preview" tabindex="-1" style="left: 540px; top: 156px; width: min(760px, calc(100vw - 600px)); min-height: 430px; z-index: 69;">
+        <div class="window-titlebar">
+          <div class="window-title">ONYXUSERMANUAL.PNG</div>
+          <button class="window-close" type="button" aria-label="Close Onyx owner manual preview" onclick="closeWindow('onyxUserManualWindow')">×</button>
+        </div>
+        <div class="folder-window-body">
+          <div class="image-preview-frame">
+            <img src="images/onyx_do_not_open/onyxusermanual.png" alt="Model 012X-O handling precautions owner manual" class="preview-image">
+          </div>
+        </div>
+        <div class="window-statusbar"><span>format: PNG</span><span>manufacturer warranty: void</span></div>
+      </article>
+
       <article class="boot-window" id="onyxExpressionChartWindow" aria-label="Onyx emotional expression chart image preview" tabindex="-1" style="left: 540px; top: 156px; width: min(760px, calc(100vw - 600px)); min-height: 430px; z-index: 69;">
         <div class="window-titlebar">
           <div class="window-title">ONYXEXPRESSIONCHART.PNG</div>
@@ -1455,33 +1468,6 @@ background-repeat: no-repeat;
         </div>
         <div class="window-statusbar"><span>format: PNG</span><span>subject cooperation: 0%</span></div>
       </article>
-
-      <article class="boot-window" id="onyxSmilingPreviewWindow" aria-label="onyx almost smiling image preview" tabindex="-1" style="left: 600px; top: 218px; width: min(520px, calc(100vw - 660px)); min-height: 560px; z-index: 70;">
-        <div class="window-titlebar">
-          <div class="window-title">ONYX_ALMOST_SMILING_01.PNG</div>
-          <button class="window-close" type="button" aria-label="Close Onyx smiling preview" onclick="closeWindow('onyxSmilingPreviewWindow')">×</button>
-        </div>
-        <div class="folder-window-body"><div class="image-preview-frame"><img src="images/onyx_do_not_open/onyxsmile.png" alt="Onyx almost smiling"></div></div>
-        <div class="window-statusbar"><span>format: PNG</span><span>confirmed sighting</span></div>
-      </article>
-
-      <article class="boot-window" id="onyxCatPreviewWindow" aria-label="onyx holding cat image preview" tabindex="-1" style="left: 620px; top: 230px; width: min(520px, calc(100vw - 660px)); min-height: 560px; z-index: 71;">
-  <div class="window-titlebar">
-    <div class="window-title">ONYX_HOLDING_CAT.PNG</div>
-    <button class="window-close" type="button" aria-label="Close Onyx cat preview" onclick="closeWindow('onyxCatPreviewWindow')">×</button>
-  </div>
-  <div class="folder-window-body"><div class="image-preview-frame"><img src="/kairodownloads/images/onyx_do_not_open/onyxcat.png" alt="Onyx holding cat"></div></div>
-  <div class="window-statusbar"><span>confirmed cat interaction</span><span>DO NOT SHOW ONYX</span></div>
-</article>
-
-            <article class="boot-window" id="onyxNormalPreviewWindow" aria-label="onyx being normal image preview" tabindex="-1" style="left: 620px; top: 230px; width: min(520px, calc(100vw - 660px)); min-height: 560px; z-index: 71;">
-  <div class="window-titlebar">
-    <div class="window-title">ONYX_BEING_NORMAL.PNG</div>
-    <button class="window-close" type="button" aria-label="Close onyx being normal image preview" onclick="closeWindow('onyxNormalPreviewWindow')">×</button>
-  </div>
-  <div class="folder-window-body"><div class="image-preview-frame"><img src="/kairodownloads/images/onyx_do_not_open/onyxbeingnormal.png" alt="Onyx being normal"></div></div>
-  <div class="window-statusbar"><span>relay tunnel fire</span><span>ONYX DOING HIS THING</span></div>
-</article>
 
       <article class="boot-window" id="weirdStuffWindow" aria-label="weird stuff folder window" tabindex="-1" style="left: 380px; top: 126px; width: min(760px, calc(100vw - 440px)); min-height: 430px; z-index: 71;">
         <div class="window-titlebar">
@@ -2111,10 +2097,6 @@ background-repeat: no-repeat;
               <div class="doc-icon" aria-hidden="true"></div>
               <div class="label">how_onyx_almost_killed_me.txt</div>
             </div>
-            <div class="folder-file" tabindex="0" data-open="rareSightingsWindow">
-              <div class="folder-icon" aria-hidden="true"></div>
-              <div class="label">rare_onyx_sightings</div>
-            </div>
             <div class="folder-file" tabindex="0" data-open="cryptidPreviewWindow">
               <div class="glitch-icon" aria-hidden="true"></div>
               <div class="label">local_cryptid_spotted.png</div>
@@ -2130,6 +2112,10 @@ background-repeat: no-repeat;
             <div class="folder-file" tabindex="0" data-open="onyxExpressionChartWindow">
               <div class="glitch-icon" aria-hidden="true"></div>
               <div class="label">onyxexpressionchart.png</div>
+            </div>
+            <div class="folder-file" tabindex="0" data-open="onyxUserManualWindow">
+              <div class="glitch-icon" aria-hidden="true"></div>
+              <div class="label">onyxusermanual.png</div>
             </div>
           </div>
         </div>
@@ -2155,34 +2141,6 @@ background-repeat: no-repeat;
         <div class="window-statusbar">
           <span>0 confirmed items</span>
           <span>investigation ongoing</span>
-        </div>
-      </article>
-
-      <article class="boot-window" id="rareSightingsWindow" aria-label="rare onyx sightings folder window" tabindex="-1" style="left: 560px; top: 86px; width: min(560px, calc(100vw - 610px)); min-height: 390px; z-index: 38;">
-        <div class="window-titlebar">
-          <div class="window-title">KAIRO://BOOTLEG_DOWNLOADS/ONYX_DO_NOT_OPEN/RARE_ONYX_SIGHTINGS</div>
-          <button class="window-close" type="button" aria-label="Close rare_onyx_sightings" onclick="closeWindow('rareSightingsWindow')">×</button>
-        </div>
-        <div class="folder-window-body">
-          <div class="folder-path">PATH: <span>/bootleg/folders/onyx_do_not_open/rare_onyx_sightings</span> &nbsp; // STATUS: observed</div>
-          <div class="folder-contents" aria-label="rare_onyx_sightings files">
-            <div class="folder-file" tabindex="0" data-open="onyxSmilingPreviewWindow">
-              <div class="glitch-icon" aria-hidden="true"></div>
-              <div class="label">onyx_almost_smiling_01.png</div>
-            </div>
-            <div class="folder-file" tabindex="0" data-open="onyxCatPreviewWindow">
-  <div class="glitch-icon" aria-hidden="true"></div>
-  <div class="label">onyx_holding_cat_01.png</div>
-</div>
-                        <div class="folder-file" tabindex="0" data-open="onyxNormalPreviewWindow">
-  <div class="glitch-icon" aria-hidden="true"></div>
-  <div class="label">onyx_being_normal.png</div>
-</div>
-          </div>
-        </div>
-        <div class="window-statusbar">
-          <span>3 items</span>
-          <span>evidence quality: questionable</span>
         </div>
       </article>
 
