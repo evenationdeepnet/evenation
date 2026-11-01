@@ -1057,6 +1057,28 @@ background-repeat: no-repeat;
     margin-bottom: 18px;
   }
 }
+    /* Doodle image previews: stay within the available viewport on touch devices. */
+    @media (max-width: 900px) {
+      .boot-window[id^="doodlePreview_"] {
+        height: auto !important;
+        max-height: calc(100dvh - 110px) !important;
+      }
+      .boot-window[id^="doodlePreview_"] .folder-window-body {
+        height: auto;
+        max-height: calc(100dvh - 190px);
+        overflow-y: auto;
+        padding-bottom: 46px;
+      }
+      .boot-window[id^="doodlePreview_"] .image-preview-frame {
+        min-height: 0;
+      }
+      .boot-window[id^="doodlePreview_"] .image-preview-frame img {
+        width: auto;
+        max-width: 100%;
+        max-height: calc(100dvh - 290px);
+        object-fit: contain;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1082,6 +1104,10 @@ background-repeat: no-repeat;
         <div class="file-item" tabindex="0" data-name="relay_maps">
           <div class="folder-icon" aria-hidden="true"></div>
           <div><div class="file-name">&gt; relay_maps</div><div class="file-meta">3 items</div></div>
+        </div>
+        <div class="file-item" tabindex="0" data-name="doodles">
+          <div class="folder-icon" aria-hidden="true"></div>
+          <div><div class="file-name">&gt; doodles</div><div class="file-meta">5 items</div></div>
         </div>
         <!-- Memes go here -->
         <div class="file-item" tabindex="0" data-name="onyx_do_not_open">
@@ -2430,6 +2456,104 @@ background-repeat: no-repeat;
           <span>encoding: UTF-8</span>
         </div>
       </article>
+      <!-- Kairo's doodles: standard folder and image preview windows -->
+      <article class="boot-window" id="doodlesWindow" aria-label="doodles folder window" tabindex="-1" style="left: 320px; top: 94px; width: min(760px, calc(100vw - 380px)); min-height: 420px; z-index: 52;">
+        <div class="window-titlebar">
+          <div class="window-title">KAIRO://BOOTLEG_DOWNLOADS/DOODLES</div>
+          <button class="window-close" type="button" aria-label="Close doodles folder" onclick="closeWindow('doodlesWindow')">×</button>
+        </div>
+        <div class="folder-window-body">
+          <div class="folder-path">PATH: <span>/bootleg/images/doodles</span> &nbsp; // STATUS: important research probably</div>
+          <div class="folder-contents" aria-label="doodle image files">
+            <div class="folder-file" tabindex="0" data-open="doodlePreview_fucknuyufrog">
+              <div class="glitch-icon" aria-hidden="true"></div>
+              <div class="label">fucknuyufrog.png</div>
+            </div>
+            <div class="folder-file" tabindex="0" data-open="doodlePreview_onk">
+              <div class="glitch-icon" aria-hidden="true"></div>
+              <div class="label">onk.png</div>
+            </div>
+            <div class="folder-file" tabindex="0" data-open="doodlePreview_patience">
+              <div class="glitch-icon" aria-hidden="true"></div>
+              <div class="label">patience.png</div>
+            </div>
+            <div class="folder-file" tabindex="0" data-open="doodlePreview_plan">
+              <div class="glitch-icon" aria-hidden="true"></div>
+              <div class="label">plan.png</div>
+            </div>
+            <div class="folder-file" tabindex="0" data-open="doodlePreview_rayneexe">
+              <div class="glitch-icon" aria-hidden="true"></div>
+              <div class="label">rayneexe.png</div>
+            </div>
+          </div>
+        </div>
+        <div class="window-statusbar"><span>5 images</span><span>artist: kairo (allegedly)</span></div>
+      </article>
+      <article class="boot-window" id="doodlePreview_fucknuyufrog" aria-label="NuYu frog doodle image preview" tabindex="-1" style="left: 460px; top: 120px; width: min(680px, calc(100vw - 520px)); min-height: 420px; z-index: 53;">
+        <div class="window-titlebar">
+          <div class="window-title">FUCKNUYUFROG.PNG</div>
+          <button class="window-close" type="button" aria-label="Close fucknuyufrog.png preview" onclick="closeWindow('doodlePreview_fucknuyufrog')">×</button>
+        </div>
+        <div class="folder-window-body">
+          <div class="folder-path">PATH: <span>/bootleg/images/doodles/fucknuyufrog.png</span></div>
+          <div class="image-preview-frame">
+            <img src="images/doodles/fucknuyufrog.png" alt="NuYu frog doodle" class="preview-image" loading="lazy">
+          </div>
+        </div>
+        <div class="window-statusbar"><span>format: PNG</span><span>source: doodles</span></div>
+      </article>
+      <article class="boot-window" id="doodlePreview_onk" aria-label="Onk the frog doodle image preview" tabindex="-1" style="left: 460px; top: 120px; width: min(680px, calc(100vw - 520px)); min-height: 420px; z-index: 53;">
+        <div class="window-titlebar">
+          <div class="window-title">ONK.PNG</div>
+          <button class="window-close" type="button" aria-label="Close onk.png preview" onclick="closeWindow('doodlePreview_onk')">×</button>
+        </div>
+        <div class="folder-window-body">
+          <div class="folder-path">PATH: <span>/bootleg/images/doodles/onk.png</span></div>
+          <div class="image-preview-frame">
+            <img src="images/doodles/onk.png" alt="Onk the frog doodle" class="preview-image" loading="lazy">
+          </div>
+        </div>
+        <div class="window-statusbar"><span>format: PNG</span><span>source: doodles</span></div>
+      </article>
+      <article class="boot-window" id="doodlePreview_patience" aria-label="Minjae patience gravestone doodle image preview" tabindex="-1" style="left: 460px; top: 120px; width: min(680px, calc(100vw - 520px)); min-height: 420px; z-index: 53;">
+        <div class="window-titlebar">
+          <div class="window-title">PATIENCE.PNG</div>
+          <button class="window-close" type="button" aria-label="Close patience.png preview" onclick="closeWindow('doodlePreview_patience')">×</button>
+        </div>
+        <div class="folder-window-body">
+          <div class="folder-path">PATH: <span>/bootleg/images/doodles/patience.png</span></div>
+          <div class="image-preview-frame">
+            <img src="images/doodles/patience.png" alt="Minjae patience gravestone doodle" class="preview-image" loading="lazy">
+          </div>
+        </div>
+        <div class="window-statusbar"><span>format: PNG</span><span>source: doodles</span></div>
+      </article>
+      <article class="boot-window" id="doodlePreview_plan" aria-label="Plan doodle image preview" tabindex="-1" style="left: 460px; top: 120px; width: min(680px, calc(100vw - 520px)); min-height: 420px; z-index: 53;">
+        <div class="window-titlebar">
+          <div class="window-title">PLAN.PNG</div>
+          <button class="window-close" type="button" aria-label="Close plan.png preview" onclick="closeWindow('doodlePreview_plan')">×</button>
+        </div>
+        <div class="folder-window-body">
+          <div class="folder-path">PATH: <span>/bootleg/images/doodles/plan.png</span></div>
+          <div class="image-preview-frame">
+            <img src="images/doodles/plan.png" alt="Plan doodle" class="preview-image" loading="lazy">
+          </div>
+        </div>
+        <div class="window-statusbar"><span>format: PNG</span><span>source: doodles</span></div>
+      </article>
+      <article class="boot-window" id="doodlePreview_rayneexe" aria-label="Rayne exe doodle image preview" tabindex="-1" style="left: 460px; top: 120px; width: min(680px, calc(100vw - 520px)); min-height: 420px; z-index: 53;">
+        <div class="window-titlebar">
+          <div class="window-title">RAYNEEXE.PNG</div>
+          <button class="window-close" type="button" aria-label="Close rayneexe.png preview" onclick="closeWindow('doodlePreview_rayneexe')">×</button>
+        </div>
+        <div class="folder-window-body">
+          <div class="folder-path">PATH: <span>/bootleg/images/doodles/rayneexe.png</span></div>
+          <div class="image-preview-frame">
+            <img src="images/doodles/rayneexe.png" alt="Rayne exe doodle" class="preview-image" loading="lazy">
+          </div>
+        </div>
+        <div class="window-statusbar"><span>format: PNG</span><span>source: doodles</span></div>
+      </article>
     </section>
 
     <div class="bottom-bar" aria-hidden="true">
@@ -2516,6 +2640,9 @@ function closeWindow(windowId) {
         item.classList.add('active');
         if (item.dataset.name === 'onyx_do_not_open') {
           openWindow('onyxWindow');
+        }
+        if (item.dataset.name === 'doodles') {
+          openWindow('doodlesWindow');
         }
         if (item.dataset.name === 'music') {
           openWindow('musicWindow');
